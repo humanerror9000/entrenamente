@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EntrenaMente — Actualización por Categorías</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap');
+
+:root {
+  --bg: #F8F5F0;
+  --bg2: #EEE9E1;
+  --card: #FFFFFF;
+  --card2: #F4F0E8;
+  --ink: #1A1714;
+  --ink2: #524D46;
+  --muted: #9B9388;
+  --border: rgba(26,23,20,0.08);
+  --border2: rgba(26,23,20,0.14);
+  --teal: #0D7377;
+  --teal-l: #CCFBF1;
+  --teal-m: rgba(13,115,119,0.10);
+  --amber: #C27D0B;
+  --amber-l: #FEF3C7;
+  --amber-m: rgba(194,125,11,0.10);
+  --coral: #C0392B;
+  --coral-l: #FEE2E2;
+  --coral-m: rgba(192,57,43,0.08);
+  --purple: #6D28D9;
+  --purple-l: #EDE9FE;
+  --purple-m: rgba(109,40,217,0.09);
+  --green: #065F46;
+  --green-l: #D1FAE5;
+  --green-m: rgba(6,95,70,0.08);
+  /* Category accent colors */
+  --cat-a: #0D7377; /* animals — teal */
+  --cat-b: #C27D0B; /* professions — amber */
+  --cat-c: #6D28D9; /* objects — purple */
+  --cat-d: #C0392B; /* places — coral */
+  --r: 14px;
+  --sh: 0 1px 4px rgba(26,23,20,0.06), 0 6px 20px rgba(26,23,20,0.05);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg); color: var(--ink);
+  min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+  padding-bottom: 60px;
+}
+
+header {
+  width: 100%; background: var(--ink);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 24px;
+}
+.logo { font-size: 14px; font-weight: 700; color: #fff; letter-spacing: 0.03em; }
+.logo em { color: #F5C842; font-style: normal; }
+.ex-tag {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
+  color: var(--teal-l); background: rgba(13,115,119,0.3);
+  border: 1px solid rgba(13,115,119,0.5); padding: 3px 11px; border-radius: 20px;
+}
+.hstats { display: flex; gap: 14px; }
+.hstat { font-size: 12px; color: rgba(255,255,255,0.45); display: flex; gap: 5px; }
+.hstat b { color: #F5C842; }
+
+main { width: 100%; max-width: 680px; padding: 22px 16px 0; display: flex; flex-direction: column; gap: 16px; }
+
+/* Stage dots */
+.sdots { display: flex; gap: 5px; }
+.sdot { flex: 1; height: 3px; border-radius: 2px; background: var(--bg2); transition: background 0.3s; }
+.sdot.done { background: var(--teal); }
+.sdot.active { background: var(--amber); }
+
+/* Cards */
+.card { background: var(--card); border-radius: var(--r); border: 1.5px solid var(--border2); box-shadow: var(--sh); overflow: hidden; display: none; }
+.card.show { display: block; }
+
+.chead { padding: 15px 20px 13px; border-bottom: 1.5px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.ctitle { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+.csub { font-size: 12px; color: var(--ink2); line-height: 1.55; max-width: 380px; }
+.cpills { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+.pill { font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; padding: 2px 8px; border-radius: 20px; }
+.pt { background: var(--teal-l); color: var(--teal); }
+.pa { background: var(--amber-l); color: var(--amber); }
+.pp { background: var(--purple-l); color: var(--purple); }
+
+.clive { text-align: right; flex-shrink: 0; }
+.clive .cv { font-size: 22px; font-weight: 700; color: var(--teal); line-height: 1; font-variant-numeric: tabular-nums; }
+.clive .cl { font-size: 10px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 2px; }
+
+.prog-bar { height: 3px; background: var(--bg2); }
+.prog-fill { height: 100%; transition: width 0.4s ease, background 0.3s; }
+
+.btn { font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 700; padding: 9px 18px; border-radius: 10px; border: none; cursor: pointer; transition: all 0.15s; }
+.btn-teal { background: var(--teal); color: #fff; }
+.btn-teal:hover { opacity: 0.88; }
+.btn-ghost { background: transparent; color: var(--ink2); border: 1.5px solid var(--border2); }
+.btn-ghost:hover { border-color: var(--ink); color: var(--ink); }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+.cfooter { padding: 11px 20px; border-top: 1.5px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+/* ════════════════════════
+   TUTORIAL / INTRO
+   ════════════════════════ */
+.tut-step { display: none; flex-direction: column; }
+.tut-step.show { display: flex; }
+.tut-head { padding: 11px 20px; font-size: 11px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--amber); background: var(--amber-m); border-bottom: 1.5px solid var(--border); }
+.tut-body { padding: 18px 20px; display: flex; flex-direction: column; gap: 13px; font-size: 13px; color: var(--ink2); line-height: 1.65; }
+.tut-body strong { color: var(--ink); }
+.tut-rule { background: var(--teal-m); border: 1.5px solid rgba(13,115,119,0.2); border-radius: 10px; padding: 12px 14px; font-size: 13px; color: var(--ink2); line-height: 1.6; }
+.tut-rule strong { color: var(--teal); }
+.tut-footer { padding: 12px 20px; border-top: 1.5px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+
+/* Category preview in tutorial */
+.cat-preview { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.cat-chip {
+  padding: 10px 14px; border-radius: 10px;
+  border: 1.5px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+.cat-icon { font-size: 20px; }
+.cat-info .cn { font-size: 13px; font-weight: 700; }
+.cat-info .ce { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.cat-chip[data-cat="animals"] { background: var(--teal-m); border-color: rgba(13,115,119,0.3); }
+.cat-chip[data-cat="animals"] .cn { color: var(--teal); }
+.cat-chip[data-cat="professions"] { background: var(--amber-m); border-color: rgba(194,125,11,0.3); }
+.cat-chip[data-cat="professions"] .cn { color: var(--amber); }
+.cat-chip[data-cat="objects"] { background: var(--purple-m); border-color: rgba(109,40,217,0.3); }
+.cat-chip[data-cat="objects"] .cn { color: var(--purple); }
+.cat-chip[data-cat="places"] { background: var(--coral-m); border-color: rgba(192,57,43,0.3); }
+.cat-chip[data-cat="places"] .cn { color: var(--coral); }
+
+/* Example sequence */
+.ex-stream { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 4px 0; }
+.ex-word {
+  padding: 7px 12px; border-radius: 9px; border: 1.5px solid var(--border2);
+  background: var(--card2); font-family: 'Fraunces', serif;
+  font-size: 15px; color: var(--ink2); text-align: center;
+}
+.ex-word.ew-animal { background: var(--teal-m); border-color: rgba(13,115,119,0.3); color: var(--teal); }
+.ex-word.ew-prof { background: var(--amber-m); border-color: rgba(194,125,11,0.3); color: var(--amber); }
+.ex-word.ew-obj { background: var(--purple-m); border-color: rgba(109,40,217,0.3); color: var(--purple); }
+.ex-word.ew-place { background: var(--coral-m); border-color: rgba(192,57,43,0.3); color: var(--coral); }
+.ex-word.latest { font-weight: 700; border-width: 2px; }
+
+/* Difficulty selector */
+.diff-opts { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; padding: 14px 20px 0; }
+.dopt {
+  padding: 11px 8px; border-radius: 11px; border: 1.5px solid var(--border2);
+  background: var(--card2); cursor: pointer; text-align: center; transition: all 0.15s;
+}
+.dopt:hover { border-color: var(--teal); }
+.dopt.dsel { background: var(--teal-m); border-color: var(--teal); }
+.dopt .dv { font-size: 18px; font-weight: 700; color: var(--teal); }
+.dopt .dl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 3px; }
+.dopt .dd { font-size: 11px; color: var(--ink2); margin-top: 4px; line-height: 1.4; }
+
+/* ════════════════════════
+   GAME — word stream
+   ════════════════════════ */
+.stream-area { padding: 24px 20px 16px; display: flex; flex-direction: column; align-items: center; gap: 20px; min-height: 180px; justify-content: center; }
+
+.word-stage {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+}
+.cat-badge {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
+  padding: 3px 12px; border-radius: 20px;
+}
+.cat-badge.cb-animals { background: var(--teal-l); color: var(--teal); }
+.cat-badge.cb-professions { background: var(--amber-l); color: var(--amber); }
+.cat-badge.cb-objects { background: var(--purple-l); color: var(--purple); }
+.cat-badge.cb-places { background: var(--coral-l); color: var(--coral); }
+
+.word-big {
+  font-family: 'Fraunces', serif;
+  font-size: 42px; font-weight: 600; color: var(--ink);
+  text-align: center; transition: opacity 0.1s;
+  min-height: 56px; display: flex; align-items: center;
+}
+.word-big.hidden { opacity: 0; }
+.word-num { font-size: 11px; color: var(--muted); letter-spacing: 0.06em; }
+
+/* Memory slots — one per category, always visible */
+.memory-slots {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 10px; width: 100%;
+}
+.mem-slot {
+  padding: 10px 12px; border-radius: 10px;
+  border: 1.5px solid var(--border);
+  background: var(--card2);
+  transition: all 0.2s;
+}
+.mem-slot .ms-cat { font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 5px; }
+.mem-slot .ms-word {
+  font-family: 'Fraunces', serif;
+  font-size: 18px; font-weight: 600; color: var(--muted);
+  min-height: 26px;
+}
+.mem-slot.ms-animals { border-color: rgba(13,115,119,0.25); }
+.mem-slot.ms-animals .ms-cat { color: var(--teal); }
+.mem-slot.ms-animals.updated .ms-word { color: var(--teal); }
+.mem-slot.ms-professions { border-color: rgba(194,125,11,0.25); }
+.mem-slot.ms-professions .ms-cat { color: var(--amber); }
+.mem-slot.ms-professions.updated .ms-word { color: var(--amber); }
+.mem-slot.ms-objects { border-color: rgba(109,40,217,0.25); }
+.mem-slot.ms-objects .ms-cat { color: var(--purple); }
+.mem-slot.ms-objects.updated .ms-word { color: var(--purple); }
+.mem-slot.ms-places { border-color: rgba(192,57,43,0.25); }
+.mem-slot.ms-places .ms-cat { color: var(--coral); }
+.mem-slot.ms-places.updated .ms-word { color: var(--coral); }
+.mem-slot.just-updated { transform: scale(1.03); box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+
+/* Recall phase */
+.recall-area { padding: 16px 20px 20px; display: flex; flex-direction: column; gap: 14px; }
+.recall-label { font-size: 11px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); }
+.recall-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.recall-cat {
+  border-radius: 11px; border: 1.5px solid var(--border2);
+  background: var(--card2); overflow: hidden;
+}
+.recall-cat-head {
+  padding: 8px 12px; font-size: 11px; font-weight: 700; letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+.rch-animals { background: var(--teal-m); color: var(--teal); }
+.rch-professions { background: var(--amber-m); color: var(--amber); }
+.rch-objects { background: var(--purple-m); color: var(--purple); }
+.rch-places { background: var(--coral-m); color: var(--coral); }
+.recall-options { padding: 8px; display: flex; flex-direction: column; gap: 5px; }
+.ropt {
+  padding: 8px 10px; border-radius: 8px; border: 1.5px solid var(--border);
+  background: var(--card); font-family: 'Fraunces', serif; font-size: 15px;
+  cursor: pointer; color: var(--ink2); transition: all 0.12s;
+}
+.ropt:hover { border-color: var(--ink); color: var(--ink); }
+.ropt.ro-correct { background: var(--green-l); border-color: var(--teal); color: var(--teal); pointer-events: none; }
+.ropt.ro-wrong { background: var(--coral-l); border-color: var(--coral); color: var(--coral); pointer-events: none; }
+.ropt.ro-locked { pointer-events: none; opacity: 0.4; }
+
+/* Results */
+.res-body { padding: 22px 20px; display: flex; flex-direction: column; gap: 14px; }
+.res-top { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.res-box { background: var(--card2); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px 12px; text-align: center; }
+.res-box .rv { font-size: 38px; font-weight: 300; color: var(--teal); line-height: 1; }
+.res-box .rl { font-size: 10px; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; margin-top: 4px; }
+.res-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; }
+.rg { background: var(--card2); border: 1.5px solid var(--border); border-radius: 10px; padding: 10px 8px; text-align: center; }
+.rg .rv { font-size: 16px; font-weight: 700; }
+.rg .rl { font-size: 10px; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; margin-top: 2px; }
+.insight { padding: 13px 15px; border-radius: 11px; background: var(--purple-m); border: 1.5px solid rgba(109,40,217,0.15); font-size: 13px; color: var(--ink2); line-height: 1.65; }
+.insight strong { color: var(--purple); }
+.res-btns { display: flex; gap: 10px; justify-content: center; }
+
+/* Sci note */
+.sci { background: var(--card); border: 1.5px solid var(--border2); border-radius: var(--r); padding: 15px 19px; font-size: 12px; color: var(--ink2); line-height: 1.7; box-shadow: var(--sh); }
+.sci-hd { font-size: 10px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
+
+@keyframes pulse-slot { 0%,100%{opacity:1} 50%{opacity:0.6} }
+.pulsing { animation: pulse-slot 0.6s ease; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Entrena<em>Mente</em></div>
+  <div class="ex-tag">Actualización por Categorías</div>
+  <div class="hstats">
+    <div class="hstat">Precisión <b id="hdr-acc">–</b></div>
+    <div class="hstat">Ronda <b id="hdr-round">–</b></div>
+  </div>
+</header>
+
+<main>
+
+  <div class="sdots">
+    <div class="sdot active" id="sd0"></div>
+    <div class="sdot" id="sd1"></div>
+    <div class="sdot" id="sd2"></div>
+  </div>
+
+  <!-- ══════════════════════
+       STAGE 0: Tutorial
+       ══════════════════════ -->
+  <div class="card show" id="s0">
+    <div class="chead">
+      <div>
+        <div class="ctitle">Actualización por Categorías</div>
+        <div class="csub">Observa una secuencia de palabras de distintas categorías. Al final, recuerda la última palabra de cada categoría.</div>
+        <div class="cpills">
+          <span class="pill pt">Miyake et al. 2000</span>
+          <span class="pill pa">Updating EF</span>
+          <span class="pill pp">4 categorías</span>
+        </div>
+      </div>
+      <div class="clive"><div class="cv" id="s0-words">12</div><div class="cl">palabras</div></div>
+    </div>
+
+    <!-- Tutorial step 1 -->
+    <div class="tut-step show" id="tut-1">
+      <div class="tut-head">Cómo funciona — 3 pasos simples</div>
+      <div class="tut-body">
+        <p>Verás una serie de palabras, una a la vez. Cada palabra pertenece a una categoría — indicada con color.</p>
+
+        <div class="cat-preview">
+          <div class="cat-chip" data-cat="animals"><span class="cat-icon">🐾</span><div class="cat-info"><div class="cn">Animales</div><div class="ce">perro, águila, cebra…</div></div></div>
+          <div class="cat-chip" data-cat="professions"><span class="cat-icon">💼</span><div class="cat-info"><div class="cn">Profesiones</div><div class="ce">médico, piloto, chef…</div></div></div>
+          <div class="cat-chip" data-cat="objects"><span class="cat-icon">🔧</span><div class="cat-info"><div class="cn">Objetos</div><div class="ce">llave, espejo, mapa…</div></div></div>
+          <div class="cat-chip" data-cat="places"><span class="cat-icon">📍</span><div class="cat-info"><div class="cn">Lugares</div><div class="ce">plaza, faro, cueva…</div></div></div>
+        </div>
+
+        <div class="tut-rule">
+          Tu tarea: <strong>recuerda solamente la última palabra de cada categoría</strong> que hayas visto. Cada vez que aparece una nueva palabra de una categoría, la anterior ya no importa — solo importa la más reciente.
+        </div>
+
+        <p>Veamos un ejemplo:</p>
+        <div style="background:var(--card2);border-radius:10px;padding:14px;border:1.5px solid var(--border)">
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;text-align:center">La secuencia llega una por una…</div>
+          <div class="ex-stream">
+            <div class="ex-word ew-animal">perro</div>
+            <div class="ex-word ew-prof">médico</div>
+            <div class="ex-word ew-animal">águila</div>
+            <div class="ex-word ew-obj">llave</div>
+            <div class="ex-word ew-animal latest">cebra ✓</div>
+            <div class="ex-word ew-place">plaza</div>
+          </div>
+          <div style="font-size:12px;color:var(--ink2);margin-top:10px;text-align:center;line-height:1.6">
+            Al llegar <em>cebra</em>, olvidas <em>perro</em> y <em>águila</em> — <strong>solo <em>cebra</em> importa ahora</strong> para la categoría Animales.
+          </div>
+        </div>
+      </div>
+      <div class="tut-footer">
+        <div></div>
+        <button class="btn btn-teal" onclick="tutStep(2)">Siguiente →</button>
+      </div>
+    </div>
+
+    <!-- Tutorial step 2 -->
+    <div class="tut-step" id="tut-2">
+      <div class="tut-head">La prueba de memoria</div>
+      <div class="tut-body">
+        <p>Cuando termina la secuencia, aparece la pregunta de cada categoría. Se te muestran <strong>3 opciones</strong> — una es la última palabra que apareció, las otras son distractores de la misma categoría.</p>
+
+        <div style="background:var(--card2);border-radius:10px;padding:14px;border:1.5px solid var(--border)">
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--teal);margin-bottom:8px">Animales — ¿cuál fue la última?</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="padding:8px 12px;border-radius:8px;background:var(--green-l);border:1.5px solid var(--teal);font-family:'Fraunces',serif;font-size:15px;color:var(--teal)">cebra ✓ última vista</div>
+            <div style="padding:8px 12px;border-radius:8px;background:var(--card);border:1.5px solid var(--border);font-family:'Fraunces',serif;font-size:15px;color:var(--muted)">perro</div>
+            <div style="padding:8px 12px;border-radius:8px;background:var(--card);border:1.5px solid var(--border);font-family:'Fraunces',serif;font-size:15px;color:var(--muted)">lobo</div>
+          </div>
+        </div>
+
+        <p>Las ranuras de memoria en la parte inferior de la pantalla te muestran <strong>en tiempo real</strong> qué palabra tienes guardada de cada categoría — actualízalas mentalmente mientras lees.</p>
+
+        <div class="tut-rule">
+          El reto: <strong>actualiza constantemente</strong>. Cada nueva palabra reemplaza a la anterior en tu memoria. Si te quedas con la primera en lugar de la última, fallarás.
+        </div>
+      </div>
+      <div class="tut-footer">
+        <button class="btn btn-ghost" onclick="tutStep(1)">← Atrás</button>
+        <button class="btn btn-teal" onclick="tutStep(3)">Siguiente →</button>
+      </div>
+    </div>
+
+    <!-- Tutorial step 3: difficulty -->
+    <div class="tut-step" id="tut-3">
+      <div class="tut-head">Elige la dificultad</div>
+      <div class="tut-body" style="padding-bottom:4px">
+        <p>Más palabras = más actualizaciones = más difícil. Empieza en <strong>Fácil</strong> si es tu primera vez.</p>
+      </div>
+      <div class="diff-opts">
+        <div class="dopt dsel" id="diff-easy" onclick="setDiff('easy')">
+          <div class="dv">8</div>
+          <div class="dl">palabras</div>
+          <div class="dd">Fácil — 1–2 actualizaciones por categoría</div>
+        </div>
+        <div class="dopt" id="diff-medium" onclick="setDiff('medium')">
+          <div class="dv">12</div>
+          <div class="dl">palabras</div>
+          <div class="dd">Normal — 2–3 actualizaciones por categoría</div>
+        </div>
+        <div class="dopt" id="diff-hard" onclick="setDiff('hard')">
+          <div class="dv">16</div>
+          <div class="dl">palabras</div>
+          <div class="dd">Difícil — 3–4 actualizaciones por categoría</div>
+        </div>
+      </div>
+      <div style="padding:10px 20px 0;font-size:12px;color:var(--muted)">Las ranuras de memoria son visibles durante el juego — esto es deliberado: observar cómo se actualizan ayuda a internalizar el proceso.</div>
+      <div class="tut-footer">
+        <button class="btn btn-ghost" onclick="tutStep(2)">← Atrás</button>
+        <button class="btn btn-teal" onclick="startGame()">▶ Comenzar</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════
+       STAGE 1: Stream + Recall
+       ══════════════════════ -->
+  <div class="card" id="s1">
+    <div class="chead">
+      <div>
+        <div class="ctitle" id="g-title">Observa y actualiza</div>
+        <div class="csub">Recuerda siempre la <strong>última</strong> palabra de cada categoría.</div>
+      </div>
+      <div class="clive"><div class="cv" id="g-prog">1/12</div><div class="cl">palabra</div></div>
+    </div>
+    <div class="prog-bar"><div class="prog-fill" id="g-fill" style="width:0%;background:var(--amber)"></div></div>
+
+    <!-- Streaming phase -->
+    <div id="stream-phase">
+      <div class="stream-area">
+        <div class="word-stage">
+          <div class="cat-badge" id="word-cat-badge">–</div>
+          <div class="word-big" id="word-display">·</div>
+          <div class="word-num" id="word-num"></div>
+        </div>
+        <!-- Live memory slots -->
+        <div class="memory-slots" id="memory-slots">
+          <div class="mem-slot ms-animals" id="ms-animals">
+            <div class="ms-cat">🐾 Animales</div>
+            <div class="ms-word" id="msw-animals">–</div>
+          </div>
+          <div class="mem-slot ms-professions" id="ms-professions">
+            <div class="ms-cat">💼 Profesiones</div>
+            <div class="ms-word" id="msw-professions">–</div>
+          </div>
+          <div class="mem-slot ms-objects" id="ms-objects">
+            <div class="ms-cat">🔧 Objetos</div>
+            <div class="ms-word" id="msw-objects">–</div>
+          </div>
+          <div class="mem-slot ms-places" id="ms-places">
+            <div class="ms-cat">📍 Lugares</div>
+            <div class="ms-word" id="msw-places">–</div>
+          </div>
+        </div>
+      </div>
+      <div class="cfooter">
+        <div style="font-size:12px;color:var(--muted)">Las ranuras muestran la última palabra guardada de cada categoría</div>
+        <button class="btn btn-ghost btn-sm" onclick="abortGame()">✕ Salir</button>
+      </div>
+    </div>
+
+    <!-- Recall phase (hidden until stream ends) -->
+    <div id="recall-phase" style="display:none">
+      <div style="padding:14px 20px 10px;background:var(--amber-m);border-bottom:1.5px solid var(--border)">
+        <div style="font-size:13px;font-weight:700;color:var(--amber)">¿Cuál fue la última palabra de cada categoría?</div>
+        <div style="font-size:12px;color:var(--ink2);margin-top:2px">Elige una respuesta por categoría</div>
+      </div>
+      <div class="recall-area">
+        <div class="recall-grid" id="recall-grid"></div>
+      </div>
+      <div class="cfooter">
+        <div style="font-size:12px;color:var(--muted)" id="recall-hint">Responde las <span id="recall-remaining">4</span> categorías para continuar</div>
+        <button class="btn btn-teal" id="next-round-btn" style="display:none" onclick="nextRound()">Siguiente ronda →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════
+       STAGE 2: Results
+       ══════════════════════ -->
+  <div class="card" id="s2">
+    <div class="chead">
+      <div><div class="ctitle">Resultados</div></div>
+    </div>
+    <div class="res-body" id="res-body"></div>
+  </div>
+
+  <div class="sci">
+    <div class="sci-hd">⚗ Base científica — actualización por categorías</div>
+    Esta tarea es la medida de <em>updating</em> del modelo de Miyake et al. (2000), el framework más citado de funciones ejecutivas. <strong>El updating fue el predictor más fuerte de razonamiento fluido y comprensión lectora</strong> entre los tres componentes ejecutivos (updating, shifting, inhibición). La tarea de categorías es más accesible que el n-back porque la regla es natural ("guarda solo la última"), el estímulo es verbal-semántico (activando directamente redes de lectura), y no requiere decisiones de respuesta rápida — pero mantiene el mismo proceso de actualización continua que hace al n-back efectivo.
+  </div>
+
+</main>
+
+<script>
+// ─────────────────────────────
+// Content
+// ─────────────────────────────
+const CATEGORIES = {
+  animals:     { label: 'Animales',     icon: '🐾', cls: 'cb-animals',     rch: 'rch-animals',
+    words: ['perro','águila','cebra','lobo','rana','delfín','puma','cigüeña','nutria','halcón','lince','cobra','orca','alce','buitre','zorro','topo','cuervo'] },
+  professions: { label: 'Profesiones',  icon: '💼', cls: 'cb-professions',  rch: 'rch-professions',
+    words: ['médico','piloto','chef','físico','juez','pintor','sastre','geólogo','locutor','árbitro','notario','herrero','cirujano','botánico','filósofo','marino','hortelano','mecánico'] },
+  objects:     { label: 'Objetos',      icon: '🔧', cls: 'cb-objects',      rch: 'rch-objects',
+    words: ['llave','espejo','mapa','ancla','frasco','compás','linterna','navaja','bisturí','veleta','prisma','tornillo','palanca','embudo','cincel','candado','pistón','péndulo'] },
+  places:      { label: 'Lugares',      icon: '📍', cls: 'cb-places',       rch: 'rch-places',
+    words: ['plaza','faro','cueva','claustro','delta','marisma','alcázar','islote','páramo','meandro','vertiente','zaguán','cenote','arrecife','colina','pantano','meseta','farallón'] },
+};
+const CAT_KEYS = Object.keys(CATEGORIES);
+
+// ─────────────────────────────
+// State
+// ─────────────────────────────
+let difficulty = 'easy'; // easy=8, medium=12, hard=16
+let streamLength = 8;
+let totalRounds = 3;
+let roundIdx = 0;
+let streamIdx = 0;
+let sequence = [];       // [{cat, word}]
+let currentMemory = {};  // {animals: word, professions: word, ...}
+let roundResults = [];   // [{cat, correct: bool}] per round
+let streamTimer = null;
+let recallAnswered = 0;
+let recallCorrect = 0;
+let totalAnswered = 0;
+let totalCorrect = 0;
+
+const WORD_SHOW_MS = 1400;
+const WORD_GAP_MS  = 400;
+
+const DIFF_LENGTHS = { easy: 8, medium: 12, hard: 16 };
+
+// ─────────────────────────────
+// Stage & tutorial nav
+// ─────────────────────────────
+function setStage(n) {
+  ['s0','s1','s2'].forEach((id,i)=>document.getElementById(id).classList.toggle('show',i===n));
+  ['sd0','sd1','sd2'].forEach((id,i)=>{
+    const d=document.getElementById(id);
+    d.classList.remove('active','done');
+    if(i<n) d.classList.add('done'); else if(i===n) d.classList.add('active');
+  });
+}
+
+function tutStep(n) {
+  document.querySelectorAll('.tut-step').forEach(el=>el.classList.remove('show'));
+  const s=document.getElementById('tut-'+n);
+  if(s) s.classList.add('show');
+}
+
+function setDiff(d) {
+  difficulty=d;
+  streamLength=DIFF_LENGTHS[d];
+  document.querySelectorAll('.dopt').forEach(el=>el.classList.remove('dsel'));
+  document.getElementById('diff-'+d).classList.add('dsel');
+  document.getElementById('s0-words').textContent=streamLength;
+}
+
+// ─────────────────────────────
+// Session start
+// ─────────────────────────────
+function startGame() {
+  roundIdx=0; totalAnswered=0; totalCorrect=0; roundResults=[];
+  document.getElementById('hdr-round').textContent='1/'+totalRounds;
+  setStage(1);
+  startRound();
+}
+
+function startRound() {
+  streamIdx=0; recallAnswered=0; recallCorrect=0;
+  currentMemory={animals:null,professions:null,objects:null,places:null};
+  sequence=buildSequence(streamLength);
+
+  // Reset UI
+  const gt=document.getElementById('g-title'); if(gt) gt.textContent='Observa y actualiza';
+  const gp=document.getElementById('g-prog'); if(gp) gp.textContent='1/'+streamLength;
+  const gf=document.getElementById('g-fill'); if(gf){ gf.style.width='0%'; gf.style.background='var(--amber)'; }
+  const hr=document.getElementById('hdr-round'); if(hr) hr.textContent=(roundIdx+1)+'/'+totalRounds;
+  const sp=document.getElementById('stream-phase'); if(sp) sp.style.display='';
+  const rp=document.getElementById('recall-phase'); if(rp) rp.style.display='none';
+  const nb=document.getElementById('next-round-btn'); if(nb) nb.style.display='none';
+  const rr=document.getElementById('recall-remaining'); if(rr) rr.textContent='4';
+
+  CAT_KEYS.forEach(cat=>{
+    document.getElementById('msw-'+cat).textContent='–';
+    document.getElementById('ms-'+cat).classList.remove('updated','just-updated');
+  });
+
+  updateWordDisplay('','','1 de '+streamLength);
+  setTimeout(showNextWord, 600);
+}
+
+function buildSequence(len) {
+  // Ensure each category appears at least twice, rest random
+  const seq=[];
+  const baseCounts={animals:2,professions:2,objects:2,places:2};
+  CAT_KEYS.forEach(cat=>{
+    const pool=shuffle([...CATEGORIES[cat].words]);
+    for(let i=0;i<baseCounts[cat];i++) seq.push({cat,word:pool[i]});
+  });
+  // Fill remainder randomly
+  while(seq.length<len) {
+    const cat=CAT_KEYS[Math.floor(Math.random()*CAT_KEYS.length)];
+    const used=seq.filter(s=>s.cat===cat).map(s=>s.word);
+    const avail=CATEGORIES[cat].words.filter(w=>!used.includes(w));
+    if(avail.length) seq.push({cat, word:avail[Math.floor(Math.random()*avail.length)]});
+  }
+  return shuffle(seq).slice(0,len);
+}
+
+// ─────────────────────────────
+// Stream
+// ─────────────────────────────
+function showNextWord() {
+  if(streamIdx>=sequence.length) { endStream(); return; }
+
+  const {cat,word}=sequence[streamIdx];
+  const catData=CATEGORIES[cat];
+
+  updateWordDisplay(catData.cls, word, (streamIdx+1)+' de '+streamLength);
+  const prog=document.getElementById('g-prog');
+  const fill=document.getElementById('g-fill');
+  if(prog) prog.textContent=(streamIdx+1)+'/'+streamLength;
+  if(fill) fill.style.width=((streamIdx+1)/streamLength*100)+'%';
+
+  // Update live memory slot
+  currentMemory[cat]=word;
+  const slot=document.getElementById('ms-'+cat);
+  const slotWord=document.getElementById('msw-'+cat);
+  if(slot && slotWord) {
+    slotWord.textContent=word;
+    slot.classList.add('updated','just-updated','pulsing');
+    setTimeout(()=>{ if(slot) slot.classList.remove('just-updated','pulsing'); },600);
+  }
+
+  streamIdx++;
+  streamTimer=setTimeout(()=>{
+    hideWordDisplay();
+    streamTimer=setTimeout(showNextWord, WORD_GAP_MS);
+  }, WORD_SHOW_MS);
+}
+
+function updateWordDisplay(badgeCls, word, numText) {
+  const badge=document.getElementById('word-cat-badge');
+  const disp=document.getElementById('word-display');
+  const num=document.getElementById('word-num');
+  if(!badge||!disp||!num) return; // guard: elements may not exist if stream was aborted
+  badge.className='cat-badge '+(badgeCls||'');
+  // Only look up category label when badgeCls is a non-empty string
+  const catKey = badgeCls ? badgeCls.replace('cb-','') : '';
+  badge.textContent = catKey && CATEGORIES[catKey] ? CATEGORIES[catKey].label : '';
+  disp.textContent=word||'·';
+  disp.className='word-big'+(word?'':' hidden');
+  num.textContent=numText||'';
+}
+
+function hideWordDisplay() {
+  const disp=document.getElementById('word-display');
+  const badge=document.getElementById('word-cat-badge');
+  if(disp) disp.classList.add('hidden');
+  if(badge) badge.textContent='';
+}
+
+function endStream() {
+  hideWordDisplay();
+  // Transition to recall
+  setTimeout(()=>{
+    document.getElementById('stream-phase').style.display='none';
+    buildRecallUI();
+    document.getElementById('recall-phase').style.display='';
+    document.getElementById('g-title').textContent='¿Cuál fue la última?';
+    document.getElementById('g-fill').style.width='100%';
+    document.getElementById('g-fill').style.background='var(--teal)';
+  }, 300);
+}
+
+// ─────────────────────────────
+// Recall
+// ─────────────────────────────
+function buildRecallUI() {
+  const grid=document.getElementById('recall-grid');
+  grid.innerHTML='';
+  recallAnswered=0;
+
+  CAT_KEYS.forEach(cat=>{
+    const catData=CATEGORIES[cat];
+    const correct=currentMemory[cat];
+    if(!correct) return; // safety: category never appeared in this sequence
+
+    const seenInCat=sequence.filter(s=>s.cat===cat).map(s=>s.word);
+    const distPool=seenInCat.filter(w=>w!==correct);
+    const unseenPool=shuffle(CATEGORIES[cat].words.filter(w=>!seenInCat.includes(w)));
+    while(distPool.length<2) distPool.push(unseenPool[distPool.length]||CATEGORIES[cat].words[distPool.length]);
+    const opts=shuffle([correct,...distPool.slice(0,2)]);
+
+    const block=document.createElement('div');
+    block.className='recall-cat';
+    const head=document.createElement('div');
+    head.className=`recall-cat-head ${catData.rch}`;
+    head.textContent=`${catData.icon} ${catData.label}`;
+    const optWrap=document.createElement('div');
+    optWrap.className='recall-options'; optWrap.id='ro-'+cat;
+
+    opts.forEach(w=>{
+      const d=document.createElement('div');
+      d.className='ropt'; d.textContent=w; d.dataset.word=w;
+      d.addEventListener('click',()=>recallAnswer(cat,w,correct,optWrap));
+      optWrap.appendChild(d);
+    });
+    block.appendChild(head); block.appendChild(optWrap);
+    grid.appendChild(block);
+  });
+}
+
+function recallAnswer(cat, chosen, correct, optWrap) {
+  const opts=optWrap.querySelectorAll('.ropt');
+  opts.forEach(o=>{
+    o.classList.add('ro-locked');
+    if(o.dataset.word===correct) o.classList.add('ro-correct');
+  });
+  const hit=chosen===correct;
+  if(!hit) {
+    opts.forEach(o=>{ if(o.dataset.word===chosen) o.classList.add('ro-wrong'); });
+  }
+
+  recallAnswered++;
+  if(hit) recallCorrect++;
+  totalAnswered++;
+  if(hit) totalCorrect++;
+
+  roundResults.push({cat,correct:hit});
+  const hdrAcc=document.getElementById('hdr-acc');
+  if(hdrAcc) hdrAcc.textContent=Math.round(totalCorrect/totalAnswered*100)+'%';
+  const rem=document.getElementById('recall-remaining');
+  if(rem) rem.textContent=Math.max(0,4-recallAnswered);
+
+  if(recallAnswered===CAT_KEYS.length) {
+    const isLastRound=roundIdx>=totalRounds-1;
+    const hint=document.getElementById('recall-hint');
+    const btn=document.getElementById('next-round-btn');
+    if(hint) hint.textContent=isLastRound ? '¡Sesión completada!' : `Ronda ${roundIdx+1} de ${totalRounds} completada`;
+    if(btn) { btn.textContent=isLastRound ? 'Ver resultados →' : 'Siguiente ronda →'; btn.style.display=''; }
+  }
+}
+
+function nextRound() {
+  roundIdx++;
+  if(roundIdx>=totalRounds) { endSession(); return; }
+  document.getElementById('g-fill').style.background='var(--amber)';
+  startRound();
+}
+
+function abortGame() { clearTimeout(streamTimer); setStage(0); }
+
+// ─────────────────────────────
+// Results
+// ─────────────────────────────
+function endSession() {
+  clearTimeout(streamTimer);
+  const acc=totalAnswered>0?Math.round(totalCorrect/totalAnswered*100):0;
+
+  // Per-category breakdown
+  const catAcc={};
+  CAT_KEYS.forEach(cat=>{
+    const rr=roundResults.filter(r=>r.cat===cat);
+    catAcc[cat]=rr.length>0?Math.round(rr.filter(r=>r.correct).length/rr.length*100):0;
+  });
+
+  let insight;
+  if(acc>=85) insight=`<strong>Actualización excelente.</strong> Tu memoria de trabajo actualiza información con alta eficacia. Prueba el nivel Difícil (16 palabras) o añade una ronda extra en la próxima sesión.`;
+  else if(acc>=65) insight=`<strong>Progreso sólido.</strong> La actualización mejora con práctica diaria. Mantén la dificultad actual durante 3–4 sesiones antes de avanzar.`;
+  else insight=`<strong>En construcción.</strong> La actualización por categorías mejora rápidamente con práctica. Intenta con 8 palabras si la sesión se siente abrumadora — el proceso de descarte es la habilidad que entrenas.`;
+
+  document.getElementById('res-body').innerHTML=`
+    <div class="res-top">
+      <div class="res-box"><div class="rv">${acc}%</div><div class="rl">Precisión global</div></div>
+      <div class="res-box"><div class="rv">${totalCorrect}/${totalAnswered}</div><div class="rl">Respuestas correctas</div></div>
+    </div>
+    <div class="res-grid">
+      ${CAT_KEYS.map(cat=>`<div class="rg"><div class="rv" style="color:${catAcc[cat]>=67?'var(--teal)':'var(--coral)'}">${catAcc[cat]}%</div><div class="rl">${CATEGORIES[cat].icon} ${CATEGORIES[cat].label}</div></div>`).join('')}
+    </div>
+    <div class="insight">${insight}</div>
+    <div class="res-btns">
+      <button class="btn btn-ghost" onclick="setStage(0)">← Cambiar dificultad</button>
+      <button class="btn btn-teal" onclick="startGame()">Repetir sesión →</button>
+    </div>
+  `;
+  setStage(2);
+}
+
+// ─────────────────────────────
+// Utils
+// ─────────────────────────────
+function shuffle(a){return [...a].sort(()=>Math.random()-0.5);}
+
+setStage(0);
+</script>
+</body>
+</html>

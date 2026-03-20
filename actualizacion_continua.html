@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EntrenaMente — Actualización Continua</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root {
+  --bg: #0F0F1A;
+  --bg2: #171724;
+  --card: #1E1E30;
+  --card2: #252538;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.13);
+  --text: #E4E2F0;
+  --text2: #9896B0;
+  --text3: #555368;
+  --teal: #00D4C8;
+  --teal-d: rgba(0,212,200,0.12);
+  --teal-b: rgba(0,212,200,0.25);
+  --amber: #FFB627;
+  --amber-d: rgba(255,182,39,0.12);
+  --coral: #FF5E5B;
+  --coral-d: rgba(255,94,91,0.12);
+  --purple: #A78BFA;
+  --purple-d: rgba(167,139,250,0.12);
+  --green: #34D399;
+  --green-d: rgba(52,211,153,0.12);
+  --r: 14px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg); color: var(--text);
+  min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+  padding-bottom: 60px;
+}
+
+header {
+  width: 100%; background: var(--bg2);
+  border-bottom: 1px solid var(--border2);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 24px;
+}
+.logo { font-size: 14px; font-weight: 700; color: var(--text); letter-spacing: 0.03em; }
+.logo em { color: var(--amber); font-style: normal; }
+.ex-tag {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;
+  color: var(--teal); background: var(--teal-d);
+  border: 1px solid var(--teal-b); padding: 3px 11px; border-radius: 20px;
+}
+.hstats { display: flex; gap: 16px; }
+.hstat { font-size: 12px; color: var(--text3); display: flex; gap: 5px; align-items: center; }
+.hstat b { color: var(--amber); }
+
+main { width: 100%; max-width: 680px; padding: 22px 16px 0; display: flex; flex-direction: column; gap: 16px; }
+
+/* Progress dots */
+.sdots { display: flex; gap: 5px; }
+.sdot { flex: 1; height: 3px; border-radius: 2px; background: var(--card2); transition: background 0.3s; }
+.sdot.done { background: var(--teal); }
+.sdot.active { background: var(--amber); }
+
+/* Cards */
+.card { background: var(--card); border-radius: var(--r); border: 1px solid var(--border2); overflow: hidden; display: none; }
+.card.show { display: block; }
+
+.chead { padding: 15px 20px 13px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.ctitle { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+.csub { font-size: 12px; color: var(--text2); line-height: 1.55; max-width: 360px; }
+.cpills { display: flex; gap: 6px; margin-top: 7px; flex-wrap: wrap; }
+.pill { font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; padding: 2px 8px; border-radius: 20px; }
+.pt { background: var(--teal-d); color: var(--teal); border: 1px solid var(--teal-b); }
+.pa { background: var(--amber-d); color: var(--amber); border: 1px solid rgba(255,182,39,0.25); }
+.pp { background: var(--purple-d); color: var(--purple); border: 1px solid rgba(167,139,250,0.25); }
+
+.clive { text-align: right; flex-shrink: 0; }
+.clive .cv { font-size: 22px; font-weight: 700; color: var(--teal); line-height: 1; font-variant-numeric: tabular-nums; }
+.clive .cl { font-size: 10px; color: var(--text3); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 2px; }
+
+.prog-bar { height: 2px; background: var(--card2); }
+.prog-fill { height: 100%; transition: width 0.3s ease, background 0.3s; }
+
+/* Buttons */
+.btn { font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600; padding: 9px 18px; border-radius: 10px; border: none; cursor: pointer; transition: all 0.15s; }
+.btn-teal { background: var(--teal); color: var(--bg); }
+.btn-teal:hover { opacity: 0.88; }
+.btn-ghost { background: transparent; color: var(--text2); border: 1px solid var(--border2); }
+.btn-ghost:hover { border-color: var(--border2); color: var(--text); }
+.btn-amber { background: var(--amber); color: var(--bg); }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+
+.cfooter { padding: 11px 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+/* ══════════════════
+   MODE SELECTOR
+   ══════════════════ */
+.mode-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+.mcard {
+  padding: 14px 10px; border-radius: 12px; border: 1px solid var(--border2);
+  background: var(--card2); cursor: pointer; text-align: center; transition: all 0.18s;
+}
+.mcard:hover { border-color: var(--purple); }
+.mcard.msel { border-color: var(--teal); background: var(--teal-d); }
+.mcard .mico { font-size: 24px; display: block; margin-bottom: 6px; }
+.mcard .mname { font-size: 12px; font-weight: 600; color: var(--text); }
+.mcard .mdesc { font-size: 10px; color: var(--text3); margin-top: 3px; line-height: 1.4; }
+.mcard.msel .mname { color: var(--teal); }
+
+/* n-back level badges */
+.n-selector { display: flex; gap: 8px; justify-content: center; padding: 12px 20px 0; }
+.nbadge {
+  width: 44px; height: 36px; border-radius: 9px; border: 1px solid var(--border2);
+  background: var(--card2); cursor: pointer; text-align: center;
+  font-size: 14px; font-weight: 700; color: var(--text2); transition: all 0.15s;
+  display: flex; align-items: center; justify-content: center;
+}
+.nbadge:hover { border-color: var(--amber); color: var(--amber); }
+.nbadge.nsel { border-color: var(--amber); background: var(--amber-d); color: var(--amber); }
+
+/* ══════════════════
+   GAME ARENA
+   ══════════════════ */
+.arena {
+  padding: 20px 24px;
+  display: flex; flex-direction: column; align-items: center; gap: 18px;
+}
+
+/* Visual grid (3×3) */
+.vis-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 8px; width: 220px;
+}
+.cell {
+  width: 64px; height: 64px; border-radius: 10px;
+  border: 1px solid var(--border2); background: var(--card2);
+  transition: background 0.1s, border-color 0.1s;
+}
+.cell.lit {
+  background: var(--teal);
+  border-color: var(--teal);
+  box-shadow: 0 0 16px rgba(0,212,200,0.35);
+}
+.cell.match-flash {
+  background: var(--green);
+  border-color: var(--green);
+  box-shadow: 0 0 16px rgba(52,211,153,0.4);
+}
+.cell.miss-flash {
+  background: var(--coral);
+  border-color: var(--coral);
+}
+
+/* Letter stream */
+.letter-display {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 48px; font-weight: 600;
+  color: var(--amber); letter-spacing: 0.05em;
+  min-height: 68px; display: flex; align-items: center; justify-content: center;
+  min-width: 80px;
+  transition: opacity 0.08s;
+}
+.letter-display.flash-in { opacity: 1; }
+.letter-display.flash-out { opacity: 0; }
+
+/* Dual layout */
+.dual-layout { display: flex; align-items: center; gap: 28px; }
+.dual-sep { width: 1px; height: 100px; background: var(--border2); }
+
+/* Response buttons */
+.response-row { display: flex; gap: 12px; justify-content: center; }
+.resp-btn {
+  padding: 13px 28px; border-radius: 12px; border: 1.5px solid var(--border2);
+  background: var(--card2); cursor: pointer; font-family: 'Outfit', sans-serif;
+  font-size: 14px; font-weight: 600; color: var(--text2); transition: all 0.14s;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+}
+.resp-btn:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-d); }
+.resp-btn.pressed-correct { border-color: var(--green); background: var(--green-d); color: var(--green); }
+.resp-btn.pressed-wrong { border-color: var(--coral); background: var(--coral-d); color: var(--coral); }
+.resp-btn .rkey { font-size: 10px; opacity: 0.5; font-family: 'JetBrains Mono', monospace; }
+.resp-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+/* Streak / feedback */
+.streak-row { display: flex; gap: 6px; justify-content: center; }
+.streak-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border2); transition: background 0.2s; }
+.streak-dot.hit { background: var(--green); }
+.streak-dot.miss { background: var(--coral); }
+.streak-dot.no-target { background: var(--border2); opacity: 0.3; }
+
+/* Timer ring */
+.timer-wrap { position: relative; width: 48px; height: 48px; }
+.timer-svg { transform: rotate(-90deg); }
+.timer-ring { fill: none; stroke: var(--card2); stroke-width: 3; }
+.timer-prog { fill: none; stroke: var(--teal); stroke-width: 3; stroke-linecap: round; transition: stroke-dashoffset 0.1s linear; }
+.timer-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 13px; font-weight: 700; color: var(--teal); font-variant-numeric: tabular-nums; }
+
+/* N-back indicator */
+.n-indicator {
+  font-size: 11px; font-weight: 700; color: var(--amber);
+  background: var(--amber-d); border: 1px solid rgba(255,182,39,0.2);
+  padding: 3px 10px; border-radius: 20px; letter-spacing: 0.05em;
+}
+
+/* ══════════════════
+   RESULTS
+   ══════════════════ */
+.res-body { padding: 22px 20px; display: flex; flex-direction: column; gap: 14px; }
+.res-top { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.res-box { background: var(--card2); border: 1px solid var(--border); border-radius: 12px; padding: 14px 12px; text-align: center; }
+.res-box .rv { font-size: 38px; font-weight: 300; color: var(--teal); line-height: 1; }
+.res-box .rl { font-size: 10px; color: var(--text3); letter-spacing: 0.05em; text-transform: uppercase; margin-top: 4px; }
+.res-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+.rg { background: var(--card2); border: 1px solid var(--border); border-radius: 10px; padding: 10px 8px; text-align: center; }
+.rg .rv { font-size: 17px; font-weight: 700; }
+.rg .rl { font-size: 10px; color: var(--text3); letter-spacing: 0.05em; text-transform: uppercase; margin-top: 2px; }
+.insight { padding: 13px 15px; border-radius: 10px; background: var(--purple-d); border: 1px solid rgba(167,139,250,0.2); font-size: 13px; color: var(--text2); line-height: 1.65; }
+.insight strong { color: var(--purple); }
+.res-btns { display: flex; gap: 10px; justify-content: center; }
+
+/* Sci note */
+.sci { background: var(--card); border: 1px solid var(--border2); border-radius: var(--r); padding: 15px 19px; font-size: 12px; color: var(--text2); line-height: 1.7; }
+.sci-hd { font-size: 10px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--text3); margin-bottom: 7px; }
+
+/* ══════════════════
+   TUTORIAL
+   ══════════════════ */
+.tut-step { display: none; flex-direction: column; gap: 0; }
+.tut-step.show { display: flex; }
+.tut-head {
+  padding: 12px 20px; font-size: 11px; font-weight: 700;
+  letter-spacing: 0.07em; text-transform: uppercase; color: var(--amber);
+  background: var(--amber-d); border-bottom: 1px solid var(--border);
+}
+.tut-body {
+  padding: 18px 20px; display: flex; flex-direction: column; gap: 12px;
+  font-size: 13px; color: var(--text2); line-height: 1.65;
+}
+.tut-body p { color: var(--text2); }
+.tut-body strong { color: var(--text); }
+.tut-rule {
+  background: var(--teal-d); border: 1px solid var(--teal-b);
+  border-radius: 10px; padding: 12px 14px;
+  font-size: 13px; color: var(--text2); line-height: 1.6;
+}
+.tut-rule strong { color: var(--teal); }
+.n-highlight { color: var(--amber); font-weight: 700; font-size: 15px; }
+.tut-footer {
+  padding: 12px 20px; border-top: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+
+/* Tutorial example sequence */
+.tut-example { background: var(--card2); border-radius: 10px; padding: 14px 12px; border: 1px solid var(--border); }
+.tut-ex-label { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text3); margin-bottom: 12px; text-align: center; }
+.tut-seq { display: flex; gap: 8px; justify-content: center; align-items: flex-end; }
+.tseq-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.tseq-cell {
+  width: 42px; height: 42px; border-radius: 8px;
+  border: 1px solid var(--border2); background: var(--card);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: var(--text3);
+}
+.tseq-cell.lit { background: var(--teal-d); border-color: var(--teal); color: var(--teal); }
+.tseq-cell.match { background: var(--green-d); border-color: var(--green); color: var(--green); }
+.tseq-num { font-size: 11px; font-weight: 600; color: var(--text3); }
+.tseq-arrow { font-size: 10px; color: var(--amber); font-weight: 700; white-space: nowrap; }
+
+/* Timing diagram */
+.tut-timing {
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; padding: 14px; background: var(--card2); border-radius: 10px; border: 1px solid var(--border);
+}
+.tt-phase { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.tt-dot {
+  width: 36px; height: 36px; border-radius: 8px;
+  border: 1px solid var(--border2); background: var(--card);
+}
+.tt-dot.lit-demo { background: var(--teal); border-color: var(--teal); box-shadow: 0 0 10px rgba(0,212,200,0.3); }
+.tt-dot.resp-demo { background: var(--amber-d); border-color: var(--amber); }
+.tt-label { font-size: 11px; color: var(--text2); text-align: center; line-height: 1.4; }
+.tt-label span { color: var(--text3); font-size: 10px; }
+.tt-arrow { font-size: 18px; color: var(--text3); }
+
+/* Response feedback indicator */
+.resp-feedback {
+  display: flex; gap: 10px; justify-content: center; align-items: center;
+  min-height: 32px;
+}
+.rf-pill {
+  padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 700;
+  letter-spacing: 0.04em; opacity: 0; transition: opacity 0.15s;
+  pointer-events: none;
+}
+.rf-pill.show { opacity: 1; }
+.rf-correct { background: var(--green-d); color: var(--green); border: 1px solid rgba(52,211,153,0.3); }
+.rf-wrong { background: var(--coral-d); color: var(--coral); border: 1px solid rgba(255,94,91,0.3); }
+.rf-wait { background: var(--card2); color: var(--text3); border: 1px solid var(--border); }
+
+@keyframes pop { 0%{transform:scale(1)} 50%{transform:scale(1.08)} 100%{transform:scale(1)} }
+.pop { animation: pop 0.18s ease; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Entrena<em>Mente</em></div>
+  <div class="ex-tag">Actualización Continua</div>
+  <div class="hstats">
+    <div class="hstat">Nivel <b id="hdr-n">2-back</b></div>
+    <div class="hstat">Precisión <b id="hdr-acc">–</b></div>
+  </div>
+</header>
+
+<main>
+
+  <div class="sdots">
+    <div class="sdot active" id="sd0"></div>
+    <div class="sdot" id="sd1"></div>
+    <div class="sdot" id="sd2"></div>
+  </div>
+
+  <!-- ═══════════════════════
+       STAGE 0: Setup + Tutorial
+       ═══════════════════════ -->
+  <div class="card show" id="s0">
+    <div class="chead">
+      <div>
+        <div class="ctitle">Actualización Continua</div>
+        <div class="csub">Entrena tu memoria de trabajo: compara lo que ves <em>ahora</em> con lo que viste hace N pasos.</div>
+      </div>
+      <div class="clive"><div class="cv" id="s0-n">2</div><div class="cl">n-back</div></div>
+    </div>
+
+    <!-- Tutorial steps -->
+    <div id="tut-wrap">
+
+      <!-- Step 1: What is n-back -->
+      <div class="tut-step show" id="tut-1">
+        <div class="tut-head">Paso 1 de 3 — ¿Cómo funciona?</div>
+        <div class="tut-body">
+          <p>Verás una secuencia de estímulos — uno cada vez. Tu tarea es simple:</p>
+          <div class="tut-rule">
+            Pulsa <strong>¡Coincide!</strong> cuando el estímulo actual sea <strong>igual</strong> al que apareció <span class="n-highlight" id="tut-n-label">2</span> pasos antes.
+          </div>
+          <p>Si no coincide, simplemente <strong>no hagas nada</strong> — espera el siguiente.</p>
+          <div class="tut-example">
+            <div class="tut-ex-label">Ejemplo con 2-back:</div>
+            <div class="tut-seq" id="tut-seq-1">
+              <div class="tseq-item">
+                <div class="tseq-cell lit">◼</div>
+                <div class="tseq-num">1</div>
+              </div>
+              <div class="tseq-item">
+                <div class="tseq-cell">◻</div>
+                <div class="tseq-num">2</div>
+              </div>
+              <div class="tseq-item">
+                <div class="tseq-cell match">◼</div>
+                <div class="tseq-num">3 ✓</div>
+                <div class="tseq-arrow">↑ igual al 1</div>
+              </div>
+              <div class="tseq-item">
+                <div class="tseq-cell">◻</div>
+                <div class="tseq-num">4</div>
+              </div>
+              <div class="tseq-item">
+                <div class="tseq-cell">◼</div>
+                <div class="tseq-num">5</div>
+              </div>
+            </div>
+            <div style="font-size:12px;color:var(--text3);margin-top:8px;text-align:center">En el turno 3, el bloque coincide con el del turno 1 (2 pasos atrás) → pulsas ¡Coincide!</div>
+          </div>
+        </div>
+        <div class="tut-footer">
+          <div></div>
+          <button class="btn btn-teal" onclick="tutStep(2)">Entendido →</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Timing -->
+      <div class="tut-step" id="tut-2">
+        <div class="tut-head">Paso 2 de 3 — El ritmo</div>
+        <div class="tut-body">
+          <p>Cada estímulo aparece por <strong>medio segundo</strong>, luego desaparece. Tienes <strong>1.5 segundos</strong> para responder antes de que llegue el siguiente.</p>
+          <div class="tut-timing">
+            <div class="tt-phase" id="tt-stim">
+              <div class="tt-dot lit-demo"></div>
+              <div class="tt-label">Estímulo<br><span>500ms</span></div>
+            </div>
+            <div class="tt-arrow">→</div>
+            <div class="tt-phase" id="tt-resp">
+              <div class="tt-dot resp-demo"></div>
+              <div class="tt-label">Responde<br><span>1500ms</span></div>
+            </div>
+            <div class="tt-arrow">→</div>
+            <div class="tt-phase">
+              <div class="tt-dot"></div>
+              <div class="tt-label">Siguiente<br><span>…</span></div>
+            </div>
+          </div>
+          <div class="tut-rule">
+            Decide <strong>en el momento en que aparece</strong> el estímulo — no esperes. Si coincide con N pasos atrás, pulsa inmediatamente.
+          </div>
+          <p style="margin-top:8px">Los primeros <span class="n-highlight" id="tut-n-first">2</span> turnos son siempre de observación — aún no hay nada que comparar.</p>
+        </div>
+        <div class="tut-footer">
+          <button class="btn btn-ghost" onclick="tutStep(1)">← Atrás</button>
+          <button class="btn btn-teal" onclick="tutStep(3)">Siguiente →</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Mode + level select -->
+      <div class="tut-step" id="tut-3">
+        <div class="tut-head">Paso 3 de 3 — Elige tu modo y nivel</div>
+        <div class="tut-body" style="gap:14px">
+          <div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--text3);margin-bottom:10px">Modo</div>
+            <div class="mode-grid" id="mode-grid">
+              <div class="mcard msel" data-mode="visual" onclick="selectMode(this,'visual')">
+                <span class="mico">◼</span>
+                <div class="mname">Visual</div>
+                <div class="mdesc">Un bloque se ilumina en la cuadrícula. ¿Misma posición que N pasos atrás?</div>
+              </div>
+              <div class="mcard" data-mode="letter" onclick="selectMode(this,'letter')">
+                <span class="mico">A</span>
+                <div class="mname">Letras</div>
+                <div class="mdesc">Aparece una letra. ¿Misma letra que N pasos atrás?</div>
+              </div>
+              <div class="mcard" data-mode="dual" onclick="selectMode(this,'dual')">
+                <span class="mico">◼A</span>
+                <div class="mname">Dual</div>
+                <div class="mdesc">Posición <em>y</em> letra al mismo tiempo. Responde a cada uno por separado.</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--text3);margin-bottom:8px">Nivel — ¿cuántos pasos atrás comparas?</div>
+            <div class="n-selector">
+              <div class="nbadge" onclick="selectN(1)">1</div>
+              <div class="nbadge nsel" onclick="selectN(2)">2</div>
+              <div class="nbadge" onclick="selectN(3)">3</div>
+              <div class="nbadge" onclick="selectN(4)">4</div>
+            </div>
+            <div style="font-size:11px;color:var(--text3);text-align:center;margin-top:8px;line-height:1.5" id="n-desc">
+              2-back: comparas con 2 pasos atrás. Nivel estándar recomendado.
+            </div>
+          </div>
+        </div>
+        <div class="tut-footer">
+          <button class="btn btn-ghost" onclick="tutStep(2)">← Atrás</button>
+          <button class="btn btn-teal" onclick="startGame()">▶ Comenzar — 20 turnos</button>
+        </div>
+      </div>
+
+    </div><!-- /tut-wrap -->
+  </div>
+
+  <!-- ═══════════════════════
+       STAGE 1: Game
+       ═══════════════════════ -->
+  <div class="card" id="s1">
+    <div class="chead">
+      <div>
+        <div class="ctitle" id="g-title">2-back Visual</div>
+        <div class="csub">Pulsa <strong>¡Coincide!</strong> si lo que ves ahora es igual a lo que apareció hace <span id="g-n-label">2</span> pasos. Si no coincide, no hagas nada.</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span class="n-indicator" id="g-n-badge">2-back</span>
+        <div class="clive"><div class="cv" id="g-trial">1/20</div><div class="cl">turno</div></div>
+      </div>
+    </div>
+    <div class="prog-bar"><div class="prog-fill" id="g-fill" style="width:0%;background:var(--teal)"></div></div>
+
+    <div class="arena" id="arena"></div>
+
+    <!-- Response feedback — confirms tap without touching stimulus -->
+    <div class="resp-feedback">
+      <div class="rf-pill rf-correct" id="rf-correct">✓ Registrado</div>
+      <div class="rf-pill rf-wrong" id="rf-wrong">✗ Falsa alarma</div>
+      <div class="rf-pill rf-wait" id="rf-wait">Observa…</div>
+    </div>
+
+    <div style="padding:2px 20px 8px">
+      <div class="streak-row" id="streak-row"></div>
+    </div>
+
+    <div class="cfooter">
+      <div style="font-size:12px;color:var(--text3)" id="g-hint">Memoriza los primeros turnos — luego compara</div>
+      <button class="btn btn-ghost btn-sm" onclick="abortGame()">✕ Salir</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════
+       STAGE 2: Results
+       ═══════════════════════ -->
+  <div class="card" id="s2">
+    <div class="chead">
+      <div><div class="ctitle">Resultados</div></div>
+    </div>
+    <div class="res-body" id="res-body"></div>
+  </div>
+
+  <div class="sci">
+    <div class="sci-hd">⚗ Por qué el n-back actualiza la memoria de trabajo</div>
+    El n-back exige <em>codificación continua, monitoreo y actualización</em> — los tres procesos del componente ejecutivo de la memoria de trabajo. A diferencia de las tareas de amplitud (Memoria Activa), que entrenan el <em>mantenimiento</em> bajo interferencia, el n-back entrena la capacidad de <em>descartar</em> lo obsoleto y priorizar lo nuevo. El modo dual amplifica el efecto al requerir actualización simultánea en dos modalidades. Una reciente revisión en Nature Human Behaviour (2023) con 460 participantes en tres RCTs mostró que la mejora en n-back no entrenado media la transferencia a razonamiento matricial — el indicador más limpio de inteligencia fluida.
+  </div>
+
+</main>
+
+<script>
+// ─────────────────────────────────────────
+// Config & State
+// ─────────────────────────────────────────
+const LETTERS = 'BCDFGHJKLMNPRSTV'; // consonants only — less confusable
+const GRID_SIZE = 9;
+const TOTAL_TRIALS = 20;
+const STIM_MS = 500;   // stimulus visible duration
+const ISI_MS = 1500;   // inter-stimulus interval (stimulus off + response window)
+const TARGET_PROB = 0.33; // ~1/3 trials are targets
+
+let mode = 'visual';  // 'visual' | 'letter' | 'dual'
+let nLevel = 2;
+let trialIdx = 0;
+let history = [];      // {pos, letter} for each trial
+let responses = [];    // {isTarget, responded, correct} for each trial
+let gameTimer = null;
+let phase = 'stimulus'; // 'stimulus' | 'response'
+let stimulusActive = false;
+let currentPos = -1;
+let currentLetter = '';
+let hits = 0, misses = 0, falseAlarms = 0, correctRejections = 0;
+let respLocked = false;
+
+const N_DESCS = {
+  1: '1-back: compara con el turno inmediatamente anterior. Ideal para comenzar.',
+  2: '2-back: compara con 2 turnos atrás — nivel de entrenamiento estándar recomendado por la investigación.',
+  3: '3-back: muy exigente. Recomendado después de dominar el 2-back durante varias sesiones.',
+  4: '4-back: nivel de experto. Solo para usuarios con rendimiento alto sostenido en 3-back.',
+};
+
+// ─────────────────────────────────────────
+// Stage nav
+// ─────────────────────────────────────────
+function setStage(n) {
+  ['s0','s1','s2'].forEach((id,i)=>document.getElementById(id).classList.toggle('show',i===n));
+  ['sd0','sd1','sd2'].forEach((id,i)=>{
+    const d=document.getElementById(id);
+    d.classList.remove('active','done');
+    if(i<n) d.classList.add('done'); else if(i===n) d.classList.add('active');
+  });
+}
+
+// ─────────────────────────────────────────
+// Tutorial step nav
+// ─────────────────────────────────────────
+function tutStep(n) {
+  document.querySelectorAll('.tut-step').forEach(el=>el.classList.remove('show'));
+  const step=document.getElementById('tut-'+n);
+  if(step) step.classList.add('show');
+  // Keep n-label in sync
+  document.querySelectorAll('.tut-n-label, #tut-n-label, #tut-n-first').forEach(el=>{
+    if(el) el.textContent=nLevel;
+  });
+}
+
+// ─────────────────────────────────────────
+// Response feedback pills
+// ─────────────────────────────────────────
+let fbTimer=null;
+function showFeedback(type) {
+  ['rf-correct','rf-wrong','rf-wait'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.classList.remove('show');
+  });
+  clearTimeout(fbTimer);
+  const el=document.getElementById('rf-'+type);
+  if(el) {
+    el.classList.add('show');
+    fbTimer=setTimeout(()=>el.classList.remove('show'), 700);
+  }
+}
+function showWaiting() {
+  ['rf-correct','rf-wrong'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.classList.remove('show');
+  });
+  const w=document.getElementById('rf-wait');
+  if(w) w.classList.add('show');
+}
+function hideAllFeedback() {
+  ['rf-correct','rf-wrong','rf-wait'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.classList.remove('show');
+  });
+}
+function selectMode(el, m) {
+  mode=m;
+  document.querySelectorAll('.mcard').forEach(c=>c.classList.remove('msel'));
+  el.classList.add('msel');
+}
+
+function selectN(n) {
+  nLevel=n;
+  document.querySelectorAll('.nbadge').forEach((b,i)=>b.classList.toggle('nsel',i===n-1));
+  document.getElementById('s0-n').textContent=n;
+  const descs={1:'1-back: comparas con el paso inmediatamente anterior. Ideal para empezar.',2:'2-back: comparas con 2 pasos atrás. Nivel estándar recomendado.',3:'3-back: muy exigente. Solo después de dominar el 2-back.',4:'4-back: nivel experto. Solo con rendimiento alto sostenido en 3-back.'};
+  const desc=document.getElementById('n-desc');
+  if(desc) desc.textContent=descs[n]||'';
+  // Sync tutorial n-labels
+  ['tut-n-label','tut-n-first'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=n;});
+}
+
+// ─────────────────────────────────────────
+// Build arena UI
+// ─────────────────────────────────────────
+function buildArena() {
+  const arena = document.getElementById('arena');
+  arena.innerHTML='';
+
+  if(mode==='visual') {
+    arena.appendChild(makeGrid());
+    arena.appendChild(makeResponseRow(['¡Coincide!'], ['pos']));
+  } else if(mode==='letter') {
+    arena.appendChild(makeLetterDisplay());
+    arena.appendChild(makeResponseRow(['¡Coincide!'], ['let']));
+  } else {
+    // Dual: grid left + letter right
+    const wrap=document.createElement('div');
+    wrap.className='dual-layout';
+    wrap.appendChild(makeGrid());
+    const sep=document.createElement('div'); sep.className='dual-sep';
+    wrap.appendChild(sep);
+    wrap.appendChild(makeLetterDisplay());
+    arena.appendChild(wrap);
+    arena.appendChild(makeResponseRow(['Posición', 'Letra'], ['pos','let']));
+  }
+
+  // Streak dots
+  const row=document.getElementById('streak-row');
+  row.innerHTML='';
+  for(let i=0;i<TOTAL_TRIALS-nLevel;i++){
+    const d=document.createElement('div'); d.className='streak-dot'; d.id='sd-trial-'+i;
+    row.appendChild(d);
+  }
+}
+
+function makeGrid() {
+  const g=document.createElement('div'); g.className='vis-grid';
+  for(let i=0;i<GRID_SIZE;i++){
+    const c=document.createElement('div'); c.className='cell'; c.id='cell-'+i;
+    g.appendChild(c);
+  }
+  return g;
+}
+
+function makeLetterDisplay() {
+  const d=document.createElement('div'); d.className='letter-display flash-in'; d.id='letter-disp';
+  d.textContent='·';
+  return d;
+}
+
+function makeResponseRow(labels, types) {
+  const row=document.createElement('div'); row.className='response-row';
+  labels.forEach((lbl,i)=>{
+    const b=document.createElement('button');
+    b.className='resp-btn'; b.id='resp-'+types[i];
+    b.innerHTML=`${lbl}<span class="rkey">${types[i]==='pos'?'← A':'→ L'}</span>`;
+    b.addEventListener('click',()=>respond(types[i]));
+    row.appendChild(b);
+  });
+  return row;
+}
+
+// ─────────────────────────────────────────
+// Game logic
+// ─────────────────────────────────────────
+function startGame() {
+  trialIdx=0; history=[]; responses=[];
+  hits=0; misses=0; falseAlarms=0; correctRejections=0;
+  respLocked=false;
+
+  document.getElementById('g-title').textContent=nLevel+'-back '+{visual:'Visual',letter:'Letras',dual:'Dual'}[mode];
+  document.getElementById('g-n-label').textContent=nLevel;
+  document.getElementById('g-n-badge').textContent=nLevel+'-back';
+  document.getElementById('hdr-n').textContent=nLevel+'-back';
+  document.getElementById('g-fill').style.width='0%';
+  document.getElementById('g-trial').textContent='1/'+TOTAL_TRIALS;
+
+  buildArena();
+  setStage(1);
+  // Brief countdown before first stimulus
+  document.getElementById('g-hint').textContent='Preparando…';
+  setTimeout(runTrial, 800);
+}
+
+function runTrial() {
+  if(trialIdx >= TOTAL_TRIALS) { endGame(); return; }
+
+  document.getElementById('g-trial').textContent=(trialIdx+1)+'/'+TOTAL_TRIALS;
+  document.getElementById('g-fill').style.width=((trialIdx)/TOTAL_TRIALS*100)+'%';
+  respLocked=false;
+  showWaiting();
+
+  // Generate stimulus
+  const isTarget = trialIdx >= nLevel && Math.random() < TARGET_PROB;
+  let pos, letter;
+
+  if(isTarget) {
+    const ref=history[trialIdx-nLevel];
+    pos=(mode==='visual'||mode==='dual') ? ref.pos : Math.floor(Math.random()*GRID_SIZE);
+    letter=(mode==='letter'||mode==='dual') ? ref.letter : LETTERS[Math.floor(Math.random()*LETTERS.length)];
+  } else {
+    // Generate non-matching stimulus
+    let attempts=0;
+    do {
+      pos=Math.floor(Math.random()*GRID_SIZE);
+      letter=LETTERS[Math.floor(Math.random()*LETTERS.length)];
+      attempts++;
+      if(attempts>20) break;
+    } while(
+      trialIdx>=nLevel && (
+        (mode!=='letter' && pos===history[trialIdx-nLevel].pos) ||
+        (mode!=='visual' && letter===history[trialIdx-nLevel].letter)
+      )
+    );
+  }
+
+  history.push({pos, letter});
+  currentPos=pos; currentLetter=letter;
+
+  // Determine actual target status per modality
+  let posTarget=false, letTarget=false;
+  if(trialIdx>=nLevel) {
+    const ref=history[trialIdx-nLevel];
+    posTarget=(mode!=='letter') && pos===ref.pos;
+    letTarget=(mode!=='visual') && letter===ref.letter;
+  }
+  const anyTarget = posTarget||letTarget;
+  responses.push({posTarget, letTarget, anyTarget, posResponded:false, letResponded:false});
+
+  // Show stimulus
+  showStimulus(pos, letter);
+
+  // Hide after STIM_MS
+  gameTimer=setTimeout(()=>{
+    hideStimulus();
+    // Response window
+    document.getElementById('g-hint').textContent = trialIdx>=nLevel
+      ? (anyTarget ? '¡Hay coincidencia! — responde' : 'Sin coincidencia — espera')
+      : 'Observa y memoriza…';
+    gameTimer=setTimeout(()=>{
+      // Score any non-response
+      scoreNoResponse(trialIdx);
+      trialIdx++;
+      runTrial();
+    }, ISI_MS);
+  }, STIM_MS);
+}
+
+function showStimulus(pos, letter) {
+  if(mode==='visual'||mode==='dual') {
+    const cell=document.getElementById('cell-'+pos);
+    if(cell) cell.classList.add('lit');
+  }
+  if(mode==='letter'||mode==='dual') {
+    const ld=document.getElementById('letter-disp');
+    if(ld) { ld.textContent=letter; ld.className='letter-display flash-in'; }
+  }
+}
+
+function hideStimulus() {
+  document.querySelectorAll('.cell.lit').forEach(c=>c.classList.remove('lit'));
+  const ld=document.getElementById('letter-disp');
+  if(ld) { ld.className='letter-display flash-out'; setTimeout(()=>{ if(ld) ld.textContent='·'; ld&&(ld.className='letter-display flash-in'); },100); }
+}
+
+function respond(type) {
+  if(respLocked) return;
+  if(trialIdx>=TOTAL_TRIALS) return;
+  const r=responses[trialIdx];
+  if(!r) return;
+
+  const isTarget = type==='pos' ? r.posTarget : r.letTarget;
+  const btn=document.getElementById('resp-'+type);
+
+  if(isTarget) {
+    hits++;
+    if(type==='pos') r.posResponded=true; else r.letResponded=true;
+    if(btn) { btn.classList.add('pressed-correct'); setTimeout(()=>btn.classList.remove('pressed-correct'),400); }
+    showFeedback('correct');
+    // Flash cell green briefly
+    const cell=document.getElementById('cell-'+currentPos);
+    if(cell&&(mode==='visual'||mode==='dual')) { cell.classList.remove('lit'); cell.classList.add('match-flash'); setTimeout(()=>cell.classList.remove('match-flash'),400); }
+    updateStreak(trialIdx-nLevel, 'hit');
+    if(mode!=='dual') {
+      respLocked=true;
+      clearTimeout(gameTimer);
+      setTimeout(()=>{ hideAllFeedback(); trialIdx++; runTrial(); },400);
+    }
+  } else {
+    falseAlarms++;
+    if(btn) { btn.classList.add('pressed-wrong'); setTimeout(()=>btn.classList.remove('pressed-wrong'),400); }
+    showFeedback('wrong');
+    const cell=document.getElementById('cell-'+currentPos);
+    if(cell&&(mode==='visual'||mode==='dual')) { cell.classList.add('miss-flash'); setTimeout(()=>cell.classList.remove('miss-flash'),300); }
+    updateStreak(trialIdx-nLevel, 'miss');
+  }
+  document.getElementById('hdr-acc').textContent=calcAcc()+'%';
+}
+
+function scoreNoResponse(idx) {
+  if(idx<nLevel) return;
+  const r=responses[idx];
+  if(!r) return;
+  if(r.posTarget && !r.posResponded) { misses++; updateStreak(idx-nLevel,'miss'); }
+  if(r.letTarget && !r.letResponded) { misses++; }
+  if(!r.anyTarget) { correctRejections++; updateStreak(idx-nLevel,'cr'); }
+  document.getElementById('hdr-acc').textContent=calcAcc()+'%';
+}
+
+function calcAcc() {
+  const total=hits+misses+falseAlarms+correctRejections;
+  return total>0?Math.round((hits+correctRejections)/total*100):0;
+}
+
+function updateStreak(idx, type) {
+  const dot=document.getElementById('sd-trial-'+idx);
+  if(!dot) return;
+  if(type==='hit') dot.className='streak-dot hit';
+  else if(type==='miss') dot.className='streak-dot miss';
+  else dot.className='streak-dot no-target';
+}
+
+function abortGame() {
+  clearTimeout(gameTimer);
+  hideStimulus();
+  setStage(0);
+}
+
+// ─────────────────────────────────────────
+// End game
+// ─────────────────────────────────────────
+function endGame() {
+  clearTimeout(gameTimer);
+  hideStimulus();
+
+  const acc=calcAcc();
+  const dprime = hits>0||misses>0 ? (hits/(hits+misses||1) - falseAlarms/(falseAlarms+correctRejections||1)).toFixed(2) : '–';
+  document.getElementById('hdr-acc').textContent=acc+'%';
+
+  // Recommend next n-level
+  let nextN=nLevel, recommendation='';
+  if(acc>=85 && nLevel<4) {
+    nextN=nLevel+1;
+    recommendation=`<strong>Rendimiento excelente.</strong> La próxima sesión avanzará a <strong>${nextN}-back</strong>. El aumento de nivel es la señal más clara de mejora real en actualización de memoria de trabajo.`;
+  } else if(acc>=70) {
+    recommendation=`<strong>Progreso sólido.</strong> Mantén el nivel ${nLevel}-back durante 2–3 sesiones más para consolidar antes de avanzar.`;
+  } else if(acc<55 && nLevel>1) {
+    nextN=nLevel-1;
+    recommendation=`<strong>Ajuste de nivel.</strong> La próxima sesión comenzará en <strong>${nextN}-back</strong>. El entrenamiento solo es efectivo justo en el límite de tu capacidad — un nivel por debajo es más productivo que fallar constantemente.`;
+  } else {
+    recommendation=`<strong>En desarrollo.</strong> El n-back se vuelve más intuitivo con la práctica diaria. Mantén el nivel actual.`;
+  }
+
+  document.getElementById('res-body').innerHTML=`
+    <div class="res-top">
+      <div class="res-box"><div class="rv">${acc}%</div><div class="rl">Precisión global</div></div>
+      <div class="res-box"><div class="rv">${nLevel}-back</div><div class="rl">Nivel completado</div></div>
+    </div>
+    <div class="res-grid">
+      <div class="rg"><div class="rv" style="color:var(--green)">${hits}</div><div class="rl">Aciertos</div></div>
+      <div class="rg"><div class="rv" style="color:var(--coral)">${misses}</div><div class="rl">Omisiones</div></div>
+      <div class="rg"><div class="rv" style="color:var(--amber)">${falseAlarms}</div><div class="rl">Falsas alarmas</div></div>
+    </div>
+    <div class="insight">${recommendation}</div>
+    <div class="res-btns">
+      <button class="btn btn-ghost" onclick="resetToSetup()">← Cambiar modo</button>
+      <button class="btn btn-teal" onclick="startGame()">Repetir sesión →</button>
+    </div>
+  `;
+  setStage(2);
+}
+
+function resetToSetup() { setStage(0); }
+
+// Keyboard support
+document.addEventListener('keydown', e=>{
+  if(e.code==='KeyA') respond('pos');
+  if(e.code==='KeyL') respond('let');
+});
+
+setStage(0);
+</script>
+</body>
+</html>

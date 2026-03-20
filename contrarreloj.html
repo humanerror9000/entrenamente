@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EntrenaMente — Contrarreloj</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap');
+
+:root {
+  --bg: #F9F7F3;
+  --bg2: #F0EDE6;
+  --card: #FFFFFF;
+  --card2: #F5F3EE;
+  --ink: #1E1C1A;
+  --ink2: #52504C;
+  --muted: #999690;
+  --border: rgba(30,28,26,0.08);
+  --border2: rgba(30,28,26,0.13);
+  --teal: #0D7377;
+  --teal-l: #D0F5F2;
+  --teal-m: rgba(13,115,119,0.10);
+  --amber: #C17D0E;
+  --amber-l: #FEF3C7;
+  --amber-m: rgba(193,125,14,0.10);
+  --coral: #B91C1C;
+  --coral-l: #FEE2E2;
+  --coral-m: rgba(185,28,28,0.08);
+  --purple: #5B21B6;
+  --purple-l: #EDE9FE;
+  --purple-m: rgba(91,33,182,0.09);
+  --green: #065F46;
+  --green-l: #D1FAE5;
+  --green-m: rgba(6,95,70,0.08);
+  --r: 14px;
+  --sh: 0 1px 4px rgba(30,28,26,0.06), 0 6px 20px rgba(30,28,26,0.05);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Instrument Sans', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center;
+  padding-bottom: 60px;
+}
+
+header {
+  width: 100%; background: var(--ink);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 26px;
+}
+.logo { font-size: 14px; font-weight: 700; color: #fff; letter-spacing: 0.03em; }
+.logo em { color: #F5C842; font-style: normal; }
+.ex-tag {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;
+  color: var(--teal-l); background: rgba(13,115,119,0.3);
+  border: 1px solid rgba(13,115,119,0.5); padding: 3px 11px; border-radius: 20px;
+}
+.hstats { display: flex; gap: 14px; }
+.hstat { font-size: 12px; color: rgba(255,255,255,0.45); display: flex; gap: 5px; align-items: center; }
+.hstat b { color: #F5C842; font-size: 13px; }
+
+main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-direction: column; gap: 18px; }
+
+/* Stage progress */
+.stage-dots { display: flex; gap: 5px; }
+.sdot { flex: 1; height: 4px; border-radius: 2px; background: var(--bg2); transition: background 0.35s; }
+.sdot.done { background: var(--teal); }
+.sdot.active { background: var(--amber); }
+
+/* Card shell */
+.card {
+  background: var(--card); border-radius: var(--r);
+  border: 1.5px solid var(--border2); box-shadow: var(--sh);
+  overflow: hidden; display: none;
+}
+.card.show { display: block; }
+
+.chead {
+  padding: 16px 22px 14px; border-bottom: 1.5px solid var(--border);
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;
+}
+.ctitle { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+.csub { font-size: 12px; color: var(--ink2); line-height: 1.55; max-width: 380px; }
+.cpills { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+.pill { font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; padding: 2px 8px; border-radius: 20px; }
+.pt { background: var(--teal-l); color: var(--teal); }
+.pa { background: var(--amber-l); color: var(--amber); }
+.pp { background: var(--purple-l); color: var(--purple); }
+.pc { background: var(--coral-l); color: var(--coral); }
+
+.clive { text-align: right; flex-shrink: 0; }
+.clive .cv { font-size: 24px; font-weight: 700; color: var(--teal); font-variant-numeric: tabular-nums; line-height: 1; }
+.clive .cl { font-size: 10px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 2px; }
+
+.prog-bar { height: 3px; background: var(--bg2); }
+.prog-fill { height: 100%; transition: width 0.4s ease, background 0.3s; }
+
+/* Buttons */
+.btn {
+  font-family: 'Instrument Sans', sans-serif; font-size: 13px; font-weight: 600;
+  padding: 9px 18px; border-radius: 10px; border: none; cursor: pointer;
+  letter-spacing: 0.02em; transition: all 0.15s;
+}
+.btn-ink { background: var(--ink); color: #fff; }
+.btn-ink:hover { background: var(--purple); }
+.btn-teal { background: var(--teal); color: #fff; }
+.btn-teal:hover { opacity: 0.88; }
+.btn-ghost { background: transparent; color: var(--ink2); border: 1.5px solid var(--border2); }
+.btn-ghost:hover { border-color: var(--ink); color: var(--ink); }
+.btn-sm { padding: 7px 13px; font-size: 12px; }
+
+.cfooter {
+  padding: 12px 22px; border-top: 1.5px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+
+/* ════════════════
+   STAGE 0: Calibration
+   ════════════════ */
+.calib-intro { padding: 22px 24px; }
+.calib-intro p { font-size: 14px; color: var(--ink2); line-height: 1.7; margin-bottom: 14px; }
+.calib-intro strong { color: var(--ink); }
+
+.calib-text-area {
+  padding: 22px 28px 18px;
+  background: var(--card2);
+  border-top: 1.5px solid var(--border);
+  border-bottom: 1.5px solid var(--border);
+}
+.calib-sentence {
+  font-family: 'Lora', serif;
+  font-size: 17px; line-height: 1.85; color: var(--ink);
+  margin-bottom: 10px;
+}
+.calib-q { font-size: 13px; color: var(--ink2); margin-bottom: 10px; line-height: 1.5; }
+.calib-q strong { color: var(--ink); }
+.calib-opts { display: flex; flex-direction: column; gap: 7px; }
+.copt {
+  padding: 10px 14px; border-radius: 9px;
+  border: 1.5px solid var(--border2); background: var(--card);
+  font-size: 13px; color: var(--ink2); cursor: pointer; transition: all 0.13s;
+  font-family: 'Instrument Sans', sans-serif;
+}
+.copt:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-m); }
+.copt.c-correct { border-color: var(--teal); background: var(--teal-m); color: var(--teal); pointer-events: none; }
+.copt.c-wrong { border-color: var(--coral); background: var(--coral-m); color: var(--coral); pointer-events: none; }
+.copt.c-locked { pointer-events: none; opacity: 0.45; }
+
+/* ════════════════
+   STAGE 1: Reading + fading
+   ════════════════ */
+.reading-area {
+  padding: 26px 32px 22px;
+  min-height: 220px;
+  position: relative;
+}
+
+.sentence-display {
+  font-family: 'Lora', serif;
+  font-size: 18px; line-height: 2.0; color: var(--ink);
+  min-height: 52px; position: relative;
+}
+
+/* Fading overlay — left-to-right masking */
+.fade-overlay {
+  position: absolute; top: 0; left: 0;
+  height: 100%; width: 0%;
+  background: var(--card);
+  transition: none;
+  pointer-events: none;
+}
+
+/* Word-level fading */
+.word-span {
+  display: inline;
+  transition: opacity 0.15s;
+}
+.word-span.faded { opacity: 0; }
+
+.sentence-meta {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 12px;
+}
+.sent-counter { font-size: 12px; color: var(--muted); letter-spacing: 0.04em; }
+.rate-badge {
+  font-size: 11px; font-weight: 700; color: var(--teal);
+  background: var(--teal-m); border: 1px solid rgba(13,115,119,0.2);
+  padding: 3px 9px; border-radius: 20px;
+}
+
+/* Mode tabs */
+.mode-row { display: flex; gap: 7px; padding: 14px 22px 0; }
+.mtab {
+  flex: 1; padding: 8px; border-radius: 9px;
+  border: 1.5px solid var(--border2); background: var(--card2);
+  font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--muted); cursor: pointer; text-align: center; transition: all 0.15s;
+}
+.mtab:hover { border-color: var(--amber); color: var(--amber); }
+.mtab.mactive { background: var(--amber-m); border-color: var(--amber); color: var(--amber); }
+
+/* ════════════════
+   STAGE 2: Comprehension Q
+   ════════════════ */
+.q-area { padding: 20px 24px; display: flex; flex-direction: column; gap: 12px; }
+.q-label { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.q-text { font-size: 15px; line-height: 1.55; color: var(--ink); }
+.q-opts { display: flex; flex-direction: column; gap: 7px; }
+.qopt {
+  padding: 11px 15px; border-radius: 9px;
+  border: 1.5px solid var(--border2); background: var(--card2);
+  font-size: 14px; font-family: 'Instrument Sans', sans-serif;
+  color: var(--ink2); cursor: pointer; transition: all 0.13s;
+}
+.qopt:hover { border-color: var(--purple); color: var(--purple); background: var(--purple-m); }
+.qopt.q-correct { border-color: var(--teal); background: var(--teal-m); color: var(--teal); pointer-events: none; }
+.qopt.q-wrong { border-color: var(--coral); background: var(--coral-m); color: var(--coral); pointer-events: none; }
+.qopt.q-locked { pointer-events: none; opacity: 0.4; }
+
+.q-fb { display: none; padding: 11px 14px; border-radius: 9px; font-size: 13px; line-height: 1.6; margin-top: 4px; }
+.q-fb.show { display: block; }
+.q-fb.good { background: var(--teal-m); border: 1px solid rgba(13,115,119,0.2); color: var(--teal); }
+.q-fb.bad { background: var(--coral-m); border: 1px solid rgba(185,28,28,0.2); color: var(--coral); }
+
+/* ════════════════
+   STAGE 3: Results
+   ════════════════ */
+.results-inner { padding: 28px 24px; display: flex; flex-direction: column; gap: 16px; }
+.res-top { display: flex; gap: 12px; }
+.res-big {
+  flex: 1; background: var(--card2); border: 1.5px solid var(--border); border-radius: 12px;
+  padding: 16px 14px; text-align: center;
+}
+.res-big .rv { font-size: 38px; font-weight: 300; color: var(--teal); line-height: 1; }
+.res-big .rl { font-size: 11px; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; margin-top: 4px; }
+.res-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.rg {
+  background: var(--card2); border: 1.5px solid var(--border); border-radius: 11px;
+  padding: 12px 10px; text-align: center;
+}
+.rg .rv { font-size: 20px; font-weight: 700; color: var(--ink); }
+.rg .rl { font-size: 10px; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; margin-top: 2px; }
+
+.insight {
+  padding: 14px 16px; border-radius: 11px;
+  background: var(--purple-m); border: 1.5px solid rgba(91,33,182,0.15);
+  font-size: 13px; color: var(--ink2); line-height: 1.65;
+}
+.insight strong { color: var(--purple); }
+.res-btns { display: flex; gap: 10px; justify-content: center; }
+
+/* Adaptation indicator */
+.adapt-banner {
+  display: none; padding: 8px 16px; margin: 0 22px 12px;
+  border-radius: 9px; font-size: 12px; font-weight: 600; text-align: center;
+}
+.adapt-banner.faster { background: var(--teal-m); color: var(--teal); border: 1px solid rgba(13,115,119,0.2); display: block; }
+.adapt-banner.slower { background: var(--coral-m); color: var(--coral); border: 1px solid rgba(185,28,28,0.2); display: block; }
+.adapt-banner.hold { background: var(--amber-m); color: var(--amber); border: 1px solid rgba(193,125,14,0.2); display: block; }
+
+/* Science note */
+.sci {
+  background: var(--card); border: 1.5px solid var(--border2); border-radius: var(--r);
+  padding: 16px 20px; font-size: 12px; color: var(--ink2); line-height: 1.7;
+  box-shadow: var(--sh);
+}
+.sci-hd { font-size: 10px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Entrena<em>Mente</em></div>
+  <div class="ex-tag">Contrarreloj</div>
+  <div class="hstats">
+    <div class="hstat">Tasa base <b id="hdr-rate">–</b></div>
+    <div class="hstat">Comprensión <b id="hdr-comp">–</b></div>
+  </div>
+</header>
+
+<main>
+
+  <div class="stage-dots">
+    <div class="sdot active" id="sd0"></div>
+    <div class="sdot" id="sd1"></div>
+    <div class="sdot" id="sd2"></div>
+    <div class="sdot" id="sd3"></div>
+  </div>
+
+  <!-- ═══════════════════════
+       STAGE 0: Calibration
+       ═══════════════════════ -->
+  <div class="card show" id="stage-0">
+    <div class="chead">
+      <div>
+        <div class="ctitle">Calibración — establece tu tasa base</div>
+        <div class="csub">Lee cada oración a tu ritmo natural. Pulsa la tecla de espacio (o el botón) al terminar. Esto establece el tiempo de exposición inicial para el entrenamiento.</div>
+        <div class="cpills">
+          <span class="pill pt">RAP protocol</span>
+          <span class="pill pa">12 oraciones</span>
+          <span class="pill pp">Tasa individual</span>
+        </div>
+      </div>
+      <div class="clive"><div class="cv" id="calib-prog">0/12</div><div class="cl">oraciones</div></div>
+    </div>
+    <div class="prog-bar"><div class="prog-fill" id="calib-fill" style="width:0%;background:var(--teal)"></div></div>
+
+    <div class="calib-text-area" id="calib-area">
+      <div class="calib-sentence" id="calib-sent"></div>
+      <div id="calib-q-wrap" style="display:none">
+        <div class="calib-q" id="calib-q"></div>
+        <div class="calib-opts" id="calib-opts"></div>
+      </div>
+    </div>
+
+    <div class="adapt-banner" id="calib-fb-banner"></div>
+
+    <div class="cfooter">
+      <div style="font-size:12px;color:var(--muted)">Lee a tu ritmo natural — no es una prueba de velocidad</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost btn-sm" id="calib-space-btn" onclick="calibNext()" style="display:none">Listo →</button>
+        <button class="btn btn-teal" id="calib-start-btn" onclick="startCalib()">▶ Comenzar calibración</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════
+       STAGE 1: Training
+       ═══════════════════════ -->
+  <div class="card" id="stage-1">
+    <div class="chead">
+      <div>
+        <div class="ctitle">Lectura con desvanecimiento</div>
+        <div class="csub">Lee cada oración antes de que desaparezca. La velocidad se adapta según tu comprensión.</div>
+        <div class="cpills">
+          <span class="pill pt">Texto adaptativo</span>
+          <span class="pill pa" id="mode-pill">Modo: izquierda→derecha</span>
+        </div>
+      </div>
+      <div class="clive"><div class="cv" id="train-prog">0/15</div><div class="cl">oraciones</div></div>
+    </div>
+    <div class="prog-bar"><div class="prog-fill" id="train-fill" style="width:0%;background:var(--amber)"></div></div>
+
+    <!-- Fading mode selector -->
+    <div class="mode-row">
+      <div class="mtab mactive" id="m0" onclick="setFadeMode(0)">← Izq. → Der.</div>
+      <div class="mtab" id="m1" onclick="setFadeMode(1)">Palabras</div>
+      <div class="mtab" id="m2" onclick="setFadeMode(2)">Párrafo completo</div>
+    </div>
+
+    <div class="reading-area" id="reading-area">
+      <div class="sentence-display" id="sent-display">
+        <span id="sent-text"></span>
+        <div class="fade-overlay" id="fade-overlay"></div>
+      </div>
+      <div class="sentence-meta">
+        <span class="sent-counter" id="sent-counter">Oración 1 de 15</span>
+        <span class="rate-badge" id="rate-badge">– ms/car.</span>
+      </div>
+    </div>
+
+    <div class="adapt-banner" id="adapt-banner"></div>
+
+    <div class="cfooter">
+      <div style="font-size:12px;color:var(--muted)">Lee con atención — habrá preguntas de comprensión</div>
+      <button class="btn btn-ghost btn-sm" onclick="pauseTraining()" id="pause-btn">⏸ Pausa</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════
+       STAGE 2: Comprehension
+       ═══════════════════════ -->
+  <div class="card" id="stage-2">
+    <div class="chead">
+      <div>
+        <div class="ctitle">Comprensión inferencial</div>
+        <div class="csub">Responde sin volver a leer. Tu puntuación ajusta la velocidad de la siguiente sesión.</div>
+        <div class="cpills">
+          <span class="pill pt">Puerta de comprensión</span>
+          <span class="pill pp">Adaptación RAP</span>
+        </div>
+      </div>
+      <div class="clive"><div class="cv" id="q-score">–</div><div class="cl">aciertos</div></div>
+    </div>
+    <div class="prog-bar"><div class="prog-fill" id="q-fill" style="width:0%;background:var(--teal)"></div></div>
+    <div class="q-area" id="q-area"></div>
+    <div class="cfooter">
+      <div style="font-size:12px;color:var(--muted)" id="q-footer-note">Responde todas las preguntas para ver tus resultados</div>
+      <button class="btn btn-ink" id="q-next-btn" onclick="showResults()" style="display:none">Ver resultados →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════
+       STAGE 3: Results
+       ═══════════════════════ -->
+  <div class="card" id="stage-3">
+    <div class="chead">
+      <div><div class="ctitle">Resultados de sesión</div></div>
+    </div>
+    <div class="results-inner" id="results-inner"></div>
+  </div>
+
+  <!-- Science note -->
+  <div class="sci">
+    <div class="sci-hd">⚗ Cómo funciona la adaptación RAP</div>
+    El Programa de Aceleración Lectora (Breznitz, University of Haifa) calibra individualmente la tasa de borrado en ms/carácter. La tasa se <strong>aumenta 2 ms/car.</strong> si se acierta en 9 de cada 10 oraciones consecutivas, se <strong>mantiene</strong> si se acierta entre 8–9, y se <strong>reduce 2 ms/car.</strong> si hay más de 2 errores en 10. Este ajuste se hace hasta 5 veces por sesión. Los estudios muestran mejoras de fluidez y comprensión en 24 sesiones, con efectos de transferencia a la lectura sin restricción de tiempo.
+  </div>
+
+</main>
+
+<script>
+// ──────────────────────────────────────────
+// Content — Spanish sentences for calibration and training
+// ──────────────────────────────────────────
+const CALIB_ITEMS = [
+  { s: "La inteligencia artificial está transformando la forma en que procesamos información a diario.", q: "¿Qué está transformando la inteligencia artificial?", opts: ["La educación universitaria", "El procesamiento cotidiano de información", "Los sistemas de transporte", "La industria farmacéutica"], correct: 1 },
+  { s: "Las ciudades costeras enfrentan retos crecientes debido al aumento del nivel del mar.", q: "¿Qué desafío enfrentan las ciudades costeras?", opts: ["La escasez de agua potable", "La contaminación del aire", "El aumento del nivel del mar", "La pérdida de biodiversidad"], correct: 2 },
+  { s: "La lectura profunda requiere atención sostenida y capacidad para conectar ideas entre sí.", q: "¿Qué requiere la lectura profunda además de atención?", opts: ["Velocidad elevada", "Conectar ideas entre sí", "Memorizar párrafos enteros", "Leer en voz alta"], correct: 1 },
+  { s: "El cambio climático afecta patrones migratorios de aves en toda América Latina.", q: "¿Qué fenómeno afecta los patrones migratorios de aves?", opts: ["La deforestación urbana", "La contaminación lumínica", "El cambio climático", "La caza ilegal"], correct: 2 },
+  { s: "Las neurociencias han demostrado que el sueño consolida los recuerdos del día anterior.", q: "¿Qué consolida el sueño según las neurociencias?", opts: ["La memoria procedimental", "Los recuerdos del día anterior", "Las habilidades motoras", "El aprendizaje lingüístico"], correct: 1 },
+  { s: "El comercio electrónico ha redefinido las expectativas de los consumidores en cuanto a velocidad.", q: "¿Qué ha redefinido el comercio electrónico?", opts: ["Los métodos de pago", "Las expectativas sobre velocidad", "Los precios de los productos", "La calidad del servicio"], correct: 1 },
+  { s: "Una dieta rica en vegetales reduce el riesgo de enfermedades cardiovasculares de forma significativa.", q: "¿Qué efecto tiene una dieta rica en vegetales?", opts: ["Mejora el rendimiento atlético", "Reduce el riesgo cardiovascular", "Aumenta la energía matutina", "Fortalece el sistema óseo"], correct: 1 },
+  { s: "La biodiversidad marina es esencial para mantener el equilibrio de los ecosistemas globales.", q: "¿Para qué es esencial la biodiversidad marina?", opts: ["Para la pesca sostenible", "Para el equilibrio de ecosistemas globales", "Para el turismo costero", "Para la producción de oxígeno"], correct: 1 },
+  { s: "El aprendizaje de idiomas fortalece las conexiones entre distintas regiones del cerebro.", q: "¿Qué fortalece el aprendizaje de idiomas?", opts: ["La memoria visual", "Las conexiones cerebrales entre regiones", "La velocidad de procesamiento", "La capacidad auditiva"], correct: 1 },
+  { s: "Los bosques tropicales generan más del veinte por ciento del oxígeno atmosférico mundial.", q: "¿Cuánto oxígeno generan los bosques tropicales?", opts: ["El diez por ciento", "El cuarenta por ciento", "Más del veinte por ciento", "El cincuenta por ciento"], correct: 2 },
+  { s: "La meditación regular reduce los niveles de cortisol y mejora la regulación emocional.", q: "¿Qué reduce la meditación regular?", opts: ["Los niveles de adrenalina", "Los niveles de cortisol", "La presión arterial", "Los niveles de glucosa"], correct: 1 },
+  { s: "El pensamiento crítico permite evaluar argumentos con mayor objetividad y precisión.", q: "¿Qué permite el pensamiento crítico?", opts: ["Generar ideas originales", "Evaluar argumentos con objetividad", "Memorizar información con eficiencia", "Comunicarse de forma persuasiva"], correct: 1 },
+];
+
+const TRAIN_ITEMS = [
+  { s: "La economía circular propone que los residuos de un proceso se conviertan en recursos de otro.", q: "¿Qué propone la economía circular?", opts: ["Reducir la producción industrial", "Convertir residuos en recursos de otro proceso", "Eliminar el uso de plásticos", "Regular el comercio internacional"], correct: 1 },
+  { s: "Los arrecifes de coral albergan casi un tercio de todas las especies marinas conocidas.", q: "¿Qué proporción de especies marinas albergan los arrecifes?", opts: ["La mitad", "Un cuarto", "Casi un tercio", "Dos tercios"], correct: 2 },
+  { s: "La memoria de trabajo es el sistema cognitivo que permite manipular información de forma activa.", q: "¿Qué permite la memoria de trabajo?", opts: ["Almacenar recuerdos a largo plazo", "Manipular información activamente", "Procesar estímulos visuales", "Coordinar el movimiento"], correct: 1 },
+  { s: "El sueño profundo elimina proteínas tóxicas del cerebro a través del sistema glinfático.", q: "¿Cómo elimina el cerebro proteínas tóxicas durante el sueño?", opts: ["A través del sistema linfático", "Por medio del sistema glinfático", "Mediante el flujo sanguíneo cerebral", "A través de la barrera hematoencefálica"], correct: 1 },
+  { s: "El entrenamiento físico aeróbico aumenta el volumen del hipocampo en adultos mayores.", q: "¿Qué estructura cerebral crece con el ejercicio aeróbico?", opts: ["La corteza prefrontal", "El hipocampo", "La amígdala", "El cerebelo"], correct: 1 },
+  { s: "La lectura en pantalla tiende a producir una lectura más superficial que la lectura en papel.", q: "¿Qué produce la lectura en pantalla comparada con el papel?", opts: ["Mayor comprensión inferencial", "Lectura más superficial", "Mejor retención de vocabulario", "Mayor velocidad de procesamiento"], correct: 1 },
+  { s: "Los idiomas con escritura transparente como el español permiten la decodificación más rápida.", q: "¿Qué permite la escritura transparente del español?", opts: ["Mayor expresividad", "Decodificación más rápida", "Vocabulario más amplio", "Mejor comprensión oral"], correct: 1 },
+  { s: "La práctica distribuida en el tiempo es más efectiva que el estudio masivo para la retención.", q: "¿Qué tipo de práctica es más efectiva para retener?", opts: ["El estudio intensivo de pocas horas", "La práctica distribuida en el tiempo", "La repetición oral del material", "El estudio en grupo colaborativo"], correct: 1 },
+  { s: "El efecto de generación implica que producir información activa la memoria mejor que recibirla.", q: "¿Qué mejora la memoria según el efecto de generación?", opts: ["Recibir información de fuentes externas", "Producir información activamente", "Repetir en voz alta el contenido", "Leer el mismo texto varias veces"], correct: 1 },
+  { s: "Los manglares protegen las costas de los efectos devastadores de huracanes y tsunamis.", q: "¿De qué protegen los manglares a las costas?", opts: ["De la erosión por mareas", "De huracanes y tsunamis", "De la contaminación del agua", "De la invasión de especies foráneas"], correct: 1 },
+  { s: "La cognición distribuida sugiere que el pensamiento se extiende más allá del cerebro individual.", q: "¿Qué sugiere la cognición distribuida?", opts: ["Que la inteligencia es innata", "Que el pensamiento supera al cerebro individual", "Que la memoria es colectiva", "Que aprendemos mejor en grupos"], correct: 1 },
+  { s: "La atención plena incrementa la densidad de materia gris en regiones del lóbulo parietal.", q: "¿Qué efecto tiene la atención plena sobre el lóbulo parietal?", opts: ["Reduce la actividad neuronal", "Incrementa la densidad de materia gris", "Mejora la conectividad hemisférica", "Activa las neuronas espejo"], correct: 1 },
+  { s: "La variabilidad interindividual en la velocidad lectora puede alcanzar un factor de diez entre lectores.", q: "¿Cuánto puede variar la velocidad lectora entre individuos?", opts: ["Un factor de dos", "Un factor de cinco", "Un factor de diez", "Un factor de veinte"], correct: 2 },
+  { s: "Las metáforas conceptuales estructuran gran parte de nuestro pensamiento abstracto cotidiano.", q: "¿Qué estructuran las metáforas conceptuales?", opts: ["El lenguaje poético", "El pensamiento abstracto cotidiano", "La comprensión literal de textos", "Las habilidades matemáticas"], correct: 1 },
+  { s: "El dominio de una segunda lengua retrasa la aparición de síntomas de deterioro cognitivo.", q: "¿Qué efecto tiene el dominio de una segunda lengua?", opts: ["Mejora el rendimiento en matemáticas", "Retrasa el deterioro cognitivo", "Aumenta la velocidad de procesamiento visual", "Mejora la memoria episódica"], correct: 1 },
+];
+
+// ──────────────────────────────────────────
+// State
+// ──────────────────────────────────────────
+let calibIdx = 0, calibTimes = [], calibStart = 0, calibCorrect = 0;
+let baseRateMs = 0; // ms per character — the calibration result
+let currentRate = 0; // live training rate (ms per character)
+
+let trainIdx = 0, trainCorrect = 0, trainWindow = []; // last 10 results
+let fadeMode = 0; // 0=left-right overlay, 1=word fade, 2=full paragraph
+let fadeTimer = null, paused = false;
+
+let qAnswered = 0, qCorrect = 0;
+const TRAIN_COUNT = 15;
+const CALIB_COUNT = 12;
+// Adaptation thresholds (RAP protocol)
+const ADAPT_WINDOW = 10;
+const ADAPT_UP_THRESHOLD = 9;   // ≥9/10 correct → increase rate (faster = shorter time per char)
+const ADAPT_DOWN_THRESHOLD = 7; // <8/10 correct → decrease rate (slower)
+const ADAPT_STEP_MS = 2;        // ms per character per adaptation
+
+// ──────────────────────────────────────────
+// Stage navigation
+// ──────────────────────────────────────────
+function setStage(n) {
+  [0,1,2,3].forEach(i => {
+    document.getElementById('stage-'+i).classList.toggle('show', i===n);
+    const dot = document.getElementById('sd'+i);
+    dot.classList.remove('active','done');
+    if(i<n) dot.classList.add('done');
+    else if(i===n) dot.classList.add('active');
+  });
+}
+
+// ──────────────────────────────────────────
+// STAGE 0: Calibration
+// ──────────────────────────────────────────
+function startCalib() {
+  calibIdx=0; calibTimes=[]; calibCorrect=0;
+  document.getElementById('calib-start-btn').style.display='none';
+  document.getElementById('calib-space-btn').style.display='';
+  showCalibItem();
+  // Spacebar support
+  document.addEventListener('keydown', spaceHandler);
+}
+
+function spaceHandler(e) {
+  if(e.code==='Space') { e.preventDefault(); calibNext(); }
+}
+
+function showCalibItem() {
+  const item = CALIB_ITEMS[calibIdx];
+  document.getElementById('calib-sent').textContent = item.s;
+  document.getElementById('calib-q-wrap').style.display='none';
+  document.getElementById('calib-opts').innerHTML='';
+  document.getElementById('calib-prog').textContent = (calibIdx+1)+'/'+CALIB_COUNT;
+  document.getElementById('calib-fill').style.width = (calibIdx/CALIB_COUNT*100)+'%';
+  document.getElementById('calib-space-btn').textContent = 'Listo →';
+  document.getElementById('calib-space-btn').onclick = calibNext;
+  calibStart = performance.now();
+}
+
+function calibNext() {
+  const elapsed = performance.now() - calibStart;
+  const item = CALIB_ITEMS[calibIdx];
+  const charCount = item.s.length;
+  const msPerChar = elapsed / charCount;
+  // Show question
+  document.getElementById('calib-space-btn').style.display='none';
+  document.getElementById('calib-q-wrap').style.display='';
+  document.getElementById('calib-q').innerHTML='<strong>'+item.q+'</strong>';
+  const opts = document.getElementById('calib-opts');
+  opts.innerHTML='';
+  item.opts.forEach((o,i) => {
+    const b = document.createElement('div');
+    b.className='copt'; b.textContent=o;
+    b.addEventListener('click', ()=>calibAnswer(i, item.correct, msPerChar, charCount));
+    opts.appendChild(b);
+  });
+}
+
+function calibAnswer(chosen, correct, msPerChar, charCount) {
+  const hit = chosen===correct;
+  document.querySelectorAll('.copt').forEach((b,i)=>{
+    b.classList.add('c-locked');
+    if(i===correct) b.classList.add('c-correct');
+  });
+  if(!hit) document.querySelectorAll('.copt')[chosen].classList.add('c-wrong');
+  // Only count correctly answered sentences for base rate (RAP protocol)
+  if(hit) { calibTimes.push(msPerChar); calibCorrect++; }
+
+  calibIdx++;
+  setTimeout(()=>{
+    if(calibIdx >= CALIB_COUNT) finishCalib();
+    else {
+      document.getElementById('calib-space-btn').style.display='';
+      document.getElementById('calib-space-btn').textContent='Siguiente →';
+      document.getElementById('calib-space-btn').onclick=showCalibNextItem;
+      document.getElementById('calib-fill').style.width=(calibIdx/CALIB_COUNT*100)+'%';
+    }
+  }, 800);
+}
+
+function showCalibNextItem() {
+  showCalibItem();
+  document.getElementById('calib-space-btn').textContent='Listo →';
+  document.getElementById('calib-space-btn').onclick=calibNext;
+}
+
+function finishCalib() {
+  document.removeEventListener('keydown', spaceHandler);
+  // Base rate = mean ms/char of correctly answered sentences
+  const mean = calibTimes.length > 0
+    ? calibTimes.reduce((a,b)=>a+b,0)/calibTimes.length
+    : 80; // fallback ~250wpm
+  baseRateMs = Math.round(mean);
+  // RAP starts training at the calibrated rate
+  currentRate = baseRateMs;
+  document.getElementById('hdr-rate').textContent = baseRateMs+'ms/c';
+  document.getElementById('calib-area').innerHTML=`
+    <div style="padding:14px 0;text-align:center">
+      <div style="font-size:28px;font-weight:300;color:var(--teal)">${baseRateMs} ms/car.</div>
+      <div style="font-size:13px;color:var(--muted);margin-top:4px">Tasa base calibrada · ${calibCorrect}/${CALIB_COUNT} correctas</div>
+    </div>`;
+  document.getElementById('calib-space-btn').style.display='none';
+  document.getElementById('calib-start-btn').textContent='▶ Iniciar entrenamiento';
+  document.getElementById('calib-start-btn').style.display='';
+  document.getElementById('calib-start-btn').onclick=startTraining;
+  document.getElementById('calib-fb-banner').className='adapt-banner hold';
+  document.getElementById('calib-fb-banner').textContent='Calibración completada. Tasa inicial: '+baseRateMs+' ms/car. — equivale a ~'+Math.round(60000/baseRateMs/5)+' palabras por minuto.';
+  document.getElementById('calib-fill').style.width='100%';
+}
+
+// ──────────────────────────────────────────
+// STAGE 1: Training
+// ──────────────────────────────────────────
+function setFadeMode(n) {
+  fadeMode=n;
+  [0,1,2].forEach(i=>document.getElementById('m'+i).classList.toggle('mactive',i===n));
+  const labels=['Izq. → Der.','Palabras','Párrafo completo'];
+  document.getElementById('mode-pill').textContent='Modo: '+labels[n];
+}
+
+function startTraining() {
+  trainIdx=0; trainCorrect=0; trainWindow=[]; paused=false;
+  setStage(1);
+  document.addEventListener('keydown', spaceHandler2);
+  runNextSentence();
+}
+
+function spaceHandler2(e) {
+  if(e.code==='Space') { e.preventDefault(); if(!paused) togglePause(); }
+}
+
+function runNextSentence() {
+  if(trainIdx >= TRAIN_COUNT) { endTraining(); return; }
+  clearTimeout(fadeTimer);
+  const item = TRAIN_ITEMS[trainIdx];
+  const text = item.s;
+  const totalMs = text.length * currentRate;
+
+  document.getElementById('train-prog').textContent=(trainIdx+1)+'/'+TRAIN_COUNT;
+  document.getElementById('train-fill').style.width=(trainIdx/TRAIN_COUNT*100)+'%';
+  document.getElementById('rate-badge').textContent=currentRate+' ms/car.';
+  document.getElementById('sent-counter').textContent='Oración '+(trainIdx+1)+' de '+TRAIN_COUNT;
+
+  const sentText = document.getElementById('sent-text');
+  const overlay = document.getElementById('fade-overlay');
+  overlay.style.transition='none';
+  overlay.style.width='0%';
+  sentText.innerHTML='';
+
+  if(fadeMode===0) {
+    // Left-to-right erasure overlay
+    sentText.textContent=text;
+    overlay.style.display='block';
+    // Force reflow then animate
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      overlay.style.transition=`width ${totalMs}ms linear`;
+      overlay.style.width='100%';
+    }));
+    fadeTimer=setTimeout(()=>{ trainIdx++; checkAdapt(); runNextSentence(); }, totalMs+200);
+
+  } else if(fadeMode===1) {
+    // Word-by-word fade
+    overlay.style.display='none';
+    const words=text.split(' ');
+    const msPerWord=totalMs/words.length;
+    sentText.innerHTML=words.map((w,i)=>`<span class="word-span" id="ws${i}">${w} </span>`).join('');
+    let wi=0;
+    function fadeWord(){
+      if(wi<words.length){ document.getElementById('ws'+wi).classList.add('faded'); wi++; fadeTimer=setTimeout(fadeWord,msPerWord); }
+      else { fadeTimer=setTimeout(()=>{ trainIdx++; checkAdapt(); runNextSentence(); },200); }
+    }
+    fadeTimer=setTimeout(fadeWord,msPerWord*0.5);
+
+  } else {
+    // Full paragraph: show, then blank all at once
+    overlay.style.display='none';
+    sentText.textContent=text;
+    fadeTimer=setTimeout(()=>{
+      sentText.style.opacity='0';
+      setTimeout(()=>{
+        sentText.style.opacity='1';
+        trainIdx++; checkAdapt(); runNextSentence();
+      },300);
+    }, totalMs);
+  }
+}
+
+function togglePause() {
+  paused=!paused;
+  document.getElementById('pause-btn').textContent=paused?'▶ Continuar':'⏸ Pausa';
+  if(paused) clearTimeout(fadeTimer);
+  else runNextSentence();
+}
+
+function pauseTraining() { togglePause(); }
+
+// RAP adaptation: every ADAPT_WINDOW sentences, check accuracy and adjust
+function checkAdapt() {
+  // Mark last answer — since we can't verify reading without a q, we proxy via session
+  // For the training phase, adapt after comprehension, not per-sentence
+  // (Full adaptation happens in the comprehension gate)
+}
+
+function endTraining() {
+  document.removeEventListener('keydown', spaceHandler2);
+  clearTimeout(fadeTimer);
+  buildQuestions();
+  setStage(2);
+}
+
+// ──────────────────────────────────────────
+// STAGE 2: Comprehension
+// ──────────────────────────────────────────
+// Pick 5 questions from the 15 training sentences (every 3rd)
+let questionItems = [];
+
+function buildQuestions() {
+  questionItems = [0,3,6,9,12].map(i=>TRAIN_ITEMS[i]);
+  qAnswered=0; qCorrect=0;
+  const area = document.getElementById('q-area');
+  area.innerHTML='';
+  document.getElementById('q-score').textContent='–';
+  document.getElementById('q-fill').style.width='0%';
+  document.getElementById('q-next-btn').style.display='none';
+
+  questionItems.forEach((item,qi)=>{
+    const block = document.createElement('div');
+    block.style.cssText='border-bottom:1.5px solid var(--border);padding-bottom:16px;margin-bottom:4px';
+    block.innerHTML=`
+      <div class="q-label">Pregunta ${qi+1}</div>
+      <div class="q-text" style="margin:6px 0 10px">${item.q}</div>
+      <div class="q-opts" id="qo${qi}">
+        ${item.opts.map((o,oi)=>`<div class="qopt" onclick="answerQ(${qi},${oi},${item.correct})">${o}</div>`).join('')}
+      </div>
+      <div class="q-fb" id="qfb${qi}"></div>
+    `;
+    area.appendChild(block);
+  });
+}
+
+function answerQ(qi, chosen, correct) {
+  const opts = document.querySelectorAll(`#qo${qi} .qopt`);
+  opts.forEach((o,i)=>{
+    o.classList.add('q-locked');
+    if(i===correct) o.classList.add('q-correct');
+  });
+  const hit = chosen===correct;
+  if(!hit) opts[chosen].classList.add('q-wrong');
+  else qCorrect++;
+
+  qAnswered++;
+  const fb = document.getElementById('qfb'+qi);
+  fb.className='q-fb show '+(hit?'good':'bad');
+  fb.textContent = hit
+    ? '✓ Correcto'
+    : 'La opción correcta era: "'+questionItems[qi].opts[correct]+'"';
+
+  document.getElementById('q-score').textContent=qCorrect+'/'+qAnswered;
+  document.getElementById('q-fill').style.width=(qAnswered/questionItems.length*100)+'%';
+  document.getElementById('hdr-comp').textContent=Math.round(qCorrect/qAnswered*100)+'%';
+
+  if(qAnswered===questionItems.length) {
+    document.getElementById('q-next-btn').style.display='';
+    document.getElementById('q-footer-note').textContent='Sesión completa — adaptando tasa para la próxima.';
+    applyRAPAdaptation();
+  }
+}
+
+function applyRAPAdaptation() {
+  const acc = qCorrect/questionItems.length;
+  let delta = 0;
+  // ≥90% correct → increase rate (reduce ms/char → faster)
+  if(acc >= 0.9) delta = -ADAPT_STEP_MS * 2;
+  else if(acc >= 0.8) delta = -ADAPT_STEP_MS;
+  else if(acc >= 0.7) delta = 0; // hold
+  else delta = +ADAPT_STEP_MS * 2; // slow down significantly
+  // Clamp: never go below 30ms/char or above 200ms/char
+  currentRate = Math.max(30, Math.min(200, currentRate + delta));
+  document.getElementById('hdr-rate').textContent=currentRate+'ms/c';
+}
+
+function showResults() {
+  const acc = Math.round(qCorrect/questionItems.length*100);
+  const wpmEquiv = Math.round(60000/currentRate/5);
+  const inner = document.getElementById('results-inner');
+
+  let insight;
+  if(acc>=90) insight=`<strong>Comprensión excelente.</strong> Tu tasa se ha aumentado a ${currentRate} ms/car. (~${wpmEquiv} wpm). Estás en la zona de entrenamiento óptima — la velocidad supera la comodidad pero la comprensión se mantiene alta.`;
+  else if(acc>=70) insight=`<strong>Comprensión sólida.</strong> Tasa mantenida en ${currentRate} ms/car. Consolida este nivel durante 2–3 sesiones más antes de acelerar.`;
+  else insight=`<strong>Comprensión por debajo del umbral.</strong> Tasa reducida a ${currentRate} ms/car. El entrenamiento solo es efectivo cuando la comprensión supera el 70%. Esto es exactamente cómo funciona el protocolo RAP.`;
+
+  inner.innerHTML=`
+    <div class="res-top">
+      <div class="res-big"><div class="rv">${acc}%</div><div class="rl">Comprensión</div></div>
+      <div class="res-big"><div class="rv">${currentRate}</div><div class="rl">ms/car. actual</div></div>
+    </div>
+    <div class="res-grid">
+      <div class="rg"><div class="rv">${Math.round(60000/baseRateMs/5)}</div><div class="rl">wpm base</div></div>
+      <div class="rg"><div class="rv">${wpmEquiv}</div><div class="rl">wpm sesión</div></div>
+      <div class="rg"><div class="rv">${qCorrect}/${questionItems.length}</div><div class="rl">Preguntas correctas</div></div>
+      <div class="rg"><div class="rv">${currentRate>baseRateMs?'↑':'↓'} ${Math.abs(currentRate-baseRateMs)}</div><div class="rl">ms/car. vs. base</div></div>
+    </div>
+    <div class="insight">${insight}</div>
+    <div class="res-btns">
+      <button class="btn btn-ghost" onclick="restartSession()">← Nueva sesión</button>
+      <button class="btn btn-ink" onclick="restartSession()">Siguiente ejercicio →</button>
+    </div>
+  `;
+  setStage(3);
+}
+
+function restartSession() {
+  trainIdx=0; trainCorrect=0; trainWindow=[];
+  setStage(0);
+}
+
+// Init
+setStage(0);
+</script>
+</body>
+</html>
