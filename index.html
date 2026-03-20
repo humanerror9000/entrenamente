@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EntrenaMente — Entrenamiento Cognitivo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0C0C10;
+  --bg2: #13131A;
+  --card: #18181F;
+  --card2: #1E1E28;
+  --border: rgba(255,255,255,0.06);
+  --border2: rgba(255,255,255,0.11);
+  --text: #EAE8F2;
+  --text2: #8E8CA8;
+  --text3: #4A4860;
+  --gold: #C9A84C;
+  --gold-l: rgba(201,168,76,0.12);
+  --gold-b: rgba(201,168,76,0.3);
+  --teal: #2ECFB8;
+  --teal-d: rgba(46,207,184,0.10);
+  --amber: #F5A623;
+  --amber-d: rgba(245,166,35,0.10);
+  --coral: #E05C5C;
+  --coral-d: rgba(224,92,92,0.10);
+  --purple: #9B7FFF;
+  --purple-d: rgba(155,127,255,0.10);
+  --green: #52C98A;
+  --green-d: rgba(82,201,138,0.10);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Grain overlay ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0; opacity: 0.5;
+}
+
+/* ── Header ── */
+header {
+  position: relative; z-index: 10;
+  padding: 48px 40px 0;
+  max-width: 1100px; margin: 0 auto;
+  display: flex; align-items: flex-start; justify-content: space-between;
+  animation: fadeUp 0.8s ease both;
+}
+
+.brand {
+  display: flex; flex-direction: column; gap: 4px;
+}
+.brand-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(36px, 5vw, 54px);
+  font-weight: 300; letter-spacing: -0.02em; color: var(--text);
+  line-height: 1;
+}
+.brand-name em { color: var(--gold); font-style: italic; }
+.brand-tag {
+  font-size: 11px; font-weight: 500; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--text3);
+}
+
+.header-right {
+  text-align: right; padding-top: 8px;
+}
+.version-tag {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--gold);
+  background: var(--gold-l); border: 1px solid var(--gold-b);
+  padding: 4px 12px; border-radius: 20px; display: inline-block;
+}
+.prototype-note {
+  font-size: 11px; color: var(--text3); margin-top: 6px;
+}
+
+/* ── Hero section ── */
+.hero {
+  position: relative; z-index: 10;
+  max-width: 1100px; margin: 0 auto;
+  padding: 40px 40px 0;
+  animation: fadeUp 0.8s ease 0.1s both;
+}
+
+.hero-line {
+  width: 48px; height: 1px; background: var(--gold); margin-bottom: 20px;
+}
+
+.hero-headline {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(22px, 3vw, 32px);
+  font-weight: 300; line-height: 1.4;
+  color: var(--text2); max-width: 580px;
+}
+.hero-headline strong { color: var(--text); font-weight: 400; }
+
+.pillar-count {
+  display: flex; gap: 24px; margin-top: 28px; flex-wrap: wrap;
+}
+.pc {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; color: var(--text3);
+}
+.pc-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+/* ── Divider ── */
+.divider {
+  max-width: 1100px; margin: 36px auto 0;
+  padding: 0 40px;
+  animation: fadeUp 0.8s ease 0.15s both;
+}
+.divider-line {
+  height: 1px; background: linear-gradient(90deg, var(--border2), transparent);
+}
+
+/* ── Section label ── */
+.section-label {
+  max-width: 1100px; margin: 0 auto;
+  padding: 32px 40px 16px;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--text3);
+}
+
+/* ── Pillar sections ── */
+.pillar {
+  max-width: 1100px; margin: 0 auto;
+  padding: 0 40px 40px;
+  animation: fadeUp 0.7s ease both;
+}
+
+.pillar-header {
+  display: flex; align-items: center; gap: 14px; margin-bottom: 16px;
+}
+.pillar-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px; font-weight: 300; color: var(--text3);
+  letter-spacing: 0.06em;
+}
+.pillar-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px; font-weight: 400; color: var(--text);
+  letter-spacing: -0.01em;
+}
+.pillar-dash { flex: 1; height: 1px; background: var(--border); }
+.pillar-badge {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; padding: 2px 9px; border-radius: 20px;
+}
+
+/* Pillar accent colors */
+.p1 .pillar-name { color: var(--teal); }
+.p1 .pillar-badge { background: var(--teal-d); color: var(--teal); border: 1px solid rgba(46,207,184,0.2); }
+.p1 .pc-dot { background: var(--teal); }
+
+.p2 .pillar-name { color: var(--purple); }
+.p2 .pillar-badge { background: var(--purple-d); color: var(--purple); border: 1px solid rgba(155,127,255,0.2); }
+
+.p3 .pillar-name { color: var(--amber); }
+.p3 .pillar-badge { background: var(--amber-d); color: var(--amber); border: 1px solid rgba(245,166,35,0.2); }
+
+.p4 .pillar-name { color: var(--green); }
+.p4 .pillar-badge { background: var(--green-d); color: var(--green); border: 1px solid rgba(82,201,138,0.2); }
+
+.p5 .pillar-name { color: var(--coral); }
+.p5 .pillar-badge { background: var(--coral-d); color: var(--coral); border: 1px solid rgba(224,92,92,0.2); }
+
+/* ── Exercise grid ── */
+.ex-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+/* ── Exercise card ── */
+.ex-card {
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: 14px;
+  padding: 20px 22px;
+  text-decoration: none;
+  display: flex; flex-direction: column; gap: 10px;
+  transition: all 0.22s ease;
+  position: relative; overflow: hidden;
+  cursor: pointer;
+}
+.ex-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 2px; opacity: 0;
+  transition: opacity 0.2s;
+}
+.p1 .ex-card::before { background: var(--teal); }
+.p2 .ex-card::before { background: var(--purple); }
+.p3 .ex-card::before { background: var(--amber); }
+.p4 .ex-card::before { background: var(--green); }
+.p5 .ex-card::before { background: var(--coral); }
+
+.ex-card:hover {
+  border-color: var(--border2);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+}
+.ex-card:hover::before { opacity: 1; }
+
+.ex-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.ex-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px; font-weight: 400; color: var(--text);
+  line-height: 1.2; letter-spacing: -0.01em;
+}
+.ex-arrow {
+  font-size: 16px; color: var(--text3);
+  transition: color 0.2s, transform 0.2s;
+  flex-shrink: 0; margin-top: 3px;
+}
+.ex-card:hover .ex-arrow { color: var(--text); transform: translate(2px,-2px); }
+
+.ex-desc {
+  font-size: 12px; color: var(--text2); line-height: 1.6;
+}
+
+.ex-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.ex-tag {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.06em;
+  text-transform: uppercase; padding: 2px 7px; border-radius: 20px;
+  background: rgba(255,255,255,0.05); color: var(--text3);
+  border: 1px solid var(--border);
+}
+
+.ex-meta {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-top: 8px; border-top: 1px solid var(--border);
+}
+.ex-time { font-size: 11px; color: var(--text3); }
+.ex-status {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase;
+  color: var(--green); background: var(--green-d);
+  border: 1px solid rgba(82,201,138,0.2);
+  padding: 2px 8px; border-radius: 20px;
+}
+
+/* ── Footer ── */
+footer {
+  position: relative; z-index: 10;
+  max-width: 1100px; margin: 20px auto 0;
+  padding: 24px 40px 48px;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px;
+  animation: fadeUp 0.8s ease 0.5s both;
+}
+.footer-left {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; font-weight: 300; color: var(--text3);
+}
+.footer-left em { color: var(--gold); font-style: italic; }
+.footer-right { font-size: 11px; color: var(--text3); line-height: 1.6; text-align: right; }
+
+/* ── Animations ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.pillar:nth-child(1) { animation-delay: 0.2s; }
+.pillar:nth-child(2) { animation-delay: 0.3s; }
+.pillar:nth-child(3) { animation-delay: 0.4s; }
+.pillar:nth-child(4) { animation-delay: 0.45s; }
+.pillar:nth-child(5) { animation-delay: 0.5s; }
+
+/* ── Mobile ── */
+@media (max-width: 600px) {
+  header, .hero, .pillar, .divider, .section-label, footer {
+    padding-left: 20px; padding-right: 20px;
+  }
+  header { padding-top: 32px; flex-direction: column; gap: 16px; }
+  .header-right { text-align: left; }
+  .ex-grid { grid-template-columns: 1fr; }
+  .pillar-count { gap: 16px; }
+  footer { flex-direction: column; }
+  .footer-right { text-align: left; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-name">Entrena<em>Mente</em></div>
+    <div class="brand-tag">Entrenamiento cognitivo avanzado · Prototipo</div>
+  </div>
+  <div class="header-right">
+    <div class="version-tag">v0.1 — Prototipos</div>
+    <div class="prototype-note">8 ejercicios · 5 pilares</div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-line"></div>
+  <p class="hero-headline">
+    Ejercicios diarios de <strong>5 minutos</strong> que entrenan la velocidad lectora,
+    la memoria de trabajo y la <strong>agilidad cognitiva</strong> general.
+  </p>
+  <div class="pillar-count">
+    <div class="pc"><div class="pc-dot" style="background:var(--teal)"></div>Lectura visual</div>
+    <div class="pc"><div class="pc-dot" style="background:var(--purple)"></div>Memoria activa</div>
+    <div class="pc"><div class="pc-dot" style="background:var(--amber)"></div>Comprensión</div>
+    <div class="pc"><div class="pc-dot" style="background:var(--green)"></div>Habilidades de estudio</div>
+    <div class="pc"><div class="pc-dot" style="background:var(--coral)"></div>Fitness cognitivo</div>
+  </div>
+</section>
+
+<div class="divider"><div class="divider-line"></div></div>
+<div class="section-label">Ejercicios disponibles — selecciona para iniciar</div>
+
+<!-- ══════════════════════════
+     PILLAR 1: VISUAL READING
+     ══════════════════════════ -->
+<section class="pillar p1">
+  <div class="pillar-header">
+    <span class="pillar-num">01</span>
+    <span class="pillar-name">Lectura visual</span>
+    <div class="pillar-dash"></div>
+    <span class="pillar-badge">4 ejercicios</span>
+  </div>
+  <div class="ex-grid">
+
+    <a class="ex-card" href="lectura_flash_rsvp.html">
+      <div class="ex-top">
+        <div class="ex-name">Lectura Flash</div>
+        <div class="ex-arrow">↗</div>
+      </div>
+      <div class="ex-desc">Presentación visual rápida adaptativa. Calibra tu tasa base y entrena la velocidad con control de comprensión.</div>
+      <div class="ex-tags">
+        <span class="ex-tag">RSVP</span>
+        <span class="ex-tag">Adaptativo</span>
+        <span class="ex-tag">≤350 wpm</span>
+      </div>
+      <div class="ex-meta">
+        <span class="ex-time">~5 min</span>
+        <span class="ex-status">Listo</span>
+      </div>
+    </a>
+
+    <a class="ex-card" href="lectura_por_bloques_prototype.html">
+      <div class="ex-top">
+        <div class="ex-name">Lectura por Bloques</div>
+        <div class="ex-arrow">↗</div>
+      </div>
+      <div class="ex-desc">Entrena el reconocimiento de grupos sintácticos como unidades únicas. 4 modos de dificultad progresiva.</div>
+      <div class="ex-tags">
+        <span class="ex-tag">Chunking</span>
+        <span class="ex-tag">Sintaxis</span>
+        <span class="ex-tag">Fluidez</span>
+      </div>
+      <div class="ex-meta">
+        <span class="ex-time">~4 min</span>
+        <span class="ex-status">Listo</span>
+      </div>
+    </a>
+
+    <a class="ex-card" href="contrarreloj.html">
+      <div class="ex-top">
+        <div class="ex-name">Contrarreloj</div>
+        <div class="ex-arrow">↗</div>
+      </div>
+      <div class="ex-desc">Texto con desvanecimiento progresivo. Basado en el protocolo RAP de Breznitz — calibración individual obligatoria.</div>
+      <div class="ex-tags">
+        <span class="ex-tag">RAP</span>
+        <span class="ex-tag">Text-fading</span>
+        <span class="ex-tag">Desvanecimiento</span>
+      </div>
+      <div class="ex-meta">
+        <span class="ex-time">~6 min</span>
+        <span class="ex-status">Listo</span>
+      </div>
+    </a>
+
+    <a class="ex-card" href="vision_paralela.html">
+      <div class="ex-top">
+        <div class="ex-name">Visión Paralela</div>
+        <div class="ex-arrow">↗</div>
+      </div>
+      <div class="ex-desc">Entrenamiento de amplitud visual atencional. Tres tareas: informe completo, informe parcial y coincidencia de cadenas.</div>
+      <div class="ex-tags">
+        <span class="ex-tag">VAS</span>
+        <span class="ex-tag">Flash arrays</span>
+        <span class="ex-tag">Paralelo</span>
+      </div>
+      <div class="ex-meta">
+        <span class="ex-time">~4 min</span>
+        <span class="ex-status">Listo</span>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════
+     PILLAR 2: MEMORY
+     ══════════════════════════ -->
+<section class="pillar p2">
+  <div class="pillar-header">
+    <span class="pillar-num">02</span>
+    <span class="pillar-name">Memoria activa</span>
+    <div class="pillar-dash"></div>
+    <span class="pillar-badge">3 ejercicios</span>
+  </div>
+  <div class="ex-grid">
+
+    <a class="ex-card" href="memoria_activa.html">
+      <div class="ex-top">
+        <div class="ex-name">Memoria Activa</div>
+        <div class="ex-arrow">↗</div>
+      </div>
+      <div class="ex-desc">Complex span task con puntuación de crédito parcial. Amplitud de operación y de lectura. Adaptativo entre sesiones.</div>
+      <div class="ex-tags">
+        <span class="ex-tag">Complex span</span>
+        <span class="ex-tag">Mantenimiento</span>
+        <span class="ex-tag">WM</span>
+      </div>
+      <div class="ex-meta">
+        <span class="ex-time">~3 min</span>
+        <span class="ex-status">Listo</span>
+      </div>
+    </a>
+
+    <a class="ex-card" href="actualizacion_categorias.html">
+      <div class="ex-top">
+        <div class="ex-name">Actualización por Categorías</div>
+        <div class="ex-arrow">↗</div>
+      </div>
+      <div class="ex-desc">Basado en Miyake et al. (2000). Observa una secuencia de palabras y recuerda la última de cada categoría.</div>
+      <div class="ex-tags">
+        <span class="ex-tag">Updating EF</span>
+        <span class="ex-tag">Miyake 2000</span>
+        <span class="ex-tag">Semántico</span>
+      </div>
+      <div class="ex-meta">
+        <span class="ex-time">~4 min</span>
+        <span class="ex-status">Listo</span>
+      </div>
+    </a>
+
+    <a class="ex-card" href="actualizacion_continua.html">
+      <div class="ex-top">
+        <div class="ex-name">Actualización Continua</div>
+        <div class="ex-arrow">↗</div>
+      </div>
+      <div class="ex-desc">N-back adaptativo con tres modos: visual, letras y dual. Tutorial interactivo incluido. Nivel ajustable.</div>
+      <div class="ex-tags">
+        <span class="ex-tag">N-back</span>
+        <span class="ex-tag">Dual</span>
+        <span class="ex-tag">Inteligencia fluida</span>
+      </div>
+      <div class="ex-meta">
+        <span class="ex-time">~3 min</span>
+        <span class="ex-status">Listo</span>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════
+     PILLAR 3: EYE MOVEMENT
+     ══════════════════════════ -->
+<section class="pillar p3">
+  <div class="pillar-header">
+    <span class="pillar-num">03</span>
+    <span class="pillar-name">Movimiento ocular</span>
+    <div class="pillar-dash"></div>
+    <span class="pillar-badge">1 ejercicio</span>
+  </div>
+  <div class="ex-grid">
+
+    <a class="ex-card" href="saltos_visuales.html">
+      <div class="ex-top">
+        <div class="ex-name">Saltos Visuales</div>
+        <div class="ex-arrow">↗</div>
+      </div>
+      <div class="ex-desc">4 modos de entrenamiento sacádico: saltos horizontales, barrido de retorno, amplitud visual y escaneo numérico King-Devick.</div>
+      <div class="ex-tags">
+        <span class="ex-tag">Sacadas</span>
+        <span class="ex-tag">King-Devick</span>
+        <span class="ex-tag">Return sweep</span>
+      </div>
+      <div class="ex-meta">
+        <span class="ex-time">~5 min</span>
+        <span class="ex-status">Listo</span>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<div class="divider" style="margin-top:0"><div class="divider-line"></div></div>
+
+<footer>
+  <div class="footer-left">Entrena<em>Mente</em></div>
+  <div class="footer-right">
+    Prototipo de investigación · Marzo 2026<br>
+    8 ejercicios · 5 pilares cognitivos · Base científica
+  </div>
+</footer>
+
+</body>
+</html>
