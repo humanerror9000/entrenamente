@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EntrenaMente – Lectura por Bloques</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
+
+  :root {
+    --ink: #1a1a2e;
+    --ink2: #3d3d5c;
+    --muted: #7a7a9a;
+    --bg: #f4f2ee;
+    --bg2: #eceae4;
+    --card: #ffffff;
+    --teal: #2a9d8f;
+    --teal-light: #e8f7f5;
+    --amber: #e9c46a;
+    --amber-dark: #b8860b;
+    --coral: #e76f51;
+    --coral-light: #fdf0ec;
+    --purple: #6c5ce7;
+    --purple-light: #f0eeff;
+    --green: #52b788;
+    --green-light: #edf7f1;
+    --border: rgba(26,26,46,0.10);
+    --radius: 12px;
+    --shadow: 0 2px 12px rgba(26,26,46,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 0 60px;
+  }
+
+  /* ── Header ── */
+  header {
+    width: 100%;
+    background: var(--ink);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 28px;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .logo { font-size: 13px; font-weight: 600; letter-spacing: 0.06em; opacity: 0.9; }
+  .logo span { color: var(--amber); }
+  .mode-badge {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    padding: 4px 12px; border-radius: 20px;
+  }
+  .streak { font-size: 12px; opacity: 0.7; display: flex; align-items: center; gap: 6px; }
+  .streak b { color: var(--amber); font-size: 14px; }
+
+  /* ── Progress bar ── */
+  .progress-wrap {
+    width: 100%; height: 4px;
+    background: var(--bg2);
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--teal), var(--green));
+    transition: width 0.5s ease;
+  }
+
+  /* ── Main container ── */
+  main {
+    width: 100%; max-width: 720px;
+    padding: 32px 20px 0;
+    display: flex; flex-direction: column; gap: 24px;
+  }
+
+  /* ── Mode tabs ── */
+  .mode-tabs {
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .mode-tab {
+    flex: 1; min-width: 120px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    background: var(--card);
+    cursor: pointer;
+    text-align: center;
+    font-family: 'Sora', sans-serif;
+    font-size: 12px; font-weight: 600;
+    color: var(--muted);
+    transition: all 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .mode-tab:hover { border-color: var(--purple); color: var(--purple); }
+  .mode-tab.active { background: var(--purple); border-color: var(--purple); color: #fff; }
+  .mode-tab .tab-num { font-size: 10px; opacity: 0.7; display: block; margin-bottom: 2px; }
+
+  /* ── Exercise card ── */
+  .exercise-card {
+    background: var(--card);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .card-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+  }
+  .card-meta { display: flex; gap: 8px; flex-wrap: wrap; }
+  .pill {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+    padding: 3px 10px; border-radius: 20px;
+  }
+  .pill-teal { background: var(--teal-light); color: var(--teal); }
+  .pill-amber { background: #fff8e1; color: var(--amber-dark); }
+  .pill-purple { background: var(--purple-light); color: var(--purple); }
+  .timer-display {
+    font-size: 13px; font-weight: 600; color: var(--coral);
+    display: flex; align-items: center; gap: 5px;
+    font-variant-numeric: tabular-nums;
+  }
+  .timer-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--coral); animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .card-instruction {
+    padding: 16px 24px;
+    font-size: 14px; color: var(--ink2); line-height: 1.6;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+  .card-instruction strong { color: var(--ink); }
+
+  /* ── MODE 1: Guided Recognition ── */
+  .passage {
+    padding: 24px 28px;
+    font-family: 'Lora', serif;
+    font-size: 18px; line-height: 2.2;
+    color: var(--ink);
+  }
+  .chunk {
+    display: inline;
+    padding: 2px 0;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.15s;
+    position: relative;
+  }
+  .chunk:hover { background: rgba(108,92,231,0.07); }
+  .chunk-prep { border-bottom: 2.5px solid var(--teal); }
+  .chunk-verb { border-bottom: 2.5px solid var(--coral); }
+  .chunk-noun { border-bottom: 2.5px solid var(--amber-dark); }
+  .chunk-disc { border-bottom: 2.5px solid var(--purple); }
+  .chunk-label {
+    display: none;
+    position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%);
+    background: var(--ink); color: #fff;
+    font-family: 'Sora', sans-serif;
+    font-size: 10px; font-weight: 600; letter-spacing: 0.06em;
+    padding: 3px 8px; border-radius: 6px; white-space: nowrap; z-index: 10;
+  }
+  .chunk:hover .chunk-label { display: block; }
+
+  /* ── Legend ── */
+  .legend {
+    padding: 12px 28px 20px;
+    display: flex; gap: 16px; flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: 0.04em;
+  }
+  .legend-line { width: 20px; height: 2.5px; border-radius: 2px; }
+
+  /* ── MODE 2: Active Parsing ── */
+  .parse-area { padding: 24px 28px; }
+  .parse-sentence {
+    font-family: 'Lora', serif;
+    font-size: 19px; line-height: 1.9; margin-bottom: 20px;
+  }
+  .parse-word {
+    display: inline-block;
+    padding: 2px 4px; margin: 2px 1px;
+    border-radius: 5px; cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: all 0.15s;
+  }
+  .parse-word:hover { background: var(--purple-light); border-color: var(--purple); }
+  .parse-word.boundary-after::after {
+    content: ' /';
+    color: var(--coral);
+    font-weight: 700;
+    font-family: 'Sora', sans-serif;
+    font-size: 16px;
+  }
+  .parse-word.selected-word { background: var(--purple-light); }
+
+  .parse-controls { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+  .btn {
+    font-family: 'Sora', sans-serif;
+    font-size: 13px; font-weight: 600;
+    padding: 10px 20px; border-radius: 10px; border: none;
+    cursor: pointer; transition: all 0.2s; letter-spacing: 0.02em;
+  }
+  .btn-primary { background: var(--purple); color: #fff; }
+  .btn-primary:hover { background: #5a4bd1; transform: translateY(-1px); }
+  .btn-secondary { background: var(--bg2); color: var(--ink2); }
+  .btn-secondary:hover { background: var(--border); }
+  .btn-ghost { background: transparent; color: var(--muted); border: 1.5px solid var(--border); }
+
+  /* ── MODE 3: Flash ── */
+  .flash-area {
+    padding: 40px 28px;
+    text-align: center;
+    min-height: 180px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 12px;
+  }
+  .flash-chunk {
+    font-family: 'Lora', serif;
+    font-size: 26px; font-weight: 400; color: var(--ink);
+    padding: 10px 24px;
+    border-radius: 12px;
+    background: var(--purple-light);
+    border: 1.5px solid rgba(108,92,231,0.2);
+    transition: opacity 0.25s ease;
+    letter-spacing: 0.01em;
+  }
+  .flash-counter { font-size: 12px; color: var(--muted); letter-spacing: 0.06em; font-weight: 600; }
+  .flash-progress-bar {
+    width: 100%; max-width: 320px; height: 4px;
+    background: var(--bg2); border-radius: 2px; overflow: hidden;
+  }
+  .flash-progress-fill {
+    height: 100%; background: var(--purple);
+    transition: width 0.3s linear;
+  }
+  .flash-start-btn {
+    font-family: 'Sora', sans-serif;
+    font-size: 14px; font-weight: 600;
+    padding: 12px 32px; border-radius: 12px;
+    border: none; cursor: pointer;
+    background: var(--purple); color: #fff;
+    transition: all 0.2s;
+  }
+  .flash-start-btn:hover { background: #5a4bd1; transform: translateY(-1px); }
+
+  /* ── MODE 4: Reconstruction ── */
+  .recon-area { padding: 24px 28px; }
+  .recon-drop-zone {
+    min-height: 72px;
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    transition: border-color 0.2s;
+    background: var(--bg);
+  }
+  .recon-drop-zone.drag-over { border-color: var(--purple); background: var(--purple-light); }
+  .recon-drop-zone .placeholder {
+    font-size: 13px; color: var(--muted); font-style: italic; width: 100%; text-align: center; padding: 8px 0;
+  }
+  .chunk-tile {
+    display: inline-flex; align-items: center;
+    font-family: 'Lora', serif; font-size: 16px;
+    padding: 8px 16px; border-radius: 10px;
+    background: var(--card); border: 1.5px solid var(--border);
+    cursor: grab; user-select: none;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    transition: all 0.15s;
+  }
+  .chunk-tile:hover { border-color: var(--purple); box-shadow: 0 3px 10px rgba(108,92,231,0.15); transform: translateY(-1px); }
+  .chunk-tile:active { cursor: grabbing; }
+  .chunk-tile.in-drop { background: var(--purple-light); border-color: rgba(108,92,231,0.35); }
+  .chunk-bank { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+
+  /* ── Feedback panel ── */
+  .feedback-panel {
+    margin: 0 24px 24px;
+    padding: 16px 20px;
+    border-radius: 12px;
+    font-size: 14px; line-height: 1.6;
+    display: none;
+  }
+  .feedback-panel.correct {
+    background: var(--green-light);
+    border: 1px solid rgba(82,183,136,0.3);
+    color: #1a5c38;
+    display: block;
+  }
+  .feedback-panel.incorrect {
+    background: var(--coral-light);
+    border: 1px solid rgba(231,111,81,0.3);
+    color: #8b2500;
+    display: block;
+  }
+  .feedback-panel.info {
+    background: var(--purple-light);
+    border: 1px solid rgba(108,92,231,0.2);
+    color: var(--purple);
+    display: block;
+  }
+  .feedback-label { font-weight: 700; margin-bottom: 4px; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+
+  /* ── Questions ── */
+  .question-area {
+    padding: 0 24px 24px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .question-label { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+  .question-text { font-size: 15px; color: var(--ink); line-height: 1.5; margin-bottom: 10px; }
+  .q-options { display: flex; flex-direction: column; gap: 7px; }
+  .q-option {
+    padding: 11px 16px; border-radius: 10px;
+    border: 1.5px solid var(--border);
+    background: var(--card); cursor: pointer;
+    font-size: 14px; font-family: 'Sora', sans-serif;
+    transition: all 0.15s; color: var(--ink2);
+  }
+  .q-option:hover { border-color: var(--purple); color: var(--purple); background: var(--purple-light); }
+  .q-option.correct-ans { border-color: var(--green); background: var(--green-light); color: #1a5c38; }
+  .q-option.wrong-ans { border-color: var(--coral); background: var(--coral-light); color: #8b2500; }
+
+  /* ── Nav ── */
+  .exercise-nav {
+    display: flex; justify-content: flex-end; padding: 16px 24px;
+    border-top: 1px solid var(--border);
+    gap: 10px;
+  }
+
+  /* ── Science note ── */
+  .science-note {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 22px;
+    font-size: 13px; color: var(--ink2); line-height: 1.65;
+    box-shadow: var(--shadow);
+  }
+  .science-note .sci-head {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 8px;
+  }
+
+  /* ── Hidden sections ── */
+  .mode-section { display: none; }
+  .mode-section.active { display: block; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Entrena<span>Mente</span></div>
+  <div class="mode-badge">Lectura por Bloques</div>
+  <div class="streak">🔥 Racha <b id="streak-count">7</b> días</div>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-fill" id="main-progress" style="width: 35%"></div>
+</div>
+
+<main>
+
+  <!-- Mode selector -->
+  <div class="mode-tabs">
+    <button class="mode-tab active" onclick="switchMode(0)">
+      <span class="tab-num">Modo 1</span>Reconocimiento guiado
+    </button>
+    <button class="mode-tab" onclick="switchMode(1)">
+      <span class="tab-num">Modo 2</span>Análisis activo
+    </button>
+    <button class="mode-tab" onclick="switchMode(2)">
+      <span class="tab-num">Modo 3</span>Flash por bloques
+    </button>
+    <button class="mode-tab" onclick="switchMode(3)">
+      <span class="tab-num">Modo 4</span>Reconstrucción
+    </button>
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- MODE 1: Guided Recognition              -->
+  <!-- ═══════════════════════════════════════ -->
+  <div class="mode-section active" id="mode-0">
+    <div class="exercise-card">
+      <div class="card-header">
+        <div class="card-meta">
+          <span class="pill pill-teal">Principiante</span>
+          <span class="pill pill-amber">~3 min</span>
+          <span class="pill pill-purple">Priming sintáctico</span>
+        </div>
+        <div class="timer-display"><div class="timer-dot"></div> <span id="timer0">2:45</span></div>
+      </div>
+      <div class="card-instruction">
+        Lee el párrafo con atención. Los <strong>bloques sintácticos</strong> están marcados con colores — pasa el cursor sobre cada uno para ver su tipo. Luego responde las preguntas.
+      </div>
+      <div class="passage" id="passage-m1">
+        <span class="chunk chunk-disc">Sin embargo,<span class="chunk-label">MARCADOR DISCURSIVO</span></span>
+        &nbsp;
+        <span class="chunk chunk-noun">la comunidad científica<span class="chunk-label">GRUPO NOMINAL</span></span>
+        &nbsp;
+        <span class="chunk chunk-verb">ha tardado en reconocer<span class="chunk-label">PERÍFRASIS VERBAL</span></span>
+        &nbsp;
+        <span class="chunk chunk-noun">el impacto real<span class="chunk-label">GRUPO NOMINAL</span></span>
+        &nbsp;
+        <span class="chunk chunk-prep">de estos descubrimientos<span class="chunk-label">FRASE PREPOSICIONAL</span></span>
+        &nbsp;
+        <span class="chunk chunk-prep">sobre el diseño<span class="chunk-label">FRASE PREPOSICIONAL</span></span>
+        &nbsp;
+        <span class="chunk chunk-prep">de materiales sostenibles.<span class="chunk-label">FRASE PREPOSICIONAL</span></span>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-line" style="background:var(--teal)"></div>Frase preposicional</div>
+        <div class="legend-item"><div class="legend-line" style="background:var(--coral)"></div>Perífrasis verbal</div>
+        <div class="legend-item"><div class="legend-line" style="background:var(--amber-dark)"></div>Grupo nominal</div>
+        <div class="legend-item"><div class="legend-line" style="background:var(--purple)"></div>Marcador discursivo</div>
+      </div>
+
+      <div class="question-area">
+        <div class="question-label">Comprensión inferencial</div>
+        <div class="question-text">¿Cuál es la actitud implícita del autor hacia la comunidad científica?</div>
+        <div class="q-options">
+          <div class="q-option" onclick="answerQ(this, false, 0)">Admiración por su rapidez</div>
+          <div class="q-option" onclick="answerQ(this, true, 0)">Crítica por su lentitud de respuesta</div>
+          <div class="q-option" onclick="answerQ(this, false, 0)">Indiferencia ante su postura</div>
+          <div class="q-option" onclick="answerQ(this, false, 0)">Apoyo incondicional a sus métodos</div>
+        </div>
+      </div>
+
+      <div class="feedback-panel" id="feedback-0"></div>
+      <div class="exercise-nav">
+        <button class="btn btn-ghost" onclick="switchMode(1)">Siguiente modo →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- MODE 2: Active Parsing                  -->
+  <!-- ═══════════════════════════════════════ -->
+  <div class="mode-section" id="mode-1">
+    <div class="exercise-card">
+      <div class="card-header">
+        <div class="card-meta">
+          <span class="pill pill-teal">Intermedio</span>
+          <span class="pill pill-amber">~4 min</span>
+          <span class="pill pill-purple">Análisis activo</span>
+        </div>
+        <div class="timer-display"><div class="timer-dot"></div> <span id="timer1">3:30</span></div>
+      </div>
+      <div class="card-instruction">
+        <strong>Toca las palabras</strong> donde termina cada bloque sintáctico para insertar un divisor <strong style="color:var(--coral)">/</strong>. Divide la oración en sus grupos naturales de significado.
+      </div>
+      <div class="parse-area">
+        <div class="parse-sentence" id="parse-sentence">
+          <!-- words injected by JS -->
+        </div>
+        <div class="parse-controls">
+          <button class="btn btn-primary" onclick="checkParse()">Verificar análisis</button>
+          <button class="btn btn-secondary" onclick="resetParse()">Reiniciar</button>
+          <button class="btn btn-ghost" onclick="showParseHint()">Ver pista</button>
+        </div>
+      </div>
+      <div class="feedback-panel" id="feedback-1"></div>
+      <div class="exercise-nav">
+        <button class="btn btn-ghost" onclick="switchMode(2)">Siguiente modo →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- MODE 3: Chunk Flash                     -->
+  <!-- ═══════════════════════════════════════ -->
+  <div class="mode-section" id="mode-2">
+    <div class="exercise-card">
+      <div class="card-header">
+        <div class="card-meta">
+          <span class="pill pill-teal">Avanzado</span>
+          <span class="pill pill-amber">~4 min</span>
+          <span class="pill pill-purple">RSVP por bloques</span>
+        </div>
+      </div>
+      <div class="card-instruction">
+        Lee cada <strong>bloque</strong> que aparece. Cuando termine la secuencia, responde la pregunta de comprensión. El ritmo se adapta a tu velocidad de lectura.
+      </div>
+      <div class="flash-area" id="flash-area">
+        <button class="flash-start-btn" onclick="startFlash()">▶ Iniciar secuencia</button>
+      </div>
+      <div class="feedback-panel" id="feedback-2"></div>
+      <div class="question-area" id="flash-question" style="display:none">
+        <div class="question-label">Pregunta de comprensión</div>
+        <div class="question-text">¿Qué relación se menciona en el texto entre las tradiciones locales y el diseño contemporáneo?</div>
+        <div class="q-options">
+          <div class="q-option" onclick="answerQ(this, false, 2)">Son conceptos opuestos e incompatibles</div>
+          <div class="q-option" onclick="answerQ(this, true, 2)">Pueden integrarse para crear soluciones más ricas</div>
+          <div class="q-option" onclick="answerQ(this, false, 2)">Las tradiciones frenan el diseño moderno</div>
+          <div class="q-option" onclick="answerQ(this, false, 2)">El texto no establece ninguna relación</div>
+        </div>
+      </div>
+      <div class="exercise-nav">
+        <button class="btn btn-ghost" onclick="switchMode(3)">Siguiente modo →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- MODE 4: Reconstruction                  -->
+  <!-- ═══════════════════════════════════════ -->
+  <div class="mode-section" id="mode-3">
+    <div class="exercise-card">
+      <div class="card-header">
+        <div class="card-meta">
+          <span class="pill pill-teal">Avanzado</span>
+          <span class="pill pill-amber">~3 min</span>
+          <span class="pill pill-purple">Reconstrucción textual</span>
+        </div>
+        <div class="timer-display"><div class="timer-dot"></div> <span id="timer3">2:30</span></div>
+      </div>
+      <div class="card-instruction">
+        <strong>Arrastra los bloques</strong> hacia la zona superior para reconstruir la oración en el orden correcto.
+      </div>
+      <div class="recon-area">
+        <div class="recon-drop-zone" id="drop-zone" ondragover="dragOver(event)" ondrop="dropChunk(event)" ondragleave="dragLeave(event)">
+          <span class="placeholder" id="drop-placeholder">Arrastra los bloques aquí...</span>
+        </div>
+        <div class="chunk-bank" id="chunk-bank">
+          <!-- tiles injected by JS -->
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap: wrap; margin-top: 4px;">
+          <button class="btn btn-primary" onclick="checkRecon()">Verificar orden</button>
+          <button class="btn btn-secondary" onclick="resetRecon()">Reiniciar</button>
+        </div>
+      </div>
+      <div class="feedback-panel" id="feedback-3"></div>
+      <div class="exercise-nav">
+        <button class="btn btn-primary" onclick="finishSession()">Finalizar sesión ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Science note -->
+  <div class="science-note">
+    <div class="sci-head">⚗ Base científica — por qué funciona</div>
+    El entrenamiento por bloques activa el <strong>priming sintáctico</strong>: la exposición repetida a estructuras frásicas aumenta la probabilidad de reconocerlas automáticamente en lecturas futuras, reduciendo la carga sobre la memoria de trabajo. La investigación de Conti (Applied Linguistics, 2025) muestra que el aprendizaje de bloques léxicos en L1 genera mejoras del <strong>30% en fluidez</strong> versus el aprendizaje palabra por palabra. En español, las perífrasis verbales y las frases preposicionales son los bloques de mayor rendimiento cognitivo por su alta frecuencia y variabilidad interna.
+  </div>
+
+</main>
+
+<script>
+// ── Mode switching ──
+function switchMode(n) {
+  document.querySelectorAll('.mode-section').forEach((el,i) => el.classList.toggle('active', i===n));
+  document.querySelectorAll('.mode-tab').forEach((el,i) => el.classList.toggle('active', i===n));
+  if (n===1) initParse();
+  if (n===3) initRecon();
+}
+
+// ── Answer handler (Modes 1 & 2) ──
+function answerQ(el, correct, mode) {
+  const options = el.closest('.q-options').querySelectorAll('.q-option');
+  options.forEach(o => o.style.pointerEvents = 'none');
+  el.classList.add(correct ? 'correct-ans' : 'wrong-ans');
+  if (!correct) {
+    options.forEach(o => { if (o.dataset.correct) o.classList.add('correct-ans'); });
+  }
+  const fb = document.getElementById('feedback-' + mode);
+  if (correct) {
+    fb.className = 'feedback-panel correct';
+    fb.innerHTML = '<div class="feedback-label">✓ Correcto</div>Identificaste correctamente la postura crítica implícita en el marcador discursivo "sin embargo" y la perífrasis "ha tardado en". Este es el tipo de lectura inferencial que entrena la comprensión profunda.';
+  } else {
+    fb.className = 'feedback-panel incorrect';
+    fb.innerHTML = '<div class="feedback-label">✗ Incorrecto</div>La clave está en el marcador discursivo <em>"Sin embargo"</em> (adversativo) combinado con la perífrasis <em>"ha tardado en reconocer"</em> — juntos indican que el autor critica la lentitud de la comunidad científica.';
+  }
+  document.getElementById('main-progress').style.width = (35 + (correct ? 15 : 5)) + '%';
+}
+
+// ── MODE 2: Active Parsing ──
+const parseSentence = [
+  { word: 'A', correct: false },
+  { word: 'lo', correct: false },
+  { word: 'largo', correct: false },
+  { word: 'del', correct: true },          // break: "A lo largo del siglo XX"
+  { word: 'siglo', correct: false },
+  { word: 'XX,', correct: true },          // break
+  { word: 'los', correct: false },
+  { word: 'avances', correct: false },
+  { word: 'tecnológicos', correct: true }, // break
+  { word: 'han', correct: false },
+  { word: 'transformado', correct: true }, // break: "han transformado"
+  { word: 'profundamente', correct: true },// break
+  { word: 'la', correct: false },
+  { word: 'forma', correct: false },
+  { word: 'en', correct: false },
+  { word: 'que', correct: true },          // break
+  { word: 'nos', correct: false },
+  { word: 'comunicamos.', correct: false },
+];
+// Correct boundaries: after indices 3,5,8,10,11,16
+
+const correctBoundaries = new Set([3,5,8,10,11,16]);
+let selectedBoundaries = new Set();
+
+function initParse() {
+  selectedBoundaries = new Set();
+  const container = document.getElementById('parse-sentence');
+  container.innerHTML = '';
+  parseSentence.forEach((w, i) => {
+    const span = document.createElement('span');
+    span.className = 'parse-word';
+    span.textContent = w.word;
+    span.dataset.idx = i;
+    span.addEventListener('click', () => toggleBoundary(span, i));
+    container.appendChild(span);
+    container.appendChild(document.createTextNode(' '));
+  });
+}
+
+function toggleBoundary(el, idx) {
+  if (selectedBoundaries.has(idx)) {
+    selectedBoundaries.delete(idx);
+    el.classList.remove('boundary-after');
+  } else {
+    selectedBoundaries.add(idx);
+    el.classList.add('boundary-after');
+  }
+}
+
+function checkParse() {
+  // Score: how many of the 6 correct boundaries the user found
+  let hits = 0, fp = 0;
+  selectedBoundaries.forEach(i => { if (correctBoundaries.has(i)) hits++; else fp++; });
+  const fb = document.getElementById('feedback-1');
+  if (hits >= 4 && fp <= 2) {
+    fb.className = 'feedback-panel correct';
+    fb.innerHTML = `<div class="feedback-label">✓ Muy bien — ${hits}/6 bloques correctos</div>Identificaste correctamente los principales grupos sintácticos. Los bloques clave son: <em>"A lo largo del siglo XX"</em> (frase preposicional temporal), <em>"los avances tecnológicos"</em> (grupo nominal), <em>"han transformado profundamente"</em> (perífrasis + adverbio), y <em>"la forma en que nos comunicamos"</em> (grupo nominal con cláusula relativa).`;
+  } else {
+    fb.className = 'feedback-panel incorrect';
+    fb.innerHTML = `<div class="feedback-label">Sigue practicando — ${hits}/6 bloques</div>Busca los grupos naturales de significado: las frases preposicionales (comienzan con preposición), los grupos nominales (artículo + sustantivo ± adjetivo) y las perífrasis verbales (verbo auxiliar + infinitivo). Prueba con la pista.`;
+  }
+}
+
+function resetParse() {
+  selectedBoundaries = new Set();
+  document.querySelectorAll('.parse-word').forEach(w => w.classList.remove('boundary-after'));
+  document.getElementById('feedback-1').className = 'feedback-panel';
+}
+
+function showParseHint() {
+  const fb = document.getElementById('feedback-1');
+  fb.className = 'feedback-panel info';
+  fb.innerHTML = '<div class="feedback-label">💡 Pista</div>Empieza por identificar las preposiciones (a, de, en) — marcan el inicio de una frase preposicional. Luego busca el verbo principal: <em>"han transformado"</em>. Todo lo que va antes es sujeto/temporal; todo lo que va después es objeto.';
+}
+
+// ── MODE 3: Chunk Flash ──
+const flashChunks = [
+  'Las tradiciones locales',
+  'no son un obstáculo',
+  'para el diseño contemporáneo,',
+  'sino una fuente de riqueza',
+  'que puede integrarse',
+  'con las técnicas modernas',
+  'para crear soluciones',
+  'más auténticas y sostenibles.'
+];
+let flashIdx = 0, flashTimer = null;
+
+function startFlash() {
+  flashIdx = 0;
+  const area = document.getElementById('flash-area');
+  area.innerHTML = `
+    <div class="flash-counter" id="flash-ctr">Bloque 1 de ${flashChunks.length}</div>
+    <div class="flash-chunk" id="flash-text">${flashChunks[0]}</div>
+    <div class="flash-progress-bar"><div class="flash-progress-fill" id="flash-pb" style="width:${100/flashChunks.length}%"></div></div>
+    <div style="font-size:12px;color:var(--muted);margin-top:4px;">Velocidad adaptativa — ajustada a tu perfil</div>
+  `;
+  flashTimer = setInterval(advanceFlash, 1100);
+}
+
+function advanceFlash() {
+  flashIdx++;
+  if (flashIdx >= flashChunks.length) {
+    clearInterval(flashTimer);
+    document.getElementById('flash-area').innerHTML = `
+      <div style="font-size:15px;font-weight:600;color:var(--ink)">✓ Secuencia completada</div>
+      <div style="font-size:13px;color:var(--muted);margin-top:4px;">Responde la pregunta de comprensión</div>
+    `;
+    document.getElementById('flash-question').style.display = 'flex';
+    document.getElementById('flash-question').style.flexDirection = 'column';
+    return;
+  }
+  const textEl = document.getElementById('flash-text');
+  if (textEl) {
+    textEl.style.opacity = '0';
+    setTimeout(() => {
+      textEl.textContent = flashChunks[flashIdx];
+      textEl.style.opacity = '1';
+    }, 200);
+    document.getElementById('flash-ctr').textContent = `Bloque ${flashIdx+1} de ${flashChunks.length}`;
+    document.getElementById('flash-pb').style.width = ((flashIdx+1)/flashChunks.length*100) + '%';
+  }
+}
+
+// ── MODE 4: Reconstruction ──
+const reconChunks = [
+  { id: 'a', text: 'A pesar de las dificultades iniciales,' },
+  { id: 'b', text: 'el equipo de investigación' },
+  { id: 'c', text: 'logró desarrollar' },
+  { id: 'd', text: 'un método innovador' },
+  { id: 'e', text: 'para el análisis' },
+  { id: 'f', text: 'de datos complejos.' },
+];
+const correctOrder = ['a','b','c','d','e','f'];
+let dropOrder = [];
+let draggingId = null;
+
+function initRecon() {
+  dropOrder = [];
+  const bank = document.getElementById('chunk-bank');
+  const dropZone = document.getElementById('drop-zone');
+  bank.innerHTML = '';
+  dropZone.innerHTML = '<span class="placeholder" id="drop-placeholder">Arrastra los bloques aquí...</span>';
+
+  // Shuffle
+  const shuffled = [...reconChunks].sort(() => Math.random() - 0.5);
+  shuffled.forEach(c => {
+    const tile = document.createElement('div');
+    tile.className = 'chunk-tile';
+    tile.textContent = c.text;
+    tile.draggable = true;
+    tile.dataset.id = c.id;
+    tile.addEventListener('dragstart', e => { draggingId = c.id; e.dataTransfer.effectAllowed = 'move'; });
+    bank.appendChild(tile);
+  });
+}
+
+function dragOver(e) {
+  e.preventDefault();
+  document.getElementById('drop-zone').classList.add('drag-over');
+}
+function dragLeave(e) {
+  document.getElementById('drop-zone').classList.remove('drag-over');
+}
+function dropChunk(e) {
+  e.preventDefault();
+  document.getElementById('drop-zone').classList.remove('drag-over');
+  if (!draggingId) return;
+  if (dropOrder.includes(draggingId)) return;
+
+  // Remove from bank visually
+  const bankTile = document.querySelector(`#chunk-bank [data-id="${draggingId}"]`);
+  if (!bankTile) return;
+  bankTile.remove();
+
+  dropOrder.push(draggingId);
+  const placeholder = document.getElementById('drop-placeholder');
+  if (placeholder) placeholder.remove();
+
+  const dz = document.getElementById('drop-zone');
+  const chunk = reconChunks.find(c => c.id === draggingId);
+  const tile = document.createElement('div');
+  tile.className = 'chunk-tile in-drop';
+  tile.textContent = chunk.text;
+  tile.dataset.id = draggingId;
+  tile.title = 'Clic para devolver al banco';
+  tile.style.cursor = 'pointer';
+  tile.addEventListener('click', () => returnToBank(draggingId, tile));
+  dz.appendChild(tile);
+  draggingId = null;
+}
+
+function returnToBank(id, tile) {
+  dropOrder = dropOrder.filter(x => x !== id);
+  tile.remove();
+  if (document.getElementById('drop-zone').children.length === 0) {
+    document.getElementById('drop-zone').innerHTML = '<span class="placeholder" id="drop-placeholder">Arrastra los bloques aquí...</span>';
+  }
+  const bank = document.getElementById('chunk-bank');
+  const chunk = reconChunks.find(c => c.id === id);
+  const newTile = document.createElement('div');
+  newTile.className = 'chunk-tile';
+  newTile.textContent = chunk.text;
+  newTile.draggable = true;
+  newTile.dataset.id = id;
+  newTile.addEventListener('dragstart', e => { draggingId = id; e.dataTransfer.effectAllowed = 'move'; });
+  bank.appendChild(newTile);
+}
+
+function checkRecon() {
+  const fb = document.getElementById('feedback-3');
+  const isCorrect = JSON.stringify(dropOrder) === JSON.stringify(correctOrder);
+  if (dropOrder.length < correctOrder.length) {
+    fb.className = 'feedback-panel info';
+    fb.innerHTML = '<div class="feedback-label">Incompleto</div>Arrastra todos los bloques antes de verificar.';
+    return;
+  }
+  if (isCorrect) {
+    fb.className = 'feedback-panel correct';
+    fb.innerHTML = '<div class="feedback-label">✓ Perfecto</div>Reconstruiste la oración correctamente. Observa la estructura: <em>marcador adversativo + sujeto + verbo principal + objeto + frases preposicionales encadenadas</em>. Este patrón es extremadamente frecuente en textos académicos y periodísticos en español.';
+    document.getElementById('main-progress').style.width = '90%';
+  } else {
+    fb.className = 'feedback-panel incorrect';
+    fb.innerHTML = '<div class="feedback-label">Orden incorrecto</div>Pista: el marcador temporal "A pesar de las dificultades iniciales" siempre va al inicio en este registro. El sujeto ("el equipo de investigación") precede al verbo. Las frases preposicionales van al final.';
+  }
+}
+
+function resetRecon() {
+  initRecon();
+  document.getElementById('feedback-3').className = 'feedback-panel';
+}
+
+function finishSession() {
+  document.getElementById('main-progress').style.width = '100%';
+  document.getElementById('streak-count').textContent = '8';
+  alert('¡Sesión completada! +12 puntos de fluidez. Mañana: Modo 3 con textos más complejos.');
+}
+
+// Init parse on load since mode 1 is first shown
+// (parse mode is mode-1 tab, init on first switch)
+</script>
+</body>
+</html>

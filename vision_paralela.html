@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EntrenaMente — Visión Paralela</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap');
+
+:root {
+  --bg: #F7F5F0;
+  --bg2: #EDEAE2;
+  --card: #FFFFFF;
+  --card2: #F4F2EC;
+  --ink: #1C1917;
+  --ink2: #5C5750;
+  --muted: #9C9589;
+  --border: rgba(28,25,23,0.08);
+  --border2: rgba(28,25,23,0.14);
+  --teal: #0F766E;
+  --teal-l: #CCFBF1;
+  --teal-m: rgba(15,118,110,0.10);
+  --amber: #B45309;
+  --amber-l: #FEF3C7;
+  --amber-m: rgba(180,83,9,0.10);
+  --coral: #BE123C;
+  --coral-l: #FFE4E6;
+  --coral-m: rgba(190,18,60,0.08);
+  --purple: #6D28D9;
+  --purple-l: #EDE9FE;
+  --purple-m: rgba(109,40,217,0.09);
+  --green: #065F46;
+  --green-l: #D1FAE5;
+  --green-m: rgba(6,95,70,0.08);
+  --r: 14px;
+  --sh: 0 1px 3px rgba(28,25,23,0.06), 0 4px 16px rgba(28,25,23,0.05);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center;
+  padding-bottom: 60px;
+}
+
+header {
+  width: 100%; background: var(--ink);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 26px;
+}
+.logo { font-size: 14px; font-weight: 700; color: #fff; letter-spacing: 0.03em; }
+.logo em { color: #F5C842; font-style: normal; }
+.ex-tag {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;
+  color: var(--teal-l); background: rgba(15,118,110,0.3);
+  border: 1px solid rgba(15,118,110,0.5); padding: 3px 11px; border-radius: 20px;
+}
+.hdr-stats { display: flex; gap: 14px; }
+.hstat { font-size: 12px; color: rgba(255,255,255,0.5); display: flex; gap: 5px; align-items: center; }
+.hstat b { color: #F5C842; }
+
+main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-direction: column; gap: 18px; }
+
+/* ── Progress dots ── */
+.prog-dots { display: flex; gap: 5px; }
+.pdot { flex: 1; height: 4px; border-radius: 2px; background: var(--bg2); transition: background 0.35s; }
+.pdot.done { background: var(--teal); }
+.pdot.active { background: var(--amber); }
+
+/* ── Task tabs ── */
+.task-tabs { display: grid; grid-template-columns: repeat(3,1fr); gap: 7px; }
+.ttab {
+  padding: 11px 8px; border-radius: 11px;
+  border: 1.5px solid var(--border2); background: var(--card);
+  cursor: pointer; text-align: center;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 11px; font-weight: 600; color: var(--muted);
+  letter-spacing: 0.04em; text-transform: uppercase; transition: all 0.18s;
+}
+.ttab:hover { border-color: var(--purple); color: var(--purple); }
+.ttab.active { background: var(--purple-m); border-color: var(--purple); color: var(--purple); }
+.ttab .ticon { font-size: 20px; display: block; margin-bottom: 4px; }
+
+/* ── Cards ── */
+.task-card {
+  background: var(--card); border-radius: var(--r);
+  border: 1.5px solid var(--border2); box-shadow: var(--sh);
+  overflow: hidden; display: none;
+}
+.task-card.active { display: block; }
+
+.chead {
+  padding: 16px 22px 14px; border-bottom: 1.5px solid var(--border);
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;
+}
+.chead-left .ctitle { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+.chead-left .csub { font-size: 12px; color: var(--ink2); line-height: 1.5; max-width: 360px; }
+.cpills { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+.cpill {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 20px;
+}
+.cp-teal { background: var(--teal-l); color: var(--teal); }
+.cp-amber { background: var(--amber-l); color: var(--amber); }
+.cp-purple { background: var(--purple-l); color: var(--purple); }
+.cp-coral { background: var(--coral-l); color: var(--coral); }
+
+.clive { text-align: right; }
+.clive .cv { font-size: 22px; font-weight: 700; color: var(--teal); font-variant-numeric: tabular-nums; }
+.clive .cl { font-size: 10px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+
+.prog-bar { height: 3px; background: var(--bg2); }
+.prog-fill { height: 100%; transition: width 0.3s ease, background 0.3s; }
+
+/* ── Shared arena ── */
+.arena {
+  min-height: 220px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 16px;
+  padding: 28px 24px;
+}
+
+/* ── Shared footer ── */
+.cfooter {
+  padding: 12px 22px; border-top: 1.5px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.btn {
+  font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; font-weight: 600;
+  padding: 8px 16px; border-radius: 9px; border: none; cursor: pointer;
+  letter-spacing: 0.02em; transition: all 0.15s;
+}
+.btn-ink { background: var(--ink); color: #fff; }
+.btn-ink:hover { background: var(--purple); }
+.btn-ghost { background: transparent; color: var(--ink2); border: 1.5px solid var(--border2); }
+.btn-ghost:hover { border-color: var(--ink); color: var(--ink); }
+.btn-teal { background: var(--teal); color: #fff; }
+.btn-teal:hover { opacity: 0.88; }
+
+/* ════════════════════════════════════
+   TASK 1 — Whole Report (string flash)
+   ════════════════════════════════════ */
+.flash-display {
+  font-family: 'Playfair Display', serif;
+  font-size: 38px; font-weight: 500; letter-spacing: 0.22em;
+  color: var(--ink); min-height: 58px; display: flex; align-items: center;
+  transition: opacity 0.1s;
+}
+.flash-display.hidden { opacity: 0; }
+
+.response-row {
+  display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 4px;
+}
+.letter-btn {
+  width: 42px; height: 42px; border-radius: 9px;
+  border: 1.5px solid var(--border2); background: var(--card2);
+  font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 500;
+  cursor: pointer; transition: all 0.12s; color: var(--ink);
+  display: flex; align-items: center; justify-content: center;
+  font-variant: normal; text-transform: uppercase;
+}
+.letter-btn:hover { border-color: var(--purple); color: var(--purple); background: var(--purple-m); }
+.letter-btn.selected { background: var(--purple-m); border-color: var(--purple); color: var(--purple); }
+.letter-btn.correct-l { background: var(--green-l); border-color: var(--teal); color: var(--teal); }
+.letter-btn.wrong-l { background: var(--coral-l); border-color: var(--coral); color: var(--coral); }
+.letter-btn.disabled { pointer-events: none; opacity: 0.5; }
+
+.input-slots { display: flex; gap: 10px; }
+.slot {
+  width: 46px; height: 52px; border-radius: 9px;
+  border: 1.5px solid var(--border2); background: var(--card2);
+  font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 500;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ink); transition: all 0.15s; letter-spacing: 0;
+}
+.slot.filled { background: var(--purple-m); border-color: var(--purple); color: var(--purple); }
+.slot.correct-s { background: var(--green-l); border-color: var(--teal); color: var(--teal); }
+.slot.wrong-s { background: var(--coral-l); border-color: var(--coral); color: var(--coral); }
+
+.flash-prompt { font-size: 13px; color: var(--ink2); text-align: center; line-height: 1.5; }
+.flash-prompt strong { color: var(--amber); }
+
+/* ════════════════════════════════════
+   TASK 2 — Partial Report (cued letter)
+   ════════════════════════════════════ */
+.partial-display { position: relative; text-align: center; }
+.partial-string {
+  font-family: 'Playfair Display', serif;
+  font-size: 38px; font-weight: 500; letter-spacing: 0.22em; color: var(--ink);
+  min-height: 58px; transition: opacity 0.1s;
+}
+.partial-string.hidden { opacity: 0; }
+.cue-indicator {
+  display: flex; gap: 0; justify-content: center; margin-top: 6px;
+}
+.cue-dot {
+  width: 42px; height: 6px; border-radius: 3px; background: transparent;
+  transition: background 0.2s;
+  /* spacing matches letter-spacing above */
+  margin: 0 4px;
+}
+.cue-dot.active-cue { background: var(--amber); }
+
+.partial-choice {
+  display: grid; grid-template-columns: repeat(6, 1fr); gap: 7px; max-width: 320px;
+}
+.pchoice-btn {
+  padding: 10px 6px; border-radius: 9px;
+  border: 1.5px solid var(--border2); background: var(--card2);
+  font-family: 'Playfair Display', serif; font-size: 20px;
+  cursor: pointer; transition: all 0.12s; color: var(--ink);
+  text-align: center; text-transform: uppercase;
+}
+.pchoice-btn:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-m); }
+.pchoice-btn.pc-correct { background: var(--green-l); border-color: var(--teal); color: var(--teal); pointer-events: none; }
+.pchoice-btn.pc-wrong { background: var(--coral-l); border-color: var(--coral); color: var(--coral); pointer-events: none; }
+.pchoice-btn.pc-locked { pointer-events: none; opacity: 0.4; }
+
+/* ════════════════════════════════════
+   TASK 3 — String Matching (forced choice)
+   ════════════════════════════════════ */
+.match-target-wrap {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+}
+.match-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.match-string {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px; font-weight: 500; letter-spacing: 0.2em;
+  color: var(--ink); min-height: 54px; transition: opacity 0.1s;
+}
+.match-string.hidden { opacity: 0; }
+
+.match-options { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 360px; }
+.match-opt {
+  padding: 14px 20px; border-radius: 11px;
+  border: 1.5px solid var(--border2); background: var(--card2);
+  font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 400;
+  letter-spacing: 0.15em; cursor: pointer; transition: all 0.12s;
+  text-align: center; color: var(--ink); text-transform: uppercase;
+}
+.match-opt:hover { border-color: var(--purple); color: var(--purple); background: var(--purple-m); }
+.match-opt.mo-correct { background: var(--green-l); border-color: var(--teal); color: var(--teal); pointer-events: none; }
+.match-opt.mo-wrong { background: var(--coral-l); border-color: var(--coral); color: var(--coral); pointer-events: none; }
+.match-opt.mo-locked { pointer-events: none; opacity: 0.4; }
+
+/* ── Results panel ── */
+.results-panel {
+  padding: 24px 22px; display: none; flex-direction: column; gap: 14px;
+}
+.results-panel.show { display: flex; }
+.res-score-big { text-align: center; }
+.res-score-big .rv { font-size: 52px; font-weight: 300; color: var(--teal); line-height: 1; }
+.res-score-big .rl { font-size: 13px; color: var(--muted); margin-top: 3px; }
+.res-metrics { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.rm {
+  background: var(--card2); border: 1.5px solid var(--border); border-radius: 10px;
+  padding: 12px 10px; text-align: center;
+}
+.rm .rv { font-size: 20px; font-weight: 700; color: var(--teal); }
+.rm .rl { font-size: 10px; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; margin-top: 2px; }
+.res-insight {
+  padding: 14px 16px; border-radius: 11px;
+  background: var(--purple-m); border: 1.5px solid rgba(109,40,217,0.18);
+  font-size: 13px; color: var(--ink2); line-height: 1.65;
+}
+.res-insight strong { color: var(--purple); }
+.res-btns { display: flex; gap: 10px; justify-content: center; }
+
+/* ── Science note ── */
+.sci {
+  background: var(--card); border: 1.5px solid var(--border2); border-radius: var(--r);
+  padding: 16px 20px; font-size: 12px; color: var(--ink2); line-height: 1.7;
+  box-shadow: var(--sh);
+}
+.sci-hd { font-size: 10px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
+
+/* Exposure selector */
+.exp-row { display: flex; gap: 6px; align-items: center; }
+.exp-btn {
+  font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 600;
+  padding: 5px 11px; border-radius: 8px; border: 1.5px solid var(--border2);
+  background: transparent; color: var(--ink2); cursor: pointer; transition: all 0.14s;
+}
+.exp-btn.active { border-color: var(--purple); color: var(--purple); background: var(--purple-m); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Entrena<em>Mente</em></div>
+  <div class="ex-tag">Visión Paralela</div>
+  <div class="hdr-stats">
+    <div class="hstat">Amplitud <b id="hdr-span">–</b></div>
+    <div class="hstat">Precisión <b id="hdr-acc">–</b></div>
+  </div>
+</header>
+
+<main>
+
+  <div class="prog-dots">
+    <div class="pdot active" id="pd0"></div>
+    <div class="pdot" id="pd1"></div>
+    <div class="pdot" id="pd2"></div>
+  </div>
+
+  <!-- Task selector -->
+  <div class="task-tabs">
+    <div class="ttab active" onclick="switchTask(0)"><span class="ticon">▦</span>Informe completo</div>
+    <div class="ttab" onclick="switchTask(1)"><span class="ticon">◎</span>Informe parcial</div>
+    <div class="ttab" onclick="switchTask(2)"><span class="ticon">≈</span>Coincidencia</div>
+  </div>
+
+  <!-- ═══════════════════════
+       TASK 0: Whole Report
+       ═══════════════════════ -->
+  <div class="task-card active" id="task-0">
+    <div class="chead">
+      <div class="chead-left">
+        <div class="ctitle">Informe completo</div>
+        <div class="csub">Memoriza todos los caracteres del destello y reprodúcelos en orden. Entrena el procesamiento paralelo de strings completos.</div>
+        <div class="cpills">
+          <span class="cpill cp-teal">Whole report</span>
+          <span class="cpill cp-amber">Procesamiento paralelo</span>
+          <span class="cpill cp-purple">Longitud adaptativa</span>
+        </div>
+      </div>
+      <div class="clive"><div class="cv" id="wr-acc">–</div><div class="cl">precisión</div></div>
+    </div>
+    <div class="prog-bar"><div class="prog-fill" id="wr-pfill" style="width:0%;background:var(--teal)"></div></div>
+    <div class="arena" id="wr-arena">
+      <div class="flash-prompt" id="wr-prompt">
+        Presiona <strong>Iniciar</strong> para comenzar. Memoriza los caracteres del destello y selecciónalos en orden.
+      </div>
+      <div class="flash-display hidden" id="wr-flash">·····</div>
+      <div class="input-slots" id="wr-slots" style="display:none"></div>
+      <div class="response-row" id="wr-choices" style="display:none"></div>
+    </div>
+    <div class="cfooter">
+      <div style="display:flex;gap:5px;align-items:center">
+        <span style="font-size:11px;color:var(--muted)">Exposición:</span>
+        <button class="exp-btn" onclick="setWRExp(300)" id="wr-300">300ms</button>
+        <button class="exp-btn active" onclick="setWRExp(200)" id="wr-200">200ms</button>
+        <button class="exp-btn" onclick="setWRExp(150)" id="wr-150">150ms</button>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost" onclick="initWR()">Reiniciar</button>
+        <button class="btn btn-teal" id="wr-start" onclick="startWR()">▶ Iniciar</button>
+      </div>
+    </div>
+    <div class="results-panel" id="wr-results"></div>
+  </div>
+
+  <!-- ═══════════════════════
+       TASK 1: Partial Report
+       ═══════════════════════ -->
+  <div class="task-card" id="task-1">
+    <div class="chead">
+      <div class="chead-left">
+        <div class="ctitle">Informe parcial</div>
+        <div class="csub">Se muestra una cadena de letras; después se señala una posición. Identifica la letra que estaba en esa posición. Activa atención distribuida vs. focalizada.</div>
+        <div class="cpills">
+          <span class="cpill cp-teal">Partial report</span>
+          <span class="cpill cp-purple">Atención distribuida</span>
+          <span class="cpill cp-coral">Posición variable</span>
+        </div>
+      </div>
+      <div class="clive"><div class="cv" id="pr-acc">–</div><div class="cl">precisión</div></div>
+    </div>
+    <div class="prog-bar"><div class="prog-fill" id="pr-pfill" style="width:0%;background:var(--teal)"></div></div>
+    <div class="arena" id="pr-arena">
+      <div class="flash-prompt" id="pr-prompt">
+        Presiona <strong>Iniciar</strong>. Aparecerá una cadena de letras brevemente. Luego se señalará una posición — identifica la letra que estaba allí.
+      </div>
+      <div class="partial-display" style="display:none" id="pr-display">
+        <div class="partial-string hidden" id="pr-string">·····</div>
+        <div class="cue-indicator" id="pr-cue-row"></div>
+      </div>
+      <div class="partial-choice" id="pr-choices" style="display:none"></div>
+    </div>
+    <div class="cfooter">
+      <div style="display:flex;gap:5px;align-items:center">
+        <span style="font-size:11px;color:var(--muted)">Longitud:</span>
+        <button class="exp-btn" onclick="setPRLen(4)" id="pr-4">4</button>
+        <button class="exp-btn active" onclick="setPRLen(5)" id="pr-5">5</button>
+        <button class="exp-btn" onclick="setPRLen(6)" id="pr-6">6</button>
+        <button class="exp-btn" onclick="setPRLen(7)" id="pr-7">7</button>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost" onclick="initPR()">Reiniciar</button>
+        <button class="btn btn-teal" id="pr-start" onclick="startPR()">▶ Iniciar</button>
+      </div>
+    </div>
+    <div class="results-panel" id="pr-results"></div>
+  </div>
+
+  <!-- ═══════════════════════════════
+       TASK 2: String Matching (2AFC)
+       ═══════════════════════════════ -->
+  <div class="task-card" id="task-2">
+    <div class="chead">
+      <div class="chead-left">
+        <div class="ctitle">Coincidencia de cadenas</div>
+        <div class="csub">Se muestra una cadena brevemente. Luego aparecen dos opciones — elige la que coincide con la vista. Entrena procesamiento holístico de grupos de letras.</div>
+        <div class="cpills">
+          <span class="cpill cp-teal">2AFC string matching</span>
+          <span class="cpill cp-purple">Procesamiento holístico</span>
+          <span class="cpill cp-amber">Codificación ortográfica</span>
+        </div>
+      </div>
+      <div class="clive"><div class="cv" id="sm-acc">–</div><div class="cl">precisión</div></div>
+    </div>
+    <div class="prog-bar"><div class="prog-fill" id="sm-pfill" style="width:0%;background:var(--teal)"></div></div>
+    <div class="arena" id="sm-arena">
+      <div class="flash-prompt" id="sm-prompt">
+        Presiona <strong>Iniciar</strong>. Memoriza la cadena de letras y elige cuál de las dos opciones coincide exactamente.
+      </div>
+      <div class="match-target-wrap" style="display:none" id="sm-target-wrap">
+        <div class="match-label">Cadena objetivo</div>
+        <div class="match-string hidden" id="sm-string">·····</div>
+      </div>
+      <div class="match-options" id="sm-options" style="display:none"></div>
+    </div>
+    <div class="cfooter">
+      <div style="display:flex;gap:5px;align-items:center">
+        <span style="font-size:11px;color:var(--muted)">Exposición:</span>
+        <button class="exp-btn" onclick="setSMExp(250)" id="sm-250">250ms</button>
+        <button class="exp-btn active" onclick="setSMExp(150)" id="sm-150">150ms</button>
+        <button class="exp-btn" onclick="setSMExp(100)" id="sm-100">100ms</button>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost" onclick="initSM()">Reiniciar</button>
+        <button class="btn btn-teal" id="sm-start" onclick="startSM()">▶ Iniciar</button>
+      </div>
+    </div>
+    <div class="results-panel" id="sm-results"></div>
+  </div>
+
+  <!-- Science note -->
+  <div class="sci">
+    <div class="sci-hd">⚗ Base científica — VAS y lectura</div>
+    El Amplio de Atención Visual (VAS) es la cantidad de elementos distintos que el cerebro puede procesar en paralelo en una sola fijación. <strong>Es el predictor único de comprensión de texto</strong> en lectores adultos (Frontiers in Psychology, 2022) y el factor más sensible al entrenamiento en lectura en español. La activación bilateral de los lóbulos parietales superiores es la firma neural del procesamiento multi-letra — estas regiones se fortalecen directamente con el entrenamiento de informe de cadenas (BRAID-Learn, 2023). El estudio EVASION (Reading Research Quarterly, 2025) demostró que 10 horas de entrenamiento VAS produce mejoras significativas y longitudinales en fluidez lectora y ortografía, con efecto causal confirmado.
+  </div>
+
+</main>
+
+<script>
+// ────────────────────────────────────
+// Shared constants & utilities
+// ────────────────────────────────────
+const CONSONANTS = 'BCDFGHJKLMNPQRSTVWXYZ';
+const VOWELS = 'AEIOU';
+const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const WR_TRIALS = 12;
+const PR_TRIALS = 12;
+const SM_TRIALS = 12;
+
+function randChar(pool) { return pool[Math.floor(Math.random()*pool.length)]; }
+
+function genString(len) {
+  // Alternate consonant/vowel for Spanish-natural feel
+  let s = '';
+  for(let i=0; i<len; i++) s += i%2===0 ? randChar(CONSONANTS) : randChar(VOWELS);
+  return s;
+}
+
+function mutateSingle(str) {
+  // Change exactly one letter position
+  const idx = Math.floor(Math.random()*str.length);
+  let newChar;
+  do { newChar = randChar(ALPHABET); } while(newChar === str[idx]);
+  return str.slice(0,idx) + newChar + str.slice(idx+1);
+}
+
+function switchTask(n) {
+  document.querySelectorAll('.ttab').forEach((t,i) => t.classList.toggle('active', i===n));
+  document.querySelectorAll('.task-card').forEach((c,i) => c.classList.toggle('active', i===n));
+  ['pd0','pd1','pd2'].forEach((id,i) => {
+    const d = document.getElementById(id);
+    d.classList.remove('active','done');
+    if(i<n) d.classList.add('done');
+    else if(i===n) d.classList.add('active');
+  });
+}
+
+function showResults(panelId, hits, total, task) {
+  const acc = Math.round(hits/total*100);
+  const panel = document.getElementById(panelId);
+
+  let grade, insight, nextStep;
+  if(acc >= 85) {
+    grade = `<span style="color:var(--teal)">${acc}%</span>`;
+    insight = `<strong>Amplitud visual excelente.</strong> Tu ventana de procesamiento paralelo está bien desarrollada. Reduce el tiempo de exposición o aumenta la longitud de cadena en la próxima sesión.`;
+  } else if(acc >= 65) {
+    grade = `<span style="color:var(--amber)">${acc}%</span>`;
+    insight = `<strong>Progreso sólido.</strong> Tu VAS está ampliándose. Mantén la dificultad actual durante 3–4 sesiones más antes de reducir la exposición.`;
+  } else {
+    grade = `<span style="color:var(--coral)">${acc}%</span>`;
+    insight = `<strong>En construcción.</strong> El VAS se desarrolla con práctica repetida. Aumenta el tiempo de exposición o reduce la longitud de la cadena para consolidar antes de avanzar.`;
+  }
+
+  panel.innerHTML = `
+    <div class="res-score-big">
+      <div class="rv">${hits}<span style="font-size:28px;color:var(--muted)">/${total}</span></div>
+      <div class="rl">respuestas correctas</div>
+    </div>
+    <div class="res-metrics">
+      <div class="rm"><div class="rv">${acc}%</div><div class="rl">Precisión</div></div>
+      <div class="rm"><div class="rv">${hits}</div><div class="rl">Aciertos</div></div>
+      <div class="rm"><div class="rv">${total-hits}</div><div class="rl">Errores</div></div>
+    </div>
+    <div class="res-insight">${insight}</div>
+    <div class="res-btns">
+      <button class="btn btn-ghost" onclick="${task}()">Repetir</button>
+      <button class="btn btn-ink" onclick="switchTask(${['initWR','initPR','initSM'].indexOf(task)+1 < 3 ? ['initWR','initPR','initSM'].indexOf(task)+1 : 0})">Siguiente tarea →</button>
+    </div>
+  `;
+  panel.classList.add('show');
+  document.getElementById('hdr-acc').textContent = acc + '%';
+}
+
+// ────────────────────────────────────
+// TASK 0: Whole Report
+// ────────────────────────────────────
+let wrExp=200, wrLen=4, wrTrials=0, wrHits=0, wrRunning=false;
+let wrCurrentString='', wrUserAnswer=[], wrWaiting=false;
+
+function setWRExp(ms) {
+  wrExp=ms;
+  [300,200,150].forEach(v=>{
+    const b=document.getElementById('wr-'+v);
+    b.classList.toggle('active', v===ms);
+  });
+}
+
+function initWR() {
+  wrTrials=0; wrHits=0; wrRunning=false; wrWaiting=false; wrUserAnswer=[];
+  document.getElementById('wr-flash').className='flash-display hidden';
+  document.getElementById('wr-flash').style.display='';
+  document.getElementById('wr-slots').style.display='none';
+  document.getElementById('wr-choices').style.display='none';
+  document.getElementById('wr-results').classList.remove('show');
+  document.getElementById('wr-pfill').style.width='0%';
+  document.getElementById('wr-acc').textContent='–';
+  document.getElementById('wr-prompt').textContent='Presiona Iniciar para comenzar. Memoriza los caracteres del destello y selecciónalos en orden.';
+  document.getElementById('wr-prompt').style.display='';
+  document.getElementById('wr-start').disabled=false;
+  document.getElementById('wr-start').textContent='▶ Iniciar';
+}
+
+function startWR() {
+  wrTrials=0; wrHits=0; wrRunning=true; wrWaiting=false; wrUserAnswer=[];
+  document.getElementById('wr-start').disabled=true;
+  document.getElementById('wr-start').textContent='…';
+  document.getElementById('wr-results').classList.remove('show');
+  wrNextTrial();
+}
+
+function wrNextTrial() {
+  if(wrTrials >= WR_TRIALS) { finishWR(); return; }
+  // Adaptive length: increase after 4 consecutive correct
+  if(wrHits>0 && wrHits%4===0 && wrLen<7) wrLen++;
+  wrUserAnswer=[];
+  wrCurrentString = genString(wrLen);
+  const flashEl = document.getElementById('wr-flash');
+  const prompt = document.getElementById('wr-prompt');
+  const slots = document.getElementById('wr-slots');
+  const choices = document.getElementById('wr-choices');
+  prompt.style.display='none';
+  slots.style.display='none';
+  choices.style.display='none';
+
+  // Flash
+  flashEl.textContent = wrCurrentString;
+  flashEl.className = 'flash-display';
+  setTimeout(() => {
+    flashEl.className = 'flash-display hidden';
+    setTimeout(() => {
+      flashEl.style.display='none';
+      buildWRResponse();
+    }, 80);
+  }, wrExp);
+}
+
+function buildWRResponse() {
+  const slots = document.getElementById('wr-slots');
+  const choices = document.getElementById('wr-choices');
+  slots.innerHTML=''; choices.innerHTML='';
+
+  // Build empty slots
+  for(let i=0; i<wrCurrentString.length; i++) {
+    const s = document.createElement('div');
+    s.className='slot'; s.dataset.idx=i; s.textContent='_';
+    slots.appendChild(s);
+  }
+  slots.style.display='flex';
+
+  // Build letter options: correct letters + distractors, shuffled
+  const correct = wrCurrentString.split('');
+  const pool = new Set(correct);
+  while(pool.size < correct.length+8) pool.add(randChar(ALPHABET));
+  const options = [...pool].sort(()=>Math.random()-0.5);
+  options.forEach(letter => {
+    const b = document.createElement('button');
+    b.className='letter-btn'; b.textContent=letter; b.dataset.letter=letter;
+    b.addEventListener('click', ()=>wrTapLetter(b, letter));
+    choices.appendChild(b);
+  });
+  choices.style.display='flex';
+  wrWaiting=true;
+}
+
+function wrTapLetter(btn, letter) {
+  if(!wrWaiting) return;
+  const slots = document.getElementById('wr-slots');
+  const filled = slots.querySelectorAll('.slot.filled').length;
+  if(filled >= wrCurrentString.length) return;
+
+  // Fill next empty slot
+  const nextSlot = slots.querySelector('.slot:not(.filled)');
+  if(!nextSlot) return;
+  nextSlot.textContent=letter; nextSlot.classList.add('filled');
+  wrUserAnswer.push(letter);
+  btn.classList.add('selected');
+
+  // Check if complete
+  if(wrUserAnswer.length === wrCurrentString.length) {
+    wrWaiting=false;
+    setTimeout(()=>checkWRAnswer(), 300);
+  }
+}
+
+function checkWRAnswer() {
+  const correct = wrCurrentString.split('');
+  let allCorrect = true;
+  const slots = document.getElementById('wr-slots').querySelectorAll('.slot');
+  const choiceBtns = document.getElementById('wr-choices').querySelectorAll('.letter-btn');
+
+  slots.forEach((s,i) => {
+    if(wrUserAnswer[i]===correct[i]) { s.className='slot correct-s'; }
+    else { s.className='slot wrong-s'; allCorrect=false; }
+  });
+  choiceBtns.forEach(b => b.classList.add('disabled'));
+
+  wrTrials++;
+  if(allCorrect) wrHits++;
+  const acc = Math.round(wrHits/wrTrials*100);
+  document.getElementById('wr-acc').textContent=acc+'%';
+  document.getElementById('wr-pfill').style.width=(wrTrials/WR_TRIALS*100)+'%';
+  document.getElementById('wr-pfill').style.background=allCorrect?'var(--teal)':'var(--coral)';
+
+  setTimeout(()=>{
+    document.getElementById('wr-flash').className='flash-display hidden';
+    document.getElementById('wr-flash').style.display='';
+    wrNextTrial();
+  }, 1600);
+}
+
+function finishWR() {
+  wrRunning=false;
+  document.getElementById('wr-slots').style.display='none';
+  document.getElementById('wr-choices').style.display='none';
+  document.getElementById('wr-prompt').style.display='none';
+  showResults('wr-results', wrHits, WR_TRIALS, 'startWR');
+}
+
+// ────────────────────────────────────
+// TASK 1: Partial Report
+// ────────────────────────────────────
+let prLen=5, prTrials=0, prHits=0, prCurrentString='', prCuedPos=-1;
+
+function setPRLen(n) {
+  prLen=n;
+  [4,5,6,7].forEach(v => document.getElementById('pr-'+v).classList.toggle('active', v===n));
+}
+
+function initPR() {
+  prTrials=0; prHits=0;
+  document.getElementById('pr-display').style.display='none';
+  document.getElementById('pr-choices').style.display='none';
+  document.getElementById('pr-results').classList.remove('show');
+  document.getElementById('pr-pfill').style.width='0%';
+  document.getElementById('pr-acc').textContent='–';
+  document.getElementById('pr-prompt').textContent='Presiona Iniciar. Aparecerá una cadena de letras brevemente. Luego se señalará una posición — identifica la letra que estaba allí.';
+  document.getElementById('pr-prompt').style.display='';
+  document.getElementById('pr-start').disabled=false;
+  document.getElementById('pr-start').textContent='▶ Iniciar';
+}
+
+function startPR() {
+  prTrials=0; prHits=0;
+  document.getElementById('pr-start').disabled=true;
+  document.getElementById('pr-start').textContent='…';
+  document.getElementById('pr-results').classList.remove('show');
+  prNextTrial();
+}
+
+function prNextTrial() {
+  if(prTrials >= PR_TRIALS) { finishPR(); return; }
+  prCurrentString = genString(prLen);
+  prCuedPos = Math.floor(Math.random()*prLen);
+
+  const display = document.getElementById('pr-display');
+  const strEl = document.getElementById('pr-string');
+  const cueRow = document.getElementById('pr-cue-row');
+  const choices = document.getElementById('pr-choices');
+  const prompt = document.getElementById('pr-prompt');
+
+  prompt.style.display='none';
+  choices.style.display='none';
+
+  // Build cue row: numbered position boxes, all neutral initially
+  cueRow.innerHTML='';
+  cueRow.style.gap='10px';
+  for(let i=0; i<prLen; i++) {
+    const box = document.createElement('div');
+    box.style.cssText=`
+      width:42px; height:34px; border-radius:7px;
+      border:1.5px solid var(--border2); background:var(--card2);
+      display:flex; align-items:center; justify-content:center;
+      font-family:'Plus Jakarta Sans',sans-serif;
+      font-size:11px; font-weight:700; color:var(--muted);
+      letter-spacing:0; transition:all 0.2s;
+    `;
+    box.textContent = i+1;
+    box.dataset.pos = i;
+    cueRow.appendChild(box);
+  }
+
+  display.style.display='';
+  strEl.textContent=prCurrentString;
+  strEl.className='partial-string';
+
+  setTimeout(()=>{
+    strEl.className='partial-string hidden';
+    // Short blank gap, then reveal cue
+    setTimeout(()=>{
+      strEl.textContent='';
+      // Highlight the cued position box
+      const boxes = cueRow.querySelectorAll('div');
+      boxes.forEach((b,i) => {
+        if(i===prCuedPos) {
+          b.style.background='var(--amber-m)';
+          b.style.borderColor='var(--amber)';
+          b.style.color='var(--amber)';
+          b.style.transform='scale(1.12)';
+        } else {
+          b.style.opacity='0.35';
+        }
+      });
+      buildPRChoices();
+    }, 150);
+  }, 200);
+}
+
+function buildPRChoices() {
+  const correctLetter = prCurrentString[prCuedPos];
+  const pool = new Set([correctLetter]);
+  while(pool.size < 12) pool.add(randChar(ALPHABET));
+  const options = [...pool].sort(()=>Math.random()-0.5);
+  const grid = document.getElementById('pr-choices');
+  grid.innerHTML='';
+  options.forEach(l => {
+    const b = document.createElement('button');
+    b.className='pchoice-btn'; b.textContent=l;
+    b.addEventListener('click', ()=>checkPR(b, l, correctLetter));
+    grid.appendChild(b);
+  });
+  grid.style.display='grid';
+}
+
+function checkPR(btn, chosen, correct) {
+  const hit = chosen===correct;
+  document.querySelectorAll('.pchoice-btn').forEach(b => {
+    b.classList.add('pc-locked');
+    if(b.textContent===correct) b.classList.add('pc-correct');
+  });
+  btn.classList.remove('pc-locked');
+  if(!hit) btn.classList.add('pc-wrong');
+
+  prTrials++; if(hit) prHits++;
+  const acc = Math.round(prHits/prTrials*100);
+  document.getElementById('pr-acc').textContent=acc+'%';
+  document.getElementById('pr-pfill').style.width=(prTrials/PR_TRIALS*100)+'%';
+  document.getElementById('pr-pfill').style.background=hit?'var(--teal)':'var(--coral)';
+
+  setTimeout(prNextTrial, 1400);
+}
+
+function finishPR() {
+  document.getElementById('pr-display').style.display='none';
+  document.getElementById('pr-choices').style.display='none';
+  showResults('pr-results', prHits, PR_TRIALS, 'startPR');
+}
+
+// ────────────────────────────────────
+// TASK 2: String Matching (2AFC)
+// ────────────────────────────────────
+let smExp=150, smLen=5, smTrials=0, smHits=0;
+
+function setSMExp(ms) {
+  smExp=ms;
+  [250,150,100].forEach(v => document.getElementById('sm-'+v).classList.toggle('active', v===ms));
+}
+
+function initSM() {
+  smTrials=0; smHits=0;
+  document.getElementById('sm-target-wrap').style.display='none';
+  document.getElementById('sm-options').style.display='none';
+  document.getElementById('sm-results').classList.remove('show');
+  document.getElementById('sm-pfill').style.width='0%';
+  document.getElementById('sm-acc').textContent='–';
+  document.getElementById('sm-prompt').textContent='Presiona Iniciar. Memoriza la cadena de letras y elige cuál de las dos opciones coincide exactamente.';
+  document.getElementById('sm-prompt').style.display='';
+  document.getElementById('sm-start').disabled=false;
+  document.getElementById('sm-start').textContent='▶ Iniciar';
+}
+
+function startSM() {
+  smTrials=0; smHits=0;
+  document.getElementById('sm-start').disabled=true;
+  document.getElementById('sm-start').textContent='…';
+  document.getElementById('sm-results').classList.remove('show');
+  smNextTrial();
+}
+
+function smNextTrial() {
+  if(smTrials >= SM_TRIALS) { finishSM(); return; }
+  // Adaptive: increase length after streaks
+  if(smHits>0 && smHits%5===0 && smLen<8) smLen++;
+
+  const target = genString(smLen);
+  const distractor = mutateSingle(target);
+  const isTargetFirst = Math.random()<0.5;
+
+  const prompt = document.getElementById('sm-prompt');
+  const wrap = document.getElementById('sm-target-wrap');
+  const strEl = document.getElementById('sm-string');
+  const opts = document.getElementById('sm-options');
+
+  prompt.style.display='none';
+  opts.style.display='none';
+  wrap.style.display='flex';
+  strEl.textContent=target;
+  strEl.className='match-string';
+
+  setTimeout(()=>{
+    strEl.className='match-string hidden';
+    setTimeout(()=>{
+      wrap.style.display='none';
+      buildSMOptions(target, isTargetFirst ? [target,distractor] : [distractor,target]);
+    }, 80);
+  }, smExp);
+}
+
+function buildSMOptions(target, pair) {
+  const opts = document.getElementById('sm-options');
+  opts.innerHTML='';
+  pair.forEach(str => {
+    const b = document.createElement('div');
+    b.className='match-opt'; b.textContent=str;
+    b.addEventListener('click', ()=>checkSM(b, str===target, pair, target));
+    opts.appendChild(b);
+  });
+  opts.style.display='flex';
+}
+
+function checkSM(btn, hit, pair, target) {
+  document.querySelectorAll('.match-opt').forEach(b => {
+    b.classList.add('mo-locked');
+    if(b.textContent===target) b.classList.add('mo-correct');
+  });
+  if(!hit) btn.classList.add('mo-wrong');
+
+  smTrials++; if(hit) smHits++;
+  const acc = Math.round(smHits/smTrials*100);
+  document.getElementById('sm-acc').textContent=acc+'%';
+  document.getElementById('sm-pfill').style.width=(smTrials/SM_TRIALS*100)+'%';
+  document.getElementById('sm-pfill').style.background=hit?'var(--teal)':'var(--coral)';
+
+  setTimeout(smNextTrial, 1400);
+}
+
+function finishSM() {
+  document.getElementById('sm-options').style.display='none';
+  showResults('sm-results', smHits, SM_TRIALS, 'startSM');
+}
+
+// Init
+initWR(); initPR(); initSM();
+</script>
+</body>
+</html>

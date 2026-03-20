@@ -1,0 +1,23 @@
+EntrenaMente
+CONTRARRELOJ
+Tasa base
+–
+Comprensión
+–
+
+
+
+
+Calibración — establece tu tasa base
+Lee cada oración a tu ritmo natural. Pulsa la tecla de espacio (o el botón) al terminar. Esto establece el tiempo de exposición inicial para el entrenamiento.
+RAP PROTOCOL
+12 ORACIONES
+TASA INDIVIDUAL
+0/12
+ORACIONES
+
+
+Lee a tu ritmo natural — no es una prueba de velocidad
+▶ Comenzar calibración
+⚗ CÓMO FUNCIONA LA ADAPTACIÓN RAP
+El Programa de Aceleración Lectora (Breznitz, University of Haifa) calibra individualmente la tasa de borrado en ms/carácter. La tasa se aumenta 2 ms/car. si se acierta en 9 de cada 10 oraciones consecutivas, se mantiene si se acierta entre 8–9, y se reduce 2 ms/car. si hay más de 2 errores en 10. Este ajuste se hace hasta 5 veces por sesión. Los estudios muestran mejoras de fluidez y comprensión en 24 sesiones, con efectos de transferencia a la lectura sin restricción de tiempo.

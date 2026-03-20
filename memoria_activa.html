@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EntrenaMente — Memoria Activa</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&display=swap');
+
+:root {
+  --bg: #F6F4F0;
+  --bg2: #EDEBE5;
+  --card: #FFFFFF;
+  --card2: #F3F1EC;
+  --ink: #201E1B;
+  --ink2: #5A574F;
+  --muted: #9E9B92;
+  --border: rgba(32,30,27,0.08);
+  --border2: rgba(32,30,27,0.14);
+  --teal: #0E7490;
+  --teal-l: #CFFAFE;
+  --teal-m: rgba(14,116,144,0.10);
+  --amber: #B45309;
+  --amber-l: #FEF3C7;
+  --amber-m: rgba(180,83,9,0.09);
+  --coral: #BE123C;
+  --coral-l: #FFE4E6;
+  --coral-m: rgba(190,18,60,0.08);
+  --purple: #6D28D9;
+  --purple-l: #EDE9FE;
+  --purple-m: rgba(109,40,217,0.09);
+  --green: #065F46;
+  --green-l: #D1FAE5;
+  --green-m: rgba(6,95,70,0.08);
+  --r: 14px;
+  --sh: 0 1px 3px rgba(32,30,27,0.06), 0 5px 18px rgba(32,30,27,0.05);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg); color: var(--ink);
+  min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+  padding-bottom: 60px;
+}
+
+header {
+  width: 100%; background: var(--ink);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 26px;
+}
+.logo { font-size: 14px; font-weight: 700; color: #fff; letter-spacing: 0.03em; }
+.logo em { color: #F5C842; font-style: normal; }
+.ex-tag {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
+  color: var(--teal-l); background: rgba(14,116,144,0.3);
+  border: 1px solid rgba(14,116,144,0.5); padding: 3px 11px; border-radius: 20px;
+}
+.hstats { display: flex; gap: 14px; }
+.hstat { font-size: 12px; color: rgba(255,255,255,0.45); display: flex; gap: 5px; align-items: center; }
+.hstat b { color: #F5C842; }
+
+main { width: 100%; max-width: 680px; padding: 24px 16px 0; display: flex; flex-direction: column; gap: 18px; }
+
+/* Stage dots */
+.sdots { display: flex; gap: 5px; }
+.sdot { flex: 1; height: 4px; border-radius: 2px; background: var(--bg2); transition: background 0.35s; }
+.sdot.done { background: var(--teal); }
+.sdot.active { background: var(--amber); }
+
+/* Card */
+.card { background: var(--card); border-radius: var(--r); border: 1.5px solid var(--border2); box-shadow: var(--sh); overflow: hidden; display: none; }
+.card.show { display: block; }
+
+.chead { padding: 16px 22px 14px; border-bottom: 1.5px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.ctitle { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+.csub { font-size: 12px; color: var(--ink2); line-height: 1.55; max-width: 360px; }
+.cpills { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+.pill { font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; padding: 2px 8px; border-radius: 20px; }
+.pt { background: var(--teal-l); color: var(--teal); }
+.pa { background: var(--amber-l); color: var(--amber); }
+.pp { background: var(--purple-l); color: var(--purple); }
+.pg { background: var(--green-l); color: var(--green); }
+
+.clive { text-align: right; flex-shrink: 0; }
+.clive .cv { font-size: 24px; font-weight: 700; color: var(--teal); line-height: 1; font-variant-numeric: tabular-nums; }
+.clive .cl { font-size: 10px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 2px; }
+
+.prog-bar { height: 3px; background: var(--bg2); }
+.prog-fill { height: 100%; transition: width 0.4s ease, background 0.3s; }
+
+/* Mode tabs */
+.mode-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.mtab {
+  padding: 11px 10px; border-radius: 11px;
+  border: 1.5px solid var(--border2); background: var(--card);
+  cursor: pointer; text-align: center;
+  font-size: 11px; font-weight: 700; color: var(--muted);
+  letter-spacing: 0.04em; text-transform: uppercase; transition: all 0.18s;
+}
+.mtab:hover { border-color: var(--purple); color: var(--purple); }
+.mtab.mactive { background: var(--purple-m); border-color: var(--purple); color: var(--purple); }
+.mtab .micon { font-size: 20px; display: block; margin-bottom: 4px; }
+
+/* Buttons */
+.btn {
+  font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 700;
+  padding: 9px 18px; border-radius: 10px; border: none; cursor: pointer;
+  letter-spacing: 0.02em; transition: all 0.15s;
+}
+.btn-ink { background: var(--ink); color: #fff; }
+.btn-ink:hover { background: var(--purple); }
+.btn-teal { background: var(--teal); color: #fff; }
+.btn-teal:hover { opacity: 0.88; }
+.btn-ghost { background: transparent; color: var(--ink2); border: 1.5px solid var(--border2); }
+.btn-ghost:hover { border-color: var(--ink); color: var(--ink); }
+.btn-sm { padding: 7px 13px; font-size: 12px; }
+
+.cfooter { padding: 12px 22px; border-top: 1.5px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+/* ══════════════════════════════
+   PHASE 1 — Processing task
+   ══════════════════════════════ */
+.proc-area { padding: 24px 28px 20px; display: flex; flex-direction: column; align-items: center; gap: 18px; min-height: 200px; justify-content: center; }
+
+/* Operation span: equation */
+.equation-display {
+  font-family: 'Crimson Pro', serif;
+  font-size: 32px; font-weight: 500; color: var(--ink);
+  text-align: center; letter-spacing: 0.02em;
+}
+.equation-q { font-size: 16px; color: var(--ink2); text-align: center; margin-top: -4px; }
+.tf-btns { display: flex; gap: 12px; }
+.tf-btn {
+  width: 80px; padding: 12px; border-radius: 11px;
+  border: 1.5px solid var(--border2); background: var(--card2);
+  font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700;
+  cursor: pointer; text-align: center; transition: all 0.14s; color: var(--ink2);
+}
+.tf-btn:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-m); }
+.tf-btn.tf-correct { background: var(--green-m); border-color: var(--green); color: var(--green); pointer-events: none; }
+.tf-btn.tf-wrong { background: var(--coral-m); border-color: var(--coral); color: var(--coral); pointer-events: none; }
+.tf-btn.tf-locked { pointer-events: none; opacity: 0.4; }
+
+/* Reading span: sentence judgment */
+.sent-display {
+  font-family: 'Crimson Pro', serif;
+  font-size: 20px; line-height: 1.7; color: var(--ink);
+  text-align: center; max-width: 480px;
+  padding: 14px 0;
+}
+.sent-q { font-size: 13px; color: var(--ink2); text-align: center; }
+
+/* ══════════════════════════════
+   PHASE 2 — Memory item flash
+   ══════════════════════════════ */
+.mem-flash-wrap {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 10px 0 18px;
+}
+.mem-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.mem-item {
+  font-family: 'Crimson Pro', serif;
+  font-size: 44px; font-weight: 600; color: var(--purple);
+  letter-spacing: 0.06em; min-height: 60px;
+  transition: opacity 0.12s;
+}
+.mem-item.hidden { opacity: 0; }
+.mem-progress {
+  display: flex; gap: 7px;
+}
+.mem-dot {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--border2); transition: background 0.2s;
+}
+.mem-dot.seen { background: var(--purple); }
+
+/* ══════════════════════════════
+   PHASE 3 — Recall
+   ══════════════════════════════ */
+.recall-area { padding: 20px 24px; }
+.recall-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+.recall-slots { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; justify-content: center; }
+.recall-slot {
+  min-width: 52px; height: 52px; padding: 0 10px; border-radius: 10px;
+  border: 1.5px solid var(--border2); background: var(--card2);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 700;
+  color: var(--ink); transition: all 0.15s; letter-spacing: 0.03em;
+  position: relative;
+}
+.recall-slot.active-slot { border-color: var(--purple); background: var(--purple-m); }
+.recall-slot.slot-filled { border-color: var(--purple); color: var(--purple); }
+.recall-slot.slot-correct { border-color: var(--teal); background: var(--teal-m); color: var(--teal); }
+.recall-slot.slot-wrong { border-color: var(--coral); background: var(--coral-m); color: var(--coral); }
+.recall-slot.slot-partial { border-color: var(--amber); background: var(--amber-m); color: var(--amber); }
+
+.recall-slot .slot-reveal {
+  position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%);
+  font-size: 10px; font-family: 'Nunito', sans-serif; font-weight: 700;
+  color: var(--teal); white-space: nowrap; opacity: 0; transition: opacity 0.2s;
+}
+.recall-slot.slot-wrong .slot-reveal { opacity: 1; }
+
+.keyboard { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; max-width: 420px; margin: 0 auto; }
+.key {
+  padding: 11px 6px; border-radius: 9px;
+  border: 1.5px solid var(--border2); background: var(--card2);
+  font-family: 'Crimson Pro', serif; font-size: 20px; font-weight: 500;
+  cursor: pointer; text-align: center; transition: all 0.12s; color: var(--ink);
+}
+.key:hover { border-color: var(--purple); color: var(--purple); background: var(--purple-m); }
+.key.key-used { opacity: 0.3; pointer-events: none; }
+.key.key-backspace { font-size: 14px; font-family: 'Nunito', sans-serif; font-weight: 700; color: var(--ink2); }
+.key.key-submit { background: var(--teal); color: #fff; border-color: var(--teal); font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 700; }
+.key.key-submit:hover { opacity: 0.88; }
+
+/* ══════════════════════════════
+   Results
+   ══════════════════════════════ */
+.res-body { padding: 24px 22px; display: flex; flex-direction: column; gap: 16px; }
+.res-top { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.res-box { background: var(--card2); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px 12px; text-align: center; }
+.res-box .rv { font-size: 36px; font-weight: 300; color: var(--teal); line-height: 1; }
+.res-box .rl { font-size: 11px; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; margin-top: 4px; }
+.res-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.rg { background: var(--card2); border: 1.5px solid var(--border); border-radius: 11px; padding: 11px 10px; text-align: center; }
+.rg .rv { font-size: 18px; font-weight: 700; color: var(--ink); }
+.rg .rl { font-size: 10px; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; margin-top: 2px; }
+.insight { padding: 14px 16px; border-radius: 11px; background: var(--purple-m); border: 1.5px solid rgba(109,40,217,0.15); font-size: 13px; color: var(--ink2); line-height: 1.65; }
+.insight strong { color: var(--purple); }
+.res-btns { display: flex; gap: 10px; justify-content: center; }
+
+/* Partial credit visualisation */
+.trial-history { display: flex; gap: 5px; flex-wrap: wrap; padding: 0 22px 16px; }
+.th-pill {
+  padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.th-full { background: var(--green-l); color: var(--green); }
+.th-partial { background: var(--amber-l); color: var(--amber); }
+.th-zero { background: var(--coral-l); color: var(--coral); }
+
+/* Progress banner */
+.adapt-banner { display: none; padding: 7px 18px; margin: 0 22px 10px; border-radius: 9px; font-size: 12px; font-weight: 700; text-align: center; }
+.adapt-banner.up { background: var(--teal-m); color: var(--teal); border: 1px solid rgba(14,116,144,0.2); display: block; }
+.adapt-banner.down { background: var(--coral-m); color: var(--coral); border: 1px solid rgba(190,18,60,0.2); display: block; }
+
+/* Science note */
+.sci { background: var(--card); border: 1.5px solid var(--border2); border-radius: var(--r); padding: 16px 20px; font-size: 12px; color: var(--ink2); line-height: 1.7; box-shadow: var(--sh); }
+.sci-hd { font-size: 10px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Entrena<em>Mente</em></div>
+  <div class="ex-tag">Memoria Activa</div>
+  <div class="hstats">
+    <div class="hstat">Amplitud <b id="hdr-span">–</b></div>
+    <div class="hstat">Precisión <b id="hdr-acc">–</b></div>
+  </div>
+</header>
+
+<main>
+
+  <div class="sdots">
+    <div class="sdot active" id="sd0"></div>
+    <div class="sdot" id="sd1"></div>
+    <div class="sdot" id="sd2"></div>
+  </div>
+
+  <!-- Mode selector -->
+  <div class="mode-tabs">
+    <div class="mtab mactive" id="tab-op" onclick="setMode('operation')">
+      <span class="micon">✕÷</span>Amplitud de operación
+    </div>
+    <div class="mtab" id="tab-rs" onclick="setMode('reading')">
+      <span class="micon">📖</span>Amplitud de lectura
+    </div>
+  </div>
+
+  <!-- ══════════════════════════
+       STAGE 0: Settings / Intro
+       ══════════════════════════ -->
+  <div class="card show" id="stage-0">
+    <div class="chead">
+      <div>
+        <div class="ctitle" id="s0-title">Amplitud de operación</div>
+        <div class="csub" id="s0-sub">Verifica cada ecuación (verdadero/falso), luego memoriza la palabra que aparece. Al final de cada ronda, recuerda todas las palabras en orden.</div>
+        <div class="cpills">
+          <span class="pill pt">Complex span</span>
+          <span class="pill pa">Amplitud adaptativa</span>
+          <span class="pill pp">Puntuación parcial</span>
+        </div>
+      </div>
+      <div class="clive"><div class="cv" id="s0-setsize">3</div><div class="cl">tamaño inicial</div></div>
+    </div>
+
+    <div style="padding:20px 24px 8px">
+      <div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:16px" id="s0-desc">
+        <strong>Cómo funciona:</strong> Verás una ecuación matemática. Responde verdadero o falso rápidamente. Luego aparecerá una palabra — memorízala. Esto se repite 3–5 veces por ronda. Al terminar, escribe todas las palabras en orden usando el teclado de pantalla.
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px">
+        <div style="background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px;text-align:center">
+          <div style="font-size:20px;font-weight:700;color:var(--purple)">3–5</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:0.06em">palabras por ronda</div>
+        </div>
+        <div style="background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:12px;text-align:center">
+          <div style="font-size:20px;font-weight:700;color:var(--teal)">5</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:0.06em">rondas por sesión</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cfooter">
+      <div style="font-size:12px;color:var(--muted)">~3 minutos · Nivel se ajusta entre sesiones</div>
+      <button class="btn btn-teal" onclick="startSession()">▶ Iniciar sesión</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════
+       STAGE 1: Trial
+       ══════════════════════════ -->
+  <div class="card" id="stage-1">
+    <div class="chead">
+      <div>
+        <div class="ctitle" id="s1-title">Amplitud de operación</div>
+        <div class="csub" id="s1-sub">Responde la ecuación, luego memoriza la palabra.</div>
+      </div>
+      <div class="clive"><div class="cv" id="trial-counter">1/5</div><div class="cl">ronda</div></div>
+    </div>
+    <div class="prog-bar"><div class="prog-fill" id="trial-fill" style="width:0%;background:var(--amber)"></div></div>
+
+    <!-- Processing task -->
+    <div class="proc-area" id="proc-area"></div>
+
+    <!-- Memory item flash (shown after processing judgment) -->
+    <div class="mem-flash-wrap" id="mem-flash" style="display:none">
+      <div class="mem-label">Memoriza esta palabra</div>
+      <div class="mem-item" id="mem-word"></div>
+      <div class="mem-progress" id="mem-dots"></div>
+    </div>
+
+    <div class="adapt-banner" id="adapt-banner"></div>
+
+    <div class="cfooter" id="trial-footer">
+      <div style="font-size:12px;color:var(--muted)" id="trial-hint">Responde la ecuación para continuar</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════
+       STAGE 1b: Recall
+       ══════════════════════════ -->
+  <div class="card" id="stage-recall">
+    <div class="chead">
+      <div>
+        <div class="ctitle">Recuerda las palabras</div>
+        <div class="csub">Escribe las palabras en el orden en que aparecieron, de izquierda a derecha.</div>
+      </div>
+      <div class="clive"><div class="cv" id="recall-set">3</div><div class="cl">palabras</div></div>
+    </div>
+    <div class="recall-area">
+      <div class="recall-label">Posición de recuerdo</div>
+      <div class="recall-slots" id="recall-slots"></div>
+      <div class="keyboard" id="keyboard"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════
+       STAGE 2: Results
+       ══════════════════════════ -->
+  <div class="card" id="stage-2">
+    <div class="chead">
+      <div><div class="ctitle">Resultados de sesión</div></div>
+    </div>
+    <div class="trial-history" id="trial-history"></div>
+    <div class="res-body" id="res-body"></div>
+  </div>
+
+  <div class="sci">
+    <div class="sci-hd">⚗ Puntuación de crédito parcial (Conway et al., 2005)</div>
+    A diferencia del método todo-o-nada, el crédito parcial te asigna puntos por cada palabra recordada <em>en la posición correcta</em>, aunque la ronda no sea perfecta. Ejemplo: si la secuencia es MESA-LUNA-CIELO y recuerdas MESA-CIELO-_, obtienes 1 punto (solo MESA en posición correcta). Este método tiene mayor fiabilidad, mejor correlación con comprensión lectora (r=.42) y más sensibilidad para detectar mejoras reales (Unsworth & Engle, 2007). La amplitud de operación automatizada predice comprensión lectora, razonamiento fluido, y atención ejecutiva.
+  </div>
+
+</main>
+
+<script>
+// ────────────────────────────────────
+// Content banks
+// ────────────────────────────────────
+const EQUATIONS = [
+  { eq:'4 × 7 = 28', ans: true },  { eq:'9 + 6 = 16', ans: false },
+  { eq:'36 ÷ 6 = 6', ans: true },  { eq:'5 × 8 = 42', ans: false },
+  { eq:'13 − 5 = 8', ans: true },  { eq:'7 + 9 = 15', ans: false },
+  { eq:'6 × 6 = 36', ans: true },  { eq:'48 ÷ 8 = 7', ans: false },
+  { eq:'15 − 7 = 8', ans: true },  { eq:'3 × 9 = 28', ans: false },
+  { eq:'24 ÷ 4 = 6', ans: true },  { eq:'8 + 7 = 16', ans: false },
+  { eq:'5 × 9 = 45', ans: true },  { eq:'30 − 8 = 23', ans: false },
+  { eq:'7 × 8 = 56', ans: true },  { eq:'9 × 6 = 52', ans: false },
+  { eq:'18 ÷ 3 = 6', ans: true },  { eq:'4 + 9 = 14', ans: false },
+  { eq:'6 × 7 = 42', ans: true },  { eq:'55 ÷ 5 = 12', ans: false },
+];
+const SENTENCES = [
+  { s:'El mar siempre está en movimiento.', ans: true },
+  { s:'Los pájaros respiran bajo el agua.', ans: false },
+  { s:'La lluvia cae de las nubes hacia la tierra.', ans: true },
+  { s:'El sol sale por el oeste cada mañana.', ans: false },
+  { s:'Las plantas necesitan luz para crecer.', ans: true },
+  { s:'Los peces vuelan sobre los árboles.', ans: false },
+  { s:'El fuego necesita oxígeno para arder.', ans: true },
+  { s:'La luna produce su propia luz solar.', ans: false },
+  { s:'Los libros contienen palabras escritas.', ans: true },
+  { s:'El viento es invisible pero se puede sentir.', ans: true },
+  { s:'Los caballos tienen seis patas.', ans: false },
+  { s:'El agua hierve a cien grados centígrados.', ans: true },
+  { s:'Las flores crecen debajo de la tierra.', ans: false },
+  { s:'El sonido viaja a través del aire.', ans: true },
+  { s:'Los peces duermen con los ojos abiertos.', ans: true },
+];
+// Memory words — Spanish domain-relevant vocabulary
+const MEM_WORDS = [
+  'LUNA','MESA','CIELO','LIBRO','AGUA','MANO','NOCHE','VIENTO','CAMPO','TIEMPO',
+  'MUNDO','FLOR','CLAVE','MARCO','FONDO','RITMO','ORDEN','SABOR','CALMA','FORMA',
+  'PLUMA','ROCA','BORDE','TINTE','CUEVA','RUIDO','PRISA','TURNO','NUDO','PALMA',
+];
+const RECALL_ALPHABET = 'ABCDEFGHIJKLMNOPRSTUVZ';
+
+// ────────────────────────────────────
+// State
+// ────────────────────────────────────
+let mode = 'operation'; // 'operation' | 'reading'
+let setSize = 3;        // adaptive: items per trial
+let trialIdx = 0;       // current trial (0–9)
+const TOTAL_TRIALS = 5;
+
+// Per-trial
+let trialWords = [];       // words to memorize this trial
+let wordIdx = 0;           // which word in the trial sequence we're on
+let procIdx = 0;           // which processing item we're on
+let procCorrect = 0;       // processing accuracy for the session
+let procTotal = 0;
+
+// Per-session accumulation
+let allTrialResults = [];  // [{target:[], recalled:[], partialScore, setSize}]
+let sessionPartialTotal = 0;
+let sessionPossibleTotal = 0;
+
+// Recall state
+let recallInput = [];      // words the user has recalled so far (first letters only — use full word)
+let recallTarget = [];
+
+// Used equation/sentence indices (avoid repeats)
+let usedEqIdx = [], usedSentIdx = [];
+
+// ────────────────────────────────────
+// Stage navigation
+// 0=intro, 1=trial, 2=recall, 3=results
+// ────────────────────────────────────
+const STAGE_IDS = ['stage-0','stage-1','stage-recall','stage-2'];
+function setStage(n) {
+  STAGE_IDS.forEach((id,i) => {
+    document.getElementById(id).classList.toggle('show', i===n);
+  });
+  // Dot mapping: intro→dot0, trial→dot1, recall→dot1, results→dot2
+  const dotIdx = n===3 ? 2 : (n===1||n===2) ? 1 : 0;
+  ['sd0','sd1','sd2'].forEach((id,i) => {
+    const d = document.getElementById(id);
+    d.classList.remove('active','done');
+    if(dotIdx > i) d.classList.add('done');
+    else if(dotIdx === i) d.classList.add('active');
+  });
+}
+
+// ────────────────────────────────────
+// Mode switching — always resets to intro screen
+// ────────────────────────────────────
+function setMode(m) {
+  mode = m;
+  // Reset all session state so a mid-session tab switch doesn't leave stale data
+  trialIdx=0; sessionPartialTotal=0; sessionPossibleTotal=0;
+  allTrialResults=[]; procCorrect=0; procTotal=0;
+  usedEqIdx=[]; usedSentIdx=[];
+  setSize=3; wordIdx=0; procIdx=0;
+  recallInput=[]; recallTarget=[];
+
+  document.getElementById('tab-op').classList.toggle('mactive', m==='operation');
+  document.getElementById('tab-rs').classList.toggle('mactive', m==='reading');
+
+  if(m==='operation') {
+    document.getElementById('s0-title').textContent='Amplitud de operación';
+    document.getElementById('s0-sub').textContent='Verifica cada ecuación (verdadero/falso), luego memoriza la palabra que aparece. Al final de cada ronda, recuerda todas las palabras en orden.';
+    document.getElementById('s1-title').textContent='Amplitud de operación';
+    document.getElementById('s1-sub').textContent='Responde la ecuación, luego memoriza la palabra.';
+    document.getElementById('s0-desc').innerHTML='<strong>Cómo funciona:</strong> Verás una ecuación matemática. Responde verdadero o falso rápidamente. Luego aparecerá una palabra — memorízala. Esto se repite 3–5 veces por ronda.';
+  } else {
+    document.getElementById('s0-title').textContent='Amplitud de lectura';
+    document.getElementById('s0-sub').textContent='Juzga si cada oración tiene sentido (verdadero/falso), luego memoriza la palabra. Al final de cada ronda, recuerda todas las palabras en orden.';
+    document.getElementById('s1-title').textContent='Amplitud de lectura';
+    document.getElementById('s1-sub').textContent='¿Tiene sentido la oración? Luego memoriza la palabra.';
+    document.getElementById('s0-desc').innerHTML='<strong>Cómo funciona:</strong> Verás una oración. Juzga si tiene sentido lógico. Luego aparecerá una palabra — memorízala. La tarea de lectura activa la misma red cognitiva que la comprensión de textos.';
+  }
+  document.getElementById('s0-setsize').textContent = setSize;
+  setStage(0);
+}
+
+// ────────────────────────────────────
+// Session start
+// ────────────────────────────────────
+function startSession() {
+  trialIdx=0; sessionPartialTotal=0; sessionPossibleTotal=0;
+  allTrialResults=[]; procCorrect=0; procTotal=0;
+  usedEqIdx=[]; usedSentIdx=[];
+  document.getElementById('adapt-banner').className='adapt-banner';
+  setStage(1);
+  startTrial();
+}
+
+// ────────────────────────────────────
+// Trial
+// ────────────────────────────────────
+function startTrial() {
+  if(trialIdx >= TOTAL_TRIALS) { endSession(); return; }
+  wordIdx=0; procIdx=0;
+  document.getElementById('trial-counter').textContent=(trialIdx+1)+'/'+TOTAL_TRIALS;
+  document.getElementById('trial-fill').style.width=((trialIdx)/TOTAL_TRIALS*100)+'%';
+  document.getElementById('trial-hint').textContent = mode==='operation' ? 'Responde la ecuación para continuar' : '¿Tiene sentido la oración?';
+
+  // Generate this trial's memory words (random sample of setSize, no repeats within trial)
+  const available = MEM_WORDS.filter((_,i)=>!trialWords.includes(MEM_WORDS[i]));
+  trialWords = shuffle(MEM_WORDS).slice(0, setSize);
+  document.getElementById('adapt-banner').className='adapt-banner';
+  showProcessingItem();
+}
+
+function pickUnused(pool, usedArr) {
+  // If pool exhausted, reset and start again
+  if(usedArr.length >= pool.length) usedArr.length = 0;
+  let idx;
+  let attempts = 0;
+  do {
+    idx = Math.floor(Math.random() * pool.length);
+    attempts++;
+    if(attempts > pool.length * 3) { usedArr.length = 0; break; }
+  } while(usedArr.includes(idx));
+  usedArr.push(idx);
+  return pool[idx];
+}
+
+function showProcessingItem() {
+  const area = document.getElementById('proc-area');
+  const memFlash = document.getElementById('mem-flash');
+  memFlash.style.display='none';
+  area.style.display='flex';
+
+  if(mode==='operation') {
+    const eq = pickUnused(EQUATIONS, usedEqIdx);
+    area.innerHTML=`
+      <div class="equation-display">${eq.eq}</div>
+      <div class="equation-q">¿Es correcta esta ecuación?</div>
+      <div class="tf-btns">
+        <div class="tf-btn" onclick="answerProc(this, true, ${eq.ans})">Verdadero</div>
+        <div class="tf-btn" onclick="answerProc(this, false, ${!eq.ans})">Falso</div>
+      </div>
+    `;
+  } else {
+    const sent = pickUnused(SENTENCES, usedSentIdx);
+    area.innerHTML=`
+      <div class="sent-display">"${sent.s}"</div>
+      <div class="sent-q">¿Tiene sentido lógico?</div>
+      <div class="tf-btns">
+        <div class="tf-btn" onclick="answerProc(this, true, ${sent.ans})">Sí</div>
+        <div class="tf-btn" onclick="answerProc(this, false, ${!sent.ans})">No</div>
+      </div>
+    `;
+  }
+}
+
+function answerProc(btn, chosen, isCorrect) {
+  procTotal++;
+  const btns = btn.parentElement.querySelectorAll('.tf-btn');
+  btns.forEach(b=>b.classList.add('tf-locked'));
+  btn.classList.add(isCorrect ? 'tf-correct' : 'tf-wrong');
+  if(isCorrect) procCorrect++;
+
+  setTimeout(showMemItem, 350);
+}
+
+function showMemItem() {
+  const area = document.getElementById('proc-area');
+  const memFlash = document.getElementById('mem-flash');
+  area.style.display='none';
+  memFlash.style.display='flex';
+
+  const word = trialWords[wordIdx];
+  const wordEl = document.getElementById('mem-word');
+  wordEl.textContent = word;
+  wordEl.className = 'mem-item';
+
+  // Build position dots
+  const dots = document.getElementById('mem-dots');
+  dots.innerHTML='';
+  for(let i=0;i<setSize;i++){
+    const d=document.createElement('div');
+    d.className='mem-dot'+(i<=wordIdx?' seen':'');
+    dots.appendChild(d);
+  }
+
+  // Hide after 900ms
+  setTimeout(()=>{
+    wordEl.className='mem-item hidden';
+    wordIdx++;
+    setTimeout(()=>{
+      if(wordIdx < setSize) {
+        showProcessingItem();
+      } else {
+        startRecall();
+      }
+    }, 200);
+  }, 900);
+}
+
+// ────────────────────────────────────
+// Recall phase
+// ────────────────────────────────────
+function startRecall() {
+  recallInput = [];
+  recallTarget = [...trialWords];
+  document.getElementById('recall-set').textContent = setSize;
+  setStage(2); // show recall card
+  buildRecallUI();
+}
+
+function buildRecallUI() {
+  // Slots — one per word position
+  const slots = document.getElementById('recall-slots');
+  slots.innerHTML='';
+  for(let i=0;i<setSize;i++){
+    const s=document.createElement('div');
+    s.className='recall-slot'+(i===0?' active-slot':'');
+    s.id='slot-'+i;
+    s.innerHTML='<span class="slot-reveal"></span>';
+    slots.appendChild(s);
+  }
+
+  // Word tiles: all words from THIS trial's pool, shuffled — full word visible
+  // User taps to place in next available slot; tapped tiles become inactive
+  const keys = document.getElementById('keyboard');
+  keys.innerHTML='';
+  keys.style.gridTemplateColumns='repeat(3, 1fr)';
+  keys.style.maxWidth='400px';
+
+  const shuffledWords = shuffle([...trialWords]);
+  shuffledWords.forEach(word => {
+    const k = document.createElement('div');
+    k.className='key'; 
+    k.textContent=word;
+    k.dataset.word=word;
+    k.style.cssText='font-size:15px;padding:12px 8px;font-family:"Crimson Pro",serif;letter-spacing:0.05em;';
+    k.addEventListener('click', ()=>recallWordTap(k, word));
+    keys.appendChild(k);
+  });
+
+  // Backspace
+  const bk=document.createElement('div');
+  bk.className='key key-backspace'; bk.textContent='⌫';
+  bk.style.cssText='font-size:16px;';
+  bk.addEventListener('click', recallBackspace);
+  keys.appendChild(bk);
+
+  // Submit
+  const sb=document.createElement('div');
+  sb.className='key key-submit'; sb.textContent='Confirmar';
+  sb.style.gridColumn='span 2';
+  sb.addEventListener('click', submitRecall);
+  keys.appendChild(sb);
+}
+
+function recallWordTap(btn, word) {
+  if(recallInput.length >= setSize) return;
+  if(btn.classList.contains('key-used')) return;
+
+  recallInput.push(word);
+  btn.classList.add('key-used');
+
+  const slotIdx = recallInput.length - 1;
+  const slot = document.getElementById('slot-'+slotIdx);
+  slot.textContent = word;
+  slot.classList.add('slot-filled');
+  slot.classList.remove('active-slot');
+  // Restore slot-reveal span for scoring phase
+  const rev = document.createElement('span');
+  rev.className='slot-reveal';
+  slot.appendChild(rev);
+
+  if(recallInput.length < setSize) {
+    document.getElementById('slot-'+recallInput.length).classList.add('active-slot');
+  }
+}
+
+function recallBackspace() {
+  if(!recallInput.length) return;
+  const removed = recallInput.pop();
+  const idx = recallInput.length;
+
+  // Clear the slot
+  const slot = document.getElementById('slot-'+idx);
+  slot.textContent='';
+  slot.innerHTML='<span class="slot-reveal"></span>';
+  slot.classList.remove('slot-filled');
+  slot.classList.add('active-slot');
+  if(idx+1 < setSize) document.getElementById('slot-'+(idx+1)).classList.remove('active-slot');
+
+  // Re-enable the word tile that was just removed
+  const tile = document.querySelector(`#keyboard .key[data-word="${removed}"]`);
+  if(tile) tile.classList.remove('key-used');
+}
+
+function submitRecall() {
+  // Pad with blanks if incomplete
+  while(recallInput.length < setSize) recallInput.push('');
+
+  // Partial-credit scoring: count each position
+  let partialScore = 0;
+  recallTarget.forEach((target,i)=>{
+    const recalled = recallInput[i];
+    const slot = document.getElementById('slot-'+i);
+    slot.textContent = recalled || '–';
+    if(recalled === target) {
+      partialScore++;
+      slot.className='recall-slot slot-correct';
+    } else if(recalled && recalled !== '') {
+      slot.className='recall-slot slot-wrong';
+      // Show what was correct
+      const reveal = slot.querySelector('.slot-reveal');
+      if(reveal) { reveal.textContent = target; reveal.style.opacity='1'; }
+    } else {
+      slot.className='recall-slot slot-wrong';
+      const reveal = slot.querySelector('.slot-reveal');
+      if(reveal) { reveal.textContent = target; reveal.style.opacity='1'; }
+    }
+  });
+
+  // Record result
+  allTrialResults.push({
+    target: [...recallTarget],
+    recalled: [...recallInput],
+    partialScore,
+    setSize,
+  });
+  sessionPartialTotal += partialScore;
+  sessionPossibleTotal += setSize;
+
+  const acc = Math.round(sessionPartialTotal/sessionPossibleTotal*100);
+  document.getElementById('hdr-acc').textContent = acc+'%';
+
+  trialIdx++;
+  document.getElementById('trial-fill').style.width=((trialIdx)/TOTAL_TRIALS*100)+'%';
+
+  setTimeout(()=>{
+    setStage(1);
+    if(trialIdx < TOTAL_TRIALS) startTrial();
+    else endSession();
+  }, 1800);}
+
+// ────────────────────────────────────
+// End session
+// ────────────────────────────────────
+function endSession() {
+  const acc = sessionPossibleTotal>0 ? Math.round(sessionPartialTotal/sessionPossibleTotal*100) : 0;
+  const spanScore = (sessionPartialTotal/TOTAL_TRIALS).toFixed(1);
+  const procAcc = procTotal>0 ? Math.round(procCorrect/procTotal*100) : 0;
+
+  document.getElementById('hdr-span').textContent = spanScore;
+  document.getElementById('hdr-acc').textContent = acc+'%';
+
+  // Build trial history pills
+  const hist = document.getElementById('trial-history');
+  hist.innerHTML='<div style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);width:100%;margin-bottom:4px">Historial de rondas</div>';
+  allTrialResults.forEach((r,i)=>{
+    const pct = r.partialScore/r.setSize;
+    const cls = pct===1?'th-full':pct>=0.5?'th-partial':'th-zero';
+    const lbl = pct===1?'✓':pct>=0.5?`${r.partialScore}/${r.setSize}`:'0';
+    hist.innerHTML+=`<div class="th-pill ${cls}">R${i+1}: ${lbl}</div>`;
+  });
+
+  // Recommend next-session set size based on overall accuracy
+  let nextSetSize = setSize;
+  if(acc >= 80 && setSize < 6) nextSetSize = setSize + 1;
+  else if(acc < 50 && setSize > 2) nextSetSize = setSize - 1;
+
+  let insight;
+  if(acc>=80) insight=`<strong>Sesión excelente.</strong> Tu puntuación de amplitud (${spanScore}) muestra una capacidad sólida de mantenimiento bajo interferencia. La próxima sesión comenzará con <strong>${nextSetSize} palabras</strong> por ronda.`;
+  else if(acc>=60) insight=`<strong>Progreso sólido.</strong> La memoria de trabajo mejora con práctica consistente. Mantén ${setSize} palabras por ronda — la próxima sesión usará el mismo nivel.`;
+  else insight=`<strong>En construcción.</strong> Estás recordando algunos ítems en posición correcta — eso ya es entrenamiento válido. La próxima sesión comenzará con <strong>${nextSetSize} palabras</strong> para consolidar antes de avanzar.`;
+
+  // Persist recommended set size for next session
+  setSize = nextSetSize;
+
+  document.getElementById('res-body').innerHTML=`
+    <div class="res-top">
+      <div class="res-box"><div class="rv">${spanScore}</div><div class="rl">Amplitud parcial media</div></div>
+      <div class="res-box"><div class="rv">${acc}%</div><div class="rl">Precisión global</div></div>
+    </div>
+    <div class="res-grid">
+      <div class="rg"><div class="rv">${sessionPartialTotal}/${sessionPossibleTotal}</div><div class="rl">Ítems correctos</div></div>
+      <div class="rg"><div class="rv">${procAcc}%</div><div class="rl">Tarea de proceso</div></div>
+      <div class="rg"><div class="rv">${setSize}</div><div class="rl">Amplitud actual</div></div>
+    </div>
+    <div class="insight">${insight}</div>
+    <div class="res-btns">
+      <button class="btn btn-ghost" onclick="resetSession()">← Reiniciar</button>
+      <button class="btn btn-ink" onclick="resetSession()">Siguiente ejercicio →</button>
+    </div>
+  `;
+  setStage(3);
+}
+
+function resetSession() {
+  setStage(0);
+}
+
+// ────────────────────────────────────
+// Utils
+// ────────────────────────────────────
+function shuffle(arr) { return [...arr].sort(()=>Math.random()-0.5); }
+
+// Init
+setStage(0);
+</script>
+</body>
+</html>
