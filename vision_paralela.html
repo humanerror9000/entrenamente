@@ -285,6 +285,146 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
   background: transparent; color: var(--ink2); cursor: pointer; transition: all 0.14s;
 }
 .exp-btn.active { border-color: var(--purple); color: var(--purple); background: var(--purple-m); }
+
+/* ═══════════════════════════════════════
+   MOBILE RESPONSIVENESS — applied globally
+   ═══════════════════════════════════════ */
+@media (max-width: 640px) {
+  /* Base text scale up */
+  body { font-size: 16px; }
+
+  /* Header: hide XP bar and secondary stats on very small screens */
+  .xp-bar-wrap { display: none !important; }
+  header { padding: 12px 16px !important; }
+
+  /* Main container: full bleed with comfortable padding */
+  main { padding: 16px 12px 0 !important; gap: 14px !important; }
+
+  /* Cards: reduce padding so content breathes */
+  .chead, .card-top { padding: 14px 16px 12px !important; }
+  .ctitle, .card-title { font-size: 17px !important; }
+  .csub, .card-sub { font-size: 14px !important; }
+
+  /* Controls grid: single column on mobile */
+  .controls-grid { grid-template-columns: 1fr !important; padding: 14px 16px !important; }
+
+  /* Question options: bigger tap targets */
+  .q-opt, .qopt, .copt, .ropt { 
+    padding: 14px 16px !important; 
+    font-size: 15px !important; 
+    min-height: 48px !important;
+  }
+
+  /* RSVP word: bigger on mobile */
+  .rsvp-pre, .rsvp-focal, .rsvp-post, .rsvp-word-full { font-size: 36px !important; }
+  .rsvp-phrase { font-size: 22px !important; line-height: 1.4 !important; }
+  .rsvp-viewport { height: 180px !important; padding: 0 16px !important; }
+
+  /* Buttons: full width on mobile where stacked */
+  .cfooter, .q-footer, .drill-footer { 
+    padding: 12px 14px !important; 
+    flex-wrap: wrap !important; 
+    gap: 8px !important;
+  }
+  .btn { font-size: 14px !important; padding: 11px 16px !important; min-height: 44px !important; }
+  .btn-sm { font-size: 13px !important; padding: 10px 14px !important; }
+  .start-btn { font-size: 16px !important; padding: 16px !important; }
+
+  /* Memory slots: 2 col max */
+  .memory-slots { grid-template-columns: 1fr 1fr !important; }
+
+  /* Recall grid: single col on narrow phones */
+  .recall-grid { grid-template-columns: 1fr !important; }
+
+  /* Word flash display */
+  .word-big { font-size: 34px !important; }
+  .mem-item { font-size: 38px !important; }
+
+  /* n-back grid cells */
+  .vis-grid { width: 192px !important; gap: 6px !important; }
+  .cell { width: 56px !important; height: 56px !important; }
+
+  /* Letter display */
+  .letter-display { font-size: 42px !important; }
+
+  /* Mode/tab grids */
+  .mode-grid { grid-template-columns: 1fr !important; }
+  .mode-tabs { grid-template-columns: 1fr !important; }
+  .task-tabs { grid-template-columns: 1fr !important; }
+
+  /* Pillar section padding on index */
+  .pillar, .section-label, .divider { padding-left: 16px !important; padding-right: 16px !important; }
+
+  /* Results boxes */
+  .res-top, .res-grid { gap: 8px !important; }
+  .res-box .rv, .res-big .rv { font-size: 32px !important; }
+
+  /* Sentence display in Contrarreloj */
+  .sentence-display { font-size: 16px !important; line-height: 1.8 !important; }
+  .reading-area { padding: 18px 16px 14px !important; }
+
+  /* Recall slots in Memoria Activa */
+  .recall-slot { min-width: 44px !important; height: 46px !important; font-size: 12px !important; }
+  .recall-area { padding: 14px 14px 16px !important; }
+  .keyboard { gap: 5px !important; }
+  .key { padding: 10px 5px !important; font-size: 14px !important; }
+
+  /* Equation display */
+  .equation-display { font-size: 26px !important; }
+
+  /* Sent display in Contrarreloj */
+  .sent-display { font-size: 18px !important; }
+
+  /* Tutorial steps */
+  .tut-body { padding: 14px 16px !important; font-size: 14px !important; }
+  .tut-footer { padding: 12px 16px !important; }
+  .tut-head { padding: 10px 16px !important; }
+
+  /* Stats header: smaller */
+  .hstats { gap: 10px !important; }
+  .hstat { font-size: 11px !important; }
+  .hstat b { font-size: 12px !important; }
+
+  /* Science note collapsible */
+  .sci-toggle-btn { font-size: 13px !important; }
+}
+
+/* Collapsible science note */
+.sci-details {
+  background: var(--card, #fff);
+  border: 1.5px solid var(--border2, rgba(0,0,0,0.12));
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.sci-details summary {
+  padding: 13px 18px;
+  font-size: 13px; font-weight: 700;
+  cursor: pointer; list-style: none;
+  display: flex; align-items: center; justify-content: space-between;
+  color: var(--muted, #888); letter-spacing: 0.03em;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.sci-details summary::-webkit-details-marker { display: none; }
+.sci-details summary::after {
+  content: '▸';
+  font-size: 11px; transition: transform 0.2s;
+  color: var(--muted, #888);
+}
+.sci-details[open] summary::after { transform: rotate(90deg); }
+.sci-details[open] summary {
+  border-bottom: 1.5px solid var(--border, rgba(0,0,0,0.08));
+}
+.sci-details-body {
+  padding: 14px 18px 16px;
+  font-size: 13px; color: var(--ink2, #444); line-height: 1.7;
+}
+@media (max-width: 640px) {
+  .sci-details summary { font-size: 14px !important; padding: 14px 16px !important; }
+  .sci-details-body { font-size: 14px !important; padding: 14px 16px 16px !important; }
+}
+
 </style>
 </head>
 <body>
@@ -439,10 +579,10 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
   </div>
 
   <!-- Science note -->
-  <div class="sci">
-    <div class="sci-hd">⚗ Base científica — VAS y lectura</div>
-    El Amplio de Atención Visual (VAS) es la cantidad de elementos distintos que el cerebro puede procesar en paralelo en una sola fijación. <strong>Es el predictor único de comprensión de texto</strong> en lectores adultos (Frontiers in Psychology, 2022) y el factor más sensible al entrenamiento en lectura en español. La activación bilateral de los lóbulos parietales superiores es la firma neural del procesamiento multi-letra — estas regiones se fortalecen directamente con el entrenamiento de informe de cadenas (BRAID-Learn, 2023). El estudio EVASION (Reading Research Quarterly, 2025) demostró que 10 horas de entrenamiento VAS produce mejoras significativas y longitudinales en fluidez lectora y ortografía, con efecto causal confirmado.
-  </div>
+  <details class="sci-details">
+  <summary>⚗ Base científica — VAS y lectura</summary>
+  <div class="sci-details-body">El Amplio de Atención Visual (VAS) es la cantidad de elementos distintos que el cerebro puede procesar en paralelo en una sola fijación. <strong>Es el predictor único de comprensión de texto</strong> en lectores adultos (Frontiers in Psychology, 2022) y el factor más sensible al entrenamiento en lectura en español. La activación bilateral de los lóbulos parietales superiores es la firma neural del procesamiento multi-letra — estas regiones se fortalecen directamente con el entrenamiento de informe de cadenas (BRAID-Learn, 2023). El estudio EVASION (Reading Research Quarterly, 2025) demostró que 10 horas de entrenamiento VAS produce mejoras significativas y longitudinales en fluidez lectora y ortografía, con efecto causal confirmado.</div>
+</details>
 
 </main>
 
@@ -608,8 +748,29 @@ function buildWRResponse() {
     b.addEventListener('click', ()=>wrTapLetter(b, letter));
     choices.appendChild(b);
   });
+
+  // Backspace button
+  const bk = document.createElement('button');
+  bk.className='letter-btn'; bk.textContent='⌫'; bk.id='wr-backspace';
+  bk.style.cssText='font-family:"Plus Jakarta Sans",sans-serif;font-size:16px;color:var(--coral);border-color:rgba(190,18,60,0.3);';
+  bk.addEventListener('click', wrBackspace);
+  choices.appendChild(bk);
+
   choices.style.display='flex';
   wrWaiting=true;
+}
+
+function wrBackspace() {
+  if(!wrWaiting || wrUserAnswer.length === 0) return;
+  // Remove last answer
+  const removed = wrUserAnswer.pop();
+  const slots = document.getElementById('wr-slots');
+  const filled = slots.querySelectorAll('.slot.filled');
+  const lastFilled = filled[filled.length-1];
+  if(lastFilled) { lastFilled.textContent='_'; lastFilled.classList.remove('filled'); }
+  // Re-enable the letter button that was selected
+  const btn = document.querySelector(`.letter-btn[data-letter="${removed}"].selected`);
+  if(btn) btn.classList.remove('selected');
 }
 
 function wrTapLetter(btn, letter) {
@@ -694,7 +855,22 @@ function startPR() {
   document.getElementById('pr-start').disabled=true;
   document.getElementById('pr-start').textContent='…';
   document.getElementById('pr-results').classList.remove('show');
-  prNextTrial();
+
+  // 3-second countdown
+  const prompt = document.getElementById('pr-prompt');
+  prompt.style.display='';
+  let count = 3;
+  prompt.innerHTML = `<span style="font-size:40px;font-weight:700;color:var(--amber)">${count}</span>`;
+  const cd = setInterval(()=>{
+    count--;
+    if(count > 0) {
+      prompt.innerHTML = `<span style="font-size:40px;font-weight:700;color:var(--amber)">${count}</span>`;
+    } else {
+      clearInterval(cd);
+      prompt.style.display='none';
+      prNextTrial();
+    }
+  }, 1000);
 }
 
 function prNextTrial() {

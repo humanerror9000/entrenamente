@@ -295,6 +295,146 @@ input[type=range] {
 .flash-feedback.show { opacity: 1; }
 .flash-feedback.up { background: var(--green-l); color: var(--green); }
 .flash-feedback.down { background: var(--coral-l); color: var(--coral); }
+
+/* ═══════════════════════════════════════
+   MOBILE RESPONSIVENESS — applied globally
+   ═══════════════════════════════════════ */
+@media (max-width: 640px) {
+  /* Base text scale up */
+  body { font-size: 16px; }
+
+  /* Header: hide XP bar and secondary stats on very small screens */
+  .xp-bar-wrap { display: none !important; }
+  header { padding: 12px 16px !important; }
+
+  /* Main container: full bleed with comfortable padding */
+  main { padding: 16px 12px 0 !important; gap: 14px !important; }
+
+  /* Cards: reduce padding so content breathes */
+  .chead, .card-top { padding: 14px 16px 12px !important; }
+  .ctitle, .card-title { font-size: 17px !important; }
+  .csub, .card-sub { font-size: 14px !important; }
+
+  /* Controls grid: single column on mobile */
+  .controls-grid { grid-template-columns: 1fr !important; padding: 14px 16px !important; }
+
+  /* Question options: bigger tap targets */
+  .q-opt, .qopt, .copt, .ropt { 
+    padding: 14px 16px !important; 
+    font-size: 15px !important; 
+    min-height: 48px !important;
+  }
+
+  /* RSVP word: bigger on mobile */
+  .rsvp-pre, .rsvp-focal, .rsvp-post, .rsvp-word-full { font-size: 36px !important; }
+  .rsvp-phrase { font-size: 22px !important; line-height: 1.4 !important; }
+  .rsvp-viewport { height: 180px !important; padding: 0 16px !important; }
+
+  /* Buttons: full width on mobile where stacked */
+  .cfooter, .q-footer, .drill-footer { 
+    padding: 12px 14px !important; 
+    flex-wrap: wrap !important; 
+    gap: 8px !important;
+  }
+  .btn { font-size: 14px !important; padding: 11px 16px !important; min-height: 44px !important; }
+  .btn-sm { font-size: 13px !important; padding: 10px 14px !important; }
+  .start-btn { font-size: 16px !important; padding: 16px !important; }
+
+  /* Memory slots: 2 col max */
+  .memory-slots { grid-template-columns: 1fr 1fr !important; }
+
+  /* Recall grid: single col on narrow phones */
+  .recall-grid { grid-template-columns: 1fr !important; }
+
+  /* Word flash display */
+  .word-big { font-size: 34px !important; }
+  .mem-item { font-size: 38px !important; }
+
+  /* n-back grid cells */
+  .vis-grid { width: 192px !important; gap: 6px !important; }
+  .cell { width: 56px !important; height: 56px !important; }
+
+  /* Letter display */
+  .letter-display { font-size: 42px !important; }
+
+  /* Mode/tab grids */
+  .mode-grid { grid-template-columns: 1fr !important; }
+  .mode-tabs { grid-template-columns: 1fr !important; }
+  .task-tabs { grid-template-columns: 1fr !important; }
+
+  /* Pillar section padding on index */
+  .pillar, .section-label, .divider { padding-left: 16px !important; padding-right: 16px !important; }
+
+  /* Results boxes */
+  .res-top, .res-grid { gap: 8px !important; }
+  .res-box .rv, .res-big .rv { font-size: 32px !important; }
+
+  /* Sentence display in Contrarreloj */
+  .sentence-display { font-size: 16px !important; line-height: 1.8 !important; }
+  .reading-area { padding: 18px 16px 14px !important; }
+
+  /* Recall slots in Memoria Activa */
+  .recall-slot { min-width: 44px !important; height: 46px !important; font-size: 12px !important; }
+  .recall-area { padding: 14px 14px 16px !important; }
+  .keyboard { gap: 5px !important; }
+  .key { padding: 10px 5px !important; font-size: 14px !important; }
+
+  /* Equation display */
+  .equation-display { font-size: 26px !important; }
+
+  /* Sent display in Contrarreloj */
+  .sent-display { font-size: 18px !important; }
+
+  /* Tutorial steps */
+  .tut-body { padding: 14px 16px !important; font-size: 14px !important; }
+  .tut-footer { padding: 12px 16px !important; }
+  .tut-head { padding: 10px 16px !important; }
+
+  /* Stats header: smaller */
+  .hstats { gap: 10px !important; }
+  .hstat { font-size: 11px !important; }
+  .hstat b { font-size: 12px !important; }
+
+  /* Science note collapsible */
+  .sci-toggle-btn { font-size: 13px !important; }
+}
+
+/* Collapsible science note */
+.sci-details {
+  background: var(--card, #fff);
+  border: 1.5px solid var(--border2, rgba(0,0,0,0.12));
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.sci-details summary {
+  padding: 13px 18px;
+  font-size: 13px; font-weight: 700;
+  cursor: pointer; list-style: none;
+  display: flex; align-items: center; justify-content: space-between;
+  color: var(--muted, #888); letter-spacing: 0.03em;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.sci-details summary::-webkit-details-marker { display: none; }
+.sci-details summary::after {
+  content: '▸';
+  font-size: 11px; transition: transform 0.2s;
+  color: var(--muted, #888);
+}
+.sci-details[open] summary::after { transform: rotate(90deg); }
+.sci-details[open] summary {
+  border-bottom: 1.5px solid var(--border, rgba(0,0,0,0.08));
+}
+.sci-details-body {
+  padding: 14px 18px 16px;
+  font-size: 13px; color: var(--ink2, #444); line-height: 1.7;
+}
+@media (max-width: 640px) {
+  .sci-details summary { font-size: 14px !important; padding: 14px 16px !important; }
+  .sci-details-body { font-size: 14px !important; padding: 14px 16px 16px !important; }
+}
+
 </style>
 </head>
 <body>
@@ -335,11 +475,11 @@ input[type=range] {
       <!-- Speed -->
       <div class="ctrl-group">
         <label>Velocidad inicial</label>
-        <div class="ctrl-display"><span id="speed-val">250</span> <span>wpm</span></div>
-        <input type="range" id="speed-slider" min="150" max="350" step="10" value="250"
+        <div class="ctrl-display"><span id="speed-val">150</span> <span>wpm</span></div>
+        <input type="range" id="speed-slider" min="100" max="350" step="10" value="150"
           oninput="document.getElementById('speed-val').textContent=this.value; currentWpm=parseInt(this.value)">
         <div style="display:flex;justify-content:space-between;margin-top:3px">
-          <span style="font-size:10px;color:var(--muted)">150</span>
+          <span style="font-size:10px;color:var(--muted)">100</span>
           <span style="font-size:10px;color:var(--amber);font-weight:600">≤350 recomendado</span>
           <span style="font-size:10px;color:var(--muted)">350</span>
         </div>
@@ -362,16 +502,16 @@ input[type=range] {
         <label>Texto de hoy</label>
         <div class="text-select">
           <div class="text-opt selected" data-text="0" onclick="selectText(this,0)">
+            <span class="text-opt-name">Un día en el parque</span>
+            <span class="text-opt-meta">Narrativo · 86 palabras · Niv. A2</span>
+          </div>
+          <div class="text-opt" data-text="1" onclick="selectText(this,1)">
             <span class="text-opt-name">La biodiversidad marina</span>
             <span class="text-opt-meta">Divulgación · 142 palabras · Niv. B2</span>
           </div>
-          <div class="text-opt" data-text="1" onclick="selectText(this,1)">
+          <div class="text-opt" data-text="2" onclick="selectText(this,2)">
             <span class="text-opt-name">Economía circular en América Latina</span>
             <span class="text-opt-meta">Ensayo · 118 palabras · Niv. C1</span>
-          </div>
-          <div class="text-opt" data-text="2" onclick="selectText(this,2)">
-            <span class="text-opt-name">Entrevista: neurociencia del aprendizaje</span>
-            <span class="text-opt-meta">Periodismo · 131 palabras · Niv. C1</span>
           </div>
         </div>
       </div>
@@ -461,10 +601,10 @@ input[type=range] {
   </div>
 
   <!-- Science note -->
-  <div class="sci-note">
-    <div class="sci-head">⚗ Por qué el límite de 350 wpm</div>
-    Las investigaciones de Acklin & Papesh (2017) y Benedetto et al. (2015) confirman que no existe diferencia significativa en comprensión entre lectura normal y RSVP a 250–350 wpm, pero la comprensión cae significativamente por encima de ese umbral. El modo <em>por frases</em> preserva las señales sintácticas que el modo palabra-por-palabra elimina, lo que reduce la carga cognitiva en oraciones complejas.
-  </div>
+  <details class="sci-details">
+  <summary>⚗ Por qué el límite de 350 wpm</summary>
+  <div class="sci-details-body">Las investigaciones de Acklin & Papesh (2017) y Benedetto et al. (2015) confirman que no existe diferencia significativa en comprensión entre lectura normal y RSVP a 250–350 wpm, pero la comprensión cae significativamente por encima de ese umbral. El modo <em>por frases</em> preserva las señales sintácticas que el modo palabra-por-palabra elimina, lo que reduce la carga cognitiva en oraciones complejas.</div>
+</details>
 
 </main>
 
@@ -474,25 +614,32 @@ input[type=range] {
 // ──────────────────────────────────
 const TEXTS = [
   {
+    title: "Un día en el parque",
+    words: "El parque estaba lleno de vida aquella mañana. Los niños corrían entre los árboles mientras sus padres conversaban en los bancos. Un perro jugaba con una pelota roja cerca de la fuente. El sol brillaba con fuerza y el aire olía a flores recién abiertas. Una anciana alimentaba a las palomas con migas de pan. Dos ciclistas pasaron a gran velocidad por el camino principal. Un vendedor de helados empujaba su carrito entre los visitantes. La gente sonreía y disfrutaba del buen tiempo. Era uno de esos días perfectos que uno no olvida fácilmente."
+      .split(' '),
+    questions: [
+      { text: "¿Cuál era el ambiente general del parque esa mañana?", opts: ["Tranquilo y vacío","Lleno de actividad y alegría","Triste y solitario","Ruidoso y desagradable"], correct: 1 },
+      { text: "¿Qué hacía la anciana en el parque?", opts: ["Corría entre los árboles","Montaba en bicicleta","Alimentaba a las palomas","Vendía helados"], correct: 2 },
+      { text: "¿Cómo describe el texto el día?", opts: ["Lluvioso y frío","Nublado y ventoso","Perfecto y memorable","Caluroso y sofocante"], correct: 2 }
+    ],
+    phrases: [
+      ["El parque estaba lleno de vida"], ["aquella mañana."],
+      ["Los niños corrían entre los árboles"], ["mientras sus padres conversaban."],
+      ["Un perro jugaba con una pelota roja"], ["cerca de la fuente."],
+      ["El sol brillaba con fuerza"], ["y el aire olía a flores."],
+      ["Una anciana alimentaba a las palomas"], ["con migas de pan."],
+      ["Dos ciclistas pasaron a gran velocidad"], ["por el camino principal."],
+      ["Era uno de esos días perfectos"], ["que uno no olvida fácilmente."]
+    ]
+  },
+  {
     title: "La biodiversidad marina",
     words: "Los océanos cubren más del setenta por ciento de la superficie terrestre y albergan una biodiversidad extraordinaria que aún no hemos logrado comprender del todo. Cada año, los científicos descubren miles de especies nuevas en las profundidades marinas, lo que pone de manifiesto cuánto queda por explorar. Sin embargo, esta riqueza biológica enfrenta amenazas sin precedentes: la contaminación plástica, el calentamiento global y la sobrepesca están transformando los ecosistemas a un ritmo alarmante. Algunos estudios recientes indican que los arrecifes de coral podrían desaparecer antes de finales de este siglo si no se toman medidas urgentes. La pérdida de estos ecosistemas no solo afecta a las especies marinas, sino también a los millones de personas que dependen del océano para su alimentación y sustento. Proteger la biodiversidad marina es, en última instancia, proteger nuestra propia supervivencia."
       .split(' '),
     questions: [
-      {
-        text: "¿Cuál es la actitud del autor respecto al conocimiento científico actual del océano?",
-        opts: ["Considera que ya se ha explorado lo suficiente", "Reconoce que el conocimiento es aún incompleto", "Cree que la ciencia exagera las amenazas", "Afirma que los océanos no tienen importancia"],
-        correct: 1
-      },
-      {
-        text: "¿Qué relación implícita establece el texto entre la biodiversidad marina y los seres humanos?",
-        opts: ["Los humanos no dependen del océano", "La crisis marina solo afecta a animales", "La supervivencia humana está ligada a la salud del océano", "Los arrecifes son irrelevantes para la economía"],
-        correct: 2
-      },
-      {
-        text: "¿Qué función cumple la frase 'en última instancia' en el argumento?",
-        opts: ["Introduce una excepción a lo anterior", "Marca el inicio del texto", "Cierra el argumento conectando lo ambiental con lo humano", "Expresa incertidumbre sobre los datos"],
-        correct: 2
-      }
+      { text: "¿Cuál es la actitud del autor respecto al conocimiento científico actual del océano?", opts: ["Considera que ya se ha explorado lo suficiente","Reconoce que el conocimiento es aún incompleto","Cree que la ciencia exagera las amenazas","Afirma que los océanos no tienen importancia"], correct: 1 },
+      { text: "¿Qué relación implícita establece el texto entre la biodiversidad marina y los seres humanos?", opts: ["Los humanos no dependen del océano","La crisis marina solo afecta a animales","La supervivencia humana está ligada a la salud del océano","Los arrecifes son irrelevantes para la economía"], correct: 2 },
+      { text: "¿Qué función cumple la frase 'en última instancia' en el argumento?", opts: ["Introduce una excepción","Marca el inicio del texto","Cierra el argumento conectando lo ambiental con lo humano","Expresa incertidumbre"], correct: 2 }
     ],
     phrases: [
       ["Los océanos cubren"], ["más del setenta por ciento"], ["de la superficie terrestre"],
@@ -513,21 +660,9 @@ const TEXTS = [
     words: "La economía circular propone un modelo en el que los residuos de un proceso se convierten en los recursos de otro, rompiendo así con la lógica lineal de producir, usar y desechar. En América Latina, esta transición resulta especialmente relevante dado el crecimiento acelerado del consumo y la fragilidad de muchos ecosistemas regionales. Países como Chile, Colombia y México ya han comenzado a implementar marcos legislativos que incentivan el rediseño de productos y la gestión responsable de materiales. No obstante, los avances son desiguales: mientras algunas ciudades lideran iniciativas innovadoras, las zonas rurales siguen enfrentando déficits importantes en infraestructura de reciclaje. Para que la economía circular deje de ser una aspiración y se convierta en política pública efectiva, es necesario articular esfuerzos entre el sector privado, los gobiernos y las comunidades locales."
       .split(' '),
     questions: [
-      {
-        text: "¿Cuál es el principio central de la economía circular según el texto?",
-        opts: ["Aumentar la producción de bienes de consumo", "Eliminar todos los residuos industriales", "Reutilizar los residuos de un proceso como recursos de otro", "Reducir el consumo a cero"],
-        correct: 2
-      },
-      {
-        text: "¿Qué sugiere el conector 'No obstante' sobre la situación en América Latina?",
-        opts: ["Los avances han sido uniformes en toda la región", "Existe una contradicción entre el progreso y las brechas persistentes", "La situación ha mejorado sin excepciones", "Los gobiernos no han hecho nada"],
-        correct: 1
-      },
-      {
-        text: "¿Qué condición plantea el autor para que la economía circular sea efectiva?",
-        opts: ["Que se elimine la producción industrial", "Que solo actúe el gobierno central", "Que colaboren el sector privado, los gobiernos y las comunidades", "Que se importe tecnología de Europa"],
-        correct: 2
-      }
+      { text: "¿Cuál es el principio central de la economía circular según el texto?", opts: ["Aumentar la producción de bienes de consumo","Eliminar todos los residuos industriales","Reutilizar los residuos de un proceso como recursos de otro","Reducir el consumo a cero"], correct: 2 },
+      { text: "¿Qué sugiere el conector 'No obstante' sobre la situación en América Latina?", opts: ["Los avances han sido uniformes","Existe una contradicción entre el progreso y las brechas","La situación ha mejorado sin excepciones","Los gobiernos no han hecho nada"], correct: 1 },
+      { text: "¿Qué condición plantea el autor para que la economía circular sea efectiva?", opts: ["Que se elimine la producción industrial","Que solo actúe el gobierno central","Que colaboren el sector privado, los gobiernos y las comunidades","Que se importe tecnología de Europa"], correct: 2 }
     ],
     phrases: [
       ["La economía circular propone"], ["un modelo en el que los residuos"], ["de un proceso"],
@@ -547,7 +682,7 @@ const TEXTS = [
 // ──────────────────────────────────
 // State
 // ──────────────────────────────────
-let currentWpm = 250;
+let currentWpm = 150;
 let presentMode = 'word'; // 'word' | 'phrase'
 let selectedTextIdx = 0;
 let rsvpTimer = null;
@@ -625,16 +760,14 @@ function startRSVP() {
   totalWords = text.words.length;
   wordIdx = 0;
   paused = false;
-  startTime = Date.now();
 
-  // Setup UI
+  // Setup UI — show RSVP stage first so user can scroll to it
   setStage(1);
   document.getElementById('live-speed').value = currentWpm;
   document.getElementById('ctrl-wpm-val').textContent = currentWpm;
   document.getElementById('live-wpm').textContent = currentWpm + ' wpm';
   document.getElementById('rsvp-prog').textContent = `0 / ${totalWords} palabras`;
 
-  const viewport = document.getElementById('rsvp-viewport');
   const wordWrap = document.getElementById('rsvp-word-wrap');
   const phraseEl = document.getElementById('rsvp-phrase');
   const contextEl = document.getElementById('rsvp-context');
@@ -652,7 +785,29 @@ function startRSVP() {
     orpGuide.style.display = 'none';
   }
 
-  scheduleNext(tokens, text.words);
+  // Scroll hint + 3-second countdown
+  const viewport = document.getElementById('rsvp-viewport');
+  const countdownEl = document.createElement('div');
+  countdownEl.id = 'rsvp-countdown';
+  countdownEl.style.cssText = 'font-size:52px;font-weight:700;color:var(--purple);text-align:center;font-variant-numeric:tabular-nums;';
+  viewport.appendChild(countdownEl);
+
+  // Scroll to RSVP viewport on mobile
+  setTimeout(() => viewport.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
+
+  let count = 3;
+  countdownEl.textContent = count;
+  const cd = setInterval(() => {
+    count--;
+    if (count > 0) {
+      countdownEl.textContent = count;
+    } else {
+      clearInterval(cd);
+      if (countdownEl.parentNode) countdownEl.parentNode.removeChild(countdownEl);
+      startTime = Date.now();
+      scheduleNext(tokens, text.words);
+    }
+  }, 1000);
 }
 
 function scheduleNext(tokens, allWords) {
@@ -690,10 +845,18 @@ function scheduleNext(tokens, allWords) {
 
   wordIdx++;
 
-  // Adaptive delay: longer pauses after punctuation (simulates natural reading rhythm)
+  // Timing: for phrases use a generous fixed floor so they're always readable
   const hasPunct = /[.,;:!?]/.test(displayText.slice(-2));
-  const baseMs = (60 / currentWpm) * 1000 * wordCount;
-  const delay = hasPunct ? baseMs * 1.5 : baseMs;
+  let delay;
+  if (presentMode === 'phrase') {
+    // Phrase mode: base on word count but with a generous minimum (2000ms floor)
+    const msPerWord = (60 / currentWpm) * 1000;
+    delay = Math.max(2000, msPerWord * wordCount * 1.4);
+    if (hasPunct) delay *= 1.3;
+  } else {
+    const baseMs = (60 / currentWpm) * 1000 * wordCount;
+    delay = hasPunct ? baseMs * 1.5 : baseMs;
+  }
 
   if (!paused) {
     rsvpTimer = setTimeout(() => scheduleNext(tokens, allWords), delay);

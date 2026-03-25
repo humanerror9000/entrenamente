@@ -261,6 +261,146 @@ main { width: 100%; max-width: 680px; padding: 22px 16px 0; display: flex; flex-
 
 @keyframes pulse-slot { 0%,100%{opacity:1} 50%{opacity:0.6} }
 .pulsing { animation: pulse-slot 0.6s ease; }
+
+/* ═══════════════════════════════════════
+   MOBILE RESPONSIVENESS — applied globally
+   ═══════════════════════════════════════ */
+@media (max-width: 640px) {
+  /* Base text scale up */
+  body { font-size: 16px; }
+
+  /* Header: hide XP bar and secondary stats on very small screens */
+  .xp-bar-wrap { display: none !important; }
+  header { padding: 12px 16px !important; }
+
+  /* Main container: full bleed with comfortable padding */
+  main { padding: 16px 12px 0 !important; gap: 14px !important; }
+
+  /* Cards: reduce padding so content breathes */
+  .chead, .card-top { padding: 14px 16px 12px !important; }
+  .ctitle, .card-title { font-size: 17px !important; }
+  .csub, .card-sub { font-size: 14px !important; }
+
+  /* Controls grid: single column on mobile */
+  .controls-grid { grid-template-columns: 1fr !important; padding: 14px 16px !important; }
+
+  /* Question options: bigger tap targets */
+  .q-opt, .qopt, .copt, .ropt { 
+    padding: 14px 16px !important; 
+    font-size: 15px !important; 
+    min-height: 48px !important;
+  }
+
+  /* RSVP word: bigger on mobile */
+  .rsvp-pre, .rsvp-focal, .rsvp-post, .rsvp-word-full { font-size: 36px !important; }
+  .rsvp-phrase { font-size: 22px !important; line-height: 1.4 !important; }
+  .rsvp-viewport { height: 180px !important; padding: 0 16px !important; }
+
+  /* Buttons: full width on mobile where stacked */
+  .cfooter, .q-footer, .drill-footer { 
+    padding: 12px 14px !important; 
+    flex-wrap: wrap !important; 
+    gap: 8px !important;
+  }
+  .btn { font-size: 14px !important; padding: 11px 16px !important; min-height: 44px !important; }
+  .btn-sm { font-size: 13px !important; padding: 10px 14px !important; }
+  .start-btn { font-size: 16px !important; padding: 16px !important; }
+
+  /* Memory slots: 2 col max */
+  .memory-slots { grid-template-columns: 1fr 1fr !important; }
+
+  /* Recall grid: single col on narrow phones */
+  .recall-grid { grid-template-columns: 1fr !important; }
+
+  /* Word flash display */
+  .word-big { font-size: 34px !important; }
+  .mem-item { font-size: 38px !important; }
+
+  /* n-back grid cells */
+  .vis-grid { width: 192px !important; gap: 6px !important; }
+  .cell { width: 56px !important; height: 56px !important; }
+
+  /* Letter display */
+  .letter-display { font-size: 42px !important; }
+
+  /* Mode/tab grids */
+  .mode-grid { grid-template-columns: 1fr !important; }
+  .mode-tabs { grid-template-columns: 1fr !important; }
+  .task-tabs { grid-template-columns: 1fr !important; }
+
+  /* Pillar section padding on index */
+  .pillar, .section-label, .divider { padding-left: 16px !important; padding-right: 16px !important; }
+
+  /* Results boxes */
+  .res-top, .res-grid { gap: 8px !important; }
+  .res-box .rv, .res-big .rv { font-size: 32px !important; }
+
+  /* Sentence display in Contrarreloj */
+  .sentence-display { font-size: 16px !important; line-height: 1.8 !important; }
+  .reading-area { padding: 18px 16px 14px !important; }
+
+  /* Recall slots in Memoria Activa */
+  .recall-slot { min-width: 44px !important; height: 46px !important; font-size: 12px !important; }
+  .recall-area { padding: 14px 14px 16px !important; }
+  .keyboard { gap: 5px !important; }
+  .key { padding: 10px 5px !important; font-size: 14px !important; }
+
+  /* Equation display */
+  .equation-display { font-size: 26px !important; }
+
+  /* Sent display in Contrarreloj */
+  .sent-display { font-size: 18px !important; }
+
+  /* Tutorial steps */
+  .tut-body { padding: 14px 16px !important; font-size: 14px !important; }
+  .tut-footer { padding: 12px 16px !important; }
+  .tut-head { padding: 10px 16px !important; }
+
+  /* Stats header: smaller */
+  .hstats { gap: 10px !important; }
+  .hstat { font-size: 11px !important; }
+  .hstat b { font-size: 12px !important; }
+
+  /* Science note collapsible */
+  .sci-toggle-btn { font-size: 13px !important; }
+}
+
+/* Collapsible science note */
+.sci-details {
+  background: var(--card, #fff);
+  border: 1.5px solid var(--border2, rgba(0,0,0,0.12));
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.sci-details summary {
+  padding: 13px 18px;
+  font-size: 13px; font-weight: 700;
+  cursor: pointer; list-style: none;
+  display: flex; align-items: center; justify-content: space-between;
+  color: var(--muted, #888); letter-spacing: 0.03em;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.sci-details summary::-webkit-details-marker { display: none; }
+.sci-details summary::after {
+  content: '▸';
+  font-size: 11px; transition: transform 0.2s;
+  color: var(--muted, #888);
+}
+.sci-details[open] summary::after { transform: rotate(90deg); }
+.sci-details[open] summary {
+  border-bottom: 1.5px solid var(--border, rgba(0,0,0,0.08));
+}
+.sci-details-body {
+  padding: 14px 18px 16px;
+  font-size: 13px; color: var(--ink2, #444); line-height: 1.7;
+}
+@media (max-width: 640px) {
+  .sci-details summary { font-size: 14px !important; padding: 14px 16px !important; }
+  .sci-details-body { font-size: 14px !important; padding: 14px 16px 16px !important; }
+}
+
 </style>
 </head>
 <body>
@@ -375,17 +515,17 @@ main { width: 100%; max-width: 680px; padding: 22px 16px 0; display: flex; flex-
         <div class="dopt dsel" id="diff-easy" onclick="setDiff('easy')">
           <div class="dv">8</div>
           <div class="dl">palabras</div>
-          <div class="dd">Fácil — 1–2 actualizaciones por categoría</div>
+          <div class="dd">Fácil — 2 categorías · ideal para comenzar</div>
         </div>
         <div class="dopt" id="diff-medium" onclick="setDiff('medium')">
           <div class="dv">12</div>
           <div class="dl">palabras</div>
-          <div class="dd">Normal — 2–3 actualizaciones por categoría</div>
+          <div class="dd">Normal — 3 categorías · desafío moderado</div>
         </div>
         <div class="dopt" id="diff-hard" onclick="setDiff('hard')">
           <div class="dv">16</div>
           <div class="dl">palabras</div>
-          <div class="dd">Difícil — 3–4 actualizaciones por categoría</div>
+          <div class="dd">Difícil — 4 categorías · máxima actualización</div>
         </div>
       </div>
       <div style="padding:10px 20px 0;font-size:12px;color:var(--muted)">Las ranuras de memoria son visibles durante el juego — esto es deliberado: observar cómo se actualizan ayuda a internalizar el proceso.</div>
@@ -470,10 +610,10 @@ main { width: 100%; max-width: 680px; padding: 22px 16px 0; display: flex; flex-
     <div class="res-body" id="res-body"></div>
   </div>
 
-  <div class="sci">
-    <div class="sci-hd">⚗ Base científica — actualización por categorías</div>
-    Esta tarea es la medida de <em>updating</em> del modelo de Miyake et al. (2000), el framework más citado de funciones ejecutivas. <strong>El updating fue el predictor más fuerte de razonamiento fluido y comprensión lectora</strong> entre los tres componentes ejecutivos (updating, shifting, inhibición). La tarea de categorías es más accesible que el n-back porque la regla es natural ("guarda solo la última"), el estímulo es verbal-semántico (activando directamente redes de lectura), y no requiere decisiones de respuesta rápida — pero mantiene el mismo proceso de actualización continua que hace al n-back efectivo.
-  </div>
+  <details class="sci-details">
+  <summary>⚗ Base científica — actualización por categorías</summary>
+  <div class="sci-details-body">Esta tarea es la medida de <em>updating</em> del modelo de Miyake et al. (2000), el framework más citado de funciones ejecutivas. <strong>El updating fue el predictor más fuerte de razonamiento fluido y comprensión lectora</strong> entre los tres componentes ejecutivos (updating, shifting, inhibición). La tarea de categorías es más accesible que el n-back porque la regla es natural ("guarda solo la última"), el estímulo es verbal-semántico (activando directamente redes de lectura), y no requiere decisiones de respuesta rápida — pero mantiene el mismo proceso de actualización continua que hace al n-back efectivo.</div>
+</details>
 
 </main>
 
@@ -544,9 +684,22 @@ function setDiff(d) {
 // ─────────────────────────────
 // Session start
 // ─────────────────────────────
+// Active categories depends on difficulty
+// easy=2 cats, medium=3 cats, hard=4 cats
+const DIFF_CATS = {
+  easy: ['animals','professions'],
+  medium: ['animals','professions','objects'],
+  hard: ['animals','professions','objects','places'],
+};
+let activeCats = ['animals','professions']; // default easy
+
 function startGame() {
+  activeCats = DIFF_CATS[difficulty] || CAT_KEYS;
   roundIdx=0; totalAnswered=0; totalCorrect=0; roundResults=[];
   document.getElementById('hdr-round').textContent='1/'+totalRounds;
+  // Update recall-remaining to reflect active cat count
+  const rr=document.getElementById('recall-remaining');
+  if(rr) rr.textContent=activeCats.length;
   setStage(1);
   startRound();
 }
@@ -556,7 +709,6 @@ function startRound() {
   currentMemory={animals:null,professions:null,objects:null,places:null};
   sequence=buildSequence(streamLength);
 
-  // Reset UI
   const gt=document.getElementById('g-title'); if(gt) gt.textContent='Observa y actualiza';
   const gp=document.getElementById('g-prog'); if(gp) gp.textContent='1/'+streamLength;
   const gf=document.getElementById('g-fill'); if(gf){ gf.style.width='0%'; gf.style.background='var(--amber)'; }
@@ -564,11 +716,15 @@ function startRound() {
   const sp=document.getElementById('stream-phase'); if(sp) sp.style.display='';
   const rp=document.getElementById('recall-phase'); if(rp) rp.style.display='none';
   const nb=document.getElementById('next-round-btn'); if(nb) nb.style.display='none';
-  const rr=document.getElementById('recall-remaining'); if(rr) rr.textContent='4';
+  const rr=document.getElementById('recall-remaining'); if(rr) rr.textContent=activeCats.length;
 
+  // Show only active memory slots, hide inactive ones
   CAT_KEYS.forEach(cat=>{
-    document.getElementById('msw-'+cat).textContent='–';
-    document.getElementById('ms-'+cat).classList.remove('updated','just-updated');
+    const slot=document.getElementById('ms-'+cat);
+    const slotWord=document.getElementById('msw-'+cat);
+    if(slot) slot.style.display = activeCats.includes(cat) ? '' : 'none';
+    if(slotWord) slotWord.textContent='–';
+    if(slot) slot.classList.remove('updated','just-updated');
   });
 
   updateWordDisplay('','','1 de '+streamLength);
@@ -576,16 +732,16 @@ function startRound() {
 }
 
 function buildSequence(len) {
-  // Ensure each category appears at least twice, rest random
   const seq=[];
-  const baseCounts={animals:2,professions:2,objects:2,places:2};
-  CAT_KEYS.forEach(cat=>{
+  // Each active category appears at least twice
+  activeCats.forEach(cat=>{
     const pool=shuffle([...CATEGORIES[cat].words]);
-    for(let i=0;i<baseCounts[cat];i++) seq.push({cat,word:pool[i]});
+    seq.push({cat,word:pool[0]});
+    seq.push({cat,word:pool[1]});
   });
-  // Fill remainder randomly
+  // Fill remainder from active cats only
   while(seq.length<len) {
-    const cat=CAT_KEYS[Math.floor(Math.random()*CAT_KEYS.length)];
+    const cat=activeCats[Math.floor(Math.random()*activeCats.length)];
     const used=seq.filter(s=>s.cat===cat).map(s=>s.word);
     const avail=CATEGORIES[cat].words.filter(w=>!used.includes(w));
     if(avail.length) seq.push({cat, word:avail[Math.floor(Math.random()*avail.length)]});
@@ -667,10 +823,10 @@ function buildRecallUI() {
   grid.innerHTML='';
   recallAnswered=0;
 
-  CAT_KEYS.forEach(cat=>{
+  activeCats.forEach(cat=>{
     const catData=CATEGORIES[cat];
     const correct=currentMemory[cat];
-    if(!correct) return; // safety: category never appeared in this sequence
+    if(!correct) return;
 
     const seenInCat=sequence.filter(s=>s.cat===cat).map(s=>s.word);
     const distPool=seenInCat.filter(w=>w!==correct);
@@ -717,9 +873,9 @@ function recallAnswer(cat, chosen, correct, optWrap) {
   const hdrAcc=document.getElementById('hdr-acc');
   if(hdrAcc) hdrAcc.textContent=Math.round(totalCorrect/totalAnswered*100)+'%';
   const rem=document.getElementById('recall-remaining');
-  if(rem) rem.textContent=Math.max(0,4-recallAnswered);
+  if(rem) rem.textContent=Math.max(0,activeCats.length-recallAnswered);
 
-  if(recallAnswered===CAT_KEYS.length) {
+  if(recallAnswered===activeCats.length) {
     const isLastRound=roundIdx>=totalRounds-1;
     const hint=document.getElementById('recall-hint');
     const btn=document.getElementById('next-round-btn');

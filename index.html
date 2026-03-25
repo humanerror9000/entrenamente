@@ -295,6 +295,110 @@ footer {
   footer { flex-direction: column; }
   .footer-right { text-align: left; }
 }
+
+/* ═══════════════════════════════════════
+   MOBILE RESPONSIVENESS — applied globally
+   ═══════════════════════════════════════ */
+@media (max-width: 640px) {
+  /* Base text scale up */
+  body { font-size: 16px; }
+
+  /* Header: hide XP bar and secondary stats on very small screens */
+  .xp-bar-wrap { display: none !important; }
+  header { padding: 12px 16px !important; }
+
+  /* Main container: full bleed with comfortable padding */
+  main { padding: 16px 12px 0 !important; gap: 14px !important; }
+
+  /* Cards: reduce padding so content breathes */
+  .chead, .card-top { padding: 14px 16px 12px !important; }
+  .ctitle, .card-title { font-size: 17px !important; }
+  .csub, .card-sub { font-size: 14px !important; }
+
+  /* Controls grid: single column on mobile */
+  .controls-grid { grid-template-columns: 1fr !important; padding: 14px 16px !important; }
+
+  /* Question options: bigger tap targets */
+  .q-opt, .qopt, .copt, .ropt { 
+    padding: 14px 16px !important; 
+    font-size: 15px !important; 
+    min-height: 48px !important;
+  }
+
+  /* RSVP word: bigger on mobile */
+  .rsvp-pre, .rsvp-focal, .rsvp-post, .rsvp-word-full { font-size: 36px !important; }
+  .rsvp-phrase { font-size: 22px !important; line-height: 1.4 !important; }
+  .rsvp-viewport { height: 180px !important; padding: 0 16px !important; }
+
+  /* Buttons: full width on mobile where stacked */
+  .cfooter, .q-footer, .drill-footer { 
+    padding: 12px 14px !important; 
+    flex-wrap: wrap !important; 
+    gap: 8px !important;
+  }
+  .btn { font-size: 14px !important; padding: 11px 16px !important; min-height: 44px !important; }
+  .btn-sm { font-size: 13px !important; padding: 10px 14px !important; }
+  .start-btn { font-size: 16px !important; padding: 16px !important; }
+
+  /* Memory slots: 2 col max */
+  .memory-slots { grid-template-columns: 1fr 1fr !important; }
+
+  /* Recall grid: single col on narrow phones */
+  .recall-grid { grid-template-columns: 1fr !important; }
+
+  /* Word flash display */
+  .word-big { font-size: 34px !important; }
+  .mem-item { font-size: 38px !important; }
+
+  /* n-back grid cells */
+  .vis-grid { width: 192px !important; gap: 6px !important; }
+  .cell { width: 56px !important; height: 56px !important; }
+
+  /* Letter display */
+  .letter-display { font-size: 42px !important; }
+
+  /* Mode/tab grids */
+  .mode-grid { grid-template-columns: 1fr !important; }
+  .mode-tabs { grid-template-columns: 1fr !important; }
+  .task-tabs { grid-template-columns: 1fr !important; }
+
+  /* Pillar section padding on index */
+  .pillar, .section-label, .divider { padding-left: 16px !important; padding-right: 16px !important; }
+
+  /* Results boxes */
+  .res-top, .res-grid { gap: 8px !important; }
+  .res-box .rv, .res-big .rv { font-size: 32px !important; }
+
+  /* Sentence display in Contrarreloj */
+  .sentence-display { font-size: 16px !important; line-height: 1.8 !important; }
+  .reading-area { padding: 18px 16px 14px !important; }
+
+  /* Recall slots in Memoria Activa */
+  .recall-slot { min-width: 44px !important; height: 46px !important; font-size: 12px !important; }
+  .recall-area { padding: 14px 14px 16px !important; }
+  .keyboard { gap: 5px !important; }
+  .key { padding: 10px 5px !important; font-size: 14px !important; }
+
+  /* Equation display */
+  .equation-display { font-size: 26px !important; }
+
+  /* Sent display in Contrarreloj */
+  .sent-display { font-size: 18px !important; }
+
+  /* Tutorial steps */
+  .tut-body { padding: 14px 16px !important; font-size: 14px !important; }
+  .tut-footer { padding: 12px 16px !important; }
+  .tut-head { padding: 10px 16px !important; }
+
+  /* Stats header: smaller */
+  .hstats { gap: 10px !important; }
+  .hstat { font-size: 11px !important; }
+  .hstat b { font-size: 12px !important; }
+
+  /* Science note collapsible */
+  .sci-toggle-btn { font-size: 13px !important; }
+}
+
 </style>
 </head>
 <body>
@@ -302,7 +406,7 @@ footer {
 <header>
   <div class="brand">
     <div class="brand-name">Entrena<em>Mente</em></div>
-    <div class="brand-tag">Entrenamiento cognitivo avanzado · Prototipo</div>
+    <div class="brand-tag">Sistema de Acondicionamiento Cognitivo · Prototipo v0.1</div>
   </div>
   <div class="header-right">
     <div class="version-tag">v0.1 — Prototipos</div>
@@ -316,6 +420,17 @@ footer {
     Ejercicios diarios de <strong>5 minutos</strong> que entrenan la velocidad lectora,
     la memoria de trabajo y la <strong>agilidad cognitiva</strong> general.
   </p>
+
+  <p style="font-size:15px;color:var(--text2);line-height:1.75;max-width:580px;margin-top:20px;font-family:'Cormorant Garamond',serif;font-style:italic;">
+    EntrenaMente es un sistema de acondicionamiento cognitivo diseñado para ejercitar la mente de la misma forma en que el deporte ejercita el cuerpo — con constancia, progresión y método. Basado en investigación neurocientífica contemporánea, está diseñado para acompañar a las personas a lo largo de toda la vida: desde niños que desarrollan su potencial hasta adultos mayores que buscan mantener la mente activa y resiliente.
+  </p>
+
+  <div style="margin-top:22px;padding:14px 18px;background:var(--gold-l);border:1px solid var(--gold-b);border-radius:11px;max-width:480px;">
+    <p style="font-size:13px;color:var(--gold);font-weight:600;letter-spacing:0.02em;line-height:1.6;">
+      No es un examen. No es un juego.<br>
+      <span style="font-size:15px;font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;">Es entrenamiento real, con resultados reales.</span>
+    </p>
+  </div>
   <div class="pillar-count">
     <div class="pc"><div class="pc-dot" style="background:var(--teal)"></div>Lectura visual</div>
     <div class="pc"><div class="pc-dot" style="background:var(--purple)"></div>Memoria activa</div>

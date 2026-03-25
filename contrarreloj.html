@@ -269,6 +269,146 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
   box-shadow: var(--sh);
 }
 .sci-hd { font-size: 10px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
+
+/* ═══════════════════════════════════════
+   MOBILE RESPONSIVENESS — applied globally
+   ═══════════════════════════════════════ */
+@media (max-width: 640px) {
+  /* Base text scale up */
+  body { font-size: 16px; }
+
+  /* Header: hide XP bar and secondary stats on very small screens */
+  .xp-bar-wrap { display: none !important; }
+  header { padding: 12px 16px !important; }
+
+  /* Main container: full bleed with comfortable padding */
+  main { padding: 16px 12px 0 !important; gap: 14px !important; }
+
+  /* Cards: reduce padding so content breathes */
+  .chead, .card-top { padding: 14px 16px 12px !important; }
+  .ctitle, .card-title { font-size: 17px !important; }
+  .csub, .card-sub { font-size: 14px !important; }
+
+  /* Controls grid: single column on mobile */
+  .controls-grid { grid-template-columns: 1fr !important; padding: 14px 16px !important; }
+
+  /* Question options: bigger tap targets */
+  .q-opt, .qopt, .copt, .ropt { 
+    padding: 14px 16px !important; 
+    font-size: 15px !important; 
+    min-height: 48px !important;
+  }
+
+  /* RSVP word: bigger on mobile */
+  .rsvp-pre, .rsvp-focal, .rsvp-post, .rsvp-word-full { font-size: 36px !important; }
+  .rsvp-phrase { font-size: 22px !important; line-height: 1.4 !important; }
+  .rsvp-viewport { height: 180px !important; padding: 0 16px !important; }
+
+  /* Buttons: full width on mobile where stacked */
+  .cfooter, .q-footer, .drill-footer { 
+    padding: 12px 14px !important; 
+    flex-wrap: wrap !important; 
+    gap: 8px !important;
+  }
+  .btn { font-size: 14px !important; padding: 11px 16px !important; min-height: 44px !important; }
+  .btn-sm { font-size: 13px !important; padding: 10px 14px !important; }
+  .start-btn { font-size: 16px !important; padding: 16px !important; }
+
+  /* Memory slots: 2 col max */
+  .memory-slots { grid-template-columns: 1fr 1fr !important; }
+
+  /* Recall grid: single col on narrow phones */
+  .recall-grid { grid-template-columns: 1fr !important; }
+
+  /* Word flash display */
+  .word-big { font-size: 34px !important; }
+  .mem-item { font-size: 38px !important; }
+
+  /* n-back grid cells */
+  .vis-grid { width: 192px !important; gap: 6px !important; }
+  .cell { width: 56px !important; height: 56px !important; }
+
+  /* Letter display */
+  .letter-display { font-size: 42px !important; }
+
+  /* Mode/tab grids */
+  .mode-grid { grid-template-columns: 1fr !important; }
+  .mode-tabs { grid-template-columns: 1fr !important; }
+  .task-tabs { grid-template-columns: 1fr !important; }
+
+  /* Pillar section padding on index */
+  .pillar, .section-label, .divider { padding-left: 16px !important; padding-right: 16px !important; }
+
+  /* Results boxes */
+  .res-top, .res-grid { gap: 8px !important; }
+  .res-box .rv, .res-big .rv { font-size: 32px !important; }
+
+  /* Sentence display in Contrarreloj */
+  .sentence-display { font-size: 16px !important; line-height: 1.8 !important; }
+  .reading-area { padding: 18px 16px 14px !important; }
+
+  /* Recall slots in Memoria Activa */
+  .recall-slot { min-width: 44px !important; height: 46px !important; font-size: 12px !important; }
+  .recall-area { padding: 14px 14px 16px !important; }
+  .keyboard { gap: 5px !important; }
+  .key { padding: 10px 5px !important; font-size: 14px !important; }
+
+  /* Equation display */
+  .equation-display { font-size: 26px !important; }
+
+  /* Sent display in Contrarreloj */
+  .sent-display { font-size: 18px !important; }
+
+  /* Tutorial steps */
+  .tut-body { padding: 14px 16px !important; font-size: 14px !important; }
+  .tut-footer { padding: 12px 16px !important; }
+  .tut-head { padding: 10px 16px !important; }
+
+  /* Stats header: smaller */
+  .hstats { gap: 10px !important; }
+  .hstat { font-size: 11px !important; }
+  .hstat b { font-size: 12px !important; }
+
+  /* Science note collapsible */
+  .sci-toggle-btn { font-size: 13px !important; }
+}
+
+/* Collapsible science note */
+.sci-details {
+  background: var(--card, #fff);
+  border: 1.5px solid var(--border2, rgba(0,0,0,0.12));
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.sci-details summary {
+  padding: 13px 18px;
+  font-size: 13px; font-weight: 700;
+  cursor: pointer; list-style: none;
+  display: flex; align-items: center; justify-content: space-between;
+  color: var(--muted, #888); letter-spacing: 0.03em;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.sci-details summary::-webkit-details-marker { display: none; }
+.sci-details summary::after {
+  content: '▸';
+  font-size: 11px; transition: transform 0.2s;
+  color: var(--muted, #888);
+}
+.sci-details[open] summary::after { transform: rotate(90deg); }
+.sci-details[open] summary {
+  border-bottom: 1.5px solid var(--border, rgba(0,0,0,0.08));
+}
+.sci-details-body {
+  padding: 14px 18px 16px;
+  font-size: 13px; color: var(--ink2, #444); line-height: 1.7;
+}
+@media (max-width: 640px) {
+  .sci-details summary { font-size: 14px !important; padding: 14px 16px !important; }
+  .sci-details-body { font-size: 14px !important; padding: 14px 16px 16px !important; }
+}
+
 </style>
 </head>
 <body>
@@ -338,7 +478,7 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
         <div class="csub">Lee cada oración antes de que desaparezca. La velocidad se adapta según tu comprensión.</div>
         <div class="cpills">
           <span class="pill pt">Texto adaptativo</span>
-          <span class="pill pa" id="mode-pill">Modo: izquierda→derecha</span>
+          <span class="pill pa" id="mode-pill">Modo: Párrafo completo</span>
         </div>
       </div>
       <div class="clive"><div class="cv" id="train-prog">0/15</div><div class="cl">oraciones</div></div>
@@ -347,9 +487,9 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
 
     <!-- Fading mode selector -->
     <div class="mode-row">
-      <div class="mtab mactive" id="m0" onclick="setFadeMode(0)">← Izq. → Der.</div>
+      <div class="mtab" id="m0" onclick="setFadeMode(0)">← Izq. → Der.</div>
       <div class="mtab" id="m1" onclick="setFadeMode(1)">Palabras</div>
-      <div class="mtab" id="m2" onclick="setFadeMode(2)">Párrafo completo</div>
+      <div class="mtab mactive" id="m2" onclick="setFadeMode(2)">Párrafo completo</div>
     </div>
 
     <div class="reading-area" id="reading-area">
@@ -405,10 +545,10 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
   </div>
 
   <!-- Science note -->
-  <div class="sci">
-    <div class="sci-hd">⚗ Cómo funciona la adaptación RAP</div>
-    El Programa de Aceleración Lectora (Breznitz, University of Haifa) calibra individualmente la tasa de borrado en ms/carácter. La tasa se <strong>aumenta 2 ms/car.</strong> si se acierta en 9 de cada 10 oraciones consecutivas, se <strong>mantiene</strong> si se acierta entre 8–9, y se <strong>reduce 2 ms/car.</strong> si hay más de 2 errores en 10. Este ajuste se hace hasta 5 veces por sesión. Los estudios muestran mejoras de fluidez y comprensión en 24 sesiones, con efectos de transferencia a la lectura sin restricción de tiempo.
-  </div>
+  <details class="sci-details">
+  <summary>⚗ Cómo funciona la adaptación RAP</summary>
+  <div class="sci-details-body">El Programa de Aceleración Lectora (Breznitz, University of Haifa) calibra individualmente la tasa de borrado en ms/carácter. La tasa se <strong>aumenta 2 ms/car.</strong> si se acierta en 9 de cada 10 oraciones consecutivas, se <strong>mantiene</strong> si se acierta entre 8–9, y se <strong>reduce 2 ms/car.</strong> si hay más de 2 errores en 10. Este ajuste se hace hasta 5 veces por sesión. Los estudios muestran mejoras de fluidez y comprensión en 24 sesiones, con efectos de transferencia a la lectura sin restricción de tiempo.</div>
+</details>
 
 </main>
 
@@ -457,7 +597,7 @@ let baseRateMs = 0; // ms per character — the calibration result
 let currentRate = 0; // live training rate (ms per character)
 
 let trainIdx = 0, trainCorrect = 0, trainWindow = []; // last 10 results
-let fadeMode = 0; // 0=left-right overlay, 1=word fade, 2=full paragraph
+let fadeMode = 2; // default: full paragraph (easiest — whole sentence disappears at once)
 let fadeTimer = null, paused = false;
 
 let qAnswered = 0, qCorrect = 0;
@@ -783,7 +923,18 @@ function showResults() {
 }
 
 function restartSession() {
+  clearTimeout(fadeTimer);
+  document.removeEventListener('keydown', spaceHandler2);
   trainIdx=0; trainCorrect=0; trainWindow=[];
+  qAnswered=0; qCorrect=0; questionItems=[];
+  paused=false;
+  // Reset question UI
+  const qArea=document.getElementById('q-area');
+  if(qArea) qArea.innerHTML='';
+  const qBtn=document.getElementById('q-next-btn');
+  if(qBtn) qBtn.style.display='none';
+  const qNote=document.getElementById('q-footer-note');
+  if(qNote) qNote.textContent='Responde todas las preguntas para ver tus resultados';
   setStage(0);
 }
 
