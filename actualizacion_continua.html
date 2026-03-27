@@ -5,36 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EntrenaMente — Actualización Continua</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
-
 :root {
-  --bg: #0F0F1A;
-  --bg2: #171724;
-  --card: #1E1E30;
-  --card2: #252538;
-  --border: rgba(255,255,255,0.07);
-  --border2: rgba(255,255,255,0.13);
-  --text: #E4E2F0;
-  --text2: #9896B0;
-  --text3: #555368;
-  --teal: #00D4C8;
-  --teal-d: rgba(0,212,200,0.12);
-  --teal-b: rgba(0,212,200,0.25);
-  --amber: #FFB627;
-  --amber-d: rgba(255,182,39,0.12);
-  --coral: #FF5E5B;
-  --coral-d: rgba(255,94,91,0.12);
-  --purple: #A78BFA;
-  --purple-d: rgba(167,139,250,0.12);
-  --green: #34D399;
-  --green-d: rgba(52,211,153,0.12);
-  --r: 14px;
+  --bg:#0C0C10; --bg2:#13131A; --card:#18181F; --card2:#1E1E28;
+  --border:rgba(255,255,255,0.06); --border2:rgba(255,255,255,0.11);
+  --text:#EAE8F2; --text2:#8E8CA8; --text3:#7A788F;
+  --gold:#C9A84C; --gold-l:rgba(201,168,76,0.12); --gold-b:rgba(201,168,76,0.30);
+  --teal:#2ECFB8; --teal-d:rgba(46,207,184,0.12); --teal-b:rgba(46,207,184,0.28);
+  --amber:#F5A623; --amber-d:rgba(245,166,35,0.12); --amber-b:rgba(245,166,35,0.28);
+  --coral:#E05C5C; --coral-d:rgba(224,92,92,0.12); --coral-b:rgba(224,92,92,0.30);
+  --purple:#9B7FFF; --purple-d:rgba(155,127,255,0.12); --purple-b:rgba(155,127,255,0.28);
+  --green:#52C98A; --green-d:rgba(82,201,138,0.12); --green-b:rgba(82,201,138,0.30);
+  --r:14px; --sh:0 2px 20px rgba(0,0,0,0.35);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: 'Outfit', sans-serif;
-  background: var(--bg); color: var(--text);
+  background:var(--bg); color:var(--text);
   min-height: 100vh; display: flex; flex-direction: column; align-items: center;
   padding-bottom: 60px;
 }
@@ -237,7 +224,7 @@ main { width: 100%; max-width: 680px; padding: 22px 16px 0; display: flex; flex-
 }
 .tut-body {
   padding: 18px 20px; display: flex; flex-direction: column; gap: 12px;
-  font-size: 13px; color: var(--text2); line-height: 1.65;
+  font-size: 13px; color:var(--text); line-height: 1.65;
 }
 .tut-body p { color: var(--text2); }
 .tut-body strong { color: var(--text); }
@@ -435,23 +422,50 @@ main { width: 100%; max-width: 680px; padding: 22px 16px 0; display: flex; flex-
 }
 .sci-details-body {
   padding: 14px 18px 16px;
-  font-size: 13px; color: var(--ink2, #444); line-height: 1.7;
+  font-size: 13px; color:var(--text); line-height: 1.7;
 }
 @media (max-width: 640px) {
   .sci-details summary { font-size: 14px !important; padding: 14px 16px !important; }
   .sci-details-body { font-size: 14px !important; padding: 14px 16px 16px !important; }
 }
 
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.4;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");}
+
+/* ── Shared design system classes ── */
+.logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:var(--text);letter-spacing:-0.01em;}
+.logo em{color:var(--gold);font-style:italic;}
+.hdr-back{font-size:12px;color:var(--text3);text-decoration:none;display:flex;align-items:center;gap:4px;transition:color 0.15s;}
+.hdr-back:hover{color:var(--text2);}
+.hdr-ex-name{font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);}
+.hdr-stat{font-size:12px;color:var(--text3);display:flex;align-items:center;gap:5px;}
+.hdr-stat b{color:var(--teal);font-size:13px;}
+.instr-banner{background:var(--teal-d);border-bottom:1px solid var(--teal-b);padding:14px 20px;display:flex;align-items:flex-start;gap:12px;}
+.instr-icon{font-size:20px;flex-shrink:0;margin-top:1px;}
+.instr-text{font-size:14px;color:var(--text2);line-height:1.65;}
+.instr-text strong{color:var(--text);font-weight:600;}
+.card-title-serif{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--text);line-height:1.1;margin-bottom:4px;}
+.sci-details{background:var(--card);border:1px solid var(--border2);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;}
+.sci-details summary{padding:13px 18px;font-size:12px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--text3);cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;-webkit-tap-highlight-color:transparent;}
+.sci-details summary::-webkit-details-marker{display:none;}
+.sci-details summary::after{content:'▸';font-size:10px;transition:transform 0.2s;color:var(--text3);}
+.sci-details[open] summary::after{transform:rotate(90deg);}
+.sci-details[open] summary{border-bottom:1px solid var(--border);}
+.sci-body,.sci-details-body{padding:14px 18px 16px;font-size:13px;color:var(--text2);line-height:1.7;}
+.sci-body strong,.sci-details-body strong{color:var(--text);}
+
 </style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <header>
-  <div class="logo">Entrena<em>Mente</em></div>
-  <div class="ex-tag">Actualización Continua</div>
-  <div class="hstats">
-    <div class="hstat">Nivel <b id="hdr-n">2-back</b></div>
-    <div class="hstat">Precisión <b id="hdr-acc">–</b></div>
+  <a class="hdr-back" href="index.html">← Inicio</a>
+  <span class="hdr-ex-name">N-back</span>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <div class="hdr-stat">precisión <b id="hdr-acc">–</b></div>
+    <div class="logo">Entrena<em>Mente</em></div>
   </div>
 </header>
 
@@ -469,8 +483,8 @@ main { width: 100%; max-width: 680px; padding: 22px 16px 0; display: flex; flex-
   <div class="card show" id="s0">
     <div class="chead">
       <div>
-        <div class="ctitle">Actualización Continua</div>
-        <div class="csub">Entrena tu memoria de trabajo: compara lo que ves <em>ahora</em> con lo que viste hace N pasos.</div>
+        <div class="ctitle" style="font-family:\'Cormorant Garamond\',serif;font-weight:300;font-size:24px;">Actualización Continua</div>
+        <div class="csub" style="font-size:13px;color:var(--text2);">Entrena tu memoria de trabajo: compara lo que ves <em>ahora</em> con lo que viste hace N pasos.</div>
       </div>
       <div class="clive"><div class="cv" id="s0-n">1</div><div class="cl">n-back</div></div>
     </div>

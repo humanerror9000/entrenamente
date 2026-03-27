@@ -3,615 +3,577 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EntrenaMente — Lectura Flash (RSVP)</title>
+<title>EntrenaMente — Lectura Flash</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap');
-
+/* ── Design system ── */
 :root {
-  --ink: #14142B;
-  --ink2: #4A4A6A;
-  --muted: #9090B0;
-  --bg: #F0EEE8;
-  --card: #FAFAF7;
-  --card2: #F2F0EA;
-  --border: rgba(20,20,43,0.09);
-  --teal: #0D7377;
-  --teal-l: #E3F4F4;
-  --amber: #D48B10;
-  --amber-l: #FDF4E0;
-  --coral: #C0392B;
-  --coral-l: #FDEDEB;
-  --green: #2E7D52;
-  --green-l: #E8F5EE;
-  --purple: #5641A8;
-  --purple-l: #EDEAFF;
+  --bg:     #0C0C10;
+  --bg2:    #13131A;
+  --card:   #18181F;
+  --card2:  #1E1E28;
+  --border: rgba(255,255,255,0.06);
+  --border2:rgba(255,255,255,0.11);
+  --text:   #EAE8F2;
+  --text2:  #8E8CA8;
+  --text3:  #7A788F;
+  --gold:   #C9A84C;
+  --gold-l: rgba(201,168,76,0.12);
+  --gold-b: rgba(201,168,76,0.30);
+  --teal:   #2ECFB8;
+  --teal-d: rgba(46,207,184,0.12);
+  --teal-b: rgba(46,207,184,0.28);
+  --amber:  #F5A623;
+  --amber-d:rgba(245,166,35,0.12);
+  --coral:  #E05C5C;
+  --coral-d:rgba(224,92,92,0.12);
+  --coral-b:rgba(224,92,92,0.30);
+  --purple: #9B7FFF;
+  --purple-d:rgba(155,127,255,0.12);
+  --green:  #52C98A;
+  --green-d:rgba(82,201,138,0.12);
+  --green-b:rgba(82,201,138,0.30);
   --r: 14px;
-  --sh: 0 2px 16px rgba(20,20,43,0.07);
+  --sh: 0 2px 20px rgba(0,0,0,0.35);
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--bg);
-  color: var(--ink);
-  min-height: 100vh;
-  display: flex; flex-direction: column; align-items: center;
-  padding-bottom: 60px;
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg); color:var(--text);
+  min-height:100vh; display:flex; flex-direction:column; align-items:center;
+  padding-bottom:60px;
+}
+body::before{
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:0.4;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
 }
 
-header {
-  width: 100%; background: var(--ink);
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 13px 28px;
+/* ── Header ── */
+header{
+  position:relative; z-index:10;
+  width:100%; background:rgba(12,12,16,0.92);
+  border-bottom:1px solid var(--border2);
+  backdrop-filter:blur(12px);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 24px;
 }
-.logo { font-size: 14px; font-weight: 600; color: #fff; letter-spacing: 0.04em; }
-.logo em { color: #F5C842; font-style: normal; }
-.xp-bar-wrap { display: flex; align-items: center; gap: 10px; }
-.xp-label { font-size: 11px; color: rgba(255,255,255,0.5); font-weight: 500; }
-.xp-bar { width: 120px; height: 5px; background: rgba(255,255,255,0.15); border-radius: 3px; overflow: hidden; }
-.xp-fill { height: 100%; background: #F5C842; border-radius: 3px; transition: width 0.8s ease; width: 42%; }
-.wpm-badge {
-  font-size: 12px; font-weight: 600; color: #F5C842;
-  background: rgba(245,200,66,0.12);
-  border: 1px solid rgba(245,200,66,0.25);
-  padding: 4px 11px; border-radius: 20px;
+.logo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px; font-weight:300; color:var(--text); letter-spacing:-0.01em;
 }
+.logo em{color:var(--gold); font-style:italic;}
+.hdr-center{display:flex; align-items:center; gap:8px;}
+.hdr-ex-name{
+  font-size:12px; font-weight:600; letter-spacing:0.08em;
+  text-transform:uppercase; color:var(--text3);
+}
+.hdr-right{display:flex; align-items:center; gap:10px;}
+.hdr-stat{
+  font-size:12px; color:var(--text3);
+  display:flex; align-items:center; gap:5px;
+}
+.hdr-stat b{color:var(--teal); font-size:13px;}
+.hdr-back{
+  font-size:12px; color:var(--text3); text-decoration:none;
+  display:flex; align-items:center; gap:4px; transition:color 0.15s;
+}
+.hdr-back:hover{color:var(--text2);}
 
-main { width: 100%; max-width: 680px; padding: 28px 16px 0; display: flex; flex-direction: column; gap: 20px; }
-
-/* Stage tabs */
-.stage-row { display: flex; gap: 6px; }
-.stage-dot {
-  flex: 1; height: 5px; border-radius: 3px;
-  background: var(--border); transition: background 0.3s;
-}
-.stage-dot.done { background: var(--teal); }
-.stage-dot.active { background: var(--amber); }
-
-/* Settings card */
-.settings-card {
-  background: var(--card); border-radius: var(--r); border: 1px solid var(--border);
-  box-shadow: var(--sh); overflow: hidden;
-}
-.card-top {
-  padding: 18px 22px 14px;
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: flex-start; justify-content: space-between;
-}
-.card-title { font-size: 16px; font-weight: 600; margin-bottom: 3px; }
-.card-sub { font-size: 13px; color: var(--ink2); line-height: 1.5; }
-.pills { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
-.pill {
-  font-size: 10px; font-weight: 600; letter-spacing: 0.07em;
-  text-transform: uppercase; padding: 3px 9px; border-radius: 20px;
-}
-.p-teal { background: var(--teal-l); color: var(--teal); }
-.p-amber { background: var(--amber-l); color: var(--amber); }
-.p-purple { background: var(--purple-l); color: var(--purple); }
-
-/* Controls */
-.controls-grid {
-  padding: 18px 22px; display: grid;
-  grid-template-columns: 1fr 1fr; gap: 16px;
-}
-.ctrl-group label {
-  font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
-  text-transform: uppercase; color: var(--muted);
-  display: block; margin-bottom: 8px;
-}
-.ctrl-display {
-  font-size: 22px; font-weight: 600; color: var(--ink);
-  margin-bottom: 6px;
-}
-.ctrl-display span { font-size: 13px; font-weight: 400; color: var(--ink2); }
-input[type=range] {
-  width: 100%; accent-color: var(--teal);
-  height: 4px; cursor: pointer;
-}
-.unit-toggle {
-  display: flex; gap: 6px; margin-top: 4px;
-}
-.unit-btn {
-  flex: 1; padding: 7px; border-radius: 8px;
-  border: 1.5px solid var(--border); background: var(--card2);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12px; font-weight: 500; cursor: pointer;
-  color: var(--ink2); transition: all 0.15s;
-}
-.unit-btn.active { background: var(--teal); border-color: var(--teal); color: #fff; }
-
-.text-select { display: flex; flex-direction: column; gap: 6px; }
-.text-opt {
-  padding: 10px 14px; border-radius: 9px;
-  border: 1.5px solid var(--border); background: var(--card2);
-  cursor: pointer; transition: all 0.15s;
-  display: flex; align-items: center; justify-content: space-between;
-}
-.text-opt:hover { border-color: var(--teal); }
-.text-opt.selected { border-color: var(--teal); background: var(--teal-l); }
-.text-opt-name { font-size: 13px; font-weight: 500; }
-.text-opt-meta { font-size: 11px; color: var(--muted); }
-
-.start-btn {
-  width: calc(100% - 44px); margin: 0 22px 18px;
-  padding: 14px; border-radius: 11px; border: none;
-  background: var(--ink); color: #fff;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 15px; font-weight: 600; cursor: pointer;
-  transition: all 0.2s; letter-spacing: 0.01em;
-}
-.start-btn:hover { background: var(--purple); transform: translateY(-1px); }
-
-/* ── RSVP stage ── */
-.rsvp-card {
-  background: var(--card); border-radius: var(--r);
-  border: 1px solid var(--border); box-shadow: var(--sh);
-  display: none;
-}
-.rsvp-card.visible { display: block; }
-
-.rsvp-header {
-  padding: 14px 22px;
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
-}
-.rsvp-wpm { font-size: 13px; font-weight: 600; color: var(--teal); }
-.rsvp-prog { font-size: 12px; color: var(--muted); }
-
-.rsvp-viewport {
-  height: 200px;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 12px; padding: 0 24px;
-  position: relative;
+/* ── Main ── */
+main{
+  position:relative; z-index:1;
+  width:100%; max-width:660px;
+  padding:24px 16px 0;
+  display:flex; flex-direction:column; gap:16px;
 }
 
-/* Optical Recognition Point guide lines */
-.orp-guide {
-  position: absolute;
-  top: 0; bottom: 0;
-  width: 1px; background: rgba(197,80,40,0.2);
-  pointer-events: none;
+/* ── Progress steps ── */
+.steps{display:flex; gap:5px; margin-bottom:4px;}
+.step{
+  flex:1; height:3px; border-radius:2px;
+  background:var(--border2); transition:background 0.3s;
+}
+.step.done{background:var(--teal);}
+.step.active{background:var(--gold);}
+
+/* ── Cards ── */
+.card{
+  background:var(--card);
+  border:1px solid var(--border2);
+  border-radius:var(--r);
+  box-shadow:var(--sh);
+  overflow:hidden;
+  display:none;
+}
+.card.visible{display:block;}
+
+/* ── Instruction banner ── */
+.instr-banner{
+  background:var(--teal-d);
+  border-bottom:1px solid var(--teal-b);
+  padding:14px 20px;
+  display:flex; align-items:flex-start; gap:12px;
+}
+.instr-icon{font-size:20px; flex-shrink:0; margin-top:1px;}
+.instr-text{font-size:14px; color:var(--text2); line-height:1.6;}
+.instr-text strong{color:var(--text); font-weight:600;}
+
+/* ── Card header ── */
+.card-head{
+  padding:18px 20px 14px;
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+}
+.card-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:24px; font-weight:300; color:var(--text); line-height:1.1;
+  margin-bottom:4px;
+}
+.card-sub{font-size:13px; color:var(--text2); line-height:1.5;}
+.card-pills{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;}
+.pill{
+  font-size:10px; font-weight:700; letter-spacing:0.08em;
+  text-transform:uppercase; padding:3px 9px; border-radius:20px;
+}
+.pill-teal{background:var(--teal-d); color:var(--teal); border:1px solid var(--teal-b);}
+.pill-gold{background:var(--gold-l); color:var(--gold); border:1px solid var(--gold-b);}
+.pill-purple{background:var(--purple-d); color:var(--purple); border:1px solid rgba(155,127,255,0.25);}
+.card-live{text-align:right; flex-shrink:0;}
+.card-live-val{
+  font-size:26px; font-weight:300; color:var(--teal);
+  line-height:1; font-variant-numeric:tabular-nums;
+  font-family:'Cormorant Garamond',serif;
+}
+.card-live-lbl{font-size:10px; color:var(--text3); letter-spacing:0.06em; text-transform:uppercase; margin-top:2px;}
+
+/* ── Controls ── */
+.controls{padding:18px 20px; display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+.ctrl-label{
+  font-size:10px; font-weight:700; letter-spacing:0.1em;
+  text-transform:uppercase; color:var(--text3);
+  display:block; margin-bottom:8px;
+}
+.ctrl-val{
+  font-family:'Cormorant Garamond',serif;
+  font-size:28px; font-weight:300; color:var(--text); margin-bottom:8px; line-height:1;
+}
+.ctrl-val span{font-family:'DM Sans',sans-serif; font-size:14px; color:var(--text3); font-weight:400;}
+input[type=range]{width:100%; accent-color:var(--teal); cursor:pointer;}
+.range-labels{display:flex; justify-content:space-between; margin-top:4px;}
+.range-labels span{font-size:10px; color:var(--text3);}
+.range-labels .range-rec{color:var(--gold); font-weight:600;}
+
+.mode-toggle{display:flex; gap:6px; margin-top:2px;}
+.mode-btn{
+  flex:1; padding:9px 8px; border-radius:9px;
+  border:1.5px solid var(--border2); background:var(--card2);
+  font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600;
+  color:var(--text3); cursor:pointer; transition:all 0.15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.mode-btn:hover{border-color:var(--teal); color:var(--teal);}
+.mode-btn.active{background:var(--teal); border-color:var(--teal); color:var(--bg);}
+.mode-desc{font-size:12px; color:var(--text3); margin-top:8px; line-height:1.5;}
+
+/* ── Text selector ── */
+.text-selector{padding:0 20px 4px; display:flex; flex-direction:column; gap:6px;}
+.text-selector-label{
+  font-size:10px; font-weight:700; letter-spacing:0.1em;
+  text-transform:uppercase; color:var(--text3); margin-bottom:4px;
+}
+.text-opt{
+  padding:11px 14px; border-radius:10px;
+  border:1.5px solid var(--border2); background:var(--card2);
+  cursor:pointer; transition:all 0.15s;
+  display:flex; align-items:center; justify-content:space-between;
+  -webkit-tap-highlight-color:transparent;
+}
+.text-opt:hover{border-color:var(--teal);}
+.text-opt.selected{border-color:var(--teal); background:var(--teal-d);}
+.text-opt-name{font-size:14px; font-weight:500; color:var(--text);}
+.text-opt.selected .text-opt-name{color:var(--teal);}
+.text-opt-meta{font-size:11px; color:var(--text3);}
+
+/* ── Start button ── */
+.start-btn-wrap{padding:16px 20px 20px;}
+.start-btn{
+  width:100%; padding:15px;
+  background:var(--teal); color:var(--bg);
+  border:none; border-radius:11px; cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+  font-size:15px; font-weight:700; letter-spacing:0.02em;
+  transition:all 0.2s; -webkit-tap-highlight-color:transparent;
+}
+.start-btn:hover{opacity:0.88; transform:translateY(-1px);}
+
+/* ── RSVP card ── */
+.rsvp-head{
+  padding:12px 20px;
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.rsvp-wpm{font-size:13px; font-weight:700; color:var(--teal);}
+.rsvp-prog{font-size:12px; color:var(--text3);}
+.rsvp-bar-wrap{height:2px; background:var(--border2);}
+.rsvp-bar-fill{height:100%; background:var(--teal); transition:width 0.2s linear;}
+
+.rsvp-stage{
+  height:200px;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:10px; padding:0 24px; position:relative;
+}
+.orp-guide{
+  position:absolute; top:0; bottom:0;
+  width:1px; background:rgba(224,92,92,0.15); pointer-events:none;
+}
+.rsvp-context{
+  font-size:12px; color:var(--text3);
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic; min-height:18px;
+}
+.rsvp-word-wrap{display:flex; align-items:center; min-height:56px;}
+.rsvp-pre{font-family:'Cormorant Garamond',serif; font-size:34px; font-weight:300; color:var(--text2);}
+.rsvp-focal{font-family:'Cormorant Garamond',serif; font-size:34px; font-weight:400; color:var(--teal);}
+.rsvp-post{font-family:'Cormorant Garamond',serif; font-size:34px; font-weight:300; color:var(--text2);}
+.rsvp-phrase{
+  font-family:'Cormorant Garamond',serif;
+  font-size:28px; font-weight:300; color:var(--text);
+  text-align:center; line-height:1.35; transition:opacity 0.15s;
+}
+.rsvp-hidden{opacity:0;}
+
+.rsvp-controls{
+  padding:12px 20px; border-top:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+}
+.speed-live{display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text3);}
+.speed-live input{width:90px; accent-color:var(--teal);}
+.speed-live-val{font-weight:700; color:var(--teal); min-width:3ch;}
+
+/* Countdown overlay */
+#rsvp-countdown{
+  font-family:'Cormorant Garamond',serif;
+  font-size:64px; font-weight:300; color:var(--gold);
+  text-align:center;
 }
 
-.rsvp-context {
-  font-size: 12px; color: var(--muted);
-  font-family: 'DM Serif Display', serif;
-  font-style: italic; min-height: 18px;
-  transition: opacity 0.2s;
+/* Flash feedback pill */
+.flash-fb{
+  position:absolute; bottom:10px;
+  font-size:11px; font-weight:700; letter-spacing:0.05em;
+  padding:3px 10px; border-radius:20px;
+  opacity:0; transition:opacity 0.2s; pointer-events:none;
 }
-.rsvp-word-wrap {
-  display: flex; align-items: baseline; gap: 0;
-  min-height: 56px; align-items: center;
+.flash-fb.show{opacity:1;}
+.flash-fb.up{background:var(--green-d); color:var(--green); border:1px solid var(--green-b);}
+.flash-fb.down{background:var(--coral-d); color:var(--coral); border:1px solid var(--coral-b);}
+
+/* ── Buttons ── */
+.btn{
+  font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600;
+  padding:10px 18px; border-radius:10px; border:none; cursor:pointer;
+  transition:all 0.15s; -webkit-tap-highlight-color:transparent;
+  min-height:40px;
 }
-.rsvp-pre { font-family: 'DM Serif Display', serif; font-size: 32px; color: var(--ink2); min-width: 2ch; text-align: right; }
-.rsvp-focal { font-family: 'DM Serif Display', serif; font-size: 32px; color: var(--coral); font-weight: 400; }
-.rsvp-post { font-family: 'DM Serif Display', serif; font-size: 32px; color: var(--ink2); }
-.rsvp-word-full { font-family: 'DM Serif Display', serif; font-size: 32px; color: var(--ink); transition: opacity 0.12s ease; }
+.btn-teal{background:var(--teal); color:var(--bg);}
+.btn-teal:hover{opacity:0.88;}
+.btn-ghost{background:transparent; color:var(--text2); border:1.5px solid var(--border2);}
+.btn-ghost:hover{border-color:var(--text2); color:var(--text);}
+.btn-danger{background:transparent; color:var(--coral); border:1.5px solid var(--coral-d);}
+.btn-sm{padding:7px 12px; font-size:12px;}
 
-/* phrase mode */
-.rsvp-phrase { font-family: 'DM Serif Display', serif; font-size: 26px; color: var(--ink); text-align: center; line-height: 1.3; transition: opacity 0.15s ease; }
-
-.rsvp-progress-bar { width: 100%; height: 3px; background: var(--card2); }
-.rsvp-progress-fill { height: 100%; background: var(--teal); transition: width 0.2s linear; }
-
-.rsvp-controls {
-  padding: 14px 22px;
-  border-top: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+/* ── Questions ── */
+.q-head{padding:18px 20px 14px; border-bottom:1px solid var(--border);}
+.q-head-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px; font-weight:300; color:var(--text); margin-bottom:3px;
 }
-.btn {
-  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
-  padding: 9px 18px; border-radius: 9px; border: none; cursor: pointer;
-  transition: all 0.15s;
+.q-head-sub{font-size:13px; color:var(--text2);}
+.q-score-row{
+  padding:10px 20px;
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
 }
-.btn-ink { background: var(--ink); color: #fff; }
-.btn-ink:hover { background: var(--purple); }
-.btn-ghost { background: transparent; color: var(--ink2); border: 1.5px solid var(--border); }
-.btn-ghost:hover { border-color: var(--ink); color: var(--ink); }
-.btn-danger { background: transparent; color: var(--coral); border: 1.5px solid rgba(192,57,43,0.2); }
-.btn-sm { padding: 6px 12px; font-size: 12px; }
+.q-score-lbl{font-size:12px; color:var(--text3);}
+.q-score-val{font-size:14px; font-weight:700; color:var(--teal);}
 
-.speed-live {
-  display: flex; align-items: center; gap: 8px;
-  font-size: 12px; color: var(--muted);
+.questions{padding:16px 20px; display:flex; flex-direction:column; gap:20px;}
+.q-block{}
+.q-num{
+  font-size:10px; font-weight:700; letter-spacing:0.1em;
+  text-transform:uppercase; color:var(--text3); margin-bottom:6px;
 }
-.speed-live input { width: 90px; accent-color: var(--teal); }
-
-/* ── Questions stage ── */
-.q-card {
-  background: var(--card); border-radius: var(--r);
-  border: 1px solid var(--border); box-shadow: var(--sh);
-  display: none; overflow: hidden;
+.q-text{font-size:15px; line-height:1.55; color:var(--text); margin-bottom:10px;}
+.q-opts{display:flex; flex-direction:column; gap:7px;}
+.q-opt{
+  padding:12px 16px; border-radius:10px;
+  border:1.5px solid var(--border2); background:var(--card2);
+  cursor:pointer; font-family:'DM Sans',sans-serif;
+  font-size:14px; color:var(--text2); transition:all 0.15s;
+  -webkit-tap-highlight-color:transparent; min-height:44px;
+  display:flex; align-items:center;
 }
-.q-card.visible { display: block; }
-.q-header { padding: 18px 22px 14px; border-bottom: 1px solid var(--border); }
-.q-title { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
-.q-sub { font-size: 13px; color: var(--ink2); }
+.q-opt:hover{border-color:var(--teal); color:var(--text); background:var(--teal-d);}
+.q-opt.correct{border-color:var(--green); background:var(--green-d); color:var(--green); pointer-events:none;}
+.q-opt.wrong{border-color:var(--coral); background:var(--coral-d); color:var(--coral); pointer-events:none;}
+.q-opt.locked{pointer-events:none; opacity:0.5;}
 
-.questions { padding: 18px 22px; display: flex; flex-direction: column; gap: 18px; }
-.q-block { }
-.q-text { font-size: 15px; line-height: 1.55; margin-bottom: 10px; }
-.q-num { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
-.q-opts { display: flex; flex-direction: column; gap: 6px; }
-.q-opt {
-  padding: 10px 15px; border-radius: 9px;
-  border: 1.5px solid var(--border); background: var(--card2);
-  cursor: pointer; font-family: 'DM Sans', sans-serif;
-  font-size: 14px; color: var(--ink2); transition: all 0.15s;
-}
-.q-opt:hover { border-color: var(--purple); color: var(--purple); background: var(--purple-l); }
-.q-opt.correct { border-color: var(--green); background: var(--green-l); color: var(--green); pointer-events: none; }
-.q-opt.wrong { border-color: var(--coral); background: var(--coral-l); color: var(--coral); pointer-events: none; }
-.q-opt.locked { pointer-events: none; }
-
-.q-footer { padding: 14px 22px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-.score-display { font-size: 13px; color: var(--ink2); }
-.score-display b { color: var(--ink); }
-
-/* ── Results stage ── */
-.results-card {
-  background: var(--card); border-radius: var(--r);
-  border: 1px solid var(--border); box-shadow: var(--sh);
-  display: none; overflow: hidden; text-align: center;
-}
-.results-card.visible { display: block; }
-.results-inner { padding: 32px 28px; }
-.result-wpm { font-size: 52px; font-weight: 300; color: var(--teal); line-height: 1; }
-.result-wpm-label { font-size: 13px; color: var(--muted); margin-top: 4px; margin-bottom: 24px; }
-.metrics-row { display: flex; gap: 12px; margin-bottom: 24px; }
-.metric-box {
-  flex: 1; background: var(--card2); border-radius: 10px;
-  padding: 14px 10px; border: 1px solid var(--border);
-}
-.metric-val { font-size: 22px; font-weight: 600; }
-.metric-label { font-size: 11px; color: var(--muted); margin-top: 3px; font-weight: 500; }
-.insight-box {
-  background: var(--purple-l); border: 1px solid rgba(86,65,168,0.15);
-  border-radius: 11px; padding: 14px 16px;
-  font-size: 13px; color: var(--purple); line-height: 1.6;
-  text-align: left; margin-bottom: 20px;
-}
-.insight-box strong { font-weight: 600; }
-.results-btns { display: flex; gap: 10px; justify-content: center; }
-
-/* Science note */
-.sci-note {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: var(--r); box-shadow: var(--sh);
-  padding: 16px 20px; font-size: 13px; color: var(--ink2); line-height: 1.65;
-}
-.sci-head { font-size: 10px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
-
-/* Overlay flash feedback */
-.flash-feedback {
-  position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
-  font-size: 11px; font-weight: 600; letter-spacing: 0.05em;
-  padding: 3px 10px; border-radius: 20px;
-  opacity: 0; transition: opacity 0.2s;
-  pointer-events: none;
-}
-.flash-feedback.show { opacity: 1; }
-.flash-feedback.up { background: var(--green-l); color: var(--green); }
-.flash-feedback.down { background: var(--coral-l); color: var(--coral); }
-
-/* ═══════════════════════════════════════
-   MOBILE RESPONSIVENESS — applied globally
-   ═══════════════════════════════════════ */
-@media (max-width: 640px) {
-  /* Base text scale up */
-  body { font-size: 16px; }
-
-  /* Header: hide XP bar and secondary stats on very small screens */
-  .xp-bar-wrap { display: none !important; }
-  header { padding: 12px 16px !important; }
-
-  /* Main container: full bleed with comfortable padding */
-  main { padding: 16px 12px 0 !important; gap: 14px !important; }
-
-  /* Cards: reduce padding so content breathes */
-  .chead, .card-top { padding: 14px 16px 12px !important; }
-  .ctitle, .card-title { font-size: 17px !important; }
-  .csub, .card-sub { font-size: 14px !important; }
-
-  /* Controls grid: single column on mobile */
-  .controls-grid { grid-template-columns: 1fr !important; padding: 14px 16px !important; }
-
-  /* Question options: bigger tap targets */
-  .q-opt, .qopt, .copt, .ropt { 
-    padding: 14px 16px !important; 
-    font-size: 15px !important; 
-    min-height: 48px !important;
-  }
-
-  /* RSVP word: bigger on mobile */
-  .rsvp-pre, .rsvp-focal, .rsvp-post, .rsvp-word-full { font-size: 36px !important; }
-  .rsvp-phrase { font-size: 22px !important; line-height: 1.4 !important; }
-  .rsvp-viewport { height: 180px !important; padding: 0 16px !important; }
-
-  /* Buttons: full width on mobile where stacked */
-  .cfooter, .q-footer, .drill-footer { 
-    padding: 12px 14px !important; 
-    flex-wrap: wrap !important; 
-    gap: 8px !important;
-  }
-  .btn { font-size: 14px !important; padding: 11px 16px !important; min-height: 44px !important; }
-  .btn-sm { font-size: 13px !important; padding: 10px 14px !important; }
-  .start-btn { font-size: 16px !important; padding: 16px !important; }
-
-  /* Memory slots: 2 col max */
-  .memory-slots { grid-template-columns: 1fr 1fr !important; }
-
-  /* Recall grid: single col on narrow phones */
-  .recall-grid { grid-template-columns: 1fr !important; }
-
-  /* Word flash display */
-  .word-big { font-size: 34px !important; }
-  .mem-item { font-size: 38px !important; }
-
-  /* n-back grid cells */
-  .vis-grid { width: 192px !important; gap: 6px !important; }
-  .cell { width: 56px !important; height: 56px !important; }
-
-  /* Letter display */
-  .letter-display { font-size: 42px !important; }
-
-  /* Mode/tab grids */
-  .mode-grid { grid-template-columns: 1fr !important; }
-  .mode-tabs { grid-template-columns: 1fr !important; }
-  .task-tabs { grid-template-columns: 1fr !important; }
-
-  /* Pillar section padding on index */
-  .pillar, .section-label, .divider { padding-left: 16px !important; padding-right: 16px !important; }
-
-  /* Results boxes */
-  .res-top, .res-grid { gap: 8px !important; }
-  .res-box .rv, .res-big .rv { font-size: 32px !important; }
-
-  /* Sentence display in Contrarreloj */
-  .sentence-display { font-size: 16px !important; line-height: 1.8 !important; }
-  .reading-area { padding: 18px 16px 14px !important; }
-
-  /* Recall slots in Memoria Activa */
-  .recall-slot { min-width: 44px !important; height: 46px !important; font-size: 12px !important; }
-  .recall-area { padding: 14px 14px 16px !important; }
-  .keyboard { gap: 5px !important; }
-  .key { padding: 10px 5px !important; font-size: 14px !important; }
-
-  /* Equation display */
-  .equation-display { font-size: 26px !important; }
-
-  /* Sent display in Contrarreloj */
-  .sent-display { font-size: 18px !important; }
-
-  /* Tutorial steps */
-  .tut-body { padding: 14px 16px !important; font-size: 14px !important; }
-  .tut-footer { padding: 12px 16px !important; }
-  .tut-head { padding: 10px 16px !important; }
-
-  /* Stats header: smaller */
-  .hstats { gap: 10px !important; }
-  .hstat { font-size: 11px !important; }
-  .hstat b { font-size: 12px !important; }
-
-  /* Science note collapsible */
-  .sci-toggle-btn { font-size: 13px !important; }
+.q-footer{
+  padding:14px 20px; border-top:1px solid var(--border);
+  display:flex; justify-content:space-between; align-items:center;
 }
 
-/* Collapsible science note */
-.sci-details {
-  background: var(--card, #fff);
-  border: 1.5px solid var(--border2, rgba(0,0,0,0.12));
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+/* ── Results ── */
+.results-inner{padding:28px 20px;}
+.results-wpm-wrap{text-align:center; margin-bottom:24px;}
+.results-wpm{
+  font-family:'Cormorant Garamond',serif;
+  font-size:72px; font-weight:300; color:var(--teal); line-height:1;
 }
-.sci-details summary {
-  padding: 13px 18px;
-  font-size: 13px; font-weight: 700;
-  cursor: pointer; list-style: none;
-  display: flex; align-items: center; justify-content: space-between;
-  color: var(--muted, #888); letter-spacing: 0.03em;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
+.results-wpm-lbl{font-size:13px; color:var(--text3); margin-top:4px; letter-spacing:0.04em;}
+.metrics-row{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:22px;}
+.metric{
+  background:var(--card2); border:1px solid var(--border2);
+  border-radius:11px; padding:14px 10px; text-align:center;
 }
-.sci-details summary::-webkit-details-marker { display: none; }
-.sci-details summary::after {
-  content: '▸';
-  font-size: 11px; transition: transform 0.2s;
-  color: var(--muted, #888);
+.metric-val{font-size:22px; font-weight:700; color:var(--text);}
+.metric-lbl{font-size:11px; color:var(--text3); margin-top:3px;}
+.insight{
+  background:var(--purple-d); border:1px solid rgba(155,127,255,0.2);
+  border-radius:11px; padding:14px 16px;
+  font-size:13px; color:var(--text2); line-height:1.65; margin-bottom:20px;
 }
-.sci-details[open] summary::after { transform: rotate(90deg); }
-.sci-details[open] summary {
-  border-bottom: 1.5px solid var(--border, rgba(0,0,0,0.08));
-}
-.sci-details-body {
-  padding: 14px 18px 16px;
-  font-size: 13px; color: var(--ink2, #444); line-height: 1.7;
-}
-@media (max-width: 640px) {
-  .sci-details summary { font-size: 14px !important; padding: 14px 16px !important; }
-  .sci-details-body { font-size: 14px !important; padding: 14px 16px 16px !important; }
-}
+.insight strong{color:var(--purple);}
+.insight em{color:var(--text); font-style:normal; font-weight:500;}
+.results-btns{display:flex; gap:10px; justify-content:center; flex-wrap:wrap;}
 
+/* ── Science note ── */
+details.sci{
+  background:var(--card); border:1px solid var(--border2);
+  border-radius:var(--r); box-shadow:var(--sh); overflow:hidden;
+}
+details.sci summary{
+  padding:13px 18px; font-size:12px; font-weight:700;
+  letter-spacing:0.07em; text-transform:uppercase;
+  color:var(--text3); cursor:pointer; list-style:none;
+  display:flex; align-items:center; justify-content:space-between;
+  -webkit-tap-highlight-color:transparent;
+}
+details.sci summary::-webkit-details-marker{display:none;}
+details.sci summary::after{content:'▸'; font-size:10px; transition:transform 0.2s; color:var(--text3);}
+details.sci[open] summary::after{transform:rotate(90deg);}
+details.sci[open] summary{border-bottom:1px solid var(--border);}
+.sci-body{padding:14px 18px 16px; font-size:13px; color:var(--text2); line-height:1.7;}
+.sci-body strong{color:var(--text);}
+
+/* ── Mobile ── */
+@media(max-width:640px){
+  header{padding:12px 16px;}
+  .hdr-center{display:none;}
+  main{padding:16px 12px 0; gap:14px;}
+  .controls{grid-template-columns:1fr; padding:14px 16px;}
+  .text-selector{padding:0 16px 4px;}
+  .start-btn-wrap{padding:14px 16px 18px;}
+  .rsvp-stage{height:180px; padding:0 16px;}
+  .rsvp-pre,.rsvp-focal,.rsvp-post{font-size:38px!important;}
+  .rsvp-phrase{font-size:22px!important;}
+  .q-opt{font-size:15px!important; padding:14px 14px!important;}
+  .results-wpm{font-size:56px!important;}
+  .metrics-row{grid-template-columns:1fr 1fr; gap:8px;}
+  .btn{min-height:44px; font-size:14px!important; padding:12px 16px!important;}
+  .rsvp-controls{padding:10px 14px; flex-wrap:wrap; gap:8px;}
+  .card-head{padding:14px 16px 12px;}
+  .card-title{font-size:20px;}
+  .q-head{padding:14px 16px 12px;}
+  .instr-banner{padding:12px 14px;}
+  .instr-text{font-size:13px;}
+  .questions{padding:14px 16px;}
+  .results-inner{padding:20px 16px;}
+}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">Entrena<em>Mente</em></div>
-  <div class="xp-bar-wrap">
-    <span class="xp-label">XP de hoy</span>
-    <div class="xp-bar"><div class="xp-fill" id="xp-fill"></div></div>
+  <a class="hdr-back" href="index.html">← Inicio</a>
+  <div class="hdr-center">
+    <span class="hdr-ex-name">Lectura Flash</span>
   </div>
-  <div class="wpm-badge" id="header-wpm">↑ 247 wpm</div>
+  <div class="hdr-right">
+    <div class="hdr-stat">ppm <b id="header-wpm">–</b></div>
+    <div class="logo">Entrena<em>Mente</em></div>
+  </div>
 </header>
 
 <main>
 
-  <!-- Stage progress -->
-  <div class="stage-row">
-    <div class="stage-dot active" id="st0"></div>
-    <div class="stage-dot" id="st1"></div>
-    <div class="stage-dot" id="st2"></div>
+  <div class="steps">
+    <div class="step active" id="st0"></div>
+    <div class="step" id="st1"></div>
+    <div class="step" id="st2"></div>
   </div>
 
   <!-- ─── STAGE 0: Settings ─── -->
-  <div class="settings-card" id="stage-settings">
-    <div class="card-top">
+  <div class="card visible" id="stage-settings">
+
+    <div class="instr-banner">
+      <div class="instr-icon">👁️</div>
+      <div class="instr-text">
+        <strong>¿Cómo funciona?</strong> Las palabras (o frases) aparecen una a la vez en el centro de la pantalla. Léelas sin mover los ojos. Al terminar, responde tres preguntas sobre el texto.
+      </div>
+    </div>
+
+    <div class="card-head">
       <div>
         <div class="card-title">Lectura Flash</div>
-        <div class="card-sub">Presentación visual rápida adaptativa · Calibra tu sesión de hoy.</div>
-        <div class="pills">
-          <span class="pill p-teal">RSVP por frases</span>
-          <span class="pill p-amber">Adaptativo</span>
-          <span class="pill p-purple">≤350 wpm</span>
+        <div class="card-sub">Elige tu velocidad y texto. Empieza despacio — ¡siempre puedes subir!</div>
+        <div class="card-pills">
+          <span class="pill pill-teal">RSVP</span>
+          <span class="pill pill-gold">Adaptativo</span>
+          <span class="pill pill-purple">Comprensión</span>
         </div>
+      </div>
+      <div class="card-live">
+        <div class="card-live-val" id="speed-val">150</div>
+        <div class="card-live-lbl">ppm</div>
       </div>
     </div>
 
-    <div class="controls-grid">
-      <!-- Speed -->
-      <div class="ctrl-group">
-        <label>Velocidad inicial</label>
-        <div class="ctrl-display"><span id="speed-val">150</span> <span>wpm</span></div>
+    <div class="controls">
+      <div>
+        <span class="ctrl-label">Velocidad inicial</span>
+        <div class="ctrl-val"><span id="speed-val2">150</span> <span>ppm</span></div>
         <input type="range" id="speed-slider" min="100" max="350" step="10" value="150"
-          oninput="document.getElementById('speed-val').textContent=this.value; currentWpm=parseInt(this.value)">
-        <div style="display:flex;justify-content:space-between;margin-top:3px">
-          <span style="font-size:10px;color:var(--muted)">100</span>
-          <span style="font-size:10px;color:var(--amber);font-weight:600">≤350 recomendado</span>
-          <span style="font-size:10px;color:var(--muted)">350</span>
+          oninput="syncSpeed(this.value)">
+        <div class="range-labels">
+          <span>100</span>
+          <span class="range-rec">≤350 recomendado</span>
+          <span>350</span>
         </div>
       </div>
-
-      <!-- Mode -->
-      <div class="ctrl-group">
-        <label>Modo de presentación</label>
-        <div class="unit-toggle">
-          <button class="unit-btn active" id="mode-word" onclick="setMode('word')">Palabra</button>
-          <button class="unit-btn" id="mode-phrase" onclick="setMode('phrase')">Frase</button>
+      <div>
+        <span class="ctrl-label">Modo de presentación</span>
+        <div class="mode-toggle">
+          <button class="mode-btn active" id="mode-word" onclick="setMode('word')">Palabra</button>
+          <button class="mode-btn" id="mode-phrase" onclick="setMode('phrase')">Frase</button>
         </div>
-        <div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.5" id="mode-desc">
-          Una palabra a la vez con Punto de Reconocimiento Óptico marcado.
-        </div>
-      </div>
-
-      <!-- Text selector -->
-      <div class="ctrl-group" style="grid-column:1/-1">
-        <label>Texto de hoy</label>
-        <div class="text-select">
-          <div class="text-opt selected" data-text="0" onclick="selectText(this,0)">
-            <span class="text-opt-name">Un día en el parque</span>
-            <span class="text-opt-meta">Narrativo · 86 palabras · Niv. A2</span>
-          </div>
-          <div class="text-opt" data-text="1" onclick="selectText(this,1)">
-            <span class="text-opt-name">La biodiversidad marina</span>
-            <span class="text-opt-meta">Divulgación · 142 palabras · Niv. B2</span>
-          </div>
-          <div class="text-opt" data-text="2" onclick="selectText(this,2)">
-            <span class="text-opt-name">Economía circular en América Latina</span>
-            <span class="text-opt-meta">Ensayo · 118 palabras · Niv. C1</span>
-          </div>
-        </div>
+        <div class="mode-desc" id="mode-desc">Una palabra a la vez — bueno para empezar.</div>
       </div>
     </div>
 
-    <button class="start-btn" onclick="startRSVP()">Iniciar Lectura Flash →</button>
+    <div class="text-selector">
+      <div class="text-selector-label">Elige el texto de hoy</div>
+      <div class="text-opt selected" onclick="selectText(this,0)">
+        <span class="text-opt-name">Un día en el parque</span>
+        <span class="text-opt-meta">Narrativo · 86 palabras · A2 ⭐ Recomendado</span>
+      </div>
+      <div class="text-opt" onclick="selectText(this,1)">
+        <span class="text-opt-name">La biodiversidad marina</span>
+        <span class="text-opt-meta">Divulgación · 142 palabras · B2</span>
+      </div>
+      <div class="text-opt" onclick="selectText(this,2)">
+        <span class="text-opt-name">Economía circular en América Latina</span>
+        <span class="text-opt-meta">Ensayo · 118 palabras · C1</span>
+      </div>
+    </div>
+
+    <div class="start-btn-wrap">
+      <button class="start-btn" onclick="startRSVP()">▶ Comenzar Lectura Flash</button>
+    </div>
   </div>
 
   <!-- ─── STAGE 1: RSVP ─── -->
-  <div class="rsvp-card" id="stage-rsvp">
-    <div class="rsvp-header">
-      <span class="rsvp-wpm" id="live-wpm">250 wpm</span>
+  <div class="card" id="stage-rsvp">
+    <div class="rsvp-head">
+      <span class="rsvp-wpm" id="live-wpm">150 ppm</span>
       <span class="rsvp-prog" id="rsvp-prog">0 / 0 palabras</span>
     </div>
+    <div class="rsvp-bar-wrap"><div class="rsvp-bar-fill" id="rsvp-bar" style="width:0%"></div></div>
 
-    <div class="rsvp-progress-bar">
-      <div class="rsvp-progress-fill" id="rsvp-bar" style="width:0%"></div>
-    </div>
-
-    <div class="rsvp-viewport" id="rsvp-viewport">
+    <div class="rsvp-stage" id="rsvp-viewport">
       <div class="orp-guide" id="orp-guide" style="left:50%"></div>
-      <!-- word mode -->
       <div class="rsvp-context" id="rsvp-context" style="display:none"></div>
       <div class="rsvp-word-wrap" id="rsvp-word-wrap" style="display:none">
         <span class="rsvp-pre" id="w-pre"></span>
         <span class="rsvp-focal" id="w-focal"></span>
         <span class="rsvp-post" id="w-post"></span>
       </div>
-      <!-- phrase mode -->
       <div class="rsvp-phrase" id="rsvp-phrase" style="display:none"></div>
-
-      <div class="flash-feedback" id="flash-fb"></div>
+      <div class="flash-fb" id="flash-fb"></div>
     </div>
 
     <div class="rsvp-controls">
       <div class="speed-live">
-        <span id="ctrl-wpm-label" style="font-size:12px;color:var(--muted)">wpm</span>
-        <input type="range" id="live-speed" min="150" max="350" step="10" value="250"
+        <span>Velocidad:</span>
+        <input type="range" id="live-speed" min="100" max="350" step="10" value="150"
           oninput="adjustLiveSpeed(this.value)">
-        <span id="ctrl-wpm-val" style="font-size:12px;font-weight:600;min-width:36px">250</span>
+        <span class="speed-live-val" id="ctrl-wpm-val">150</span>
+        <span>ppm</span>
       </div>
-      <div style="display:flex;gap:8px">
+      <div style="display:flex;gap:8px;">
         <button class="btn btn-ghost btn-sm" id="pause-btn" onclick="togglePause()">⏸ Pausa</button>
-        <button class="btn btn-danger btn-sm" onclick="stopRSVP()">✕ Salir</button>
+        <button class="btn btn-danger btn-sm" onclick="stopRSVP()">✕</button>
       </div>
     </div>
   </div>
 
-  <!-- ─── STAGE 2a: Questions ─── -->
-  <div class="q-card" id="stage-q">
-    <div class="q-header">
-      <div class="q-title">Comprensión inferencial</div>
-      <div class="q-sub">Responde sin volver a leer el texto.</div>
+  <!-- ─── STAGE 2: Questions ─── -->
+  <div class="card" id="stage-q">
+    <div class="q-head">
+      <div class="q-head-title">¿Qué recuerdas del texto?</div>
+      <div class="q-head-sub">Responde las preguntas — no hay prisa.</div>
+    </div>
+    <div class="q-score-row">
+      <span class="q-score-lbl">Respuestas correctas</span>
+      <span class="q-score-val" id="score-display">–</span>
     </div>
     <div class="questions" id="questions-container"></div>
     <div class="q-footer">
-      <div class="score-display">Puntuación: <b id="score-display">–</b></div>
-      <button class="btn btn-ink" onclick="showResults()">Ver resultados →</button>
+      <button class="btn btn-ghost btn-sm" onclick="resetAll()">← Volver</button>
+      <button class="btn btn-teal" onclick="showResults()">Ver resultados →</button>
     </div>
   </div>
 
-  <!-- ─── STAGE 2b: Results ─── -->
-  <div class="results-card" id="stage-results">
+  <!-- ─── STAGE 3: Results ─── -->
+  <div class="card" id="stage-results">
     <div class="results-inner">
-      <div class="result-wpm" id="result-wpm">–</div>
-      <div class="result-wpm-label">palabras por minuto</div>
-      <div class="metrics-row">
-        <div class="metric-box">
-          <div class="metric-val" id="r-comp">–</div>
-          <div class="metric-label">Comprensión</div>
-        </div>
-        <div class="metric-box">
-          <div class="metric-val" id="r-delta">–</div>
-          <div class="metric-label">vs. sesión anterior</div>
-        </div>
-        <div class="metric-box">
-          <div class="metric-val" id="r-efficiency">–</div>
-          <div class="metric-label">Eficiencia lectora</div>
-        </div>
+      <div class="results-wpm-wrap">
+        <div class="results-wpm" id="result-wpm">–</div>
+        <div class="results-wpm-lbl">palabras por minuto</div>
       </div>
-      <div class="insight-box" id="insight-box"></div>
+      <div class="metrics-row">
+        <div class="metric"><div class="metric-val" id="r-comp">–</div><div class="metric-lbl">Comprensión</div></div>
+        <div class="metric"><div class="metric-val" id="r-delta">–</div><div class="metric-lbl">vs. sesión anterior</div></div>
+        <div class="metric"><div class="metric-val" id="r-efficiency">–</div><div class="metric-lbl">Eficiencia</div></div>
+      </div>
+      <div class="insight" id="insight-box"></div>
       <div class="results-btns">
         <button class="btn btn-ghost" onclick="resetAll()">← Nuevo texto</button>
-        <button class="btn btn-ink" onclick="resetAll()">Siguiente ejercicio →</button>
+        <button class="btn btn-teal" onclick="resetAll()">Repetir →</button>
       </div>
     </div>
   </div>
 
-  <!-- Science note -->
-  <details class="sci-details">
-  <summary>⚗ Por qué el límite de 350 wpm</summary>
-  <div class="sci-details-body">Las investigaciones de Acklin & Papesh (2017) y Benedetto et al. (2015) confirman que no existe diferencia significativa en comprensión entre lectura normal y RSVP a 250–350 wpm, pero la comprensión cae significativamente por encima de ese umbral. El modo <em>por frases</em> preserva las señales sintácticas que el modo palabra-por-palabra elimina, lo que reduce la carga cognitiva en oraciones complejas.</div>
-</details>
+  <details class="sci">
+    <summary>⚗ Base científica — por qué el límite de 350 ppm</summary>
+    <div class="sci-body">
+      Las investigaciones de Acklin &amp; Papesh (2017) y Benedetto et al. (2015) confirman que no existe diferencia significativa en comprensión entre lectura normal y RSVP a 250–350 ppm, pero la comprensión cae significativamente por encima de ese umbral. El modo <em>por frases</em> preserva las señales sintácticas que el modo palabra-por-palabra elimina, lo que reduce la carga cognitiva en oraciones complejas.
+    </div>
+  </details>
 
 </main>
 
 <script>
-// ──────────────────────────────────
-// Data
-// ──────────────────────────────────
+// ── sync speed display across both elements ──
+function syncSpeed(v) {
+  currentWpm = parseInt(v);
+  document.getElementById('speed-val').textContent = v;
+  document.getElementById('speed-val2').textContent = v;
+}
+
 const TEXTS = [
   {
     title: "Un día en el parque",
@@ -765,7 +727,7 @@ function startRSVP() {
   setStage(1);
   document.getElementById('live-speed').value = currentWpm;
   document.getElementById('ctrl-wpm-val').textContent = currentWpm;
-  document.getElementById('live-wpm').textContent = currentWpm + ' wpm';
+  document.getElementById('live-wpm').textContent = currentWpm + ' ppm';
   document.getElementById('rsvp-prog').textContent = `0 / ${totalWords} palabras`;
 
   const wordWrap = document.getElementById('rsvp-word-wrap');
@@ -878,11 +840,11 @@ function togglePause() {
 function adjustLiveSpeed(v) {
   currentWpm = parseInt(v);
   document.getElementById('ctrl-wpm-val').textContent = v;
-  document.getElementById('live-wpm').textContent = v + ' wpm';
+  document.getElementById('live-wpm').textContent = v + ' ppm';
 
   const fb = document.getElementById('flash-fb');
   fb.className = 'flash-feedback show ' + (currentWpm > 250 ? 'up' : 'down');
-  fb.textContent = (currentWpm > 250 ? '▲ ' : '▼ ') + currentWpm + ' wpm';
+  fb.textContent = (currentWpm > 250 ? '▲ ' : '▼ ') + currentWpm + ' ppm';
   clearTimeout(fb._t);
   fb._t = setTimeout(() => fb.classList.remove('show'), 1200);
 }
@@ -897,7 +859,7 @@ function finishRSVP(wordCount) {
   const elapsed = (Date.now() - startTime) / 60000;
   const finalWpm = Math.round(wordCount / elapsed);
   document.getElementById('result-wpm').textContent = finalWpm;
-  document.getElementById('header-wpm').textContent = '↑ ' + finalWpm + ' wpm';
+  document.getElementById('header-wpm').textContent = '↑ ' + finalWpm + ' ppm';
   buildQuestions();
   setStage(2);
 }
@@ -943,7 +905,7 @@ function showResults() {
   const wpm = parseInt(document.getElementById('result-wpm').textContent) || currentWpm;
 
   document.getElementById('r-comp').textContent = pct + '%';
-  document.getElementById('r-delta').textContent = '+' + Math.floor(Math.random()*12+3) + ' wpm';
+  document.getElementById('r-delta').textContent = '+' + Math.floor(Math.random()*12+3) + ' ppm';
   // Efficiency = comprehension × speed index
   const efficiency = Math.round(pct * (wpm / 350));
   document.getElementById('r-efficiency').textContent = efficiency + '%';

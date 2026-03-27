@@ -5,37 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EntrenaMente — Saltos Visuales</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&display=swap');
-
 :root {
-  --bg: #0E0E16;
-  --bg2: #16161F;
-  --card: #1C1C28;
-  --card2: #222230;
-  --border: rgba(255,255,255,0.07);
-  --border2: rgba(255,255,255,0.13);
-  --text: #E8E6F0;
-  --text2: #9896A8;
-  --text3: #5A5868;
-  --teal: #2ECFB8;
-  --teal-d: rgba(46,207,184,0.12);
-  --amber: #F5C842;
-  --amber-d: rgba(245,200,66,0.12);
-  --coral: #FF6B5B;
-  --coral-d: rgba(255,107,91,0.12);
-  --purple: #9B7FFF;
-  --purple-d: rgba(155,127,255,0.12);
-  --green: #4ECBA0;
-  --green-d: rgba(78,203,160,0.1);
-  --r: 14px;
+  --bg:#0C0C10; --bg2:#13131A; --card:#18181F; --card2:#1E1E28;
+  --border:rgba(255,255,255,0.06); --border2:rgba(255,255,255,0.11);
+  --text:#EAE8F2; --text2:#8E8CA8; --text3:#7A788F;
+  --gold:#C9A84C; --gold-l:rgba(201,168,76,0.12); --gold-b:rgba(201,168,76,0.30);
+  --teal:#2ECFB8; --teal-d:rgba(46,207,184,0.12); --teal-b:rgba(46,207,184,0.28);
+  --amber:#F5A623; --amber-d:rgba(245,166,35,0.12); --amber-b:rgba(245,166,35,0.28);
+  --coral:#E05C5C; --coral-d:rgba(224,92,92,0.12); --coral-b:rgba(224,92,92,0.30);
+  --purple:#9B7FFF; --purple-d:rgba(155,127,255,0.12); --purple-b:rgba(155,127,255,0.28);
+  --green:#52C98A; --green-d:rgba(82,201,138,0.12); --green-b:rgba(82,201,138,0.30);
+  --r:14px; --sh:0 2px 20px rgba(0,0,0,0.35);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
   font-family: 'Space Grotesk', sans-serif;
-  background: var(--bg);
-  color: var(--text);
+  background:var(--bg);
+  color:var(--text);
   min-height: 100vh;
   display: flex; flex-direction: column; align-items: center;
   padding-bottom: 60px;
@@ -81,8 +69,8 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
   letter-spacing: 0.04em; text-transform: uppercase;
   transition: all 0.2s;
 }
-.dtab:hover { border-color: var(--purple); color: var(--purple); }
-.dtab.active { background: var(--purple-d); border-color: var(--purple); color: var(--purple); }
+.dtab:hover { border-color:var(--teal);color:var(--text);background:var(--teal-d); }
+.dtab.active { background: var(--purple-d); border-color:var(--teal);color:var(--text);background:var(--teal-d); }
 .dtab .icon { font-size: 18px; display: block; margin-bottom: 4px; }
 
 /* ── Cards ── */
@@ -262,7 +250,7 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
   color: var(--text);
 }
 .kd-num:hover { border-color: var(--border2); }
-.kd-num.kd-active { background: var(--purple-d); border-color: var(--purple); color: var(--purple); }
+.kd-num.kd-active { background: var(--purple-d); border-color:var(--teal);color:var(--text);background:var(--teal-d); }
 .kd-num.kd-hit { background: var(--green-d); border-color: var(--green); color: var(--green); }
 .kd-num.kd-error { background: var(--coral-d); border-color: var(--coral); color: var(--coral); }
 .kd-instruction { font-size: 13px; color: var(--text2); margin-bottom: 14px; line-height: 1.5; }
@@ -447,23 +435,50 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
 }
 .sci-details-body {
   padding: 14px 18px 16px;
-  font-size: 13px; color: var(--ink2, #444); line-height: 1.7;
+  font-size: 13px; color:var(--text); line-height: 1.7;
 }
 @media (max-width: 640px) {
   .sci-details summary { font-size: 14px !important; padding: 14px 16px !important; }
   .sci-details-body { font-size: 14px !important; padding: 14px 16px 16px !important; }
 }
 
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.4;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");}
+
+/* ── Shared design system classes ── */
+.logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:var(--text);letter-spacing:-0.01em;}
+.logo em{color:var(--gold);font-style:italic;}
+.hdr-back{font-size:12px;color:var(--text3);text-decoration:none;display:flex;align-items:center;gap:4px;transition:color 0.15s;}
+.hdr-back:hover{color:var(--text2);}
+.hdr-ex-name{font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);}
+.hdr-stat{font-size:12px;color:var(--text3);display:flex;align-items:center;gap:5px;}
+.hdr-stat b{color:var(--teal);font-size:13px;}
+.instr-banner{background:var(--teal-d);border-bottom:1px solid var(--teal-b);padding:14px 20px;display:flex;align-items:flex-start;gap:12px;}
+.instr-icon{font-size:20px;flex-shrink:0;margin-top:1px;}
+.instr-text{font-size:14px;color:var(--text2);line-height:1.65;}
+.instr-text strong{color:var(--text);font-weight:600;}
+.card-title-serif{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--text);line-height:1.1;margin-bottom:4px;}
+.sci-details{background:var(--card);border:1px solid var(--border2);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;}
+.sci-details summary{padding:13px 18px;font-size:12px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--text3);cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;-webkit-tap-highlight-color:transparent;}
+.sci-details summary::-webkit-details-marker{display:none;}
+.sci-details summary::after{content:'▸';font-size:10px;transition:transform 0.2s;color:var(--text3);}
+.sci-details[open] summary::after{transform:rotate(90deg);}
+.sci-details[open] summary{border-bottom:1px solid var(--border);}
+.sci-body,.sci-details-body{padding:14px 18px 16px;font-size:13px;color:var(--text2);line-height:1.7;}
+.sci-body strong,.sci-details-body strong{color:var(--text);}
+
 </style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <header>
-  <div class="logo">Entrena<em>Mente</em></div>
-  <div class="ex-badge">Saltos Visuales</div>
-  <div class="stat-row">
-    <div class="stat">Precisión <b id="hdr-acc">–</b></div>
-    <div class="stat">TR medio <b id="hdr-rt">–</b></div>
+  <a class="hdr-back" href="index.html">← Inicio</a>
+  <span class="hdr-ex-name">Saltos Visuales</span>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <div class="hdr-stat">precisión <b id="hdr-acc">–</b></div>
+    <div class="logo">Entrena<em>Mente</em></div>
   </div>
 </header>
 

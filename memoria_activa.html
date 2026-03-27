@@ -5,41 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EntrenaMente — Memoria Activa</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&display=swap');
-
 :root {
-  --bg: #F6F4F0;
-  --bg2: #EDEBE5;
-  --card: #FFFFFF;
-  --card2: #F3F1EC;
-  --ink: #201E1B;
-  --ink2: #5A574F;
-  --muted: #9E9B92;
-  --border: rgba(32,30,27,0.08);
-  --border2: rgba(32,30,27,0.14);
-  --teal: #0E7490;
-  --teal-l: #CFFAFE;
-  --teal-m: rgba(14,116,144,0.10);
-  --amber: #B45309;
-  --amber-l: #FEF3C7;
-  --amber-m: rgba(180,83,9,0.09);
-  --coral: #BE123C;
-  --coral-l: #FFE4E6;
-  --coral-m: rgba(190,18,60,0.08);
-  --purple: #6D28D9;
-  --purple-l: #EDE9FE;
-  --purple-m: rgba(109,40,217,0.09);
-  --green: #065F46;
-  --green-l: #D1FAE5;
-  --green-m: rgba(6,95,70,0.08);
-  --r: 14px;
-  --sh: 0 1px 3px rgba(32,30,27,0.06), 0 5px 18px rgba(32,30,27,0.05);
+  --bg:#0C0C10; --bg2:#13131A; --card:#18181F; --card2:#1E1E28;
+  --border:rgba(255,255,255,0.06); --border2:rgba(255,255,255,0.11);
+  --text:#EAE8F2; --text2:#8E8CA8; --text3:#7A788F;
+  --gold:#C9A84C; --gold-l:rgba(201,168,76,0.12); --gold-b:rgba(201,168,76,0.30);
+  --teal:#2ECFB8; --teal-d:rgba(46,207,184,0.12); --teal-b:rgba(46,207,184,0.28);
+  --amber:#F5A623; --amber-d:rgba(245,166,35,0.12); --amber-b:rgba(245,166,35,0.28);
+  --coral:#E05C5C; --coral-d:rgba(224,92,92,0.12); --coral-b:rgba(224,92,92,0.30);
+  --purple:#9B7FFF; --purple-d:rgba(155,127,255,0.12); --purple-b:rgba(155,127,255,0.28);
+  --green:#52C98A; --green-d:rgba(82,201,138,0.12); --green-b:rgba(82,201,138,0.30);
+  --r:14px; --sh:0 2px 20px rgba(0,0,0,0.35);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: 'Nunito', sans-serif;
-  background: var(--bg); color: var(--ink);
+  background:var(--bg); color:var(--text);
   min-height: 100vh; display: flex; flex-direction: column; align-items: center;
   padding-bottom: 60px;
 }
@@ -98,8 +80,8 @@ main { width: 100%; max-width: 680px; padding: 24px 16px 0; display: flex; flex-
   font-size: 11px; font-weight: 700; color: var(--muted);
   letter-spacing: 0.04em; text-transform: uppercase; transition: all 0.18s;
 }
-.mtab:hover { border-color: var(--purple); color: var(--purple); }
-.mtab.mactive { background: var(--purple-m); border-color: var(--purple); color: var(--purple); }
+.mtab:hover { border-color:var(--teal);color:var(--text);background:var(--teal-d); }
+.mtab.mactive { background: var(--purple-m); border-color:var(--teal);color:var(--text);background:var(--teal-d); }
 .mtab .micon { font-size: 20px; display: block; margin-bottom: 4px; }
 
 /* Buttons */
@@ -190,7 +172,7 @@ main { width: 100%; max-width: 680px; padding: 24px 16px 0; display: flex; flex-
   position: relative;
 }
 .recall-slot.active-slot { border-color: var(--purple); background: var(--purple-m); }
-.recall-slot.slot-filled { border-color: var(--purple); color: var(--purple); }
+.recall-slot.slot-filled { border-color:var(--teal);color:var(--text);background:var(--teal-d); }
 .recall-slot.slot-correct { border-color: var(--teal); background: var(--teal-m); color: var(--teal); }
 .recall-slot.slot-wrong { border-color: var(--coral); background: var(--coral-m); color: var(--coral); }
 .recall-slot.slot-partial { border-color: var(--amber); background: var(--amber-m); color: var(--amber); }
@@ -209,7 +191,7 @@ main { width: 100%; max-width: 680px; padding: 24px 16px 0; display: flex; flex-
   font-family: 'Crimson Pro', serif; font-size: 20px; font-weight: 500;
   cursor: pointer; text-align: center; transition: all 0.12s; color: var(--ink);
 }
-.key:hover { border-color: var(--purple); color: var(--purple); background: var(--purple-m); }
+.key:hover { border-color:var(--teal);color:var(--text);background:var(--teal-d); background: var(--purple-m); }
 .key.key-used { opacity: 0.3; pointer-events: none; }
 .key.key-backspace { font-size: 14px; font-family: 'Nunito', sans-serif; font-weight: 700; color: var(--ink2); }
 .key.key-submit { background: var(--teal); color: #fff; border-color: var(--teal); font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 700; }
@@ -382,23 +364,50 @@ main { width: 100%; max-width: 680px; padding: 24px 16px 0; display: flex; flex-
 }
 .sci-details-body {
   padding: 14px 18px 16px;
-  font-size: 13px; color: var(--ink2, #444); line-height: 1.7;
+  font-size: 13px; color:var(--text); line-height: 1.7;
 }
 @media (max-width: 640px) {
   .sci-details summary { font-size: 14px !important; padding: 14px 16px !important; }
   .sci-details-body { font-size: 14px !important; padding: 14px 16px 16px !important; }
 }
 
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.4;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");}
+
+/* ── Shared design system classes ── */
+.logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:var(--text);letter-spacing:-0.01em;}
+.logo em{color:var(--gold);font-style:italic;}
+.hdr-back{font-size:12px;color:var(--text3);text-decoration:none;display:flex;align-items:center;gap:4px;transition:color 0.15s;}
+.hdr-back:hover{color:var(--text2);}
+.hdr-ex-name{font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);}
+.hdr-stat{font-size:12px;color:var(--text3);display:flex;align-items:center;gap:5px;}
+.hdr-stat b{color:var(--teal);font-size:13px;}
+.instr-banner{background:var(--teal-d);border-bottom:1px solid var(--teal-b);padding:14px 20px;display:flex;align-items:flex-start;gap:12px;}
+.instr-icon{font-size:20px;flex-shrink:0;margin-top:1px;}
+.instr-text{font-size:14px;color:var(--text2);line-height:1.65;}
+.instr-text strong{color:var(--text);font-weight:600;}
+.card-title-serif{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--text);line-height:1.1;margin-bottom:4px;}
+.sci-details{background:var(--card);border:1px solid var(--border2);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;}
+.sci-details summary{padding:13px 18px;font-size:12px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--text3);cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;-webkit-tap-highlight-color:transparent;}
+.sci-details summary::-webkit-details-marker{display:none;}
+.sci-details summary::after{content:'▸';font-size:10px;transition:transform 0.2s;color:var(--text3);}
+.sci-details[open] summary::after{transform:rotate(90deg);}
+.sci-details[open] summary{border-bottom:1px solid var(--border);}
+.sci-body,.sci-details-body{padding:14px 18px 16px;font-size:13px;color:var(--text2);line-height:1.7;}
+.sci-body strong,.sci-details-body strong{color:var(--text);}
+
 </style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <header>
-  <div class="logo">Entrena<em>Mente</em></div>
-  <div class="ex-tag">Memoria Activa</div>
-  <div class="hstats">
-    <div class="hstat">Amplitud <b id="hdr-span">–</b></div>
-    <div class="hstat">Precisión <b id="hdr-acc">–</b></div>
+  <a class="hdr-back" href="index.html">← Inicio</a>
+  <span class="hdr-ex-name">Memoria Activa</span>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <div class="hdr-stat">precisión <b id="hdr-acc">–</b></div>
+    <div class="logo">Entrena<em>Mente</em></div>
   </div>
 </header>
 
@@ -495,8 +504,8 @@ main { width: 100%; max-width: 680px; padding: 24px 16px 0; display: flex; flex-
   <div class="card" id="stage-recall">
     <div class="chead">
       <div>
-        <div class="ctitle">Recuerda las palabras</div>
-        <div class="csub">Escribe las palabras en el orden en que aparecieron, de izquierda a derecha.</div>
+        <div class="ctitle" style="font-family:\'Cormorant Garamond\',serif;font-weight:300;font-size:24px;">Recuerda las palabras</div>
+        <div class="csub" style="font-size:13px;color:var(--text2);">Escribe las palabras en el orden en que aparecieron, de izquierda a derecha.</div>
       </div>
       <div class="clive"><div class="cv" id="recall-set">3</div><div class="cl">palabras</div></div>
     </div>

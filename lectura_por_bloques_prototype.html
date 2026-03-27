@@ -5,36 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EntrenaMente – Lectura por Bloques</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
-
   :root {
-    --ink: #1a1a2e;
-    --ink2: #3d3d5c;
-    --muted: #7a7a9a;
-    --bg: #f4f2ee;
-    --bg2: #eceae4;
-    --card: #ffffff;
-    --teal: #2a9d8f;
-    --teal-light: #e8f7f5;
-    --amber: #e9c46a;
-    --amber-dark: #b8860b;
-    --coral: #e76f51;
-    --coral-light: #fdf0ec;
-    --purple: #6c5ce7;
-    --purple-light: #f0eeff;
-    --green: #52b788;
-    --green-light: #edf7f1;
-    --border: rgba(26,26,46,0.10);
-    --radius: 12px;
-    --shadow: 0 2px 12px rgba(26,26,46,0.08);
-  }
+  --bg:#0C0C10; --bg2:#13131A; --card:#18181F; --card2:#1E1E28;
+  --border:rgba(255,255,255,0.06); --border2:rgba(255,255,255,0.11);
+  --text:#EAE8F2; --text2:#8E8CA8; --text3:#7A788F;
+  --gold:#C9A84C; --gold-l:rgba(201,168,76,0.12); --gold-b:rgba(201,168,76,0.30);
+  --teal:#2ECFB8; --teal-d:rgba(46,207,184,0.12); --teal-b:rgba(46,207,184,0.28);
+  --amber:#F5A623; --amber-d:rgba(245,166,35,0.12); --amber-b:rgba(245,166,35,0.28);
+  --coral:#E05C5C; --coral-d:rgba(224,92,92,0.12); --coral-b:rgba(224,92,92,0.30);
+  --purple:#9B7FFF; --purple-d:rgba(155,127,255,0.12); --purple-b:rgba(155,127,255,0.28);
+  --green:#52C98A; --green-d:rgba(82,201,138,0.12); --green-b:rgba(82,201,138,0.30);
+  --r:14px; --sh:0 2px 20px rgba(0,0,0,0.35);
+}
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
     font-family: 'Sora', sans-serif;
-    background: var(--bg);
-    color: var(--ink);
+    background:var(--bg);
+    color:var(--text);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -102,7 +91,7 @@
     transition: all 0.2s;
     letter-spacing: 0.02em;
   }
-  .mode-tab:hover { border-color: var(--purple); color: var(--purple); }
+  .mode-tab:hover { border-color:var(--teal);color:var(--text);background:var(--teal-d); }
   .mode-tab.active { background: var(--purple); border-color: var(--purple); color: #fff; }
   .mode-tab .tab-num { font-size: 10px; opacity: 0.7; display: block; margin-bottom: 2px; }
 
@@ -147,31 +136,46 @@
   .passage {
     padding: 24px 28px;
     font-family: 'Lora', serif;
-    font-size: 18px; line-height: 2.2;
+    font-size: 18px; line-height: 2.6;
     color: var(--ink);
   }
   .chunk {
     display: inline;
-    padding: 2px 0;
+    padding: 3px 2px;
     border-radius: 4px;
     cursor: pointer;
     transition: background 0.15s;
     position: relative;
   }
   .chunk:hover { background: rgba(108,92,231,0.07); }
+  .chunk.tapped { background: rgba(108,92,231,0.10); }
   .chunk-prep { border-bottom: 2.5px solid var(--teal); }
   .chunk-verb { border-bottom: 2.5px solid var(--coral); }
   .chunk-noun { border-bottom: 2.5px solid var(--amber-dark); }
   .chunk-disc { border-bottom: 2.5px solid var(--purple); }
+
+  /* Label: shown on hover (desktop) or tap (mobile) */
   .chunk-label {
     display: none;
-    position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%; transform: translateX(-50%);
     background: var(--ink); color: #fff;
     font-family: 'Sora', sans-serif;
-    font-size: 10px; font-weight: 600; letter-spacing: 0.06em;
-    padding: 3px 8px; border-radius: 6px; white-space: nowrap; z-index: 10;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+    padding: 4px 10px; border-radius: 7px; white-space: nowrap; z-index: 20;
+    pointer-events: none;
   }
+  .chunk-label::after {
+    content: '';
+    position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: var(--ink);
+  }
+  /* Show on desktop hover */
   .chunk:hover .chunk-label { display: block; }
+  /* Show on mobile tap via .tapped class */
+  .chunk.tapped .chunk-label { display: block; }
 
   /* ── Legend ── */
   .legend {
@@ -330,7 +334,7 @@
     font-size: 14px; font-family: 'Sora', sans-serif;
     transition: all 0.15s; color: var(--ink2);
   }
-  .q-option:hover { border-color: var(--purple); color: var(--purple); background: var(--purple-light); }
+  .q-option:hover { border-color:var(--teal);color:var(--text);background:var(--teal-d); background: var(--purple-light); }
   .q-option.correct-ans { border-color: var(--green); background: var(--green-light); color: #1a5c38; }
   .q-option.wrong-ans { border-color: var(--coral); background: var(--coral-light); color: #8b2500; }
 
@@ -358,14 +362,70 @@
   /* ── Hidden sections ── */
   .mode-section { display: none; }
   .mode-section.active { display: block; }
+
+@media (max-width: 640px) {
+  main { padding: 16px 12px 0 !important; }
+  .passage { padding: 16px 16px !important; font-size: 16px !important; line-height: 2.2 !important; }
+  .parse-area { padding: 16px 16px !important; }
+  .parse-sentence { font-size: 16px !important; line-height: 1.8 !important; }
+  .parse-word { padding: 4px 6px !important; margin: 3px 2px !important; font-size: 15px !important; min-height: 36px !important; display: inline-flex !important; align-items: center !important; }
+  .flash-area { padding: 24px 16px !important; }
+  .flash-chunk { font-size: 20px !important; padding: 10px 16px !important; }
+  .recon-area { padding: 16px 16px !important; }
+  .chunk-tile { font-size: 14px !important; padding: 10px 14px !important; min-height: 44px !important; }
+  .recon-drop-zone { min-height: 60px !important; padding: 10px 12px !important; }
+  .card-instruction { padding: 12px 16px !important; font-size: 14px !important; }
+  .card-header { padding: 14px 16px 12px !important; }
+  .btn { padding: 12px 16px !important; font-size: 14px !important; min-height: 44px !important; }
+  .parse-controls { gap: 8px !important; }
+  .legend { padding: 10px 16px 16px !important; gap: 10px !important; }
+  .mode-tabs { gap: 6px !important; }
+  .mode-tab { min-width: 0 !important; font-size: 11px !important; padding: 8px 8px !important; }
+  .chunk { padding: 4px 3px !important; }
+  .chunk-label { font-size: 10px !important; }
+  .q-option { padding: 12px 14px !important; font-size: 14px !important; min-height: 44px !important; }
+  .question-area { padding: 0 16px 16px !important; }
+  .feedback-panel { margin: 0 16px 16px !important; font-size: 13px !important; }
+}
+
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.4;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");}
+
+/* ── Shared design system classes ── */
+.logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:var(--text);letter-spacing:-0.01em;}
+.logo em{color:var(--gold);font-style:italic;}
+.hdr-back{font-size:12px;color:var(--text3);text-decoration:none;display:flex;align-items:center;gap:4px;transition:color 0.15s;}
+.hdr-back:hover{color:var(--text2);}
+.hdr-ex-name{font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);}
+.hdr-stat{font-size:12px;color:var(--text3);display:flex;align-items:center;gap:5px;}
+.hdr-stat b{color:var(--teal);font-size:13px;}
+.instr-banner{background:var(--teal-d);border-bottom:1px solid var(--teal-b);padding:14px 20px;display:flex;align-items:flex-start;gap:12px;}
+.instr-icon{font-size:20px;flex-shrink:0;margin-top:1px;}
+.instr-text{font-size:14px;color:var(--text2);line-height:1.65;}
+.instr-text strong{color:var(--text);font-weight:600;}
+.card-title-serif{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--text);line-height:1.1;margin-bottom:4px;}
+.sci-details{background:var(--card);border:1px solid var(--border2);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;}
+.sci-details summary{padding:13px 18px;font-size:12px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--text3);cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;-webkit-tap-highlight-color:transparent;}
+.sci-details summary::-webkit-details-marker{display:none;}
+.sci-details summary::after{content:'▸';font-size:10px;transition:transform 0.2s;color:var(--text3);}
+.sci-details[open] summary::after{transform:rotate(90deg);}
+.sci-details[open] summary{border-bottom:1px solid var(--border);}
+.sci-body,.sci-details-body{padding:14px 18px 16px;font-size:13px;color:var(--text2);line-height:1.7;}
+.sci-body strong,.sci-details-body strong{color:var(--text);}
+
 </style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <header>
-  <div class="logo">Entrena<span>Mente</span></div>
-  <div class="mode-badge">Lectura por Bloques</div>
-  <div class="streak">🔥 Racha <b id="streak-count">7</b> días</div>
+  <a class="hdr-back" href="index.html">← Inicio</a>
+  <span class="hdr-ex-name">Lectura por Bloques</span>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <div class="hdr-stat">progreso <b id="hdr-acc">–</b></div>
+    <div class="logo">Entrena<em>Mente</em></div>
+  </div>
 </header>
 
 <div class="progress-wrap">
@@ -404,7 +464,7 @@
         <div class="timer-display"><div class="timer-dot"></div> <span id="timer0">2:45</span></div>
       </div>
       <div class="card-instruction">
-        Lee el párrafo con atención. Los <strong>bloques sintácticos</strong> están marcados con colores — pasa el cursor sobre cada uno para ver su tipo. Luego responde las preguntas.
+        Lee el párrafo con atención. Los <strong>bloques sintácticos</strong> están marcados con colores. <strong>Toca o pasa el cursor</strong> sobre cada bloque para ver su tipo. Luego responde las preguntas.
       </div>
       <div class="passage" id="passage-m1">
         <span class="chunk chunk-disc">Sin embargo,<span class="chunk-label">MARCADOR DISCURSIVO</span></span>
@@ -528,11 +588,11 @@
         <div class="timer-display"><div class="timer-dot"></div> <span id="timer3">2:30</span></div>
       </div>
       <div class="card-instruction">
-        <strong>Arrastra los bloques</strong> hacia la zona superior para reconstruir la oración en el orden correcto.
+        <strong>Toca los bloques</strong> para colocarlos en orden y reconstruir la oración completa.
       </div>
       <div class="recon-area">
         <div class="recon-drop-zone" id="drop-zone" ondragover="dragOver(event)" ondrop="dropChunk(event)" ondragleave="dragLeave(event)">
-          <span class="placeholder" id="drop-placeholder">Arrastra los bloques aquí...</span>
+          <span class="placeholder" id="drop-placeholder">Toca un bloque del banco para colocarlo aquí</span>
         </div>
         <div class="chunk-bank" id="chunk-bank">
           <!-- tiles injected by JS -->
@@ -566,13 +626,35 @@ function switchMode(n) {
   if (n===3) initRecon();
 }
 
-// ── Answer handler (Modes 1 & 2) ──
+// ── MODE 1: Chunk tap-toggle for mobile ──
+document.querySelectorAll('.chunk').forEach(chunk => {
+  // Touch: toggle label on tap, dismiss on tap elsewhere
+  chunk.addEventListener('touchstart', e => {
+    e.preventDefault(); // prevent ghost click
+    const wasActive = chunk.classList.contains('tapped');
+    // Close all others
+    document.querySelectorAll('.chunk.tapped').forEach(c => c.classList.remove('tapped'));
+    if (!wasActive) chunk.classList.add('tapped');
+  }, { passive: false });
+});
+// Tap elsewhere to dismiss
+document.addEventListener('touchstart', e => {
+  if (!e.target.closest('.chunk')) {
+    document.querySelectorAll('.chunk.tapped').forEach(c => c.classList.remove('tapped'));
+  }
+});
+
+// ── Answer handler ──
 function answerQ(el, correct, mode) {
   const options = el.closest('.q-options').querySelectorAll('.q-option');
   options.forEach(o => o.style.pointerEvents = 'none');
   el.classList.add(correct ? 'correct-ans' : 'wrong-ans');
   if (!correct) {
-    options.forEach(o => { if (o.dataset.correct) o.classList.add('correct-ans'); });
+    options.forEach(o => {
+      // mark the correct one green
+      const onclickAttr = o.getAttribute('onclick') || '';
+      if (onclickAttr.includes('true')) o.classList.add('correct-ans');
+    });
   }
   const fb = document.getElementById('feedback-' + mode);
   if (correct) {
@@ -587,28 +669,28 @@ function answerQ(el, correct, mode) {
 
 // ── MODE 2: Active Parsing ──
 const parseSentence = [
-  { word: 'A', correct: false },
-  { word: 'lo', correct: false },
-  { word: 'largo', correct: false },
-  { word: 'del', correct: true },          // break: "A lo largo del siglo XX"
-  { word: 'siglo', correct: false },
-  { word: 'XX,', correct: true },          // break
-  { word: 'los', correct: false },
-  { word: 'avances', correct: false },
-  { word: 'tecnológicos', correct: true }, // break
-  { word: 'han', correct: false },
-  { word: 'transformado', correct: true }, // break: "han transformado"
-  { word: 'profundamente', correct: true },// break
-  { word: 'la', correct: false },
-  { word: 'forma', correct: false },
-  { word: 'en', correct: false },
-  { word: 'que', correct: true },          // break
-  { word: 'nos', correct: false },
+  { word: 'A',            correct: false },
+  { word: 'lo',           correct: false },
+  { word: 'largo',        correct: false },
+  { word: 'del',          correct: true  }, // boundary: "A lo largo del" → no, actually after "del siglo XX,"
+  { word: 'siglo',        correct: false },
+  { word: 'XX,',          correct: true  }, // end of temporal phrase
+  { word: 'los',          correct: false },
+  { word: 'avances',      correct: false },
+  { word: 'tecnológicos', correct: true  }, // end of subject NP
+  { word: 'han',          correct: false },
+  { word: 'transformado', correct: true  }, // end of verb phrase
+  { word: 'profundamente',correct: true  }, // adverb — own chunk
+  { word: 'la',           correct: false },
+  { word: 'forma',        correct: false },
+  { word: 'en',           correct: false },
+  { word: 'que',          correct: true  }, // end of "la forma en que"
+  { word: 'nos',          correct: false },
   { word: 'comunicamos.', correct: false },
 ];
-// Correct boundaries: after indices 3,5,8,10,11,16
-
-const correctBoundaries = new Set([3,5,8,10,11,16]);
+const correctBoundaries = new Set([5, 8, 10, 11, 15]);
+// 5 boundaries: after XX,(5), tecnológicos(8), transformado(10), profundamente(11), que(15)
+const TOTAL_BOUNDARIES = correctBoundaries.size; // 5
 let selectedBoundaries = new Set();
 
 function initParse() {
@@ -637,16 +719,19 @@ function toggleBoundary(el, idx) {
 }
 
 function checkParse() {
-  // Score: how many of the 6 correct boundaries the user found
   let hits = 0, fp = 0;
-  selectedBoundaries.forEach(i => { if (correctBoundaries.has(i)) hits++; else fp++; });
+  selectedBoundaries.forEach(i => {
+    if (correctBoundaries.has(i)) hits++; else fp++;
+  });
+  const total = TOTAL_BOUNDARIES;
   const fb = document.getElementById('feedback-1');
-  if (hits >= 4 && fp <= 2) {
+  if (hits >= Math.ceil(total * 0.6) && fp <= 2) {
     fb.className = 'feedback-panel correct';
-    fb.innerHTML = `<div class="feedback-label">✓ Muy bien — ${hits}/6 bloques correctos</div>Identificaste correctamente los principales grupos sintácticos. Los bloques clave son: <em>"A lo largo del siglo XX"</em> (frase preposicional temporal), <em>"los avances tecnológicos"</em> (grupo nominal), <em>"han transformado profundamente"</em> (perífrasis + adverbio), y <em>"la forma en que nos comunicamos"</em> (grupo nominal con cláusula relativa).`;
+    fb.innerHTML = `<div class="feedback-label">✓ Muy bien — ${hits}/${total} bloques correctos</div>Identificaste correctamente los principales grupos sintácticos. Los bloques clave son: <em>"A lo largo del siglo XX,"</em> (frase preposicional temporal), <em>"los avances tecnológicos"</em> (grupo nominal), <em>"han transformado"</em> (perífrasis verbal), <em>"profundamente"</em> (adverbio), y <em>"la forma en que"</em> (grupo nominal con cláusula relativa).`;
+    document.getElementById('main-progress').style.width = '60%';
   } else {
     fb.className = 'feedback-panel incorrect';
-    fb.innerHTML = `<div class="feedback-label">Sigue practicando — ${hits}/6 bloques</div>Busca los grupos naturales de significado: las frases preposicionales (comienzan con preposición), los grupos nominales (artículo + sustantivo ± adjetivo) y las perífrasis verbales (verbo auxiliar + infinitivo). Prueba con la pista.`;
+    fb.innerHTML = `<div class="feedback-label">Sigue practicando — ${hits}/${total} bloques</div>Busca los grupos naturales de significado: las frases preposicionales (comienzan con preposición), los grupos nominales (artículo + sustantivo ± adjetivo) y las perífrasis verbales (verbo auxiliar + participio/infinitivo). Prueba con la pista.`;
   }
 }
 
@@ -659,7 +744,7 @@ function resetParse() {
 function showParseHint() {
   const fb = document.getElementById('feedback-1');
   fb.className = 'feedback-panel info';
-  fb.innerHTML = '<div class="feedback-label">💡 Pista</div>Empieza por identificar las preposiciones (a, de, en) — marcan el inicio de una frase preposicional. Luego busca el verbo principal: <em>"han transformado"</em>. Todo lo que va antes es sujeto/temporal; todo lo que va después es objeto.';
+  fb.innerHTML = '<div class="feedback-label">💡 Pista</div>Hay 5 divisores en esta oración. Empieza por la coma después de "XX" — siempre marca un límite. Luego busca el sujeto completo ("los avances tecnológicos") antes del verbo, y el adverbio "profundamente" después del verbo principal.';
 }
 
 // ── MODE 3: Chunk Flash ──
@@ -702,16 +787,14 @@ function advanceFlash() {
   const textEl = document.getElementById('flash-text');
   if (textEl) {
     textEl.style.opacity = '0';
-    setTimeout(() => {
-      textEl.textContent = flashChunks[flashIdx];
-      textEl.style.opacity = '1';
-    }, 200);
+    setTimeout(() => { textEl.textContent = flashChunks[flashIdx]; textEl.style.opacity = '1'; }, 200);
     document.getElementById('flash-ctr').textContent = `Bloque ${flashIdx+1} de ${flashChunks.length}`;
     document.getElementById('flash-pb').style.width = ((flashIdx+1)/flashChunks.length*100) + '%';
   }
 }
 
 // ── MODE 4: Reconstruction ──
+// Uses tap-to-place instead of drag — works on both desktop and mobile
 const reconChunks = [
   { id: 'a', text: 'A pesar de las dificultades iniciales,' },
   { id: 'b', text: 'el equipo de investigación' },
@@ -722,111 +805,104 @@ const reconChunks = [
 ];
 const correctOrder = ['a','b','c','d','e','f'];
 let dropOrder = [];
-let draggingId = null;
+let draggingId = null; // kept for desktop drag fallback
 
 function initRecon() {
   dropOrder = [];
   const bank = document.getElementById('chunk-bank');
   const dropZone = document.getElementById('drop-zone');
   bank.innerHTML = '';
-  dropZone.innerHTML = '<span class="placeholder" id="drop-placeholder">Arrastra los bloques aquí...</span>';
+  dropZone.innerHTML = '<span class="placeholder" id="drop-placeholder">Toca un bloque para colocarlo aquí</span>';
+  document.getElementById('feedback-3').className = 'feedback-panel';
 
-  // Shuffle
   const shuffled = [...reconChunks].sort(() => Math.random() - 0.5);
   shuffled.forEach(c => {
-    const tile = document.createElement('div');
-    tile.className = 'chunk-tile';
-    tile.textContent = c.text;
-    tile.draggable = true;
-    tile.dataset.id = c.id;
-    tile.addEventListener('dragstart', e => { draggingId = c.id; e.dataTransfer.effectAllowed = 'move'; });
+    const tile = makeBankTile(c);
     bank.appendChild(tile);
   });
 }
 
-function dragOver(e) {
-  e.preventDefault();
-  document.getElementById('drop-zone').classList.add('drag-over');
+function makeBankTile(c) {
+  const tile = document.createElement('div');
+  tile.className = 'chunk-tile';
+  tile.textContent = c.text;
+  tile.dataset.id = c.id;
+  // Desktop drag
+  tile.draggable = true;
+  tile.addEventListener('dragstart', e => { draggingId = c.id; e.dataTransfer.effectAllowed = 'move'; });
+  // Mobile & desktop tap-to-place
+  tile.addEventListener('click', () => placeChunk(c.id));
+  return tile;
 }
-function dragLeave(e) {
-  document.getElementById('drop-zone').classList.remove('drag-over');
+
+function placeChunk(id) {
+  if (dropOrder.includes(id)) return;
+  const bankTile = document.querySelector(`#chunk-bank [data-id="${id}"]`);
+  if (!bankTile) return;
+  bankTile.remove();
+
+  dropOrder.push(id);
+  const placeholder = document.getElementById('drop-placeholder');
+  if (placeholder) placeholder.remove();
+
+  const chunk = reconChunks.find(c => c.id === id);
+  const dz = document.getElementById('drop-zone');
+  const tile = document.createElement('div');
+  tile.className = 'chunk-tile in-drop';
+  tile.textContent = chunk.text;
+  tile.dataset.id = id;
+  tile.title = 'Toca para devolver al banco';
+  tile.style.cursor = 'pointer';
+  tile.addEventListener('click', () => returnToBank(id, tile));
+  dz.appendChild(tile);
 }
+
+// Desktop drag support (unchanged)
+function dragOver(e) { e.preventDefault(); document.getElementById('drop-zone').classList.add('drag-over'); }
+function dragLeave(e) { document.getElementById('drop-zone').classList.remove('drag-over'); }
 function dropChunk(e) {
   e.preventDefault();
   document.getElementById('drop-zone').classList.remove('drag-over');
   if (!draggingId) return;
-  if (dropOrder.includes(draggingId)) return;
-
-  // Remove from bank visually
-  const bankTile = document.querySelector(`#chunk-bank [data-id="${draggingId}"]`);
-  if (!bankTile) return;
-  bankTile.remove();
-
-  dropOrder.push(draggingId);
-  const placeholder = document.getElementById('drop-placeholder');
-  if (placeholder) placeholder.remove();
-
-  const dz = document.getElementById('drop-zone');
-  const chunk = reconChunks.find(c => c.id === draggingId);
-  const tile = document.createElement('div');
-  tile.className = 'chunk-tile in-drop';
-  tile.textContent = chunk.text;
-  tile.dataset.id = draggingId;
-  tile.title = 'Clic para devolver al banco';
-  tile.style.cursor = 'pointer';
-  tile.addEventListener('click', () => returnToBank(draggingId, tile));
-  dz.appendChild(tile);
+  placeChunk(draggingId);
   draggingId = null;
 }
 
 function returnToBank(id, tile) {
   dropOrder = dropOrder.filter(x => x !== id);
   tile.remove();
-  if (document.getElementById('drop-zone').children.length === 0) {
-    document.getElementById('drop-zone').innerHTML = '<span class="placeholder" id="drop-placeholder">Arrastra los bloques aquí...</span>';
+  if (!document.querySelector('#drop-zone .chunk-tile')) {
+    document.getElementById('drop-zone').innerHTML = '<span class="placeholder" id="drop-placeholder">Toca un bloque para colocarlo aquí</span>';
   }
-  const bank = document.getElementById('chunk-bank');
   const chunk = reconChunks.find(c => c.id === id);
-  const newTile = document.createElement('div');
-  newTile.className = 'chunk-tile';
-  newTile.textContent = chunk.text;
-  newTile.draggable = true;
-  newTile.dataset.id = id;
-  newTile.addEventListener('dragstart', e => { draggingId = id; e.dataTransfer.effectAllowed = 'move'; });
-  bank.appendChild(newTile);
+  document.getElementById('chunk-bank').appendChild(makeBankTile(chunk));
 }
 
 function checkRecon() {
   const fb = document.getElementById('feedback-3');
-  const isCorrect = JSON.stringify(dropOrder) === JSON.stringify(correctOrder);
   if (dropOrder.length < correctOrder.length) {
     fb.className = 'feedback-panel info';
-    fb.innerHTML = '<div class="feedback-label">Incompleto</div>Arrastra todos los bloques antes de verificar.';
+    fb.innerHTML = '<div class="feedback-label">Incompleto</div>Toca todos los bloques del banco para colocarlos antes de verificar.';
     return;
   }
+  const isCorrect = JSON.stringify(dropOrder) === JSON.stringify(correctOrder);
   if (isCorrect) {
     fb.className = 'feedback-panel correct';
-    fb.innerHTML = '<div class="feedback-label">✓ Perfecto</div>Reconstruiste la oración correctamente. Observa la estructura: <em>marcador adversativo + sujeto + verbo principal + objeto + frases preposicionales encadenadas</em>. Este patrón es extremadamente frecuente en textos académicos y periodísticos en español.';
+    fb.innerHTML = '<div class="feedback-label">✓ Perfecto</div>Reconstruiste la oración correctamente. Observa la estructura: <em>marcador adversativo → sujeto → verbo principal → objeto → frases preposicionales encadenadas</em>. Este patrón es muy frecuente en textos académicos y periodísticos en español.';
     document.getElementById('main-progress').style.width = '90%';
   } else {
     fb.className = 'feedback-panel incorrect';
-    fb.innerHTML = '<div class="feedback-label">Orden incorrecto</div>Pista: el marcador temporal "A pesar de las dificultades iniciales" siempre va al inicio en este registro. El sujeto ("el equipo de investigación") precede al verbo. Las frases preposicionales van al final.';
+    fb.innerHTML = '<div class="feedback-label">Orden incorrecto</div>Pista: el marcador "A pesar de las dificultades iniciales" siempre va al inicio. El sujeto ("el equipo de investigación") precede al verbo. Las frases preposicionales van al final.';
   }
 }
 
-function resetRecon() {
-  initRecon();
-  document.getElementById('feedback-3').className = 'feedback-panel';
-}
+function resetRecon() { initRecon(); }
 
 function finishSession() {
   document.getElementById('main-progress').style.width = '100%';
   document.getElementById('streak-count').textContent = '8';
-  alert('¡Sesión completada! +12 puntos de fluidez. Mañana: Modo 3 con textos más complejos.');
+  alert('¡Sesión completada! Mañana: Modo 3 con textos más complejos.');
 }
-
-// Init parse on load since mode 1 is first shown
-// (parse mode is mode-1 tab, init on first switch)
 </script>
 </body>
 </html>

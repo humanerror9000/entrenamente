@@ -5,43 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EntrenaMente — Contrarreloj</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap');
-
 :root {
-  --bg: #F9F7F3;
-  --bg2: #F0EDE6;
-  --card: #FFFFFF;
-  --card2: #F5F3EE;
-  --ink: #1E1C1A;
-  --ink2: #52504C;
-  --muted: #999690;
-  --border: rgba(30,28,26,0.08);
-  --border2: rgba(30,28,26,0.13);
-  --teal: #0D7377;
-  --teal-l: #D0F5F2;
-  --teal-m: rgba(13,115,119,0.10);
-  --amber: #C17D0E;
-  --amber-l: #FEF3C7;
-  --amber-m: rgba(193,125,14,0.10);
-  --coral: #B91C1C;
-  --coral-l: #FEE2E2;
-  --coral-m: rgba(185,28,28,0.08);
-  --purple: #5B21B6;
-  --purple-l: #EDE9FE;
-  --purple-m: rgba(91,33,182,0.09);
-  --green: #065F46;
-  --green-l: #D1FAE5;
-  --green-m: rgba(6,95,70,0.08);
-  --r: 14px;
-  --sh: 0 1px 4px rgba(30,28,26,0.06), 0 6px 20px rgba(30,28,26,0.05);
+  --bg:#0C0C10; --bg2:#13131A; --card:#18181F; --card2:#1E1E28;
+  --border:rgba(255,255,255,0.06); --border2:rgba(255,255,255,0.11);
+  --text:#EAE8F2; --text2:#8E8CA8; --text3:#7A788F;
+  --gold:#C9A84C; --gold-l:rgba(201,168,76,0.12); --gold-b:rgba(201,168,76,0.30);
+  --teal:#2ECFB8; --teal-d:rgba(46,207,184,0.12); --teal-b:rgba(46,207,184,0.28);
+  --amber:#F5A623; --amber-d:rgba(245,166,35,0.12); --amber-b:rgba(245,166,35,0.28);
+  --coral:#E05C5C; --coral-d:rgba(224,92,92,0.12); --coral-b:rgba(224,92,92,0.30);
+  --purple:#9B7FFF; --purple-d:rgba(155,127,255,0.12); --purple-b:rgba(155,127,255,0.28);
+  --green:#52C98A; --green-d:rgba(82,201,138,0.12); --green-b:rgba(82,201,138,0.30);
+  --r:14px; --sh:0 2px 20px rgba(0,0,0,0.35);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
   font-family: 'Instrument Sans', sans-serif;
-  background: var(--bg);
-  color: var(--ink);
+  background:var(--bg);
+  color:var(--text);
   min-height: 100vh;
   display: flex; flex-direction: column; align-items: center;
   padding-bottom: 60px;
@@ -216,7 +198,7 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
   font-size: 14px; font-family: 'Instrument Sans', sans-serif;
   color: var(--ink2); cursor: pointer; transition: all 0.13s;
 }
-.qopt:hover { border-color: var(--purple); color: var(--purple); background: var(--purple-m); }
+.qopt:hover { border-color:var(--teal);color:var(--text);background:var(--teal-d); background: var(--purple-m); }
 .qopt.q-correct { border-color: var(--teal); background: var(--teal-m); color: var(--teal); pointer-events: none; }
 .qopt.q-wrong { border-color: var(--coral); background: var(--coral-m); color: var(--coral); pointer-events: none; }
 .qopt.q-locked { pointer-events: none; opacity: 0.4; }
@@ -402,23 +384,50 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
 }
 .sci-details-body {
   padding: 14px 18px 16px;
-  font-size: 13px; color: var(--ink2, #444); line-height: 1.7;
+  font-size: 13px; color:var(--text); line-height: 1.7;
 }
 @media (max-width: 640px) {
   .sci-details summary { font-size: 14px !important; padding: 14px 16px !important; }
   .sci-details-body { font-size: 14px !important; padding: 14px 16px 16px !important; }
 }
 
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.4;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");}
+
+/* ── Shared design system classes ── */
+.logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:var(--text);letter-spacing:-0.01em;}
+.logo em{color:var(--gold);font-style:italic;}
+.hdr-back{font-size:12px;color:var(--text3);text-decoration:none;display:flex;align-items:center;gap:4px;transition:color 0.15s;}
+.hdr-back:hover{color:var(--text2);}
+.hdr-ex-name{font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);}
+.hdr-stat{font-size:12px;color:var(--text3);display:flex;align-items:center;gap:5px;}
+.hdr-stat b{color:var(--teal);font-size:13px;}
+.instr-banner{background:var(--teal-d);border-bottom:1px solid var(--teal-b);padding:14px 20px;display:flex;align-items:flex-start;gap:12px;}
+.instr-icon{font-size:20px;flex-shrink:0;margin-top:1px;}
+.instr-text{font-size:14px;color:var(--text2);line-height:1.65;}
+.instr-text strong{color:var(--text);font-weight:600;}
+.card-title-serif{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--text);line-height:1.1;margin-bottom:4px;}
+.sci-details{background:var(--card);border:1px solid var(--border2);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;}
+.sci-details summary{padding:13px 18px;font-size:12px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--text3);cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;-webkit-tap-highlight-color:transparent;}
+.sci-details summary::-webkit-details-marker{display:none;}
+.sci-details summary::after{content:'▸';font-size:10px;transition:transform 0.2s;color:var(--text3);}
+.sci-details[open] summary::after{transform:rotate(90deg);}
+.sci-details[open] summary{border-bottom:1px solid var(--border);}
+.sci-body,.sci-details-body{padding:14px 18px 16px;font-size:13px;color:var(--text2);line-height:1.7;}
+.sci-body strong,.sci-details-body strong{color:var(--text);}
+
 </style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <header>
-  <div class="logo">Entrena<em>Mente</em></div>
-  <div class="ex-tag">Contrarreloj</div>
-  <div class="hstats">
-    <div class="hstat">Tasa base <b id="hdr-rate">–</b></div>
-    <div class="hstat">Comprensión <b id="hdr-comp">–</b></div>
+  <a class="hdr-back" href="index.html">← Inicio</a>
+  <span class="hdr-ex-name">Contrarreloj</span>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <div class="hdr-stat">ms/car. <b id="hdr-rate">–</b></div>
+    <div class="logo">Entrena<em>Mente</em></div>
   </div>
 </header>
 
@@ -437,8 +446,8 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
   <div class="card show" id="stage-0">
     <div class="chead">
       <div>
-        <div class="ctitle">Calibración — establece tu tasa base</div>
-        <div class="csub">Lee cada oración a tu ritmo natural. Pulsa la tecla de espacio (o el botón) al terminar. Esto establece el tiempo de exposición inicial para el entrenamiento.</div>
+        <div class="ctitle" style="font-family:\'Cormorant Garamond\',serif;font-weight:300;font-size:24px;">Calibración — establece tu tasa base</div>
+        <div class="csub" style="font-size:13px;color:var(--text2);">Lee cada oración a tu ritmo natural. Pulsa la tecla de espacio (o el botón) al terminar. Esto establece el tiempo de exposición inicial para el entrenamiento.</div>
         <div class="cpills">
           <span class="pill pt">RAP protocol</span>
           <span class="pill pa">12 oraciones</span>
