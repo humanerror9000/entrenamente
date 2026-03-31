@@ -454,6 +454,109 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 .sci-body,.sci-details-body{padding:14px 18px 16px;font-size:13px;color:var(--text2);line-height:1.7;}
 .sci-body strong,.sci-details-body strong{color:var(--text);}
 
+
+/* ── Ready Screen ── */
+.ready-screen {
+  position:fixed; inset:0; z-index:200;
+  background:var(--bg);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:32px 24px; text-align:center;
+  overflow:hidden;
+}
+.ready-screen.hidden { display:none; }
+.ready-screen::before {
+  content:''; position:absolute; inset:0; pointer-events:none; z-index:0; opacity:0.4;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+}
+.ready-inner {
+  position:relative; z-index:1;
+  width:100%; max-width:440px;
+  display:flex; flex-direction:column; align-items:center; gap:0;
+  animation: rdyUp 0.5s ease both;
+}
+@keyframes rdyUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+.ready-logo {
+  font-family:'Cormorant Garamond',serif;
+  font-size:16px; font-weight:300; color:var(--text3);
+  letter-spacing:0.08em; text-transform:uppercase;
+  margin-bottom:28px;
+}
+.ready-logo em { color:var(--gold); font-style:italic; }
+.ready-title {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(32px,8vw,48px); font-weight:300;
+  color:var(--text); line-height:1.1; margin-bottom:12px;
+}
+.ready-title em { color:var(--teal); font-style:italic; }
+.ready-sub {
+  font-size:17px; color:var(--text2); line-height:1.7;
+  margin-bottom:28px; max-width:360px;
+}
+.ready-sub strong { color:var(--text); font-weight:600; }
+
+/* Animation preview box */
+.ready-preview {
+  width:100%; max-width:340px;
+  background:var(--card); border:1px solid var(--border2);
+  border-radius:16px; overflow:hidden;
+  margin-bottom:28px; min-height:110px;
+  display:flex; align-items:center; justify-content:center;
+  position:relative;
+}
+.preview-label {
+  position:absolute; top:10px; left:14px;
+  font-size:10px; font-weight:700; letter-spacing:0.10em;
+  text-transform:uppercase; color:var(--text3);
+}
+.preview-inner {
+  padding:20px 24px; width:100%;
+  display:flex; align-items:center; justify-content:center;
+}
+
+/* Steps */
+.ready-steps {
+  display:flex; gap:6px; margin-bottom:28px;
+}
+.ready-step {
+  display:flex; align-items:flex-start; gap:10px;
+  text-align:left; padding:12px 14px;
+  background:var(--card2); border:1px solid var(--border);
+  border-radius:10px; flex:1;
+}
+.ready-step-num {
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px; font-weight:300; color:var(--teal);
+  line-height:1; flex-shrink:0; margin-top:1px;
+}
+.ready-step-text {
+  font-size:14px; color:var(--text2); line-height:1.5;
+}
+.ready-step-text strong { color:var(--text); font-weight:600; }
+
+.ready-btn {
+  width:100%; padding:17px;
+  background:var(--teal); color:var(--bg);
+  border:none; border-radius:13px; cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+  font-size:17px; font-weight:700; letter-spacing:0.02em;
+  transition:all 0.2s; -webkit-tap-highlight-color:transparent;
+  margin-bottom:14px;
+}
+.ready-btn:hover { opacity:0.88; transform:translateY(-1px); }
+.ready-btn:active { transform:translateY(0); }
+.ready-hint {
+  font-size:13px; color:var(--text3); line-height:1.5;
+}
+
+@media(max-width:600px) {
+  .ready-screen { padding:24px 16px; }
+  .ready-title { font-size:34px; }
+  .ready-sub { font-size:16px; }
+  .ready-steps { flex-direction:column; gap:8px; }
+  .ready-btn { font-size:16px; padding:16px; }
+}
+
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -464,12 +567,87 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
   <a class="hdr-back" href="index.html">← Inicio</a>
   <span class="hdr-ex-name">N-back</span>
   <div style="display:flex;align-items:center;gap:12px;">
+    <div class="hdr-stat">nivel <b id="hdr-n">1-back</b></div>
     <div class="hdr-stat">precisión <b id="hdr-acc">–</b></div>
     <div class="logo">Entrena<em>Mente</em></div>
   </div>
 </header>
 
 <main>
+
+<div class="ready-screen" id="ready-screen">
+  <div class="ready-inner">
+    <div class="ready-logo">Entrena<em>Mente</em> · Memoria Activa</div>
+    <div class="ready-title">Actualización <em>Continua</em></div>
+    <div class="ready-sub">¿La celda que brilla ahora es la <strong>misma</strong> que brilló hace 1 paso? Responde tan rápido como puedas.</div>
+
+    <div class="ready-preview" style="min-height:150px;">
+      <div class="preview-label">Vista previa · 1-back</div>
+      <div class="preview-inner">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+          <div id="rdy-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:150px;"></div>
+          <div id="rdy-nb-msg" style="font-size:13px;color:var(--text3);min-height:18px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ready-steps">
+      <div class="ready-step">
+        <div class="ready-step-num">1</div>
+        <div class="ready-step-text"><strong>Observa</strong> qué celda brilla</div>
+      </div>
+      <div class="ready-step">
+        <div class="ready-step-num">2</div>
+        <div class="ready-step-text"><strong>Recuerda</strong> la anterior</div>
+      </div>
+      <div class="ready-step">
+        <div class="ready-step-num">3</div>
+        <div class="ready-step-text"><strong>Toca</strong> Sí o No</div>
+      </div>
+    </div>
+
+    <button class="ready-btn" onclick="dismissReady()">▶ Empecemos</button>
+    <div class="ready-hint">Empieza con 1-back · el tutorial te guía paso a paso</div>
+  </div>
+</div>
+<script>
+(function(){
+  const grid=document.getElementById('rdy-grid');
+  const msg=document.getElementById('rdy-nb-msg');
+  if(!grid) return;
+  // Build 3×3 grid
+  const cells=[];
+  for(let i=0;i<9;i++){
+    const d=document.createElement('div');
+    d.style.cssText='width:46px;height:46px;border-radius:8px;background:var(--card2);border:1px solid var(--border2);transition:all 0.2s;';
+    grid.appendChild(d); cells.push(d);
+  }
+  const seq=[4,7,4,2,7]; // positions; 4 repeats after 1 step (match), 7→4 no match
+  let si=0, prev=-1;
+  function flash(){
+    cells.forEach(c=>{ c.style.background='var(--card2)'; c.style.borderColor='var(--border2)'; });
+    const pos=seq[si%seq.length];
+    cells[pos].style.background='var(--teal)';
+    cells[pos].style.borderColor='var(--teal-b)';
+    const isMatch = pos===prev;
+    if(si>0) msg.innerHTML=isMatch
+      ?'<span style="color:var(--green);font-weight:700;">✓ ¡Igual!</span>'
+      :'<span style="color:var(--coral);font-weight:700;">✗ Diferente</span>';
+    prev=pos; si++;
+    setTimeout(()=>{
+      cells[pos].style.background='var(--card2)';
+      cells[pos].style.borderColor='var(--border2)';
+      msg.textContent='';
+      setTimeout(flash, 500);
+    },800);
+  }
+  setTimeout(flash,600);
+})();
+function dismissReady(){
+  document.getElementById('ready-screen').classList.add('hidden');
+}
+</script>
+
 
   <div class="sdots">
     <div class="sdot active" id="sd0"></div>
@@ -481,136 +659,43 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
        STAGE 0: Setup + Tutorial
        ═══════════════════════ -->
   <div class="card show" id="s0">
-    <div class="chead">
-      <div>
-        <div class="ctitle" style="font-family:\'Cormorant Garamond\',serif;font-weight:300;font-size:24px;">Actualización Continua</div>
-        <div class="csub" style="font-size:13px;color:var(--text2);">Entrena tu memoria de trabajo: compara lo que ves <em>ahora</em> con lo que viste hace N pasos.</div>
-      </div>
-      <div class="clive"><div class="cv" id="s0-n">1</div><div class="cl">n-back</div></div>
+    <div style="padding:20px 20px 14px;border-bottom:1px solid var(--border);">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--text);margin-bottom:4px;">Actualización <em style="color:var(--teal);font-style:italic;">Continua</em></div>
+      <div style="font-size:15px;color:var(--text2);line-height:1.65;">¿El estímulo que ves ahora es el <strong style="color:var(--text);">mismo</strong> que viste hace <span id="s0-n">1</span> paso?</div>
     </div>
 
-    <!-- Tutorial steps -->
-    <div id="tut-wrap">
+    <div style="padding:16px 20px 8px;">
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;">Nivel — ¿cuántos pasos atrás?</div>
+      <div style="display:flex;gap:8px;">
+        <div class="nbadge nsel" onclick="selectN(1)" style="flex:1;padding:12px 8px;text-align:center;border-radius:10px;border:1.5px solid var(--teal);background:var(--teal-d);font-size:20px;font-weight:700;color:var(--teal);cursor:pointer;font-family:'Cormorant Garamond',serif;">1</div>
+        <div class="nbadge" onclick="selectN(2)" style="flex:1;padding:12px 8px;text-align:center;border-radius:10px;border:1.5px solid var(--border2);background:var(--card2);font-size:20px;font-weight:700;color:var(--text3);cursor:pointer;font-family:'Cormorant Garamond',serif;">2</div>
+        <div class="nbadge" onclick="selectN(3)" style="flex:1;padding:12px 8px;text-align:center;border-radius:10px;border:1.5px solid var(--border2);background:var(--card2);font-size:20px;font-weight:700;color:var(--text3);cursor:pointer;font-family:'Cormorant Garamond',serif;">3</div>
+        <div class="nbadge" onclick="selectN(4)" style="flex:1;padding:12px 8px;text-align:center;border-radius:10px;border:1.5px solid var(--border2);background:var(--card2);font-size:20px;font-weight:700;color:var(--text3);cursor:pointer;font-family:'Cormorant Garamond',serif;">4</div>
+      </div>
+      <div style="font-size:13px;color:var(--text3);text-align:center;margin-top:10px;line-height:1.5;" id="n-desc">1-back: comparas con el paso inmediatamente anterior. Ideal para empezar.</div>
+    </div>
 
-      <!-- Step 1: What is n-back -->
-      <div class="tut-step show" id="tut-1">
-        <div class="tut-head">Paso 1 de 3 — ¿Cómo funciona?</div>
-        <div class="tut-body">
-          <p>Verás una secuencia de estímulos — uno cada vez. Tu tarea es simple:</p>
-          <div class="tut-rule">
-            Pulsa <strong>¡Coincide!</strong> cuando el estímulo actual sea <strong>igual</strong> al que apareció <span class="n-highlight" id="tut-n-label">2</span> pasos antes.
-          </div>
-          <p>Si no coincide, simplemente <strong>no hagas nada</strong> — espera el siguiente.</p>
-          <div class="tut-example">
-            <div class="tut-ex-label">Ejemplo con 2-back:</div>
-            <div class="tut-seq" id="tut-seq-1">
-              <div class="tseq-item">
-                <div class="tseq-cell lit">◼</div>
-                <div class="tseq-num">1</div>
-              </div>
-              <div class="tseq-item">
-                <div class="tseq-cell">◻</div>
-                <div class="tseq-num">2</div>
-              </div>
-              <div class="tseq-item">
-                <div class="tseq-cell match">◼</div>
-                <div class="tseq-num">3 ✓</div>
-                <div class="tseq-arrow">↑ igual al 1</div>
-              </div>
-              <div class="tseq-item">
-                <div class="tseq-cell">◻</div>
-                <div class="tseq-num">4</div>
-              </div>
-              <div class="tseq-item">
-                <div class="tseq-cell">◼</div>
-                <div class="tseq-num">5</div>
-              </div>
-            </div>
-            <div style="font-size:12px;color:var(--text3);margin-top:8px;text-align:center">En el turno 3, el bloque coincide con el del turno 1 (2 pasos atrás) → pulsas ¡Coincide!</div>
-          </div>
+    <div style="padding:8px 20px 8px;">
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;">Modo</div>
+      <div style="display:flex;gap:8px;">
+        <div class="mcard msel" data-mode="visual" onclick="selectMode(this,'visual')" style="flex:1;padding:12px 8px;text-align:center;border-radius:10px;border:1.5px solid var(--teal);background:var(--teal-d);cursor:pointer;">
+          <div style="font-size:18px;">◼</div>
+          <div style="font-size:12px;font-weight:600;color:var(--teal);margin-top:4px;">Visual</div>
         </div>
-        <div class="tut-footer">
-          <div></div>
-          <button class="btn btn-teal" onclick="tutStep(2)">Entendido →</button>
+        <div class="mcard" data-mode="letter" onclick="selectMode(this,'letter')" style="flex:1;padding:12px 8px;text-align:center;border-radius:10px;border:1.5px solid var(--border2);background:var(--card2);cursor:pointer;">
+          <div style="font-size:18px;">A</div>
+          <div style="font-size:12px;font-weight:600;color:var(--text3);margin-top:4px;">Letras</div>
+        </div>
+        <div class="mcard" data-mode="dual" onclick="selectMode(this,'dual')" style="flex:1;padding:12px 8px;text-align:center;border-radius:10px;border:1.5px solid var(--border2);background:var(--card2);cursor:pointer;">
+          <div style="font-size:18px;">◼A</div>
+          <div style="font-size:12px;font-weight:600;color:var(--text3);margin-top:4px;">Dual</div>
         </div>
       </div>
+    </div>
 
-      <!-- Step 2: Timing -->
-      <div class="tut-step" id="tut-2">
-        <div class="tut-head">Paso 2 de 3 — El ritmo</div>
-        <div class="tut-body">
-          <p>Cada estímulo aparece por <strong>medio segundo</strong>, luego desaparece. Tienes <strong>1.5 segundos</strong> para responder antes de que llegue el siguiente.</p>
-          <div class="tut-timing">
-            <div class="tt-phase" id="tt-stim">
-              <div class="tt-dot lit-demo"></div>
-              <div class="tt-label">Estímulo<br><span>500ms</span></div>
-            </div>
-            <div class="tt-arrow">→</div>
-            <div class="tt-phase" id="tt-resp">
-              <div class="tt-dot resp-demo"></div>
-              <div class="tt-label">Responde<br><span>1500ms</span></div>
-            </div>
-            <div class="tt-arrow">→</div>
-            <div class="tt-phase">
-              <div class="tt-dot"></div>
-              <div class="tt-label">Siguiente<br><span>…</span></div>
-            </div>
-          </div>
-          <div class="tut-rule">
-            Decide <strong>en el momento en que aparece</strong> el estímulo — no esperes. Si coincide con N pasos atrás, pulsa inmediatamente.
-          </div>
-          <p style="margin-top:8px">Los primeros <span class="n-highlight" id="tut-n-first">2</span> turnos son siempre de observación — aún no hay nada que comparar.</p>
-        </div>
-        <div class="tut-footer">
-          <button class="btn btn-ghost" onclick="tutStep(1)">← Atrás</button>
-          <button class="btn btn-teal" onclick="tutStep(3)">Siguiente →</button>
-        </div>
-      </div>
-
-      <!-- Step 3: Mode + level select -->
-      <div class="tut-step" id="tut-3">
-        <div class="tut-head">Paso 3 de 3 — Elige tu modo y nivel</div>
-        <div class="tut-body" style="gap:14px">
-          <div>
-            <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--text3);margin-bottom:10px">Modo</div>
-            <div class="mode-grid" id="mode-grid">
-              <div class="mcard msel" data-mode="visual" onclick="selectMode(this,'visual')">
-                <span class="mico">◼</span>
-                <div class="mname">Visual</div>
-                <div class="mdesc">Un bloque se ilumina en la cuadrícula. ¿Misma posición que N pasos atrás?</div>
-              </div>
-              <div class="mcard" data-mode="letter" onclick="selectMode(this,'letter')">
-                <span class="mico">A</span>
-                <div class="mname">Letras</div>
-                <div class="mdesc">Aparece una letra. ¿Misma letra que N pasos atrás?</div>
-              </div>
-              <div class="mcard" data-mode="dual" onclick="selectMode(this,'dual')">
-                <span class="mico">◼A</span>
-                <div class="mname">Dual</div>
-                <div class="mdesc">Posición <em>y</em> letra al mismo tiempo. Responde a cada uno por separado.</div>
-              </div>
-            </div>
-          </div>
-          <div>
-            <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--text3);margin-bottom:8px">Nivel — ¿cuántos pasos atrás comparas?</div>
-            <div class="n-selector">
-              <div class="nbadge nsel" onclick="selectN(1)">1</div>
-              <div class="nbadge" onclick="selectN(2)">2</div>
-              <div class="nbadge" onclick="selectN(3)">3</div>
-              <div class="nbadge" onclick="selectN(4)">4</div>
-            </div>
-            <div style="font-size:11px;color:var(--text3);text-align:center;margin-top:8px;line-height:1.5" id="n-desc">
-              1-back: comparas con el paso inmediatamente anterior. Ideal para empezar.
-            </div>
-          </div>
-        </div>
-        <div class="tut-footer">
-          <button class="btn btn-ghost" onclick="tutStep(2)">← Atrás</button>
-          <button class="btn btn-teal" onclick="startGame()">▶ Comenzar — 20 turnos</button>
-        </div>
-      </div>
-
-    </div><!-- /tut-wrap -->
+    <div style="padding:12px 20px 20px;">
+      <button class="btn btn-teal btn-wide" style="font-size:16px;" onclick="startGame()">▶ Comenzar — 10 turnos</button>
+    </div>
   </div>
 
   <!-- ═══════════════════════
@@ -619,11 +704,11 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
   <div class="card" id="s1">
     <div class="chead">
       <div>
-        <div class="ctitle" id="g-title">2-back Visual</div>
+        <div class="ctitle" id="g-title">1-back Visual</div>
         <div class="csub">Pulsa <strong>¡Coincide!</strong> si lo que ves ahora es igual a lo que apareció hace <span id="g-n-label">2</span> pasos. Si no coincide, no hagas nada.</div>
       </div>
       <div style="display:flex;align-items:center;gap:10px">
-        <span class="n-indicator" id="g-n-badge">2-back</span>
+        <span class="n-indicator" id="g-n-badge">1-back</span>
         <div class="clive"><div class="cv" id="g-trial">1/20</div><div class="cl">turno</div></div>
       </div>
     </div>
@@ -671,7 +756,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 // ─────────────────────────────────────────
 const LETTERS = 'BCDFGHJKLMNPRSTV'; // consonants only — less confusable
 const GRID_SIZE = 9;
-const TOTAL_TRIALS = 20;
+const TOTAL_TRIALS = 10;
 const STIM_MS = 500;   // stimulus visible duration
 const ISI_MS = 1500;   // inter-stimulus interval (stimulus off + response window)
 const TARGET_PROB = 0.33; // ~1/3 trials are targets
@@ -753,24 +838,44 @@ function hideAllFeedback() {
 }
 function selectMode(el, m) {
   mode=m;
-  document.querySelectorAll('.mcard').forEach(c=>c.classList.remove('msel'));
+  document.querySelectorAll('.mcard').forEach(c=>{
+    c.classList.remove('msel');
+    c.style.borderColor='var(--border2)';
+    c.style.background='var(--card2)';
+    const lbl=c.querySelector('div:last-child');
+    if(lbl) lbl.style.color='var(--text3)';
+  });
   el.classList.add('msel');
+  el.style.borderColor='var(--teal)';
+  el.style.background='var(--teal-d)';
+  const lbl=el.querySelector('div:last-child');
+  if(lbl) lbl.style.color='var(--teal)';
 }
 
 function selectN(n) {
   nLevel=n;
-  document.querySelectorAll('.nbadge').forEach((b,i)=>b.classList.toggle('nsel',i===n-1));
-  document.getElementById('s0-n').textContent=n;
-  const descs={1:'1-back: comparas con el paso inmediatamente anterior. Ideal para empezar.',2:'2-back: comparas con 2 pasos atrás. Nivel estándar recomendado.',3:'3-back: muy exigente. Solo después de dominar el 2-back.',4:'4-back: nivel experto. Solo con rendimiento alto sostenido en 3-back.'};
-  const desc=document.getElementById('n-desc');
-  if(desc) desc.textContent=descs[n]||'';
-  // Sync tutorial n-labels
-  ['tut-n-label','tut-n-first'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=n;});
+  document.querySelectorAll('.nbadge').forEach(b=>{
+    b.classList.remove('nsel');
+    b.style.borderColor='var(--border2)';
+    b.style.background='var(--card2)';
+    b.style.color='var(--text3)';
+  });
+  const sel=document.querySelector(`.nbadge[onclick*="selectN(${n})"]`);
+  if(sel){
+    sel.classList.add('nsel');
+    sel.style.borderColor='var(--teal)';
+    sel.style.background='var(--teal-d)';
+    sel.style.color='var(--teal)';
+  }
+  const s0n=document.getElementById('s0-n'); if(s0n) s0n.textContent=n;
+  const nd=document.getElementById('n-desc');
+  const descs={1:'1-back: comparas con el paso inmediatamente anterior. Ideal para empezar.',
+    2:'2-back: compara con 2 pasos atrás. Nivel estándar recomendado.',
+    3:'3-back: muy exigente. Solo después de dominar el 2-back.',
+    4:'4-back: nivel experto.'};
+  if(nd) nd.textContent=descs[n]||'';
 }
 
-// ─────────────────────────────────────────
-// Build arena UI
-// ─────────────────────────────────────────
 function buildArena() {
   const arena = document.getElementById('arena');
   arena.innerHTML='';
@@ -840,7 +945,7 @@ function startGame() {
   document.getElementById('g-title').textContent=nLevel+'-back '+{visual:'Visual',letter:'Letras',dual:'Dual'}[mode];
   document.getElementById('g-n-label').textContent=nLevel;
   document.getElementById('g-n-badge').textContent=nLevel+'-back';
-  document.getElementById('hdr-n').textContent=nLevel+'-back';
+  const _hn=document.getElementById('hdr-n'); if(_hn) _hn.textContent=nLevel+'-back';
   document.getElementById('g-fill').style.width='0%';
   document.getElementById('g-trial').textContent='1/'+TOTAL_TRIALS;
 

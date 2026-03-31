@@ -416,6 +416,109 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 .sci-body,.sci-details-body{padding:14px 18px 16px;font-size:13px;color:var(--text2);line-height:1.7;}
 .sci-body strong,.sci-details-body strong{color:var(--text);}
 
+
+/* ── Ready Screen ── */
+.ready-screen {
+  position:fixed; inset:0; z-index:200;
+  background:var(--bg);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:32px 24px; text-align:center;
+  overflow:hidden;
+}
+.ready-screen.hidden { display:none; }
+.ready-screen::before {
+  content:''; position:absolute; inset:0; pointer-events:none; z-index:0; opacity:0.4;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+}
+.ready-inner {
+  position:relative; z-index:1;
+  width:100%; max-width:440px;
+  display:flex; flex-direction:column; align-items:center; gap:0;
+  animation: rdyUp 0.5s ease both;
+}
+@keyframes rdyUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+.ready-logo {
+  font-family:'Cormorant Garamond',serif;
+  font-size:16px; font-weight:300; color:var(--text3);
+  letter-spacing:0.08em; text-transform:uppercase;
+  margin-bottom:28px;
+}
+.ready-logo em { color:var(--gold); font-style:italic; }
+.ready-title {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(32px,8vw,48px); font-weight:300;
+  color:var(--text); line-height:1.1; margin-bottom:12px;
+}
+.ready-title em { color:var(--teal); font-style:italic; }
+.ready-sub {
+  font-size:17px; color:var(--text2); line-height:1.7;
+  margin-bottom:28px; max-width:360px;
+}
+.ready-sub strong { color:var(--text); font-weight:600; }
+
+/* Animation preview box */
+.ready-preview {
+  width:100%; max-width:340px;
+  background:var(--card); border:1px solid var(--border2);
+  border-radius:16px; overflow:hidden;
+  margin-bottom:28px; min-height:110px;
+  display:flex; align-items:center; justify-content:center;
+  position:relative;
+}
+.preview-label {
+  position:absolute; top:10px; left:14px;
+  font-size:10px; font-weight:700; letter-spacing:0.10em;
+  text-transform:uppercase; color:var(--text3);
+}
+.preview-inner {
+  padding:20px 24px; width:100%;
+  display:flex; align-items:center; justify-content:center;
+}
+
+/* Steps */
+.ready-steps {
+  display:flex; gap:6px; margin-bottom:28px;
+}
+.ready-step {
+  display:flex; align-items:flex-start; gap:10px;
+  text-align:left; padding:12px 14px;
+  background:var(--card2); border:1px solid var(--border);
+  border-radius:10px; flex:1;
+}
+.ready-step-num {
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px; font-weight:300; color:var(--teal);
+  line-height:1; flex-shrink:0; margin-top:1px;
+}
+.ready-step-text {
+  font-size:14px; color:var(--text2); line-height:1.5;
+}
+.ready-step-text strong { color:var(--text); font-weight:600; }
+
+.ready-btn {
+  width:100%; padding:17px;
+  background:var(--teal); color:var(--bg);
+  border:none; border-radius:13px; cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+  font-size:17px; font-weight:700; letter-spacing:0.02em;
+  transition:all 0.2s; -webkit-tap-highlight-color:transparent;
+  margin-bottom:14px;
+}
+.ready-btn:hover { opacity:0.88; transform:translateY(-1px); }
+.ready-btn:active { transform:translateY(0); }
+.ready-hint {
+  font-size:13px; color:var(--text3); line-height:1.5;
+}
+
+@media(max-width:600px) {
+  .ready-screen { padding:24px 16px; }
+  .ready-title { font-size:34px; }
+  .ready-sub { font-size:16px; }
+  .ready-steps { flex-direction:column; gap:8px; }
+  .ready-btn { font-size:16px; padding:16px; }
+}
+
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -432,6 +535,22 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 </header>
 
 <main>
+<div class="ready-screen" id="ready-screen">
+  <div class="ready-inner">
+    <div class="ready-logo">Entrena<em>Mente</em> · Lectura Visual</div>
+    <div class="ready-title"><em>Contra</em>reloj</div>
+    <div class="ready-sub">Primero calibramos tu velocidad. Luego el texto <strong>se desvanece</strong> mientras lees — termina antes de que desaparezca.</div>
+    <div class="ready-steps">
+      <div class="ready-step"><div class="ready-step-num">1</div><div class="ready-step-text"><strong>Calibración</strong> rápida de tu velocidad base</div></div>
+      <div class="ready-step"><div class="ready-step-num">2</div><div class="ready-step-text"><strong>Lee</strong> antes de que el texto desaparezca</div></div>
+      <div class="ready-step"><div class="ready-step-num">3</div><div class="ready-step-text"><strong>Responde</strong> preguntas de comprensión</div></div>
+    </div>
+    <button class="ready-btn" onclick="dismissReady()">▶ Empecemos</button>
+    <div class="ready-hint">Modo inicial: Párrafo completo — el más suave para empezar</div>
+  </div>
+</div>
+<script>function dismissReady(){ document.getElementById('ready-screen').classList.add('hidden'); }</script>
+
 
   <div class="stage-dots">
     <div class="sdot active" id="sd0"></div>
@@ -559,6 +678,19 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
   <div class="sci-details-body">El Programa de Aceleración Lectora (Breznitz, University of Haifa) calibra individualmente la tasa de borrado en ms/carácter. La tasa se <strong>aumenta 2 ms/car.</strong> si se acierta en 9 de cada 10 oraciones consecutivas, se <strong>mantiene</strong> si se acierta entre 8–9, y se <strong>reduce 2 ms/car.</strong> si hay más de 2 errores en 10. Este ajuste se hace hasta 5 veces por sesión. Los estudios muestran mejoras de fluidez y comprensión en 24 sesiones, con efectos de transferencia a la lectura sin restricción de tiempo.</div>
 </details>
 
+
+  <!-- ─── END SCREEN ─── -->
+  <div id="end-screen" style="display:none;background:var(--card);border:1px solid var(--border2);border-radius:14px;box-shadow:var(--sh);overflow:hidden;">
+    <div style="padding:28px 24px;text-align:center;">
+      <div style="font-size:40px;margin-bottom:12px;">🎯</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--text);margin-bottom:8px;">Sesión completada</div>
+      <div style="font-size:15px;color:var(--text2);line-height:1.65;margin-bottom:24px;">Tu velocidad se ha ajustado para la próxima sesión. La consistencia es la clave del progreso.</div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <button onclick="restartSession()" style="padding:13px 24px;background:var(--teal);color:var(--bg);border:none;border-radius:11px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;">Nueva sesión →</button>
+        <a href="index.html" style="padding:13px 24px;background:transparent;color:var(--text2);border:1.5px solid var(--border2);border-radius:11px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;">← Inicio</a>
+      </div>
+    </div>
+  </div>
 </main>
 
 <script>
@@ -879,7 +1011,7 @@ function answerQ(qi, chosen, correct) {
 
   document.getElementById('q-score').textContent=qCorrect+'/'+qAnswered;
   document.getElementById('q-fill').style.width=(qAnswered/questionItems.length*100)+'%';
-  document.getElementById('hdr-comp').textContent=Math.round(qCorrect/qAnswered*100)+'%';
+  const _hc=document.getElementById('hdr-comp'); if(_hc) _hc.textContent=Math.round(qCorrect/qAnswered*100)+'%';
 
   if(qAnswered===questionItems.length) {
     document.getElementById('q-next-btn').style.display='';
@@ -902,6 +1034,8 @@ function applyRAPAdaptation() {
 }
 
 function showResults() {
+  document.getElementById('end-screen').style.display='block';
+  document.getElementById('end-screen').scrollIntoView({behavior:'smooth',block:'center'});
   const acc = Math.round(qCorrect/questionItems.length*100);
   const wpmEquiv = Math.round(60000/currentRate/5);
   const inner = document.getElementById('results-inner');

@@ -432,6 +432,109 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 .sci-body,.sci-details-body{padding:14px 18px 16px;font-size:13px;color:var(--text2);line-height:1.7;}
 .sci-body strong,.sci-details-body strong{color:var(--text);}
 
+
+/* ── Ready Screen ── */
+.ready-screen {
+  position:fixed; inset:0; z-index:200;
+  background:var(--bg);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:32px 24px; text-align:center;
+  overflow:hidden;
+}
+.ready-screen.hidden { display:none; }
+.ready-screen::before {
+  content:''; position:absolute; inset:0; pointer-events:none; z-index:0; opacity:0.4;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+}
+.ready-inner {
+  position:relative; z-index:1;
+  width:100%; max-width:440px;
+  display:flex; flex-direction:column; align-items:center; gap:0;
+  animation: rdyUp 0.5s ease both;
+}
+@keyframes rdyUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+.ready-logo {
+  font-family:'Cormorant Garamond',serif;
+  font-size:16px; font-weight:300; color:var(--text3);
+  letter-spacing:0.08em; text-transform:uppercase;
+  margin-bottom:28px;
+}
+.ready-logo em { color:var(--gold); font-style:italic; }
+.ready-title {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(32px,8vw,48px); font-weight:300;
+  color:var(--text); line-height:1.1; margin-bottom:12px;
+}
+.ready-title em { color:var(--teal); font-style:italic; }
+.ready-sub {
+  font-size:17px; color:var(--text2); line-height:1.7;
+  margin-bottom:28px; max-width:360px;
+}
+.ready-sub strong { color:var(--text); font-weight:600; }
+
+/* Animation preview box */
+.ready-preview {
+  width:100%; max-width:340px;
+  background:var(--card); border:1px solid var(--border2);
+  border-radius:16px; overflow:hidden;
+  margin-bottom:28px; min-height:110px;
+  display:flex; align-items:center; justify-content:center;
+  position:relative;
+}
+.preview-label {
+  position:absolute; top:10px; left:14px;
+  font-size:10px; font-weight:700; letter-spacing:0.10em;
+  text-transform:uppercase; color:var(--text3);
+}
+.preview-inner {
+  padding:20px 24px; width:100%;
+  display:flex; align-items:center; justify-content:center;
+}
+
+/* Steps */
+.ready-steps {
+  display:flex; gap:6px; margin-bottom:28px;
+}
+.ready-step {
+  display:flex; align-items:flex-start; gap:10px;
+  text-align:left; padding:12px 14px;
+  background:var(--card2); border:1px solid var(--border);
+  border-radius:10px; flex:1;
+}
+.ready-step-num {
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px; font-weight:300; color:var(--teal);
+  line-height:1; flex-shrink:0; margin-top:1px;
+}
+.ready-step-text {
+  font-size:14px; color:var(--text2); line-height:1.5;
+}
+.ready-step-text strong { color:var(--text); font-weight:600; }
+
+.ready-btn {
+  width:100%; padding:17px;
+  background:var(--teal); color:var(--bg);
+  border:none; border-radius:13px; cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+  font-size:17px; font-weight:700; letter-spacing:0.02em;
+  transition:all 0.2s; -webkit-tap-highlight-color:transparent;
+  margin-bottom:14px;
+}
+.ready-btn:hover { opacity:0.88; transform:translateY(-1px); }
+.ready-btn:active { transform:translateY(0); }
+.ready-hint {
+  font-size:13px; color:var(--text3); line-height:1.5;
+}
+
+@media(max-width:600px) {
+  .ready-screen { padding:24px 16px; }
+  .ready-title { font-size:34px; }
+  .ready-sub { font-size:16px; }
+  .ready-steps { flex-direction:column; gap:8px; }
+  .ready-btn { font-size:16px; padding:16px; }
+}
+
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -449,14 +552,126 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 
 <main>
 
-  <div class="prog-dots">
+<div class="ready-screen" id="ready-screen">
+  <div class="ready-inner">
+    <div class="ready-logo">Entrena<em>Mente</em> · Lectura Visual</div>
+    <div class="ready-title">Visión <em>Paralela</em></div>
+    <div class="ready-sub">Un destello de letras por un instante. Memoriza todo lo que puedas.</div>
+
+    <div class="ready-preview">
+      <div class="preview-label">Vista previa</div>
+      <div class="preview-inner" style="flex-direction:column;gap:10px;">
+        <div id="rdy-vp-string" style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--teal);letter-spacing:0.12em;min-height:44px;transition:opacity 0.08s;text-align:center;"></div>
+        <div id="rdy-vp-msg" style="font-size:12px;color:var(--text3);letter-spacing:0.06em;text-align:center;min-height:18px;"></div>
+      </div>
+    </div>
+
+    <div style="width:100%;margin-bottom:24px;">
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);text-align:center;margin-bottom:10px;">Dificultad — ¿cuántas letras?</div>
+      <div style="display:flex;gap:8px;justify-content:center;">
+        <button class="diff-pick" data-len="3" onclick="pickDiff(this,3)">3</button>
+        <button class="diff-pick sel" data-len="4" onclick="pickDiff(this,4)">4 ⭐</button>
+        <button class="diff-pick" data-len="5" onclick="pickDiff(this,5)">5</button>
+        <button class="diff-pick" data-len="6" onclick="pickDiff(this,6)">6</button>
+      </div>
+      <div style="font-size:12px;color:var(--text3);text-align:center;margin-top:8px;" id="diff-hint">Empieza con 4 — sube cuando llegues al 80% de aciertos</div>
+    </div>
+
+    <div style="font-size:13px;color:var(--text3);text-align:center;margin-bottom:20px;">3 modos · 5 ejercicios cada uno · sesión completa</div>
+    <button class="ready-btn" onclick="startFullSession()">▶ Empecemos</button>
+  </div>
+</div>
+<style>
+.diff-pick{padding:10px 18px;border-radius:10px;border:1.5px solid var(--border2);background:var(--card2);font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;color:var(--text3);cursor:pointer;transition:all 0.15s;min-width:52px;}
+.diff-pick:hover{border-color:var(--teal);color:var(--teal);}
+.diff-pick.sel{background:var(--teal);border-color:var(--teal);color:var(--bg);}
+/* Mode transition overlay */
+.mode-transition{position:fixed;inset:0;z-index:300;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:32px;}
+.mode-transition.hidden{display:none;}
+.mt-label{font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
+.mt-title{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--text);}
+.mt-title em{color:var(--teal);font-style:italic;}
+.mt-desc{font-size:16px;color:var(--text2);text-align:center;max-width:340px;line-height:1.65;}
+.mt-preview{background:var(--card);border:1px solid var(--border2);border-radius:14px;padding:20px 28px;min-height:80px;display:flex;align-items:center;justify-content:center;width:100%;max-width:320px;}
+.mt-btn{width:100%;max-width:320px;padding:15px;background:var(--teal);color:var(--bg);border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:all 0.2s;}
+</style>
+<script>
+(function(){
+  const strings=['BAFE','MIKO','SURA','DETO'];
+  let si=0;
+  const el=document.getElementById('rdy-vp-string');
+  const msg=document.getElementById('rdy-vp-msg');
+  if(!el||!msg) return;
+  function cycle(){
+    el.style.opacity='0';
+    setTimeout(()=>{el.textContent=strings[si];el.style.opacity='1';msg.textContent='';},80);
+    setTimeout(()=>{el.style.opacity='0';msg.textContent='¿Cuántas recuerdas?';
+      setTimeout(()=>{el.textContent='';msg.textContent='';si=(si+1)%strings.length;setTimeout(cycle,800);},1200);
+    },700);
+  }
+  setTimeout(cycle,600);
+})();
+
+let sessionLen=4; // letters per trial, set by user
+function pickDiff(btn,len){
+  document.querySelectorAll('.diff-pick').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel'); sessionLen=len;
+  const hints={3:'Empieza aquí si es tu primera vez',4:'Empieza con 4 — sube cuando llegues al 80%',5:'Intermedio — buen desafío',6:'Avanzado — máxima concentración'};
+  document.getElementById('diff-hint').textContent=hints[len]||'';
+}
+
+// ── Session flow ──
+let sessionPhase=0; // 0=WR,1=PR,2=SM
+let sessionScores={wr:{h:0,t:0},pr:{h:0,t:0},sm:{h:0,t:0}};
+
+function startFullSession(){
+  // Set lengths based on user choice
+  wrLen=sessionLen; prLen=sessionLen; smLen=sessionLen;
+  document.getElementById('ready-screen').classList.add('hidden');
+  sessionPhase=0;
+  beginPhase(0);
+}
+
+function beginPhase(phase){
+  sessionPhase=phase;
+  switchTask(phase);
+  if(phase===0){startWR();}
+  else if(phase===1){startPR();}
+  else if(phase===2){startSM();}
+}
+
+function showModeTransition(nextPhase, title, em, desc, previewHTML, btnText){
+  // Create or reuse transition overlay
+  let ov=document.getElementById('mode-transition');
+  if(!ov){ ov=document.createElement('div'); ov.id='mode-transition'; ov.className='mode-transition'; document.body.appendChild(ov); }
+  ov.innerHTML=`
+    <div class="mt-label">Siguiente modo</div>
+    <div class="mt-title">${title} <em>${em}</em></div>
+    <div class="mt-desc">${desc}</div>
+    <div class="mt-preview">${previewHTML}</div>
+    <button class="mt-btn" onclick="dismissTransition(${nextPhase})">${btnText}</button>
+  `;
+  ov.classList.remove('hidden');
+}
+function dismissTransition(phase){
+  const ov=document.getElementById('mode-transition');
+  if(ov) ov.classList.add('hidden');
+  beginPhase(phase);
+}
+
+// Override finishWR/PR to trigger flow
+const _origFinishWR=window.finishWR; // will be defined later
+</script>
+
+
+  <div class="prog-dots" style="display:none">
     <div class="pdot active" id="pd0"></div>
     <div class="pdot" id="pd1"></div>
     <div class="pdot" id="pd2"></div>
   </div>
 
   <!-- Task selector -->
-  <div class="task-tabs">
+  <div class="task-tabs" style="display:none">
     <div class="ttab active" onclick="switchTask(0)"><span class="ticon">▦</span>Informe completo</div>
     <div class="ttab" onclick="switchTask(1)"><span class="ticon">◎</span>Informe parcial</div>
     <div class="ttab" onclick="switchTask(2)"><span class="ticon">≈</span>Coincidencia</div>
@@ -602,9 +817,9 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 const CONSONANTS = 'BCDFGHJKLMNPQRSTVWXYZ';
 const VOWELS = 'AEIOU';
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-const WR_TRIALS = 12;
-const PR_TRIALS = 12;
-const SM_TRIALS = 12;
+const WR_TRIALS = 5;
+const PR_TRIALS = 5;
+const SM_TRIALS = 5;
 
 function randChar(pool) { return pool[Math.floor(Math.random()*pool.length)]; }
 
@@ -677,6 +892,7 @@ let wrExp=200, wrLen=4, wrTrials=0, wrHits=0, wrRunning=false;
 let wrCurrentString='', wrUserAnswer=[], wrWaiting=false;
 
 function setWRExp(ms) {
+  if(wrRunning) return;
   wrExp=ms;
   [300,200,150].forEach(v=>{
     const b=document.getElementById('wr-'+v);
@@ -709,8 +925,6 @@ function startWR() {
 
 function wrNextTrial() {
   if(wrTrials >= WR_TRIALS) { finishWR(); return; }
-  // Adaptive length: increase after 4 consecutive correct
-  if(wrHits>0 && wrHits%4===0 && wrLen<7) wrLen++;
   wrUserAnswer=[];
   wrCurrentString = genString(wrLen);
   const flashEl = document.getElementById('wr-flash');
@@ -825,7 +1039,71 @@ function checkWRAnswer() {
     document.getElementById('wr-flash').className='flash-display hidden';
     document.getElementById('wr-flash').style.display='';
     wrNextTrial();
-  }, 1600);
+  }, 2200);
+}
+
+
+// ── Auto-flow between modes ──
+function afterWR(){
+  sessionScores.wr={h:wrHits,t:WR_TRIALS};
+  showModeTransition(1,
+    'Informe','parcial',
+    'Ahora se señala una posición — identifica solo esa letra.',
+    '<div style="font-family:\'Cormorant Garamond\',serif;font-size:28px;color:var(--teal);letter-spacing:0.1em;">MAKO<span style="color:var(--amber)"> ↑3</span></div>',
+    '▶ Continuar'
+  );
+}
+function afterPR(){
+  sessionScores.pr={h:prHits,t:PR_TRIALS};
+  showModeTransition(2,
+    'Coincidencia','de cadenas',
+    '¿Son iguales las dos cadenas? Responde rápido.',
+    '<div style="display:flex;gap:12px;align-items:center;font-family:\'Cormorant Garamond\',serif;font-size:22px;"><span style="color:var(--teal)">BARO</span><span style="color:var(--text3)">vs</span><span style="color:var(--amber)">BALO</span></div>',
+    '▶ Continuar'
+  );
+}
+function afterSM(){
+  sessionScores.sm={h:smHits,t:SM_TRIALS};
+  showFinalResults();
+}
+
+function showFinalResults(){
+  const total=sessionScores.wr.h+sessionScores.pr.h+sessionScores.sm.h;
+  const maxTotal=WR_TRIALS+PR_TRIALS+SM_TRIALS;
+  const pct=Math.round(total/maxTotal*100);
+  let insight;
+  if(pct>=80) insight='<strong>Amplitud visual excelente.</strong> Tu campo de procesamiento paralelo está bien entrenado. En la próxima sesión sube la dificultad en 1 letra.';
+  else if(pct>=60) insight='<strong>Progreso sólido.</strong> Mantén esta dificultad durante 3–4 sesiones antes de subir.';
+  else insight='<strong>En construcción.</strong> El VAS mejora con práctica diaria. Considera bajar la dificultad si el ejercicio se siente frustrante.';
+
+  let ov=document.getElementById('mode-transition');
+  if(!ov){ ov=document.createElement('div'); ov.id='mode-transition'; ov.className='mode-transition'; document.body.appendChild(ov); }
+  ov.innerHTML=`
+    <div style="font-size:32px;margin-bottom:8px;">🎯</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--text);margin-bottom:6px;">Sesión completada</div>
+    <div style="font-size:48px;font-weight:300;font-family:'Cormorant Garamond',serif;color:var(--teal);margin:8px 0;">${pct}%</div>
+    <div style="font-size:14px;color:var(--text3);margin-bottom:16px;">precisión global · ${total}/${maxTotal} correctas</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%;max-width:320px;margin-bottom:20px;">
+      <div style="background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:12px 8px;text-align:center;">
+        <div style="font-size:20px;font-weight:700;color:var(--text);">${Math.round(sessionScores.wr.h/sessionScores.wr.t*100)}%</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:3px;text-transform:uppercase;letter-spacing:0.06em;">Completo</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:12px 8px;text-align:center;">
+        <div style="font-size:20px;font-weight:700;color:var(--text);">${Math.round(sessionScores.pr.h/sessionScores.pr.t*100)}%</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:3px;text-transform:uppercase;letter-spacing:0.06em;">Parcial</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:12px 8px;text-align:center;">
+        <div style="font-size:20px;font-weight:700;color:var(--text);">${Math.round(sessionScores.sm.h/sessionScores.sm.t*100)}%</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:3px;text-transform:uppercase;letter-spacing:0.06em;">Coincidencia</div>
+      </div>
+    </div>
+    <div style="background:var(--purple-d);border:1px solid var(--purple-b);border-radius:11px;padding:14px 16px;font-size:14px;color:var(--text2);line-height:1.65;width:100%;max-width:320px;margin-bottom:20px;text-align:left;">${insight}</div>
+    <div style="display:flex;gap:10px;width:100%;max-width:320px;">
+      <button onclick="location.reload()" style="flex:1;padding:13px;background:transparent;color:var(--text2);border:1.5px solid var(--border2);border-radius:11px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">Repetir</button>
+      <a href="index.html" style="flex:1;padding:13px;background:var(--teal);color:var(--bg);border:none;border-radius:11px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center;">← Inicio</a>
+    </div>
+  `;
+  ov.classList.remove('hidden');
 }
 
 function finishWR() {
@@ -833,7 +1111,7 @@ function finishWR() {
   document.getElementById('wr-slots').style.display='none';
   document.getElementById('wr-choices').style.display='none';
   document.getElementById('wr-prompt').style.display='none';
-  showResults('wr-results', wrHits, WR_TRIALS, 'startWR');
+  afterWR();
 }
 
 // ────────────────────────────────────
@@ -977,7 +1255,7 @@ function checkPR(btn, chosen, correct) {
 function finishPR() {
   document.getElementById('pr-display').style.display='none';
   document.getElementById('pr-choices').style.display='none';
-  showResults('pr-results', prHits, PR_TRIALS, 'startPR');
+  afterPR();
 }
 
 // ────────────────────────────────────

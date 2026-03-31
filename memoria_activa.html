@@ -396,6 +396,109 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 .sci-body,.sci-details-body{padding:14px 18px 16px;font-size:13px;color:var(--text2);line-height:1.7;}
 .sci-body strong,.sci-details-body strong{color:var(--text);}
 
+
+/* ── Ready Screen ── */
+.ready-screen {
+  position:fixed; inset:0; z-index:200;
+  background:var(--bg);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:32px 24px; text-align:center;
+  overflow:hidden;
+}
+.ready-screen.hidden { display:none; }
+.ready-screen::before {
+  content:''; position:absolute; inset:0; pointer-events:none; z-index:0; opacity:0.4;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+}
+.ready-inner {
+  position:relative; z-index:1;
+  width:100%; max-width:440px;
+  display:flex; flex-direction:column; align-items:center; gap:0;
+  animation: rdyUp 0.5s ease both;
+}
+@keyframes rdyUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+.ready-logo {
+  font-family:'Cormorant Garamond',serif;
+  font-size:16px; font-weight:300; color:var(--text3);
+  letter-spacing:0.08em; text-transform:uppercase;
+  margin-bottom:28px;
+}
+.ready-logo em { color:var(--gold); font-style:italic; }
+.ready-title {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(32px,8vw,48px); font-weight:300;
+  color:var(--text); line-height:1.1; margin-bottom:12px;
+}
+.ready-title em { color:var(--teal); font-style:italic; }
+.ready-sub {
+  font-size:17px; color:var(--text2); line-height:1.7;
+  margin-bottom:28px; max-width:360px;
+}
+.ready-sub strong { color:var(--text); font-weight:600; }
+
+/* Animation preview box */
+.ready-preview {
+  width:100%; max-width:340px;
+  background:var(--card); border:1px solid var(--border2);
+  border-radius:16px; overflow:hidden;
+  margin-bottom:28px; min-height:110px;
+  display:flex; align-items:center; justify-content:center;
+  position:relative;
+}
+.preview-label {
+  position:absolute; top:10px; left:14px;
+  font-size:10px; font-weight:700; letter-spacing:0.10em;
+  text-transform:uppercase; color:var(--text3);
+}
+.preview-inner {
+  padding:20px 24px; width:100%;
+  display:flex; align-items:center; justify-content:center;
+}
+
+/* Steps */
+.ready-steps {
+  display:flex; gap:6px; margin-bottom:28px;
+}
+.ready-step {
+  display:flex; align-items:flex-start; gap:10px;
+  text-align:left; padding:12px 14px;
+  background:var(--card2); border:1px solid var(--border);
+  border-radius:10px; flex:1;
+}
+.ready-step-num {
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px; font-weight:300; color:var(--teal);
+  line-height:1; flex-shrink:0; margin-top:1px;
+}
+.ready-step-text {
+  font-size:14px; color:var(--text2); line-height:1.5;
+}
+.ready-step-text strong { color:var(--text); font-weight:600; }
+
+.ready-btn {
+  width:100%; padding:17px;
+  background:var(--teal); color:var(--bg);
+  border:none; border-radius:13px; cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+  font-size:17px; font-weight:700; letter-spacing:0.02em;
+  transition:all 0.2s; -webkit-tap-highlight-color:transparent;
+  margin-bottom:14px;
+}
+.ready-btn:hover { opacity:0.88; transform:translateY(-1px); }
+.ready-btn:active { transform:translateY(0); }
+.ready-hint {
+  font-size:13px; color:var(--text3); line-height:1.5;
+}
+
+@media(max-width:600px) {
+  .ready-screen { padding:24px 16px; }
+  .ready-title { font-size:34px; }
+  .ready-sub { font-size:16px; }
+  .ready-steps { flex-direction:column; gap:8px; }
+  .ready-btn { font-size:16px; padding:16px; }
+}
+
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -412,6 +515,42 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 </header>
 
 <main>
+
+<div class="ready-screen" id="ready-screen">
+  <div class="ready-inner">
+    <div class="ready-logo">Entrena<em>Mente</em></div>
+    <div class="ready-title">Memoria <em>Activa</em></div>
+    <div class="ready-sub">Verás palabras intercaladas con <strong>pequeños problemas</strong>. Al final de cada serie, recuerda las palabras en orden.</div>
+    <div class="ready-steps"><div class="ready-step"><div class="ready-step-num">1</div><div class="ready-step-text"><strong>Lee</strong> cada palabra</div></div><div class="ready-step"><div class="ready-step-num">2</div><div class="ready-step-text"><strong>Resuelve</strong> el problema</div></div><div class="ready-step"><div class="ready-step-num">3</div><div class="ready-step-text"><strong>Recuerda</strong> las palabras en orden</div></div></div>
+    <button class="ready-btn" onclick="dismissReady()">▶ Empecemos</button>
+    <div class="ready-hint">Puntuación de crédito parcial — cada palabra cuenta</div>
+  </div>
+</div>
+<script>
+function dismissReady(){ document.getElementById('ready-screen').classList.add('hidden'); }
+
+// Mode transition between span types
+function showSpanTransition(){
+  let ov=document.getElementById('span-transition');
+  if(!ov){
+    ov=document.createElement('div');
+    ov.id='span-transition';
+    ov.style.cssText='position:fixed;inset:0;z-index:300;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:32px;text-align:center;';
+    document.body.appendChild(ov);
+  }
+  ov.innerHTML=`
+    <div style="font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--text);margin-bottom:4px;">¡Bien hecho!</div>
+    <div style="font-size:16px;color:var(--text2);max-width:320px;line-height:1.65;margin-bottom:8px;">Ahora inténtalo con <strong style="color:var(--text);">oraciones</strong> en lugar de ecuaciones. Mismo objetivo — recuerda las palabras en orden.</div>
+    <div style="background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:16px 20px;max-width:300px;font-size:14px;color:var(--text2);line-height:1.6;">
+      <em style="color:var(--teal);">"El cielo es azul"</em> → ¿Es verdad? → Recuerda: <strong>azul</strong>
+    </div>
+    <button onclick="document.getElementById('span-transition').style.display='none';startReadingSpan();" style="width:100%;max-width:300px;padding:15px;background:var(--teal);color:var(--bg);border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;cursor:pointer;margin-top:8px;">▶ Continuar</button>
+  `;
+  ov.style.display='flex';
+}
+
+</script>
+
 
   <div class="sdots">
     <div class="sdot active" id="sd0"></div>
@@ -901,7 +1040,7 @@ function submitRecall() {
   sessionPossibleTotal += setSize;
 
   const acc = Math.round(sessionPartialTotal/sessionPossibleTotal*100);
-  document.getElementById('hdr-acc').textContent = acc+'%';
+  const _ha=document.getElementById('hdr-acc'); if(_ha) _ha.textContent=acc+'%';
 
   trialIdx++;
   document.getElementById('trial-fill').style.width=((trialIdx)/TOTAL_TRIALS*100)+'%';
@@ -915,16 +1054,28 @@ function submitRecall() {
 // ────────────────────────────────────
 // End session
 // ────────────────────────────────────
+function startReadingSpan() {
+  // Called from transition card "Continuar" button
+  setMode('reading');
+  startSession();
+}
+
 function endSession() {
+  // If we just finished operation span, show transition to reading span
+  if (mode === 'operation') {
+    showSpanTransition();
+    return;
+  }
+  // Otherwise show real results (reading span just finished)
   const acc = sessionPossibleTotal>0 ? Math.round(sessionPartialTotal/sessionPossibleTotal*100) : 0;
   const spanScore = (sessionPartialTotal/TOTAL_TRIALS).toFixed(1);
   const procAcc = procTotal>0 ? Math.round(procCorrect/procTotal*100) : 0;
 
-  document.getElementById('hdr-span').textContent = spanScore;
-  document.getElementById('hdr-acc').textContent = acc+'%';
+  const _hs=document.getElementById('hdr-span'); if(_hs) _hs.textContent=spanScore;
+  const _ha=document.getElementById('hdr-acc'); if(_ha) _ha.textContent=acc+'%';
 
   // Build trial history pills
-  const hist = document.getElementById('trial-history');
+  const hist = document.getElementById('trial-history'); if(!hist) { setStage(3); return; }
   hist.innerHTML='<div style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);width:100%;margin-bottom:4px">Historial de rondas</div>';
   allTrialResults.forEach((r,i)=>{
     const pct = r.partialScore/r.setSize;

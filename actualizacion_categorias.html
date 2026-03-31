@@ -403,6 +403,109 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 .sci-body,.sci-details-body{padding:14px 18px 16px;font-size:13px;color:var(--text2);line-height:1.7;}
 .sci-body strong,.sci-details-body strong{color:var(--text);}
 
+
+/* ── Ready Screen ── */
+.ready-screen {
+  position:fixed; inset:0; z-index:200;
+  background:var(--bg);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:32px 24px; text-align:center;
+  overflow:hidden;
+}
+.ready-screen.hidden { display:none; }
+.ready-screen::before {
+  content:''; position:absolute; inset:0; pointer-events:none; z-index:0; opacity:0.4;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+}
+.ready-inner {
+  position:relative; z-index:1;
+  width:100%; max-width:440px;
+  display:flex; flex-direction:column; align-items:center; gap:0;
+  animation: rdyUp 0.5s ease both;
+}
+@keyframes rdyUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+.ready-logo {
+  font-family:'Cormorant Garamond',serif;
+  font-size:16px; font-weight:300; color:var(--text3);
+  letter-spacing:0.08em; text-transform:uppercase;
+  margin-bottom:28px;
+}
+.ready-logo em { color:var(--gold); font-style:italic; }
+.ready-title {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(32px,8vw,48px); font-weight:300;
+  color:var(--text); line-height:1.1; margin-bottom:12px;
+}
+.ready-title em { color:var(--teal); font-style:italic; }
+.ready-sub {
+  font-size:17px; color:var(--text2); line-height:1.7;
+  margin-bottom:28px; max-width:360px;
+}
+.ready-sub strong { color:var(--text); font-weight:600; }
+
+/* Animation preview box */
+.ready-preview {
+  width:100%; max-width:340px;
+  background:var(--card); border:1px solid var(--border2);
+  border-radius:16px; overflow:hidden;
+  margin-bottom:28px; min-height:110px;
+  display:flex; align-items:center; justify-content:center;
+  position:relative;
+}
+.preview-label {
+  position:absolute; top:10px; left:14px;
+  font-size:10px; font-weight:700; letter-spacing:0.10em;
+  text-transform:uppercase; color:var(--text3);
+}
+.preview-inner {
+  padding:20px 24px; width:100%;
+  display:flex; align-items:center; justify-content:center;
+}
+
+/* Steps */
+.ready-steps {
+  display:flex; gap:6px; margin-bottom:28px;
+}
+.ready-step {
+  display:flex; align-items:flex-start; gap:10px;
+  text-align:left; padding:12px 14px;
+  background:var(--card2); border:1px solid var(--border);
+  border-radius:10px; flex:1;
+}
+.ready-step-num {
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px; font-weight:300; color:var(--teal);
+  line-height:1; flex-shrink:0; margin-top:1px;
+}
+.ready-step-text {
+  font-size:14px; color:var(--text2); line-height:1.5;
+}
+.ready-step-text strong { color:var(--text); font-weight:600; }
+
+.ready-btn {
+  width:100%; padding:17px;
+  background:var(--teal); color:var(--bg);
+  border:none; border-radius:13px; cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+  font-size:17px; font-weight:700; letter-spacing:0.02em;
+  transition:all 0.2s; -webkit-tap-highlight-color:transparent;
+  margin-bottom:14px;
+}
+.ready-btn:hover { opacity:0.88; transform:translateY(-1px); }
+.ready-btn:active { transform:translateY(0); }
+.ready-hint {
+  font-size:13px; color:var(--text3); line-height:1.5;
+}
+
+@media(max-width:600px) {
+  .ready-screen { padding:24px 16px; }
+  .ready-title { font-size:34px; }
+  .ready-sub { font-size:16px; }
+  .ready-steps { flex-direction:column; gap:8px; }
+  .ready-btn { font-size:16px; padding:16px; }
+}
+
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -413,12 +516,88 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
   <a class="hdr-back" href="index.html">← Inicio</a>
   <span class="hdr-ex-name">Categorías</span>
   <div style="display:flex;align-items:center;gap:12px;">
-    <div class="hdr-stat">precisión <b id="hdr-acc">–</b></div>
+    <div class="hdr-stat">ronda <b id="hdr-round">–</b></div>
     <div class="logo">Entrena<em>Mente</em></div>
   </div>
 </header>
 
 <main>
+
+<div class="ready-screen" id="ready-screen">
+  <div class="ready-inner">
+    <div class="ready-logo">Entrena<em>Mente</em> · Memoria Activa</div>
+    <div class="ready-title">Actualización por <em>Categorías</em></div>
+    <div class="ready-sub">Observa palabras de distintos grupos. Al final recuerda <strong>solo la última</strong> de cada categoría — no la primera.</div>
+
+    <div class="ready-preview" style="min-height:130px;">
+      <div class="preview-label">Vista previa</div>
+      <div class="preview-inner" style="flex-direction:column;gap:10px;padding:16px 20px;">
+        <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+          <div id="rdy-slot-a" style="flex:1;min-width:80px;background:var(--teal-d);border:1px solid var(--teal-b);border-radius:8px;padding:8px 10px;text-align:center;">
+            <div style="font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--teal);margin-bottom:4px;">🐾 Animales</div>
+            <div id="rdy-slot-a-word" style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--text);transition:all 0.2s;">–</div>
+          </div>
+          <div id="rdy-slot-b" style="flex:1;min-width:80px;background:var(--amber-d);border:1px solid var(--amber-b);border-radius:8px;padding:8px 10px;text-align:center;">
+            <div style="font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--amber);margin-bottom:4px;">💼 Oficios</div>
+            <div id="rdy-slot-b-word" style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--text);transition:all 0.2s;">–</div>
+          </div>
+        </div>
+        <div id="rdy-stream-word" style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:var(--text);text-align:center;min-height:36px;transition:opacity 0.15s;"></div>
+        <div id="rdy-stream-cat" style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);text-align:center;min-height:14px;"></div>
+      </div>
+    </div>
+
+    <div class="ready-steps">
+      <div class="ready-step">
+        <div class="ready-step-num">1</div>
+        <div class="ready-step-text"><strong>Mira</strong> cada palabra</div>
+      </div>
+      <div class="ready-step">
+        <div class="ready-step-num">2</div>
+        <div class="ready-step-text"><strong>Actualiza</strong> el slot</div>
+      </div>
+      <div class="ready-step">
+        <div class="ready-step-num">3</div>
+        <div class="ready-step-text"><strong>Recuerda</strong> la última</div>
+      </div>
+    </div>
+
+    <button class="ready-btn" onclick="dismissReady()">▶ Empecemos</button>
+    <div class="ready-hint">Empieza fácil — 2 categorías · 8 palabras</div>
+  </div>
+</div>
+<script>
+(function(){
+  const seq=[
+    {cat:'a',word:'perro'},{cat:'b',word:'médico'},
+    {cat:'a',word:'águila'},{cat:'b',word:'piloto'},
+    {cat:'a',word:'cebra'}
+  ];
+  let si=0;
+  const sw=document.getElementById('rdy-stream-word');
+  const sc=document.getElementById('rdy-stream-cat');
+  const sa=document.getElementById('rdy-slot-a-word');
+  const sb=document.getElementById('rdy-slot-b-word');
+  if(!sw) return;
+  function next(){
+    const item=seq[si%seq.length];
+    sw.style.opacity='0';
+    setTimeout(()=>{
+      sw.textContent=item.word; sw.style.opacity='1';
+      sc.textContent=item.cat==='a'?'🐾 Animales':'💼 Oficios';
+      if(item.cat==='a'){ sa.textContent=item.word; sa.style.color='var(--teal)'; setTimeout(()=>sa.style.color='var(--text)',600); }
+      else { sb.textContent=item.word; sb.style.color='var(--amber)'; setTimeout(()=>sb.style.color='var(--text)',600); }
+      si++;
+    },120);
+    setTimeout(()=>{ sw.style.opacity='0'; sc.textContent=''; setTimeout(next,400); },1100);
+  }
+  setTimeout(next,500);
+})();
+function dismissReady(){
+  document.getElementById('ready-screen').classList.add('hidden');
+}
+</script>
+
 
   <div class="sdots">
     <div class="sdot active" id="sd0"></div>
@@ -429,116 +608,33 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
   <!-- ══════════════════════
        STAGE 0: Tutorial
        ══════════════════════ -->
-  <div class="card show" id="s0">
-    <div class="chead">
-      <div>
-        <div class="ctitle" style="font-family:\'Cormorant Garamond\',serif;font-weight:300;font-size:24px;">Actualización por Categorías</div>
-        <div class="csub" style="font-size:13px;color:var(--text2);">Observa una secuencia de palabras de distintas categorías. Al final, recuerda la última palabra de cada categoría.</div>
-        <div class="cpills">
-          <span class="pill pt">Miyake et al. 2000</span>
-          <span class="pill pa">Updating EF</span>
-          <span class="pill pp">4 categorías</span>
-        </div>
-      </div>
-      <div class="clive"><div class="cv" id="s0-words">12</div><div class="cl">palabras</div></div>
+    <div class="card show" id="s0">
+    <div style="padding:20px 20px 14px;border-bottom:1px solid var(--border);">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--text);margin-bottom:4px;">Actualización por <em style="color:var(--teal);font-style:italic;">Categorías</em></div>
+      <div style="font-size:15px;color:var(--text2);line-height:1.6;">Recuerda <strong style="color:var(--text);">solo la última palabra</strong> de cada categoría. ¿Cuántas categorías quieres entrenar?</div>
     </div>
 
-    <!-- Tutorial step 1 -->
-    <div class="tut-step show" id="tut-1">
-      <div class="tut-head">Cómo funciona — 3 pasos simples</div>
-      <div class="tut-body">
-        <p>Verás una serie de palabras, una a la vez. Cada palabra pertenece a una categoría — indicada con color.</p>
-
-        <div class="cat-preview">
-          <div class="cat-chip" data-cat="animals"><span class="cat-icon">🐾</span><div class="cat-info"><div class="cn">Animales</div><div class="ce">perro, águila, cebra…</div></div></div>
-          <div class="cat-chip" data-cat="professions"><span class="cat-icon">💼</span><div class="cat-info"><div class="cn">Profesiones</div><div class="ce">médico, piloto, chef…</div></div></div>
-          <div class="cat-chip" data-cat="objects"><span class="cat-icon">🔧</span><div class="cat-info"><div class="cn">Objetos</div><div class="ce">llave, espejo, mapa…</div></div></div>
-          <div class="cat-chip" data-cat="places"><span class="cat-icon">📍</span><div class="cat-info"><div class="cn">Lugares</div><div class="ce">plaza, faro, cueva…</div></div></div>
-        </div>
-
-        <div class="tut-rule">
-          Tu tarea: <strong>recuerda solamente la última palabra de cada categoría</strong> que hayas visto. Cada vez que aparece una nueva palabra de una categoría, la anterior ya no importa — solo importa la más reciente.
-        </div>
-
-        <p>Veamos un ejemplo:</p>
-        <div style="background:var(--card2);border-radius:10px;padding:14px;border:1.5px solid var(--border)">
-          <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;text-align:center">La secuencia llega una por una…</div>
-          <div class="ex-stream">
-            <div class="ex-word ew-animal">perro</div>
-            <div class="ex-word ew-prof">médico</div>
-            <div class="ex-word ew-animal">águila</div>
-            <div class="ex-word ew-obj">llave</div>
-            <div class="ex-word ew-animal latest">cebra ✓</div>
-            <div class="ex-word ew-place">plaza</div>
-          </div>
-          <div style="font-size:12px;color:var(--ink2);margin-top:10px;text-align:center;line-height:1.6">
-            Al llegar <em>cebra</em>, olvidas <em>perro</em> y <em>águila</em> — <strong>solo <em>cebra</em> importa ahora</strong> para la categoría Animales.
-          </div>
-        </div>
+    <div style="padding:16px 20px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+      <div class="dopt dsel" id="diff-easy" onclick="setDiff('easy')" style="text-align:center;padding:14px 8px;">
+        <div style="font-size:26px;font-weight:300;color:var(--teal);font-family:'Cormorant Garamond',serif;">2</div>
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-top:2px;">categorías</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:6px;line-height:1.4;">Para empezar</div>
       </div>
-      <div class="tut-footer">
-        <div></div>
-        <button class="btn btn-teal" onclick="tutStep(2)">Siguiente →</button>
+      <div class="dopt" id="diff-medium" onclick="setDiff('medium')" style="text-align:center;padding:14px 8px;">
+        <div style="font-size:26px;font-weight:300;color:var(--teal);font-family:'Cormorant Garamond',serif;">3</div>
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-top:2px;">categorías</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:6px;line-height:1.4;">Desafío medio</div>
+      </div>
+      <div class="dopt" id="diff-hard" onclick="setDiff('hard')" style="text-align:center;padding:14px 8px;">
+        <div style="font-size:26px;font-weight:300;color:var(--teal);font-family:'Cormorant Garamond',serif;">4</div>
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-top:2px;">categorías</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:6px;line-height:1.4;">Máxima dificultad</div>
       </div>
     </div>
 
-    <!-- Tutorial step 2 -->
-    <div class="tut-step" id="tut-2">
-      <div class="tut-head">La prueba de memoria</div>
-      <div class="tut-body">
-        <p>Cuando termina la secuencia, aparece la pregunta de cada categoría. Se te muestran <strong>3 opciones</strong> — una es la última palabra que apareció, las otras son distractores de la misma categoría.</p>
-
-        <div style="background:var(--card2);border-radius:10px;padding:14px;border:1.5px solid var(--border)">
-          <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--teal);margin-bottom:8px">Animales — ¿cuál fue la última?</div>
-          <div style="display:flex;flex-direction:column;gap:6px">
-            <div style="padding:8px 12px;border-radius:8px;background:var(--green-l);border:1.5px solid var(--teal);font-family:'Fraunces',serif;font-size:15px;color:var(--teal)">cebra ✓ última vista</div>
-            <div style="padding:8px 12px;border-radius:8px;background:var(--card);border:1.5px solid var(--border);font-family:'Fraunces',serif;font-size:15px;color:var(--muted)">perro</div>
-            <div style="padding:8px 12px;border-radius:8px;background:var(--card);border:1.5px solid var(--border);font-family:'Fraunces',serif;font-size:15px;color:var(--muted)">lobo</div>
-          </div>
-        </div>
-
-        <p>Las ranuras de memoria en la parte inferior de la pantalla te muestran <strong>en tiempo real</strong> qué palabra tienes guardada de cada categoría — actualízalas mentalmente mientras lees.</p>
-
-        <div class="tut-rule">
-          El reto: <strong>actualiza constantemente</strong>. Cada nueva palabra reemplaza a la anterior en tu memoria. Si te quedas con la primera en lugar de la última, fallarás.
-        </div>
-      </div>
-      <div class="tut-footer">
-        <button class="btn btn-ghost" onclick="tutStep(1)">← Atrás</button>
-        <button class="btn btn-teal" onclick="tutStep(3)">Siguiente →</button>
-      </div>
+    <div style="padding:0 20px 18px;">
+      <button class="btn btn-teal btn-wide" style="font-size:16px;" onclick="startGame()">▶ Comenzar</button>
     </div>
-
-    <!-- Tutorial step 3: difficulty -->
-    <div class="tut-step" id="tut-3">
-      <div class="tut-head">Elige la dificultad</div>
-      <div class="tut-body" style="padding-bottom:4px">
-        <p>Más palabras = más actualizaciones = más difícil. Empieza en <strong>Fácil</strong> si es tu primera vez.</p>
-      </div>
-      <div class="diff-opts">
-        <div class="dopt dsel" id="diff-easy" onclick="setDiff('easy')">
-          <div class="dv">8</div>
-          <div class="dl">palabras</div>
-          <div class="dd">Fácil — 2 categorías · ideal para comenzar</div>
-        </div>
-        <div class="dopt" id="diff-medium" onclick="setDiff('medium')">
-          <div class="dv">12</div>
-          <div class="dl">palabras</div>
-          <div class="dd">Normal — 3 categorías · desafío moderado</div>
-        </div>
-        <div class="dopt" id="diff-hard" onclick="setDiff('hard')">
-          <div class="dv">16</div>
-          <div class="dl">palabras</div>
-          <div class="dd">Difícil — 4 categorías · máxima actualización</div>
-        </div>
-      </div>
-      <div style="padding:10px 20px 0;font-size:12px;color:var(--muted)">Las ranuras de memoria son visibles durante el juego — esto es deliberado: observar cómo se actualizan ayuda a internalizar el proceso.</div>
-      <div class="tut-footer">
-        <button class="btn btn-ghost" onclick="tutStep(2)">← Atrás</button>
-        <button class="btn btn-teal" onclick="startGame()">▶ Comenzar</button>
-      </div>
-    </div>
-
   </div>
 
   <!-- ══════════════════════
@@ -682,7 +778,7 @@ function setDiff(d) {
   streamLength=DIFF_LENGTHS[d];
   document.querySelectorAll('.dopt').forEach(el=>el.classList.remove('dsel'));
   document.getElementById('diff-'+d).classList.add('dsel');
-  document.getElementById('s0-words').textContent=streamLength;
+  // s0-words element removed — difficulty display handled by dopt cards
 }
 
 // ─────────────────────────────
@@ -700,7 +796,7 @@ let activeCats = ['animals','professions']; // default easy
 function startGame() {
   activeCats = DIFF_CATS[difficulty] || CAT_KEYS;
   roundIdx=0; totalAnswered=0; totalCorrect=0; roundResults=[];
-  document.getElementById('hdr-round').textContent='1/'+totalRounds;
+  const hr=document.getElementById('hdr-round'); if(hr) hr.textContent='1/'+totalRounds;
   // Update recall-remaining to reflect active cat count
   const rr=document.getElementById('recall-remaining');
   if(rr) rr.textContent=activeCats.length;
@@ -716,7 +812,7 @@ function startRound() {
   const gt=document.getElementById('g-title'); if(gt) gt.textContent='Observa y actualiza';
   const gp=document.getElementById('g-prog'); if(gp) gp.textContent='1/'+streamLength;
   const gf=document.getElementById('g-fill'); if(gf){ gf.style.width='0%'; gf.style.background='var(--amber)'; }
-  const hr=document.getElementById('hdr-round'); if(hr) hr.textContent=(roundIdx+1)+'/'+totalRounds;
+  const hrr=document.getElementById('hdr-round'); if(hrr) hrr.textContent=(roundIdx+1)+'/'+totalRounds;
   const sp=document.getElementById('stream-phase'); if(sp) sp.style.display='';
   const rp=document.getElementById('recall-phase'); if(rp) rp.style.display='none';
   const nb=document.getElementById('next-round-btn'); if(nb) nb.style.display='none';

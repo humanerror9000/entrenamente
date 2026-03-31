@@ -413,6 +413,109 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 .sci-body,.sci-details-body{padding:14px 18px 16px;font-size:13px;color:var(--text2);line-height:1.7;}
 .sci-body strong,.sci-details-body strong{color:var(--text);}
 
+
+/* ── Ready Screen ── */
+.ready-screen {
+  position:fixed; inset:0; z-index:200;
+  background:var(--bg);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:32px 24px; text-align:center;
+  overflow:hidden;
+}
+.ready-screen.hidden { display:none; }
+.ready-screen::before {
+  content:''; position:absolute; inset:0; pointer-events:none; z-index:0; opacity:0.4;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+}
+.ready-inner {
+  position:relative; z-index:1;
+  width:100%; max-width:440px;
+  display:flex; flex-direction:column; align-items:center; gap:0;
+  animation: rdyUp 0.5s ease both;
+}
+@keyframes rdyUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+.ready-logo {
+  font-family:'Cormorant Garamond',serif;
+  font-size:16px; font-weight:300; color:var(--text3);
+  letter-spacing:0.08em; text-transform:uppercase;
+  margin-bottom:28px;
+}
+.ready-logo em { color:var(--gold); font-style:italic; }
+.ready-title {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(32px,8vw,48px); font-weight:300;
+  color:var(--text); line-height:1.1; margin-bottom:12px;
+}
+.ready-title em { color:var(--teal); font-style:italic; }
+.ready-sub {
+  font-size:17px; color:var(--text2); line-height:1.7;
+  margin-bottom:28px; max-width:360px;
+}
+.ready-sub strong { color:var(--text); font-weight:600; }
+
+/* Animation preview box */
+.ready-preview {
+  width:100%; max-width:340px;
+  background:var(--card); border:1px solid var(--border2);
+  border-radius:16px; overflow:hidden;
+  margin-bottom:28px; min-height:110px;
+  display:flex; align-items:center; justify-content:center;
+  position:relative;
+}
+.preview-label {
+  position:absolute; top:10px; left:14px;
+  font-size:10px; font-weight:700; letter-spacing:0.10em;
+  text-transform:uppercase; color:var(--text3);
+}
+.preview-inner {
+  padding:20px 24px; width:100%;
+  display:flex; align-items:center; justify-content:center;
+}
+
+/* Steps */
+.ready-steps {
+  display:flex; gap:6px; margin-bottom:28px;
+}
+.ready-step {
+  display:flex; align-items:flex-start; gap:10px;
+  text-align:left; padding:12px 14px;
+  background:var(--card2); border:1px solid var(--border);
+  border-radius:10px; flex:1;
+}
+.ready-step-num {
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px; font-weight:300; color:var(--teal);
+  line-height:1; flex-shrink:0; margin-top:1px;
+}
+.ready-step-text {
+  font-size:14px; color:var(--text2); line-height:1.5;
+}
+.ready-step-text strong { color:var(--text); font-weight:600; }
+
+.ready-btn {
+  width:100%; padding:17px;
+  background:var(--teal); color:var(--bg);
+  border:none; border-radius:13px; cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+  font-size:17px; font-weight:700; letter-spacing:0.02em;
+  transition:all 0.2s; -webkit-tap-highlight-color:transparent;
+  margin-bottom:14px;
+}
+.ready-btn:hover { opacity:0.88; transform:translateY(-1px); }
+.ready-btn:active { transform:translateY(0); }
+.ready-hint {
+  font-size:13px; color:var(--text3); line-height:1.5;
+}
+
+@media(max-width:600px) {
+  .ready-screen { padding:24px 16px; }
+  .ready-title { font-size:34px; }
+  .ready-sub { font-size:16px; }
+  .ready-steps { flex-direction:column; gap:8px; }
+  .ready-btn { font-size:16px; padding:16px; }
+}
+
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -433,6 +536,36 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 </div>
 
 <main>
+
+<div class="ready-screen" id="ready-screen">
+  <div class="ready-inner">
+    <div class="ready-logo">Entrena<em>Mente</em> · Lectura Visual</div>
+    <div class="ready-title">Lectura por <em>Bloques</em></div>
+    <div class="ready-sub">Aprende a leer <strong>grupos de palabras</strong> como una sola unidad. Cuatro modos de dificultad creciente.</div>
+
+    <div class="ready-steps">
+      <div class="ready-step">
+        <div class="ready-step-num">1</div>
+        <div class="ready-step-text"><strong>Reconocimiento</strong> guiado — toca cada bloque</div>
+      </div>
+      <div class="ready-step">
+        <div class="ready-step-num">2</div>
+        <div class="ready-step-text"><strong>Análisis activo</strong> — divide la oración</div>
+      </div>
+      <div class="ready-step">
+        <div class="ready-step-num">3</div>
+        <div class="ready-step-text"><strong>Flash</strong> y <strong>reconstrucción</strong></div>
+      </div>
+    </div>
+
+    <button class="ready-btn" onclick="dismissReady()">▶ Empecemos</button>
+    <div class="ready-hint">Empieza por el Modo 1 — puedes cambiar cuando quieras</div>
+  </div>
+</div>
+<script>
+function dismissReady(){ document.getElementById('ready-screen').classList.add('hidden'); }
+</script>
+
 
   <!-- Mode selector -->
   <div class="mode-tabs">
@@ -610,10 +743,10 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
   </div>
 
   <!-- Science note -->
-  <div class="science-note">
-    <div class="sci-head">⚗ Base científica — por qué funciona</div>
-    El entrenamiento por bloques activa el <strong>priming sintáctico</strong>: la exposición repetida a estructuras frásicas aumenta la probabilidad de reconocerlas automáticamente en lecturas futuras, reduciendo la carga sobre la memoria de trabajo. La investigación de Conti (Applied Linguistics, 2025) muestra que el aprendizaje de bloques léxicos en L1 genera mejoras del <strong>30% en fluidez</strong> versus el aprendizaje palabra por palabra. En español, las perífrasis verbales y las frases preposicionales son los bloques de mayor rendimiento cognitivo por su alta frecuencia y variabilidad interna.
-  </div>
+  <details class="sci-details">
+  <summary>⚗ Base científica — por qué funciona</summary>
+  <div class="sci-body">El entrenamiento por bloques activa el <strong>priming sintáctico</strong>: la exposición repetida a estructuras frásicas aumenta la probabilidad de reconocerlas automáticamente en lecturas futuras, reduciendo la carga sobre la memoria de trabajo. La investigación de Conti (Applied Linguistics, 2025) muestra que el aprendizaje de bloques léxicos en L1 genera mejoras del <strong>30% en fluidez</strong> versus el aprendizaje palabra por palabra. En español, las perífrasis verbales y las frases preposicionales son los bloques de mayor rendimiento cognitivo por su alta frecuencia y variabilidad interna.</div>
+</details>
 
 </main>
 
@@ -900,7 +1033,7 @@ function resetRecon() { initRecon(); }
 
 function finishSession() {
   document.getElementById('main-progress').style.width = '100%';
-  document.getElementById('streak-count').textContent = '8';
+  const _sc=document.getElementById('streak-count'); if(_sc) _sc.textContent='8';
   alert('¡Sesión completada! Mañana: Modo 3 con textos más complejos.');
 }
 </script>
