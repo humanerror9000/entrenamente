@@ -5,18 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EntrenaMente — Sistema de Acondicionamiento Cognitivo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:#0C0C10;--bg2:#13131A;--card:#18181F;--card2:#1E1E28;
-  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.11);
-  --text:#EAE8F2;--text2:#8E8CA8;--text3:#4A4860;
-  --gold:#C9A84C;--gold-l:rgba(201,168,76,0.12);--gold-b:rgba(201,168,76,0.3);
-  --teal:#2ECFB8;--teal-d:rgba(46,207,184,0.10);--teal-b:rgba(46,207,184,0.25);
-  --amber:#F5A623;--amber-d:rgba(245,166,35,0.10);
-  --coral:#E05C5C;--coral-d:rgba(224,92,92,0.10);
-  --purple:#9B7FFF;--purple-d:rgba(155,127,255,0.10);
-  --green:#52C98A;--green-d:rgba(82,201,138,0.10);
+  --bg:#0C0C10; --bg2:#13131A; --card:#18181F; --card2:#1E1E28;
+  --border:rgba(255,255,255,0.06); --border2:rgba(255,255,255,0.11);
+  --text:#EAE8F2; --text2:#8E8CA8; --text3:#4A4860;
+  /* Brand violet — primary accent */
+  --violet:#B8A9FF; --violet-d:rgba(184,169,255,0.12); --violet-b:rgba(184,169,255,0.28);
+  --violet-deep:#534AB7;
+  /* Teal — action/success/interactive */
+  --teal:#2ECFB8; --teal-d:rgba(46,207,184,0.12); --teal-b:rgba(46,207,184,0.28);
+  /* Supporting palette */
+  --gold:#C9A84C; --gold-l:rgba(201,168,76,0.12); --gold-b:rgba(201,168,76,0.30);
+  --amber:#F5A623; --amber-d:rgba(245,166,35,0.12); --amber-b:rgba(245,166,35,0.28);
+  --coral:#E05C5C; --coral-d:rgba(224,92,92,0.12); --coral-b:rgba(224,92,92,0.30);
+  --purple:#B8A9FF; --purple-d:rgba(184,169,255,0.12); --purple-b:rgba(184,169,255,0.28);
+  --green:#52C98A; --green-d:rgba(82,201,138,0.12); --green-b:rgba(82,201,138,0.30);
+  --muted:#4A4860;
+  --r:14px; --sh:0 2px 20px rgba(0,0,0,0.35);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
@@ -164,6 +171,228 @@ footer{position:relative;z-index:10;max-width:1100px;margin:20px auto 0;padding:
   .wb-inner{padding:14px;}
   .ob-profiles{grid-template-columns:1fr 1fr;}
 }
+
+/* ── Daily Session Card ── */
+.session-card {
+  background: var(--card);
+  border: 1.5px solid var(--border2);
+  border-radius: 16px;
+  box-shadow: var(--sh);
+  overflow: hidden;
+  margin-bottom: 0;
+  transition: all 0.3s;
+}
+.session-card.done {
+  border-color: var(--teal-b);
+  background: linear-gradient(135deg, var(--card) 0%, rgba(46,207,184,0.06) 100%);
+}
+.sc-head {
+  padding: 18px 20px 14px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+.sc-head-left { display: flex; flex-direction: column; gap: 3px; }
+.sc-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.10em;
+  text-transform: uppercase; color: var(--text3);
+}
+.sc-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px; font-weight: 300; color: var(--text);
+  line-height: 1.1;
+}
+.sc-title em { color: var(--teal); font-style: italic; }
+
+/* Streak badge */
+.streak-badge {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 2px; cursor: default;
+}
+.streak-flame {
+  font-size: 28px; line-height: 1;
+  filter: drop-shadow(0 0 6px rgba(255,140,0,0.5));
+  transition: transform 0.2s;
+}
+.streak-badge:hover .streak-flame { transform: scale(1.15); }
+.streak-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; font-weight: 300; color: var(--amber);
+  line-height: 1;
+}
+.streak-lbl {
+  font-size: 8px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--text3);
+}
+.streak-badge.zero .streak-flame { filter: none; opacity: 0.3; }
+.streak-badge.zero .streak-num { color: var(--text3); }
+
+/* Session exercises list */
+.sc-exercises {
+  padding: 14px 20px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.sc-ex {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px;
+  background: var(--card2);
+  border: 1.5px solid var(--border);
+  border-radius: 11px;
+  text-decoration: none;
+  transition: all 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.sc-ex:hover { border-color: var(--teal-b); background: rgba(46,207,184,0.05); }
+.sc-ex.completed {
+  border-color: var(--teal-b);
+  background: rgba(46,207,184,0.08);
+  pointer-events: none;
+}
+.sc-ex-check {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 2px solid var(--border2);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+  font-size: 12px;
+}
+.sc-ex.completed .sc-ex-check {
+  background: var(--teal); border-color: var(--teal);
+  color: var(--bg);
+}
+.sc-ex-info { flex: 1; }
+.sc-ex-name {
+  font-size: 14px; font-weight: 600; color: var(--text);
+  margin-bottom: 2px;
+}
+.sc-ex.completed .sc-ex-name { color: var(--text3); }
+.sc-ex-desc { font-size: 12px; color: var(--text3); line-height: 1.4; }
+.sc-ex-arrow {
+  font-size: 14px; color: var(--text3);
+  transition: transform 0.15s;
+}
+.sc-ex:hover .sc-ex-arrow { transform: translate(2px,-2px); }
+.sc-ex.completed .sc-ex-arrow { display: none; }
+
+/* Progress bar inside session card */
+.sc-progress {
+  padding: 0 20px 6px;
+  display: flex; align-items: center; gap: 10px;
+}
+.sc-prog-bar {
+  flex: 1; height: 4px; background: var(--border);
+  border-radius: 2px; overflow: hidden;
+}
+.sc-prog-fill {
+  height: 100%; background: var(--teal);
+  border-radius: 2px; transition: width 0.4s ease;
+}
+.sc-prog-label {
+  font-size: 11px; color: var(--text3);
+  white-space: nowrap; min-width: 36px; text-align: right;
+}
+
+/* Completion state */
+.sc-done-banner {
+  display: none;
+  padding: 16px 20px;
+  background: rgba(46,207,184,0.08);
+  border-top: 1px solid var(--teal-b);
+  text-align: center;
+}
+.session-card.done .sc-done-banner { display: block; }
+.sc-done-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px; font-weight: 300; color: var(--teal);
+  margin-bottom: 4px;
+}
+.sc-done-sub { font-size: 13px; color: var(--text3); line-height: 1.5; }
+.sc-done-flame {
+  font-size: 32px; display: block; margin-bottom: 6px;
+  filter: drop-shadow(0 0 8px rgba(255,140,0,0.6));
+}
+
+/* Session card footer */
+.sc-footer {
+  padding: 12px 20px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-top: 1px solid var(--border);
+}
+.sc-day-label { font-size: 11px; color: var(--text3); }
+.sc-day-label strong { color: var(--text2); font-weight: 600; }
+
+@media(max-width:600px){
+  .sc-head { padding: 14px 16px 12px; }
+  .sc-exercises { padding: 12px 14px; gap: 8px; }
+  .sc-ex { padding: 11px 12px; }
+  .sc-progress { padding: 0 14px 6px; }
+  .sc-footer { padding: 10px 14px 14px; }
+}
+
+
+/* ── Brand logo ── */
+.logo, .brand-name {
+  font-family: 'Fredoka', 'Cormorant Garamond', serif;
+  font-size: 20px; font-weight: 600;
+  color: var(--text); letter-spacing: -0.01em;
+  display: flex; align-items: center;
+}
+.logo em, .brand-name em {
+  color: var(--violet); font-style: italic;
+}
+/* ── Primary button — violet ── */
+.btn-teal, .ready-btn {
+  background: var(--violet-deep) !important;
+  color: #fff !important;
+}
+.btn-teal:hover, .ready-btn:hover {
+  background: var(--violet) !important;
+  opacity: 1 !important;
+}
+/* Keep teal for success/feedback states */
+.btn-teal.btn-success { background: var(--teal) !important; }
+
+
+.sc-start-btn {
+  width: 100%;
+  padding: 16px;
+  background: var(--violet-deep);
+  color: #fff;
+  border: none;
+  border-radius: 13px;
+  font-family: 'Fredoka', 'DM Sans', sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.sc-start-btn:hover { background: var(--violet); transform: translateY(-1px); }
+.sc-start-btn:active { transform: translateY(0); }
+.sc-start-btn:disabled {
+  background: var(--card2);
+  color: var(--text3);
+  cursor: default;
+  transform: none;
+}
+/* Exercise preview items — non-tappable, just show what's coming */
+.sc-ex { pointer-events: none; }
+.sc-ex:hover { border-color: var(--border); background: var(--card2); }
+.sc-ex.completed { pointer-events: none; }
+
+
+/* Session complete overlay */
+.session-complete-overlay {
+  position: fixed; inset: 0; z-index: 500;
+  background: var(--bg);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 32px 24px; text-align: center;
+  animation: scFadeIn 0.4s ease both;
+}
+@keyframes scFadeIn { from{opacity:0;transform:scale(0.97)} to{opacity:1;transform:scale(1)} }
+.session-complete-overlay.hidden { display: none; }
+
 </style>
 </head>
 <body>
@@ -254,9 +483,54 @@ footer{position:relative;z-index:10;max-width:1100px;margin:20px auto 0;padding:
     </div>
   </div>
 
+  <!-- ── Daily Session Card ── -->
+  <div class="session-card" id="session-card" style="display:none;">
+    <div class="sc-head">
+      <div class="sc-head-left">
+        <div class="sc-label">Sesión de hoy</div>
+        <div class="sc-title">Tu entrenamiento <em>diario</em></div>
+      </div>
+      <div class="streak-badge zero" id="streak-badge" title="Racha de días consecutivos">
+        <div class="streak-flame">🔥</div>
+        <div class="streak-num" id="streak-num">0</div>
+        <div class="streak-lbl">días</div>
+      </div>
+    </div>
+
+    <div class="sc-progress">
+      <div class="sc-prog-bar"><div class="sc-prog-fill" id="sc-prog-fill" style="width:0%"></div></div>
+      <div class="sc-prog-label" id="sc-prog-label">0 / 0</div>
+    </div>
+
+    <div class="sc-exercises" id="sc-exercises">
+      <!-- populated by JS — preview only, not tappable -->
+    </div>
+
+    <div style="padding:4px 20px 16px;">
+      <button class="sc-start-btn" id="sc-start-btn" onclick="startDailySession()">
+        ▶ Comenzar sesión
+      </button>
+    </div>
+
+    <div class="sc-done-banner">
+      <span class="sc-done-flame">🔥</span>
+      <div class="sc-done-title">¡Sesión completada!</div>
+      <div class="sc-done-sub" id="sc-done-sub">Vuelve mañana para mantener tu racha.</div>
+    </div>
+
+    <div class="sc-footer">
+      <div class="sc-day-label" id="sc-day-label"></div>
+      <div class="sc-day-label" style="color:var(--text3);font-size:11px;">↓ Todos los ejercicios abajo</div>
+    </div>
+  </div>
+
   <header>
     <div class="brand">
-      <div class="brand-name">Entrena<em>Mente</em></div>
+      <div class="brand-name"><svg width="22" height="26" viewBox="0 0 22 26" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;margin-right:7px;flex-shrink:0;">
+  <rect x="1.5" y="1.5" width="19" height="14" rx="7" stroke="var(--violet)" stroke-width="1.8"/>
+  <path d="M1.5 11 Q1.5 19 11 19 Q20.5 19 20.5 11" stroke="var(--violet)" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+  <path d="M5 7 Q11 2 17 7" stroke="var(--teal)" stroke-width="2" stroke-linecap="round" fill="none"/>
+</svg><span style="font-family:'Fredoka',sans-serif;font-weight:600;letter-spacing:-0.01em;">Entrena<em style="color:var(--violet);font-style:italic;">Mente</em></span></div>
       <div class="brand-tag">Sistema de Acondicionamiento Cognitivo · Prototipo v0.1</div>
     </div>
     <div class="header-right">
@@ -485,7 +759,225 @@ function resetOnboarding(){
   location.reload();
 }
 
+
+// ════════════════════════════════════════════════════════
+// DAILY SESSION SYSTEM
+// ════════════════════════════════════════════════════════
+
+const EXERCISES = {
+  flash:     { name:'Lectura Flash',            desc:'Velocidad lectora adaptativa',      url:'lectura_flash_rsvp.html',            key:'flash' },
+  bloques:   { name:'Lectura por Bloques',       desc:'Procesamiento por grupos de palabras', url:'lectura_por_bloques_prototype.html', key:'bloques' },
+  contra:    { name:'Contrarreloj',              desc:'Lee antes de que desaparezca',      url:'contrarreloj.html',                  key:'contra' },
+  vision:    { name:'Visión Paralela',           desc:'Amplitud visual y memoria icónica', url:'vision_paralela.html',               key:'vision' },
+  saltos:    { name:'Saltos Visuales',           desc:'Entrenamiento de movimientos oculares', url:'saltos_visuales.html',           key:'saltos' },
+  memoria:   { name:'Memoria Activa',            desc:'Amplitud de memoria de trabajo',    url:'memoria_activa.html',                key:'memoria' },
+  cats:      { name:'Actualización por Categorías', desc:'Actualiza lo que recuerdas en tiempo real', url:'actualizacion_categorias.html', key:'cats' },
+  continua:  { name:'Actualización Continua',    desc:'N-back — compara con pasos anteriores', url:'actualizacion_continua.html',    key:'continua' },
+};
+
+// Weekly rotation per profile — index 0=Sun,1=Mon,...,6=Sat
+const SCHEDULE = {
+  adult: [
+    ['flash','cats','saltos'],     // Sun
+    ['flash','cats','saltos'],     // Mon
+    ['contra','memoria','vision'], // Tue
+    ['flash','continua','bloques'],// Wed
+    ['contra','cats','saltos'],    // Thu
+    ['flash','memoria','vision'],  // Fri
+    ['continua','bloques','saltos'],// Sat
+  ],
+  teen: [
+    ['flash','cats','saltos'],
+    ['flash','cats','saltos'],
+    ['contra','memoria','vision'],
+    ['flash','continua','bloques'],
+    ['contra','cats','saltos'],
+    ['flash','memoria','vision'],
+    ['continua','bloques','saltos'],
+  ],
+  child: [
+    ['cats','saltos'],
+    ['flash','cats'],
+    ['cats','saltos'],
+    ['flash','cats'],
+    ['cats','saltos'],
+    ['flash','cats'],
+    ['cats','saltos'],
+  ],
+  senior: [
+    ['flash','cats','saltos'],
+    ['flash','cats','saltos'],
+    ['contra','cats','vision'],
+    ['flash','saltos','bloques'],
+    ['contra','cats','saltos'],
+    ['flash','cats','vision'],
+    ['saltos','bloques','cats'],
+  ],
+};
+
+const DAY_NAMES = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+const TODAY_KEY = () => new Date().toISOString().slice(0,10); // YYYY-MM-DD
+
+function getStreak() {
+  try { return JSON.parse(localStorage.getItem('em_streak')) || {count:0, lastDate:''}; }
+  catch(e) { return {count:0, lastDate:''}; }
+}
+function saveStreak(s) {
+  try { localStorage.setItem('em_streak', JSON.stringify(s)); } catch(e) {}
+}
+function getCompletions() {
+  try { return JSON.parse(localStorage.getItem('em_completions')) || {}; } catch(e) { return {}; }
+}
+
+function getTodayCompletions() {
+  const all = getCompletions();
+  return all[TODAY_KEY()] || [];
+}
+
+function buildSessionCard(profile) {
+  const dow = new Date().getDay();
+  const schedule = SCHEDULE[profile] || SCHEDULE.adult;
+  const todayExercises = schedule[dow].map(k => EXERCISES[k]);
+  const completedToday = getTodayCompletions();
+  const streak = getStreak();
+
+  // Show card
+  const card = document.getElementById('session-card');
+  card.style.display = '';
+
+  // Streak badge
+  const badge = document.getElementById('streak-badge');
+  const numEl = document.getElementById('streak-num');
+  numEl.textContent = streak.count;
+  if(streak.count > 0) badge.classList.remove('zero');
+  else badge.classList.add('zero');
+
+  // Day label
+  const dayEl = document.getElementById('sc-day-label');
+  const now = new Date();
+  const dayName = DAY_NAMES[now.getDay()];
+  const dateStr = now.toLocaleDateString('es-CO',{day:'numeric',month:'long'});
+  dayEl.innerHTML = `<strong>${dayName.charAt(0).toUpperCase()+dayName.slice(1)} ${dateStr}</strong>`;
+
+  // Build exercise list
+  const container = document.getElementById('sc-exercises');
+  container.innerHTML = '';
+  todayExercises.forEach((ex, i) => {
+    const done = completedToday.includes(ex.key);
+    const el = document.createElement('div');
+    el.className = 'sc-ex' + (done ? ' completed' : '');
+    el.innerHTML = `
+      <div class="sc-ex-check">${done ? '✓' : ''}</div>
+      <div class="sc-ex-info">
+        <div class="sc-ex-name">${ex.name}</div>
+        <div class="sc-ex-desc">${ex.desc}</div>
+      </div>
+      <div class="sc-ex-num" style="font-size:11px;color:var(--text3);">${i+1}</div>
+    `;
+    container.appendChild(el);
+  });
+
+  // Progress
+  const doneCount = todayExercises.filter(ex => completedToday.includes(ex.key)).length;
+  const total = todayExercises.length;
+  const pct = total > 0 ? Math.round(doneCount/total*100) : 0;
+  document.getElementById('sc-prog-fill').style.width = pct + '%';
+  document.getElementById('sc-prog-label').textContent = doneCount + ' / ' + total;
+
+  // All done?
+  // Update start button state
+  const startBtn = document.getElementById('sc-start-btn');
+  if(startBtn) {
+    if(doneCount === total && total > 0) {
+      startBtn.disabled = true;
+      startBtn.textContent = '✓ Sesión completada';
+    } else if(doneCount > 0) {
+      // Partial — resume from next uncompleted
+      startBtn.textContent = '▶ Continuar sesión';
+    }
+  }
+
+  if(doneCount === total && total > 0) {
+    card.classList.add('done');
+    const today = TODAY_KEY();
+    if(streak.lastDate !== today) {
+      const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
+      const yKey = yesterday.toISOString().slice(0,10);
+      const newCount = streak.lastDate === yKey ? streak.count + 1 : 1;
+      saveStreak({count: newCount, lastDate: today});
+      numEl.textContent = newCount;
+      if(newCount > 0) badge.classList.remove('zero');
+    }
+    const sub = document.getElementById('sc-done-sub');
+    const s = getStreak();
+    if(s.count >= 7) sub.textContent = `¡${s.count} días seguidos! Eso es dedicación real.`;
+    else if(s.count >= 3) sub.textContent = `${s.count} días seguidos — sigue así.`;
+    else sub.textContent = `Vuelve mañana para mantener tu racha.`;
+  }
+}
+
+// ── Mark completion (called when user returns from exercise) ──
+// Each exercise writes em_completions on its results screen.
+// On return to index we just re-render.
+function checkReturnCompletion() {
+  const params = new URLSearchParams(window.location.search);
+  const done = params.get('done');
+  window.history.replaceState({}, '', window.location.pathname);
+
+  if(done === 'session') {
+    // Full session completed — show celebration overlay
+    showSessionComplete();
+    return;
+  }
+  if(done) {
+    const all = getCompletions();
+    const today = TODAY_KEY();
+    if(!all[today]) all[today] = [];
+    if(!all[today].includes(done)) all[today].push(done);
+    try { localStorage.setItem('em_completions', JSON.stringify(all)); } catch(e) {}
+  }
+}
+
+function showSessionComplete() {
+  // Update streak first
+  const streak = getStreak();
+  const today = TODAY_KEY();
+  if(streak.lastDate !== today) {
+    const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
+    const yKey = yesterday.toISOString().slice(0,10);
+    const newCount = streak.lastDate === yKey ? streak.count + 1 : 1;
+    saveStreak({count: newCount, lastDate: today});
+  }
+  const s = getStreak();
+
+  let msg, sub;
+  if(s.count >= 7)      { msg = `¡${s.count} días seguidos!`; sub = 'Eso es disciplina real. Tu mente lo nota.'; }
+  else if(s.count >= 3) { msg = `${s.count} días consecutivos`; sub = 'La constancia es el entrenamiento más poderoso.'; }
+  else if(s.count === 1){ msg = '¡Primera sesión!'; sub = 'El primer paso es el más importante. Vuelve mañana.'; }
+  else                   { msg = '¡Sesión completada!'; sub = 'Excelente trabajo. Vuelve mañana para mantener la racha.'; }
+
+  const ov = document.createElement('div');
+  ov.className = 'session-complete-overlay';
+  ov.innerHTML = `
+    <div style="font-size:64px;margin-bottom:16px;filter:drop-shadow(0 0 16px rgba(255,140,0,0.6))">🔥</div>
+    <div style="font-family:'Fredoka',sans-serif;font-size:36px;font-weight:600;color:var(--text);margin-bottom:8px;">${msg}</div>
+    <div style="font-size:16px;color:var(--text2);line-height:1.65;max-width:300px;margin-bottom:32px;">${sub}</div>
+    <div style="display:flex;gap:12px;width:100%;max-width:320px;">
+      <button onclick="this.closest('.session-complete-overlay').classList.add('hidden')"
+        style="flex:1;padding:14px;background:transparent;color:var(--text2);border:1.5px solid var(--border2);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;">
+        Ver ejercicios
+      </button>
+      <button onclick="this.closest('.session-complete-overlay').classList.add('hidden')"
+        style="flex:1;padding:14px;background:var(--violet-deep);color:#fff;border:none;border-radius:12px;font-family:'Fredoka',sans-serif;font-size:16px;font-weight:600;cursor:pointer;">
+        ¡Genial!
+      </button>
+    </div>
+  `;
+  document.body.appendChild(ov);
+}
+
 function init(){
+  checkReturnCompletion();
   let data;
   try{data=JSON.parse(localStorage.getItem('em_user'));}catch(e){}
   if(data){
@@ -493,6 +985,7 @@ function init(){
     document.getElementById('app').classList.add('show');
     showWelcomeBanner();
     highlightRecommended();
+    buildSessionCard(data.profile||'adult');
   }
 }
 
@@ -501,6 +994,35 @@ document.getElementById('ob-name').addEventListener('keydown',e=>{
 });
 
 init();
+
+// ── Session runner ──
+function startDailySession() {
+  let data;
+  try { data = JSON.parse(localStorage.getItem('em_user')); } catch(e) {}
+  if(!data) return;
+
+  const dow = new Date().getDay();
+  const schedule = SCHEDULE[data.profile||'adult'] || SCHEDULE.adult;
+  const todayKeys = schedule[dow];
+  const completedToday = getTodayCompletions();
+
+  // Find first uncompleted exercise
+  const remaining = todayKeys.filter(k => !completedToday.includes(k));
+  if(remaining.length === 0) return; // all done
+
+  // Save session queue to localStorage
+  const queue = {
+    keys: todayKeys,
+    date: TODAY_KEY(),
+    profile: data.profile || 'adult',
+  };
+  try { localStorage.setItem('em_session_queue', JSON.stringify(queue)); } catch(e) {}
+
+  // Navigate to first uncompleted exercise
+  const nextEx = EXERCISES[remaining[0]];
+  if(nextEx) window.location.href = nextEx.url + '?session=1';
+}
+
 </script>
 </body>
 </html>
