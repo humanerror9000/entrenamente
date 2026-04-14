@@ -674,7 +674,8 @@ function pickDiff(btn,len){
 }
 
 // ── Session flow ──
-let sessionPhase=0; // 0=WR,1=PR,2=SM
+let sessionPhase=0;
+let _fromTransitionCard=false; // 0=WR,1=PR,2=SM
 let sessionScores={wr:{h:0,t:0},pr:{h:0,t:0},sm:{h:0,t:0}};
 
 function startFullSession(){
@@ -689,9 +690,51 @@ function startFullSession(){
 function beginPhase(phase){
   sessionPhase=phase;
   switchTask(phase);
-  if(phase===0){startWR();}
-  else if(phase===1){startPR();}
-  else if(phase===2){startSM();}
+  showCountdownThenStart(phase);
+}
+
+function showCountdownThenStart(phase){
+  // Skip countdown if we just showed a transition card (it had its own preview)
+  if(_fromTransitionCard) {
+    _fromTransitionCard = false;
+    if(phase===0){startWR();}
+    else if(phase===1){startPR();}
+    else if(phase===2){startSM();}
+    return;
+  }
+  const names=['Informe completo','Informe parcial','Coincidencia de cadenas'];
+  const descs=['Memoriza todos los caracteres del destello','Identifica la letra en la posición señalada','¿Son iguales las dos cadenas?'];
+
+  // Remove existing countdown
+  const old = document.getElementById('vp-countdown');
+  if(old) old.remove();
+
+  const ov = document.createElement('div');
+  ov.id = 'vp-countdown';
+  ov.style.cssText = 'position:fixed;inset:0;z-index:8000;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;';
+  ov.innerHTML = `
+    <div style="font-size:11px;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;color:var(--text3);">Modo ${phase+1} de 3</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--text);">${names[phase]}</div>
+    <div style="font-size:15px;color:var(--text2);text-align:center;max-width:280px;">${descs[phase]}</div>
+    <div id="vp-cd-num" style="font-family:'Cormorant Garamond',serif;font-size:96px;font-weight:300;color:var(--violet);line-height:1;margin-top:8px;">3</div>
+  `;
+  document.body.appendChild(ov);
+
+  let n = 3;
+  const tick = setInterval(()=>{
+    n--;
+    const el = document.getElementById('vp-cd-num');
+    if(el) el.textContent = n > 0 ? n : '¡Ya!';
+    if(n <= 0){
+      clearInterval(tick);
+      setTimeout(()=>{
+        ov.remove();
+        if(phase===0){startWR();}
+        else if(phase===1){startPR();}
+        else if(phase===2){startSM();}
+      }, 400);
+    }
+  }, 1000);
 }
 
 function showModeTransition(nextPhase, title, em, desc, previewHTML, btnText){
@@ -710,6 +753,7 @@ function showModeTransition(nextPhase, title, em, desc, previewHTML, btnText){
 function dismissTransition(phase){
   const ov=document.getElementById('mode-transition');
   if(ov) ov.classList.add('hidden');
+  _fromTransitionCard = true;
   beginPhase(phase);
 }
 
@@ -1183,45 +1227,63 @@ function afterSM(){
 function showFinalResults(){
   markComplete();
   releaseWakeLock();
-  setTimeout(()=>{ const b=document.getElementById("vision-session-btn"); if(b&&isInSession()) b.style.display="block"; },100);
+
   const total=sessionScores.wr.h+sessionScores.pr.h+sessionScores.sm.h;
   const maxTotal=WR_TRIALS+PR_TRIALS+SM_TRIALS;
   const pct=Math.round(total/maxTotal*100);
+
   let insight;
   if(pct>=80) insight='<strong>Amplitud visual excelente.</strong> Tu campo de procesamiento paralelo está bien entrenado. En la próxima sesión sube la dificultad en 1 letra.';
   else if(pct>=60) insight='<strong>Progreso sólido.</strong> Mantén esta dificultad durante 3–4 sesiones antes de subir.';
   else insight='<strong>En construcción.</strong> El VAS mejora con práctica diaria. Considera bajar la dificultad si el ejercicio se siente frustrante.';
 
-  let ov=document.getElementById('mode-transition');
-  if(!ov){ ov=document.createElement('div'); ov.id='mode-transition'; ov.className='mode-transition'; document.body.appendChild(ov); }
-  ov.innerHTML=`
-    <div style="font-size:32px;margin-bottom:8px;">🎯</div>
-    <div style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--text);margin-bottom:6px;">Sesión completada</div>
-    <div style="font-size:48px;font-weight:300;font-family:'Cormorant Garamond',serif;color:var(--teal);margin:8px 0;">${pct}%</div>
-    <div style="font-size:14px;color:var(--text3);margin-bottom:16px;">precisión global · ${total}/${maxTotal} correctas</div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%;max-width:320px;margin-bottom:20px;">
-      <div style="background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:12px 8px;text-align:center;">
-        <div style="font-size:20px;font-weight:700;color:var(--text);">${Math.round(sessionScores.wr.h/sessionScores.wr.t*100)}%</div>
-        <div style="font-size:10px;color:var(--text3);margin-top:3px;text-transform:uppercase;letter-spacing:0.06em;">Completo</div>
+  const _next = getSessionNext();
+  const _isLast = !_next || _next === 'done';
+  const _btnLabel = _isLast ? 'Finalizar sesión →' : 'Siguiente ejercicio →';
+
+  // Remove any existing final overlay
+  const existing = document.getElementById('vp-final-overlay');
+  if(existing) existing.remove();
+
+  const ov = document.createElement('div');
+  ov.id = 'vp-final-overlay';
+  ov.style.cssText = 'position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;padding:32px 24px;overflow-y:auto;';
+
+  ov.innerHTML = `
+    <div style="width:100%;max-width:380px;display:flex;flex-direction:column;align-items:center;gap:0;text-align:center;">
+      <div style="font-size:40px;margin-bottom:12px;">🎯</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300;color:var(--text);margin-bottom:6px;">Visión Paralela</div>
+      <div style="font-size:52px;font-weight:300;font-family:'Cormorant Garamond',serif;color:var(--teal);line-height:1;margin:8px 0;">${pct}%</div>
+      <div style="font-size:13px;color:var(--text3);margin-bottom:20px;">precisión global · ${total}/${maxTotal} correctas</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%;margin-bottom:16px;">
+        <div style="background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:12px 8px;">
+          <div style="font-size:20px;font-weight:700;color:var(--text);">${Math.round(sessionScores.wr.h/sessionScores.wr.t*100)}%</div>
+          <div style="font-size:10px;color:var(--text3);margin-top:3px;text-transform:uppercase;letter-spacing:0.06em;">Completo</div>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:12px 8px;">
+          <div style="font-size:20px;font-weight:700;color:var(--text);">${Math.round(sessionScores.pr.h/sessionScores.pr.t*100)}%</div>
+          <div style="font-size:10px;color:var(--text3);margin-top:3px;text-transform:uppercase;letter-spacing:0.06em;">Parcial</div>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:12px 8px;">
+          <div style="font-size:20px;font-weight:700;color:var(--text);">${Math.round(sessionScores.sm.h/sessionScores.sm.t*100)}%</div>
+          <div style="font-size:10px;color:var(--text3);margin-top:3px;text-transform:uppercase;letter-spacing:0.06em;">Coincidencia</div>
+        </div>
       </div>
-      <div style="background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:12px 8px;text-align:center;">
-        <div style="font-size:20px;font-weight:700;color:var(--text);">${Math.round(sessionScores.pr.h/sessionScores.pr.t*100)}%</div>
-        <div style="font-size:10px;color:var(--text3);margin-top:3px;text-transform:uppercase;letter-spacing:0.06em;">Parcial</div>
-      </div>
-      <div style="background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:12px 8px;text-align:center;">
-        <div style="font-size:20px;font-weight:700;color:var(--text);">${Math.round(sessionScores.sm.h/sessionScores.sm.t*100)}%</div>
-        <div style="font-size:10px;color:var(--text3);margin-top:3px;text-transform:uppercase;letter-spacing:0.06em;">Coincidencia</div>
-      </div>
-    </div>
-    <div style="background:var(--purple-d);border:1px solid var(--purple-b);border-radius:11px;padding:14px 16px;font-size:14px;color:var(--text2);line-height:1.65;width:100%;max-width:320px;margin-bottom:20px;text-align:left;">${insight}</div>
-    <button class="session-next-btn" style="display:none;max-width:320px;" onclick="completeAndContinue()" id="vision-session-btn">Siguiente ejercicio →</button>
-    <div style="display:flex;gap:10px;width:100%;max-width:320px;" class="session-hide">
-      <button onclick="location.reload()" style="flex:1;padding:13px;background:transparent;color:var(--text2);border:1.5px solid var(--border2);border-radius:11px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">Repetir</button>
-      <a href="index.html" style="flex:1;padding:13px;background:var(--teal);color:var(--bg);border:none;border-radius:11px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center;">← Inicio</a>
+      <div style="background:var(--violet-d);border:1px solid var(--violet-b);border-radius:11px;padding:14px 16px;font-size:14px;color:var(--text2);line-height:1.65;width:100%;margin-bottom:20px;text-align:left;">${insight}</div>
+      ${isInSession() ? `
+        <button onclick="completeAndContinue()" style="width:100%;padding:16px;background:var(--violet-deep);color:#fff;border:none;border-radius:13px;font-family:'Fredoka','DM Sans',sans-serif;font-size:17px;font-weight:600;cursor:pointer;margin-bottom:10px;">${_btnLabel}</button>
+      ` : `
+        <div style="display:flex;gap:10px;width:100%;">
+          <button onclick="location.reload()" style="flex:1;padding:13px;background:transparent;color:var(--text2);border:1.5px solid var(--border2);border-radius:11px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">Repetir</button>
+          <a href="index.html" style="flex:1;padding:13px;background:var(--teal);color:var(--bg);border:none;border-radius:11px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center;">← Inicio</a>
+        </div>
+      `}
     </div>
   `;
-  ov.classList.remove('hidden');
+
+  document.body.appendChild(ov);
 }
+
 
 function finishWR() {
   wrRunning=false;

@@ -731,6 +731,18 @@ function showSessionNextIfNeeded() {
   document.querySelector('main')?.appendChild(btn);
 }
 
+
+// Update session button labels to reflect position in queue
+function updateSessionBtnLabels() {
+  if(!isInSession()) return;
+  const next = getSessionNext();
+  const isLast = !next || next === 'done';
+  const label = isLast ? 'Finalizar sesión →' : 'Siguiente ejercicio →';
+  document.querySelectorAll('.session-next-btn').forEach(b => {
+    b.textContent = label;
+  });
+}
+
 </script>
 
 
@@ -1419,6 +1431,7 @@ buildKDBoard(KD_COUNT);
 // ── Show session navigation UI ──
 function showSessionUI() {
   if(!isInSession()) return;
+  updateSessionBtnLabels();
   // Show the next button
   document.querySelectorAll('.session-next-btn').forEach(b => {
     b.style.cssText = 'display:block!important';

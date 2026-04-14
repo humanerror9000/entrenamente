@@ -661,6 +661,18 @@ function goNextOrHome(homeUrl) {
   }
 }
 
+
+// Update session button labels to reflect position in queue
+function updateSessionBtnLabels() {
+  if(!isInSession()) return;
+  const next = getSessionNext();
+  const isLast = !next || next === 'done';
+  const label = isLast ? 'Finalizar sesión →' : 'Siguiente ejercicio →';
+  document.querySelectorAll('.session-next-btn').forEach(b => {
+    b.textContent = label;
+  });
+}
+
 </script>
 
 
@@ -1203,6 +1215,7 @@ setStage(0);
 // ── Show session navigation UI ──
 function showSessionUI() {
   if(!isInSession()) return;
+  updateSessionBtnLabels();
   // Show the next button
   document.querySelectorAll('.session-next-btn').forEach(b => {
     b.style.cssText = 'display:block!important';
