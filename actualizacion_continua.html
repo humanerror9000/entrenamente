@@ -605,8 +605,6 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
   -webkit-tap-highlight-color: transparent;
 }
 .session-next-btn:hover { background: var(--violet); }
-.in-session .session-next-btn { display: block; }
-.in-session .session-hide { display: none !important; }
 
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -711,6 +709,7 @@ function markComplete() {
     if(!all[today].includes('continua')) all[today].push('continua');
     localStorage.setItem('em_completions', JSON.stringify(all));
   } catch(e) {}
+  showSessionUI();
 }
 
 function completeAndContinue() {
@@ -1051,6 +1050,7 @@ function makeResponseRow(labels, types) {
 // Game logic
 // ─────────────────────────────────────────
 function startGame() {
+  requestWakeLock();
   trialIdx=0; history=[]; responses=[];
   hits=0; misses=0; falseAlarms=0; correctRejections=0;
   respLocked=false;
@@ -1217,6 +1217,7 @@ function abortGame() {
 // End game
 // ─────────────────────────────────────────
 function endGame() {
+  releaseWakeLock();
   clearTimeout(gameTimer);
   hideStimulus();
 
@@ -1267,6 +1268,35 @@ document.addEventListener('keydown', e=>{
 });
 
 setStage(0);
+
+// ── Show session navigation UI ──
+function showSessionUI() {
+  if(!isInSession()) return;
+  // Show the next button
+  document.querySelectorAll('.session-next-btn').forEach(b => {
+    b.style.cssText = 'display:block!important';
+  });
+  // Hide the repeat/reset buttons
+  document.querySelectorAll('.session-hide').forEach(b => {
+    b.style.cssText = 'display:none!important';
+  });
+}
+
+// ── Wake Lock: prevent screen sleep during exercise ──
+let _wakeLock = null;
+async function requestWakeLock() {
+  if(!('wakeLock' in navigator)) return;
+  try {
+    _wakeLock = await navigator.wakeLock.request('screen');
+  } catch(e) {}
+}
+function releaseWakeLock() {
+  if(_wakeLock) { _wakeLock.release().catch(()=>{}); _wakeLock = null; }
+}
+// Re-acquire on tab visibility change
+document.addEventListener('visibilitychange', () => {
+  if(document.visibilityState === 'visible') requestWakeLock();
+});
 </script>
 </body>
 </html>

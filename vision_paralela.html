@@ -583,8 +583,6 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
   -webkit-tap-highlight-color: transparent;
 }
 .session-next-btn:hover { background: var(--violet); }
-.in-session .session-next-btn { display: block; }
-.in-session .session-hide { display: none !important; }
 
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -680,6 +678,7 @@ let sessionPhase=0; // 0=WR,1=PR,2=SM
 let sessionScores={wr:{h:0,t:0},pr:{h:0,t:0},sm:{h:0,t:0}};
 
 function startFullSession(){
+  requestWakeLock();
   // Set lengths based on user choice
   wrLen=sessionLen; prLen=sessionLen; smLen=sessionLen;
   document.getElementById('ready-screen').classList.add('hidden');
@@ -726,6 +725,7 @@ function markComplete() {
     if(!all[today].includes('vision')) all[today].push('vision');
     localStorage.setItem('em_completions', JSON.stringify(all));
   } catch(e) {}
+  showSessionUI();
 }
 
 function completeAndContinue() {
@@ -1181,6 +1181,7 @@ function afterSM(){
 }
 
 function showFinalResults(){
+  releaseWakeLock();
   setTimeout(()=>{ const b=document.getElementById("vision-session-btn"); if(b&&isInSession()) b.style.display="block"; },100);
   const total=sessionScores.wr.h+sessionScores.pr.h+sessionScores.sm.h;
   const maxTotal=WR_TRIALS+PR_TRIALS+SM_TRIALS;
@@ -1468,6 +1469,35 @@ function finishSM() {
 
 // Init
 initWR(); initPR(); initSM();
+
+// ── Show session navigation UI ──
+function showSessionUI() {
+  if(!isInSession()) return;
+  // Show the next button
+  document.querySelectorAll('.session-next-btn').forEach(b => {
+    b.style.cssText = 'display:block!important';
+  });
+  // Hide the repeat/reset buttons
+  document.querySelectorAll('.session-hide').forEach(b => {
+    b.style.cssText = 'display:none!important';
+  });
+}
+
+// ── Wake Lock: prevent screen sleep during exercise ──
+let _wakeLock = null;
+async function requestWakeLock() {
+  if(!('wakeLock' in navigator)) return;
+  try {
+    _wakeLock = await navigator.wakeLock.request('screen');
+  } catch(e) {}
+}
+function releaseWakeLock() {
+  if(_wakeLock) { _wakeLock.release().catch(()=>{}); _wakeLock = null; }
+}
+// Re-acquire on tab visibility change
+document.addEventListener('visibilitychange', () => {
+  if(document.visibilityState === 'visible') requestWakeLock();
+});
 </script>
 </body>
 </html>

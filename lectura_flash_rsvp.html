@@ -527,8 +527,6 @@ details.sci[open] summary{border-bottom:1px solid var(--border);}
   -webkit-tap-highlight-color: transparent;
 }
 .session-next-btn:hover { background: var(--violet); }
-.in-session .session-next-btn { display: block; }
-.in-session .session-hide { display: none !important; }
 
 </style>
 </head>
@@ -616,6 +614,7 @@ function markComplete() {
     if(!all[today].includes('flash')) all[today].push('flash');
     localStorage.setItem('em_completions', JSON.stringify(all));
   } catch(e) {}
+  showSessionUI();
 }
 
 function completeAndContinue() {
@@ -973,6 +972,7 @@ function orpSplit(word) {
 // RSVP engine
 // ──────────────────────────────────
 function startRSVP() {
+  requestWakeLock();
   const text = TEXTS[selectedTextIdx];
   const tokens = presentMode === 'word' ? text.words : text.phrases;
   totalWords = text.words.length;
@@ -1155,6 +1155,7 @@ function answerQ(qi, chosen, correct) {
 }
 
 function showResults() {
+  releaseWakeLock();
   const qs = TEXTS[selectedTextIdx].questions;
   const total = qs.length;
   const pct = Math.round((correctCount / total) * 100);
@@ -1195,6 +1196,35 @@ function resetAll() {
 
 // Init
 setStage(0);
+
+// ── Show session navigation UI ──
+function showSessionUI() {
+  if(!isInSession()) return;
+  // Show the next button
+  document.querySelectorAll('.session-next-btn').forEach(b => {
+    b.style.cssText = 'display:block!important';
+  });
+  // Hide the repeat/reset buttons
+  document.querySelectorAll('.session-hide').forEach(b => {
+    b.style.cssText = 'display:none!important';
+  });
+}
+
+// ── Wake Lock: prevent screen sleep during exercise ──
+let _wakeLock = null;
+async function requestWakeLock() {
+  if(!('wakeLock' in navigator)) return;
+  try {
+    _wakeLock = await navigator.wakeLock.request('screen');
+  } catch(e) {}
+}
+function releaseWakeLock() {
+  if(_wakeLock) { _wakeLock.release().catch(()=>{}); _wakeLock = null; }
+}
+// Re-acquire on tab visibility change
+document.addEventListener('visibilitychange', () => {
+  if(document.visibilityState === 'visible') requestWakeLock();
+});
 </script>
 </body>
 </html>

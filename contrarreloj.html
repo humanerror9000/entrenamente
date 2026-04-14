@@ -567,8 +567,6 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
   -webkit-tap-highlight-color: transparent;
 }
 .session-next-btn:hover { background: var(--violet); }
-.in-session .session-next-btn { display: block; }
-.in-session .session-hide { display: none !important; }
 
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -614,6 +612,7 @@ function markComplete() {
     if(!all[today].includes('contra')) all[today].push('contra');
     localStorage.setItem('em_completions', JSON.stringify(all));
   } catch(e) {}
+  showSessionUI();
 }
 
 function completeAndContinue() {
@@ -881,6 +880,7 @@ function setStage(n) {
 // STAGE 0: Calibration
 // ──────────────────────────────────────────
 function startCalib() {
+  requestWakeLock();
   calibIdx=0; calibTimes=[]; calibCorrect=0;
   document.getElementById('calib-start-btn').style.display='none';
   document.getElementById('calib-space-btn').style.display='';
@@ -1148,6 +1148,7 @@ function applyRAPAdaptation() {
 }
 
 function showResults() {
+  releaseWakeLock();
   document.getElementById('end-screen').style.display='block';
   document.getElementById('end-screen').scrollIntoView({behavior:'smooth',block:'center'});
   const acc = Math.round(qCorrect/questionItems.length*100);
@@ -1197,6 +1198,35 @@ function restartSession() {
 
 // Init
 setStage(0);
+
+// ── Show session navigation UI ──
+function showSessionUI() {
+  if(!isInSession()) return;
+  // Show the next button
+  document.querySelectorAll('.session-next-btn').forEach(b => {
+    b.style.cssText = 'display:block!important';
+  });
+  // Hide the repeat/reset buttons
+  document.querySelectorAll('.session-hide').forEach(b => {
+    b.style.cssText = 'display:none!important';
+  });
+}
+
+// ── Wake Lock: prevent screen sleep during exercise ──
+let _wakeLock = null;
+async function requestWakeLock() {
+  if(!('wakeLock' in navigator)) return;
+  try {
+    _wakeLock = await navigator.wakeLock.request('screen');
+  } catch(e) {}
+}
+function releaseWakeLock() {
+  if(_wakeLock) { _wakeLock.release().catch(()=>{}); _wakeLock = null; }
+}
+// Re-acquire on tab visibility change
+document.addEventListener('visibilitychange', () => {
+  if(document.visibilityState === 'visible') requestWakeLock();
+});
 </script>
 </body>
 </html>

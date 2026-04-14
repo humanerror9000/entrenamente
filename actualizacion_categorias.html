@@ -554,8 +554,6 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
   -webkit-tap-highlight-color: transparent;
 }
 .session-next-btn:hover { background: var(--violet); }
-.in-session .session-next-btn { display: block; }
-.in-session .session-hide { display: none !important; }
 
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -661,6 +659,7 @@ function markComplete() {
     if(!all[today].includes('cats')) all[today].push('cats');
     localStorage.setItem('em_completions', JSON.stringify(all));
   } catch(e) {}
+  showSessionUI();
 }
 
 function completeAndContinue() {
@@ -907,6 +906,7 @@ const DIFF_CATS = {
 let activeCats = ['animals','professions']; // default easy
 
 function startGame() {
+  requestWakeLock();
   activeCats = DIFF_CATS[difficulty] || CAT_KEYS;
   roundIdx=0; totalAnswered=0; totalCorrect=0; roundResults=[];
   const hr=document.getElementById('hdr-round'); if(hr) hr.textContent='1/'+totalRounds;
@@ -1149,6 +1149,35 @@ function endSession() {
 function shuffle(a){return [...a].sort(()=>Math.random()-0.5);}
 
 setStage(0);
+
+// ── Show session navigation UI ──
+function showSessionUI() {
+  if(!isInSession()) return;
+  // Show the next button
+  document.querySelectorAll('.session-next-btn').forEach(b => {
+    b.style.cssText = 'display:block!important';
+  });
+  // Hide the repeat/reset buttons
+  document.querySelectorAll('.session-hide').forEach(b => {
+    b.style.cssText = 'display:none!important';
+  });
+}
+
+// ── Wake Lock: prevent screen sleep during exercise ──
+let _wakeLock = null;
+async function requestWakeLock() {
+  if(!('wakeLock' in navigator)) return;
+  try {
+    _wakeLock = await navigator.wakeLock.request('screen');
+  } catch(e) {}
+}
+function releaseWakeLock() {
+  if(_wakeLock) { _wakeLock.release().catch(()=>{}); _wakeLock = null; }
+}
+// Re-acquire on tab visibility change
+document.addEventListener('visibilitychange', () => {
+  if(document.visibilityState === 'visible') requestWakeLock();
+});
 </script>
 </body>
 </html>
