@@ -548,6 +548,28 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 /* Keep teal for success/feedback states */
 .btn-teal.btn-success { background: var(--teal) !important; }
 
+
+/* Session next button — shown only during session flow */
+.session-next-btn {
+  display: none;
+  width: 100%;
+  padding: 16px;
+  background: var(--violet-deep);
+  color: #fff;
+  border: none;
+  border-radius: 13px;
+  font-family: 'Fredoka', 'DM Sans', sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 10px;
+  -webkit-tap-highlight-color: transparent;
+}
+.session-next-btn:hover { background: var(--violet); }
+.in-session .session-next-btn { display: block; }
+.in-session .session-hide { display: none !important; }
+
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -776,7 +798,8 @@ function goNextOrHome(homeUrl) {
       <div style="font-size:40px;margin-bottom:12px;">🎯</div>
       <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--text);margin-bottom:8px;">Sesión completada</div>
       <div style="font-size:15px;color:var(--text2);line-height:1.65;margin-bottom:24px;">Tu velocidad se ha ajustado para la próxima sesión. La consistencia es la clave del progreso.</div>
-      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+      <button class="session-next-btn" onclick="completeAndContinue()">Siguiente ejercicio →</button>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;" class="session-hide">
         <button onclick="restartSession()" style="padding:13px 24px;background:var(--teal);color:var(--bg);border:none;border-radius:11px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;">Nueva sesión →</button>
         <a href="index.html" onclick="event.preventDefault(); completeAndContinue();" style="padding:13px 24px;background:transparent;color:var(--text2);border:1.5px solid var(--border2);border-radius:11px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;">← Inicio</a>
       </div>

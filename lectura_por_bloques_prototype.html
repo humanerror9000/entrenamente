@@ -545,6 +545,28 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 /* Keep teal for success/feedback states */
 .btn-teal.btn-success { background: var(--teal) !important; }
 
+
+/* Session next button — shown only during session flow */
+.session-next-btn {
+  display: none;
+  width: 100%;
+  padding: 16px;
+  background: var(--violet-deep);
+  color: #fff;
+  border: none;
+  border-radius: 13px;
+  font-family: 'Fredoka', 'DM Sans', sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 10px;
+  -webkit-tap-highlight-color: transparent;
+}
+.session-next-btn:hover { background: var(--violet); }
+.in-session .session-next-btn { display: block; }
+.in-session .session-hide { display: none !important; }
+
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -600,6 +622,7 @@ function dismissReady(){ document.getElementById('ready-screen').classList.add('
 
 // ── Session completion tracking ──
 function markComplete() {
+  showSessionNextIfNeeded();
   try {
     const today = new Date().toISOString().slice(0,10);
     const all = JSON.parse(localStorage.getItem('em_completions') || '{}');
@@ -653,6 +676,26 @@ function goNextOrHome(homeUrl) {
   } else {
     window.location.href = next;
   }
+}
+
+
+// Show session next button on results if in session
+function showSessionNextIfNeeded() {
+  if(!isInSession()) return;
+  const existing = document.querySelector('.session-next-btn');
+  if(existing) { existing.style.display='block'; return; }
+  const btn = document.createElement('button');
+  btn.className = 'session-next-btn';
+  btn.textContent = 'Siguiente ejercicio →';
+  btn.onclick = completeAndContinue;
+  // Find results container and append
+  const targets = ['res-body','results-inner','result-wrap','s2','stage-2','stage-results'];
+  for(const t of targets) {
+    const el = document.getElementById(t);
+    if(el) { el.appendChild(btn); return; }
+  }
+  // Fallback: append to main
+  document.querySelector('main')?.appendChild(btn);
 }
 
 </script>

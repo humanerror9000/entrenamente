@@ -564,6 +564,28 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 /* Keep teal for success/feedback states */
 .btn-teal.btn-success { background: var(--teal) !important; }
 
+
+/* Session next button — shown only during session flow */
+.session-next-btn {
+  display: none;
+  width: 100%;
+  padding: 16px;
+  background: var(--violet-deep);
+  color: #fff;
+  border: none;
+  border-radius: 13px;
+  font-family: 'Fredoka', 'DM Sans', sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 10px;
+  -webkit-tap-highlight-color: transparent;
+}
+.session-next-btn:hover { background: var(--violet); }
+.in-session .session-next-btn { display: block; }
+.in-session .session-hide { display: none !important; }
+
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -1159,6 +1181,7 @@ function afterSM(){
 }
 
 function showFinalResults(){
+  setTimeout(()=>{ const b=document.getElementById("vision-session-btn"); if(b&&isInSession()) b.style.display="block"; },100);
   const total=sessionScores.wr.h+sessionScores.pr.h+sessionScores.sm.h;
   const maxTotal=WR_TRIALS+PR_TRIALS+SM_TRIALS;
   const pct=Math.round(total/maxTotal*100);
@@ -1189,9 +1212,10 @@ function showFinalResults(){
       </div>
     </div>
     <div style="background:var(--purple-d);border:1px solid var(--purple-b);border-radius:11px;padding:14px 16px;font-size:14px;color:var(--text2);line-height:1.65;width:100%;max-width:320px;margin-bottom:20px;text-align:left;">${insight}</div>
-    <div style="display:flex;gap:10px;width:100%;max-width:320px;">
+    <button class="session-next-btn" style="display:none;max-width:320px;" onclick="completeAndContinue()" id="vision-session-btn">Siguiente ejercicio →</button>
+    <div style="display:flex;gap:10px;width:100%;max-width:320px;" class="session-hide">
       <button onclick="location.reload()" style="flex:1;padding:13px;background:transparent;color:var(--text2);border:1.5px solid var(--border2);border-radius:11px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">Repetir</button>
-      <a href="index.html" onclick="event.preventDefault(); completeAndContinue();" style="flex:1;padding:13px;background:var(--teal);color:var(--bg);border:none;border-radius:11px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center;">← Inicio</a>
+      <a href="index.html" style="flex:1;padding:13px;background:var(--teal);color:var(--bg);border:none;border-radius:11px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center;">← Inicio</a>
     </div>
   `;
   ov.classList.remove('hidden');

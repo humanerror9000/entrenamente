@@ -535,6 +535,28 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 /* Keep teal for success/feedback states */
 .btn-teal.btn-success { background: var(--teal) !important; }
 
+
+/* Session next button — shown only during session flow */
+.session-next-btn {
+  display: none;
+  width: 100%;
+  padding: 16px;
+  background: var(--violet-deep);
+  color: #fff;
+  border: none;
+  border-radius: 13px;
+  font-family: 'Fredoka', 'DM Sans', sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 10px;
+  -webkit-tap-highlight-color: transparent;
+}
+.session-next-btn:hover { background: var(--violet); }
+.in-session .session-next-btn { display: block; }
+.in-session .session-hide { display: none !important; }
+
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -1113,7 +1135,8 @@ function endSession() {
     </div>
     <div class="insight">${insight}</div>
     <div class="res-btns">
-      <button class="btn btn-ghost" onclick="setStage(0)">← Cambiar dificultad</button>
+      <button class="btn btn-ghost session-hide" onclick="setStage(0)">← Cambiar dificultad</button>
+      <button class="session-next-btn" onclick="completeAndContinue()">Siguiente ejercicio →</button>
       <button class="btn btn-teal" onclick="startGame()">Repetir sesión →</button>
     </div>
   `;

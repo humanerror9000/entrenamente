@@ -508,6 +508,28 @@ details.sci[open] summary{border-bottom:1px solid var(--border);}
 /* Keep teal for success/feedback states */
 .btn-teal.btn-success { background: var(--teal) !important; }
 
+
+/* Session next button — shown only during session flow */
+.session-next-btn {
+  display: none;
+  width: 100%;
+  padding: 16px;
+  background: var(--violet-deep);
+  color: #fff;
+  border: none;
+  border-radius: 13px;
+  font-family: 'Fredoka', 'DM Sans', sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 10px;
+  -webkit-tap-highlight-color: transparent;
+}
+.session-next-btn:hover { background: var(--violet); }
+.in-session .session-next-btn { display: block; }
+.in-session .session-hide { display: none !important; }
+
 </style>
 </head>
 <body>
@@ -784,9 +806,10 @@ function goNextOrHome(homeUrl) {
       </div>
       <div class="insight" id="insight-box"></div>
       <div class="results-btns">
-        <button class="btn btn-ghost" onclick="resetAll()">← Nuevo texto</button>
-        <button class="btn btn-teal" onclick="resetAll()">Repetir →</button>
+        <button class="btn btn-ghost session-hide" onclick="resetAll()">← Nuevo texto</button>
+        <button class="btn btn-teal session-hide" onclick="resetAll()">Repetir →</button>
       </div>
+      <button class="session-next-btn" onclick="completeAndContinue()">Siguiente ejercicio →</button>
     </div>
   </div>
 
