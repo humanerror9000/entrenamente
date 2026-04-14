@@ -1156,6 +1156,7 @@ function answerQ(qi, chosen, correct) {
 
 function showResults() {
   releaseWakeLock();
+  markComplete();
   const qs = TEXTS[selectedTextIdx].questions;
   const total = qs.length;
   const pct = Math.round((correctCount / total) * 100);

@@ -1181,6 +1181,7 @@ function endSession() {
     return;
   }
   // Otherwise show real results (reading span just finished)
+  markComplete();
   const acc = sessionPossibleTotal>0 ? Math.round(sessionPartialTotal/sessionPossibleTotal*100) : 0;
   const spanScore = (sessionPartialTotal/TOTAL_TRIALS).toFixed(1);
   const procAcc = procTotal>0 ? Math.round(procCorrect/procTotal*100) : 0;

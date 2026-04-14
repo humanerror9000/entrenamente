@@ -1181,6 +1181,7 @@ function afterSM(){
 }
 
 function showFinalResults(){
+  markComplete();
   releaseWakeLock();
   setTimeout(()=>{ const b=document.getElementById("vision-session-btn"); if(b&&isInSession()) b.style.display="block"; },100);
   const total=sessionScores.wr.h+sessionScores.pr.h+sessionScores.sm.h;

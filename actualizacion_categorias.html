@@ -1110,6 +1110,7 @@ function abortGame() { clearTimeout(streamTimer); setStage(0); }
 // Results
 // ─────────────────────────────
 function endSession() {
+  markComplete();
   clearTimeout(streamTimer);
   const acc=totalAnswered>0?Math.round(totalCorrect/totalAnswered*100):0;
 

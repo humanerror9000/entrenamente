@@ -1164,6 +1164,7 @@ function checkRecon() {
 function resetRecon() { initRecon(); }
 
 function finishSession() {
+  markComplete();
   document.getElementById('main-progress').style.width = '100%';
   const _sc=document.getElementById('streak-count'); if(_sc) _sc.textContent='8';
   alert('¡Sesión completada! Mañana: Modo 3 con textos más complejos.');

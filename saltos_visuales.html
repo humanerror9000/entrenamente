@@ -1037,6 +1037,7 @@ function jumpHit(idx) {
 
 function finishJump() {
   jRunning=false;
+  markComplete();
   const avgRT = jHits>0 ? Math.round(jTotalRT/jHits) : 0;
   const acc = Math.round(jHits/J_ROUNDS*100);
   document.getElementById('jump-instr').innerHTML=`Completado — Precisión: <strong style="color:var(--teal)">${acc}%</strong> · TR medio: <strong style="color:var(--teal)">${avgRT}ms</strong>`;
@@ -1289,6 +1290,7 @@ function spanTap(n, target, cell) {
 
 function finishSpan() {
   spRunning=false;
+  markComplete();
   const acc=Math.round(spHits/SP_MAX_TRIALS*100);
   document.getElementById('sp-grid').innerHTML='';
   document.getElementById('sp-target').style.display='none';
@@ -1392,6 +1394,7 @@ function kdTap(n, el) {
 function finishKD() {
   clearInterval(kdTicker);
   kdRunning=false;
+  markComplete();
   const elapsed=((performance.now()-kdStartTime)/1000).toFixed(1);
   if(!kdBest || parseFloat(elapsed)<parseFloat(kdBest)) kdBest=elapsed;
   document.getElementById('kd-best').textContent=kdBest+'s';
