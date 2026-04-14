@@ -1193,7 +1193,6 @@ function endSession() {
     return;
   }
   // Otherwise show real results (reading span just finished)
-  markComplete();
   const acc = sessionPossibleTotal>0 ? Math.round(sessionPartialTotal/sessionPossibleTotal*100) : 0;
   const spanScore = (sessionPartialTotal/TOTAL_TRIALS).toFixed(1);
   const procAcc = procTotal>0 ? Math.round(procCorrect/procTotal*100) : 0;
@@ -1242,6 +1241,8 @@ function endSession() {
     </div>
   `;
   setStage(3);
+  markComplete();
+  showSessionOverlay();
 }
 
 function resetSession() {
@@ -1286,5 +1287,81 @@ document.addEventListener('visibilitychange', () => {
   if(document.visibilityState === 'visible') requestWakeLock();
 });
 </script>
+
+<script>
+// ── Session navigation ──
+function getSessionNext() {
+  try {
+    const q = JSON.parse(localStorage.getItem('em_session_queue')||'null');
+    if(!q) return null;
+    const today = new Date().toISOString().slice(0,10);
+    if(q.date !== today) return null;
+    const all = JSON.parse(localStorage.getItem('em_completions')||'{}');
+    const done = all[today] || [];
+    const remaining = q.keys.filter(function(k){ return !done.includes(k); });
+    if(remaining.length === 0) return 'done';
+    const urls = {
+      flash:'lectura_flash_rsvp.html',bloques:'lectura_por_bloques_prototype.html',
+      contra:'contrarreloj.html',vision:'vision_paralela.html',
+      saltos:'saltos_visuales.html',memoria:'memoria_activa.html',
+      cats:'actualizacion_categorias.html',continua:'actualizacion_continua.html'
+    };
+    return urls[remaining[0]] ? urls[remaining[0]] + '?session=1' : null;
+  } catch(e) { return null; }
+}
+function isInSession() {
+  return new URLSearchParams(window.location.search).get('session') === '1';
+}
+function completeAndContinue() {
+  markComplete();
+  var next = getSessionNext();
+  setTimeout(function(){
+    if(!next || next === 'done') window.location.href = 'index.html?done=session';
+    else window.location.href = next;
+  }, 400);
+}
+function showSessionOverlay() {
+  if(!isInSession()) return;
+  var existing = document.getElementById('ma-session-overlay');
+  if(existing) existing.remove();
+  var next = getSessionNext();
+  var isLast = !next || next === 'done';
+  var ov = document.createElement('div');
+  ov.id = 'ma-session-overlay';
+  ov.style.cssText = 'position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center;';
+  var wrap = document.createElement('div');
+  wrap.style.cssText = 'width:100%;max-width:360px;display:flex;flex-direction:column;align-items:center;gap:16px;';
+  var icon = document.createElement('div');
+  icon.style.cssText = 'font-size:44px;';
+  icon.textContent = '✓';
+  var title = document.createElement('div');
+  title.style.cssText = "font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300;color:var(--text);";
+  title.textContent = 'Memoria Activa';
+  var sub = document.createElement('div');
+  sub.style.cssText = 'font-size:15px;color:var(--text2);margin-top:4px;';
+  sub.textContent = 'Ejercicio completado';
+  var btn = document.createElement('button');
+  btn.style.cssText = "width:100%;padding:16px;background:var(--violet-deep);color:#fff;border:none;border-radius:13px;font-family:'Fredoka','DM Sans',sans-serif;font-size:17px;font-weight:600;cursor:pointer;margin-top:8px;";
+  btn.textContent = isLast ? 'Finalizar sesión →' : 'Siguiente ejercicio →';
+  btn.onclick = completeAndContinue;
+  wrap.appendChild(icon); wrap.appendChild(title);
+  wrap.appendChild(sub); wrap.appendChild(btn);
+  ov.appendChild(wrap);
+  document.body.appendChild(ov);
+}
+// ── Wake Lock ──
+var _wakeLock = null;
+function requestWakeLock() {
+  if(!('wakeLock' in navigator)) return;
+  navigator.wakeLock.request('screen').then(function(wl){ _wakeLock = wl; }).catch(function(){});
+}
+function releaseWakeLock() {
+  if(_wakeLock) { _wakeLock.release().catch(function(){}); _wakeLock = null; }
+}
+document.addEventListener('visibilitychange', function(){
+  if(document.visibilityState === 'visible') requestWakeLock();
+});
+</script>
+
 </body>
 </html>
