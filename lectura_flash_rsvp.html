@@ -1061,8 +1061,9 @@ function scheduleNext(tokens, allWords) {
     document.getElementById('rsvp-context').textContent = ctx;
   } else {
     const el = document.getElementById('rsvp-phrase');
+    clearTimeout(el._fadeT);
     el.style.opacity = '0';
-    setTimeout(() => { el.textContent = displayText; el.style.opacity = '1'; }, 80);
+    el._fadeT = setTimeout(() => { el.textContent = displayText; el.style.opacity = '1'; }, 80);
   }
 
   // Update progress
