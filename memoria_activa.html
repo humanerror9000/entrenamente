@@ -532,7 +532,12 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
   </div>
 </div>
 <script>
-function dismissReady(){ document.getElementById('ready-screen').classList.add('hidden'); }
+function dismissReady(){
+  document.getElementById('ready-screen').classList.add('hidden');
+  if(typeof requestWakeLock==='function') requestWakeLock();
+  setStage(1);
+  startSession();
+}
 
 // Mode transition between span types
 function showSpanTransition(){

@@ -549,11 +549,28 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
   <div class="ready-inner">
     <div class="ready-title"><em>Contra</em>reloj</div>
     <div class="ready-sub">El texto se desvanece mientras lees — sigue el ritmo.</div>
+    
+    <div id="rdy-calib-note" style="width:100%;padding:12px 16px;background:var(--card);border:1.5px solid var(--border2);border-radius:11px;margin-bottom:20px;text-align:left;">
+      <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:4px;" id="rdy-calib-title">Primera vez</div>
+      <div style="font-size:13px;color:var(--text3);line-height:1.5;" id="rdy-calib-desc">Primero medimos tu ritmo de lectura natural — sin presión. Solo tarda un momento.</div>
+    </div>
     <button class="ready-btn" onclick="dismissReady()">▶ Empecemos</button>
     <div class="ready-hint">Modo inicial: Párrafo completo — el más suave para empezar</div>
   </div>
 </div>
-<script>function dismissReady(){ document.getElementById('ready-screen').classList.add('hidden'); }
+<script>function dismissReady(){
+  document.getElementById('ready-screen').classList.add('hidden');
+  const saved = localStorage.getItem('em_contra_wpm');
+  if(saved){
+    // Returning user — skip calibration, use saved pace
+    calibratedWpm = parseInt(saved);
+  try{ localStorage.setItem('em_contra_wpm', calibratedWpm); }catch(e){}
+    setStage(1);
+  } else {
+    // First visit — go through calibration
+    setStage(0);
+  }
+}
 // ── Session completion tracking ──
 function markComplete() {
   try {
@@ -1192,6 +1209,18 @@ function releaseWakeLock() {
 document.addEventListener('visibilitychange', () => {
   if(document.visibilityState === 'visible') requestWakeLock();
 });
+
+(function updateContraHint(){
+  const saved = localStorage.getItem('em_contra_wpm');
+  const title = document.getElementById('rdy-calib-title');
+  const desc = document.getElementById('rdy-calib-desc');
+  if(saved && title && desc){
+    title.textContent = 'Ritmo guardado — ' + saved + ' ppm';
+    desc.textContent = 'Comenzamos directamente con tu ritmo anterior. Puedes recalibrar desde el ejercicio.';
+    title.style.color = 'var(--teal)';
+  }
+})();
+
 </script>
 
 <div style="position:fixed;bottom:0;left:0;right:0;z-index:40;display:flex;justify-content:center;align-items:center;padding:10px 20px 20px;pointer-events:none;">

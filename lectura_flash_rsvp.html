@@ -518,6 +518,24 @@ details.sci[open] summary{border-bottom:1px solid var(--border);}
         </div>
       </div>
     </div>
+    
+    <div style="width:100%;margin-bottom:20px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);">Velocidad</span>
+        <span style="font-family:'Fredoka',sans-serif;font-size:18px;font-weight:600;color:var(--violet);"><span id="rdy-speed-val">150</span> ppm</span>
+      </div>
+      <input id="rdy-speed-slider" type="range" min="100" max="350" step="25" value="150"
+        oninput="document.getElementById('rdy-speed-val').textContent=this.value"
+        style="width:100%;accent-color:var(--violet);">
+    </div>
+    <div style="width:100%;margin-bottom:24px;">
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:8px;">Texto</div>
+      <select id="rdy-text-sel" style="width:100%;padding:12px 14px;background:var(--card);border:1.5px solid var(--border2);border-radius:11px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;outline:none;cursor:pointer;">
+        <option value="0">Un día en el parque</option>
+<option value="1">La biodiversidad marina</option>
+<option value="2">Economía circular en América Latina</option>
+      </select>
+    </div>
     <button class="ready-btn" onclick="dismissReady()">▶ Empecemos</button>
     <div class="ready-hint">Puedes pausar en cualquier momento</div>
   </div>
@@ -540,7 +558,13 @@ details.sci[open] summary{border-bottom:1px solid var(--border);}
 })();
 function dismissReady(){
   window._stopRdy && window._stopRdy();
+  const sel = document.getElementById('rdy-text-sel');
+  if(sel) selectedTextIdx = parseInt(sel.value)||0;
+  const spd = document.getElementById('rdy-speed-slider');
+  if(spd){ currentWpm=parseInt(spd.value)||150; syncSpeed(spd.value); }
   document.getElementById('ready-screen').classList.add('hidden');
+  setStage(1);
+  startRSVP();
 }
 
 // ── Session completion tracking ──

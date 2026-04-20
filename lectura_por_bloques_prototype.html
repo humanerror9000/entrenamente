@@ -551,12 +551,35 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
   <div class="ready-inner">
     <div class="ready-title">Lectura por <em>Bloques</em></div>
     <div class="ready-sub">Lee grupos de palabras como una sola unidad.</div>
+    
+    <div style="width:100%;margin-bottom:16px;" id="rdy-mode-wrap">
+      
+      <button onclick="selectBloqueMode(0,this)" style="width:100%;padding:13px 16px;background:var(--card);border:1.5px solid var(--border2);border-radius:11px;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;text-align:left;cursor:pointer;transition:all 0.15s;margin-bottom:8px;" id="rdy-mode-0">
+        <span style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:2px;">Modo 1</span>
+        Modo 1Reconocimiento guiado
+      </button>
+      <button onclick="selectBloqueMode(1,this)" style="width:100%;padding:13px 16px;background:var(--card);border:1.5px solid var(--border2);border-radius:11px;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;text-align:left;cursor:pointer;transition:all 0.15s;margin-bottom:8px;" id="rdy-mode-1">
+        <span style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:2px;">Modo 2</span>
+        Modo 2Análisis activo
+      </button>
+      <button onclick="selectBloqueMode(2,this)" style="width:100%;padding:13px 16px;background:var(--card);border:1.5px solid var(--border2);border-radius:11px;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;text-align:left;cursor:pointer;transition:all 0.15s;margin-bottom:8px;" id="rdy-mode-2">
+        <span style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:2px;">Modo 3</span>
+        Modo 3Flash por bloques
+      </button>
+      <button onclick="selectBloqueMode(3,this)" style="width:100%;padding:13px 16px;background:var(--card);border:1.5px solid var(--border2);border-radius:11px;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;text-align:left;cursor:pointer;transition:all 0.15s;margin-bottom:8px;" id="rdy-mode-3">
+        <span style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:2px;">Modo 4</span>
+        Modo 4Reconstrucción
+      </button>
+    </div>
     <button class="ready-btn" onclick="dismissReady()">▶ Empecemos</button>
     <div class="ready-hint">Empieza por el Modo 1 — puedes cambiar cuando quieras</div>
   </div>
 </div>
 <script>
-function dismissReady(){ document.getElementById('ready-screen').classList.add('hidden'); }
+function dismissReady(){
+  document.getElementById('ready-screen').classList.add('hidden');
+  switchMode(_rdyBloqueMode);
+}
 
 // ── Session completion tracking ──
 function markComplete() {
@@ -1151,6 +1174,20 @@ function releaseWakeLock() {
 document.addEventListener('visibilitychange', () => {
   if(document.visibilityState === 'visible') requestWakeLock();
 });
+
+let _rdyBloqueMode = 0;
+function selectBloqueMode(n, el){
+  _rdyBloqueMode = n;
+  document.querySelectorAll('[id^="rdy-mode-"]').forEach(b=>{
+    b.style.borderColor='var(--border2)';
+    b.style.color='var(--text2)';
+    b.style.background='var(--card)';
+  });
+  el.style.borderColor='var(--violet)';
+  el.style.color='var(--violet)';
+  el.style.background='var(--violet-d)';
+}
+
 </script>
 
 <div style="position:fixed;bottom:0;left:0;right:0;z-index:40;display:flex;justify-content:center;align-items:center;padding:10px 20px 20px;pointer-events:none;">

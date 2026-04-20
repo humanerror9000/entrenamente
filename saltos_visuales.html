@@ -600,13 +600,25 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 <div class="ready-screen" id="ready-screen">
   <div class="ready-inner">
     <div class="ready-title">Saltos <em>Visuales</em></div>
-    <div class="ready-sub">Entrena los movimientos oculares que hacen la lectura más fluida.</div>
+    <div class="ready-sub">Cuatro ejercicios de movimiento ocular, uno tras otro. Unos 5 minutos en total.</div>
+    
+    <div style="display:flex;gap:8px;justify-content:center;margin-bottom:24px;flex-wrap:wrap;">
+      <div style="padding:6px 12px;background:var(--card);border:1px solid var(--border2);border-radius:20px;font-size:12px;color:var(--text3);">⇄ Saltos</div>
+      <div style="padding:6px 12px;background:var(--card);border:1px solid var(--border2);border-radius:20px;font-size:12px;color:var(--text3);">↵ Barrido</div>
+      <div style="padding:6px 12px;background:var(--card);border:1px solid var(--border2);border-radius:20px;font-size:12px;color:var(--text3);">◈ Amplitud</div>
+      <div style="padding:6px 12px;background:var(--card);border:1px solid var(--border2);border-radius:20px;font-size:12px;color:var(--text3);"># Escaneo</div>
+    </div>
     <button class="ready-btn" onclick="dismissReady()">▶ Empecemos</button>
     <div class="ready-hint">Avanza a tu ritmo entre los cuatro modos</div>
   </div>
 </div>
 <script>
-function dismissReady(){ document.getElementById('ready-screen').classList.add('hidden'); }
+function dismissReady(){
+  document.getElementById('ready-screen').classList.add('hidden');
+  if(typeof requestWakeLock==='function') requestWakeLock();
+  switchDrill(0);
+  startJump();
+}
 
 // ── Session completion tracking ──
 function markComplete() {
@@ -1010,6 +1022,8 @@ function finishJump() {
   document.getElementById('jump-instr').innerHTML=`Completado — Precisión: <strong style="color:var(--teal)">${acc}%</strong> · TR medio: <strong style="color:var(--teal)">${avgRT}ms</strong>`;
   document.getElementById('j-start-btn').textContent='▶ Repetir';
   document.getElementById('j-start-btn').disabled=false;
+
+  nextSaltosDrill();
 }
 
 function resetJump() {
@@ -1283,6 +1297,8 @@ function finishSpan() {
   `;
   document.getElementById('sp-start-btn').disabled=false;
   document.getElementById('sp-start-btn').textContent='▶ Repetir';
+
+  nextSaltosDrill();
 }
 
 // ─────────────────────────────────────
@@ -1374,6 +1390,8 @@ function finishKD() {
   document.getElementById('kd-instr').innerHTML=msg;
   document.getElementById('kd-start-btn').disabled=false;
   document.getElementById('kd-start-btn').textContent='▶ Repetir';
+
+  nextSaltosDrill();
 }
 
 // ─────────────────────────────────────
@@ -1412,6 +1430,51 @@ function releaseWakeLock() {
 document.addEventListener('visibilitychange', () => {
   if(document.visibilityState === 'visible') requestWakeLock();
 });
+
+// ── Saltos auto-flow ──
+let _saltosDrill = 0;
+const _saltosOrder = [
+  {start: startJump},
+  {start: startSweep},
+  {start: startSpan},
+  {start: startKD}
+];
+
+function nextSaltosDrill(){
+  _saltosDrill++;
+  if(_saltosDrill >= _saltosOrder.length){
+    showSaltosComplete();
+    return;
+  }
+  switchDrill(_saltosDrill);
+  setTimeout(()=>{ _saltosOrder[_saltosDrill].start(); }, 600);
+}
+
+function showSaltosComplete(){
+  markComplete();
+  releaseWakeLock();
+  const next=getSessionNext();
+  const isLast=!next||next==='done';
+  const btnLabel=isLast?'Finalizar sesión →':'Siguiente ejercicio →';
+  const ov=document.createElement('div');
+  ov.style.cssText='position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center;';
+  const inner=document.createElement('div');
+  inner.style.cssText='width:100%;max-width:360px;display:flex;flex-direction:column;align-items:center;gap:16px;';
+  const icon=document.createElement('div'); icon.style.cssText='font-size:48px;'; icon.textContent='👁';
+  const title=document.createElement('div');
+  title.style.cssText="font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300;color:var(--text);";
+  title.textContent='Saltos Visuales';
+  const sub=document.createElement('div');
+  sub.style.cssText='font-size:15px;color:var(--text2);';
+  sub.textContent='Los cuatro ejercicios completados.';
+  const btn=document.createElement('button');
+  btn.style.cssText="width:100%;padding:16px;background:var(--violet-deep);color:#fff;border:none;border-radius:13px;font-family:'Fredoka','DM Sans',sans-serif;font-size:17px;font-weight:600;cursor:pointer;";
+  btn.textContent=isInSession()?btnLabel:'← Inicio';
+  btn.onclick=isInSession()?completeAndContinue:()=>window.location.href='index.html';
+  inner.appendChild(icon);inner.appendChild(title);inner.appendChild(sub);inner.appendChild(btn);
+  ov.appendChild(inner);document.body.appendChild(ov);
+}
+
 </script>
 
 <div style="position:fixed;bottom:0;left:0;right:0;z-index:40;display:flex;justify-content:center;align-items:center;padding:10px 20px 20px;pointer-events:none;">

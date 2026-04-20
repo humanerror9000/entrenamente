@@ -582,6 +582,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 })();
 function dismissReady(){
   document.getElementById('ready-screen').classList.add('hidden');
+  if(typeof requestWakeLock==='function') requestWakeLock();
+  startGame();
 }
 
 // ── Session completion tracking ──
