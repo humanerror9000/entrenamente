@@ -397,30 +397,17 @@ details.sci[open] summary{border-bottom:1px solid var(--border);}
   content:''; position:absolute; inset:0; pointer-events:none; z-index:0; opacity:0.4;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
 }
-.ready-inner {
-  position:relative; z-index:1;
-  width:100%; max-width:440px;
-  display:flex; flex-direction:column; align-items:center; gap:0;
-  animation: rdyUp 0.5s ease both;
-}
+.ready-inner{display:flex;flex-direction:column;align-items:center;width:100%;max-width:400px;padding:12px 0 8px;text-align:center;}
 @keyframes rdyUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-.ready-logo {
-  font-family:'Cormorant Garamond',serif;
-  font-size:16px; font-weight:300; color:var(--text3);
-  letter-spacing:0.08em; text-transform:uppercase;
-  margin-bottom:28px;
-}
-.ready-logo em { color:var(--gold); font-style:italic; }
+.ready-logo{font-family:'Fredoka',sans-serif;font-size:14px;font-weight:600;color:var(--text3);letter-spacing:0.02em;margin-bottom:16px;text-align:center;}
+.ready-logo em{color:var(--violet);font-style:italic;}
 .ready-title {
   font-family:'Cormorant Garamond',serif;
   font-size:clamp(32px,8vw,48px); font-weight:300;
   color:var(--text); line-height:1.1; margin-bottom:12px;
 }
 .ready-title em { color:var(--teal); font-style:italic; }
-.ready-sub {
-  font-size:17px; color:var(--text2); line-height:1.7;
-  margin-bottom:28px; max-width:360px;
-}
+.ready-sub{font-size:17px;color:var(--text2);line-height:1.6;text-align:center;margin-bottom:24px;max-width:320px;}
 .ready-sub strong { color:var(--text); font-weight:600; }
 
 /* Animation preview box */
@@ -442,24 +429,7 @@ details.sci[open] summary{border-bottom:1px solid var(--border);}
   display:flex; align-items:center; justify-content:center;
 }
 
-/* Steps */
-.ready-steps {
-  display:flex; gap:6px; margin-bottom:28px;
-}
-.ready-step {
-  display:flex; align-items:flex-start; gap:10px;
-  text-align:left; padding:12px 14px;
-  background:var(--card2); border:1px solid var(--border);
-  border-radius:10px; flex:1;
-}
-.ready-step-num {
-  font-family:'Cormorant Garamond',serif;
-  font-size:22px; font-weight:300; color:var(--teal);
-  line-height:1; flex-shrink:0; margin-top:1px;
-}
-.ready-step-text {
-  font-size:14px; color:var(--text2); line-height:1.5;
-}
+
 .ready-step-text strong { color:var(--text); font-weight:600; }
 
 .ready-btn {
@@ -532,28 +502,12 @@ details.sci[open] summary{border-bottom:1px solid var(--border);}
 </head>
 <body>
 
-<header>
-  <a class="hdr-back" href="index.html">← Inicio</a>
-  <div class="hdr-center">
-    <span class="hdr-ex-name">Lectura Flash</span>
-  </div>
-  <div class="hdr-right">
-    <div class="hdr-stat">ppm <b id="header-wpm">–</b></div>
-    <div class="logo"><svg width="22" height="26" viewBox="0 0 22 26" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;margin-right:7px;flex-shrink:0;">
-  <rect x="1.5" y="1.5" width="19" height="14" rx="7" stroke="var(--violet)" stroke-width="1.8"/>
-  <path d="M1.5 11 Q1.5 19 11 19 Q20.5 19 20.5 11" stroke="var(--violet)" stroke-width="1.8" stroke-linecap="round" fill="none"/>
-  <path d="M5 7 Q11 2 17 7" stroke="var(--teal)" stroke-width="2" stroke-linecap="round" fill="none"/>
-</svg><span style="font-family:'Fredoka',sans-serif;font-weight:600;letter-spacing:-0.01em;">Entrena<em style="color:var(--violet);font-style:italic;">Mente</em></span></div>
-  </div>
-</header>
-
 <main>
 
 <div class="ready-screen" id="ready-screen">
   <div class="ready-inner">
-    <div class="ready-logo">Entrena<em>Mente</em> · Lectura Visual</div>
     <div class="ready-title">Lectura <em>Flash</em></div>
-    <div class="ready-sub">Las palabras aparecen <strong>una a la vez</strong> en el centro de la pantalla. Léelas sin mover los ojos.</div>
+    <div class="ready-sub">Las palabras aparecen una a la vez — lee sin mover los ojos.</div>
 
     <div class="ready-preview">
       <div class="preview-label">Vista previa</div>
@@ -564,22 +518,6 @@ details.sci[open] summary{border-bottom:1px solid var(--border);}
         </div>
       </div>
     </div>
-
-    <div class="ready-steps">
-      <div class="ready-step">
-        <div class="ready-step-num">1</div>
-        <div class="ready-step-text"><strong>Elige</strong> velocidad y texto</div>
-      </div>
-      <div class="ready-step">
-        <div class="ready-step-num">2</div>
-        <div class="ready-step-text"><strong>Lee</strong> sin mover los ojos</div>
-      </div>
-      <div class="ready-step">
-        <div class="ready-step-num">3</div>
-        <div class="ready-step-text"><strong>Responde</strong> 3 preguntas</div>
-      </div>
-    </div>
-
     <button class="ready-btn" onclick="dismissReady()">▶ Empecemos</button>
     <div class="ready-hint">Puedes pausar en cualquier momento</div>
   </div>
@@ -1061,9 +999,8 @@ function scheduleNext(tokens, allWords) {
     document.getElementById('rsvp-context').textContent = ctx;
   } else {
     const el = document.getElementById('rsvp-phrase');
-    clearTimeout(el._fadeT);
     el.style.opacity = '0';
-    el._fadeT = setTimeout(() => { el.textContent = displayText; el.style.opacity = '1'; }, 80);
+    setTimeout(() => { el.textContent = displayText; el.style.opacity = '1'; }, 80);
   }
 
   // Update progress
@@ -1241,5 +1178,12 @@ document.addEventListener('visibilitychange', () => {
   if(document.visibilityState === 'visible') requestWakeLock();
 });
 </script>
+
+<div style="position:fixed;bottom:0;left:0;right:0;z-index:40;display:flex;justify-content:center;align-items:center;padding:10px 20px 20px;pointer-events:none;">
+  <a href="index.html" style="font-family:'Fredoka',sans-serif;font-size:14px;font-weight:600;color:var(--text3);letter-spacing:-0.01em;text-decoration:none;pointer-events:all;opacity:0.6;transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">
+    Entrena<em style="color:var(--violet);font-style:italic;">Mente</em>
+  </a>
+</div>
+
 </body>
 </html>

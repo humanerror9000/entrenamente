@@ -453,30 +453,17 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
   content:''; position:absolute; inset:0; pointer-events:none; z-index:0; opacity:0.4;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
 }
-.ready-inner {
-  position:relative; z-index:1;
-  width:100%; max-width:440px;
-  display:flex; flex-direction:column; align-items:center; gap:0;
-  animation: rdyUp 0.5s ease both;
-}
+.ready-inner{display:flex;flex-direction:column;align-items:center;width:100%;max-width:400px;padding:12px 0 8px;text-align:center;}
 @keyframes rdyUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-.ready-logo {
-  font-family:'Cormorant Garamond',serif;
-  font-size:16px; font-weight:300; color:var(--text3);
-  letter-spacing:0.08em; text-transform:uppercase;
-  margin-bottom:28px;
-}
-.ready-logo em { color:var(--gold); font-style:italic; }
+.ready-logo{font-family:'Fredoka',sans-serif;font-size:14px;font-weight:600;color:var(--text3);letter-spacing:0.02em;margin-bottom:16px;text-align:center;}
+.ready-logo em{color:var(--violet);font-style:italic;}
 .ready-title {
   font-family:'Cormorant Garamond',serif;
   font-size:clamp(32px,8vw,48px); font-weight:300;
   color:var(--text); line-height:1.1; margin-bottom:12px;
 }
 .ready-title em { color:var(--teal); font-style:italic; }
-.ready-sub {
-  font-size:17px; color:var(--text2); line-height:1.7;
-  margin-bottom:28px; max-width:360px;
-}
+.ready-sub{font-size:17px;color:var(--text2);line-height:1.6;text-align:center;margin-bottom:24px;max-width:320px;}
 .ready-sub strong { color:var(--text); font-weight:600; }
 
 /* Animation preview box */
@@ -498,24 +485,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
   display:flex; align-items:center; justify-content:center;
 }
 
-/* Steps */
-.ready-steps {
-  display:flex; gap:6px; margin-bottom:28px;
-}
-.ready-step {
-  display:flex; align-items:flex-start; gap:10px;
-  text-align:left; padding:12px 14px;
-  background:var(--card2); border:1px solid var(--border);
-  border-radius:10px; flex:1;
-}
-.ready-step-num {
-  font-family:'Cormorant Garamond',serif;
-  font-size:22px; font-weight:300; color:var(--teal);
-  line-height:1; flex-shrink:0; margin-top:1px;
-}
-.ready-step-text {
-  font-size:14px; color:var(--text2); line-height:1.5;
-}
+
 .ready-step-text strong { color:var(--text); font-weight:600; }
 
 .ready-btn {
@@ -590,245 +560,24 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 </head>
 <body>
 
-<header>
-  <a class="hdr-back" href="index.html">← Inicio</a>
-  <span class="hdr-ex-name">Visión Paralela</span>
-  <div style="display:flex;align-items:center;gap:12px;">
-    <div class="hdr-stat">precisión <b id="hdr-acc">–</b></div>
-    <div class="logo"><svg width="22" height="26" viewBox="0 0 22 26" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;margin-right:7px;flex-shrink:0;">
-  <rect x="1.5" y="1.5" width="19" height="14" rx="7" stroke="var(--violet)" stroke-width="1.8"/>
-  <path d="M1.5 11 Q1.5 19 11 19 Q20.5 19 20.5 11" stroke="var(--violet)" stroke-width="1.8" stroke-linecap="round" fill="none"/>
-  <path d="M5 7 Q11 2 17 7" stroke="var(--teal)" stroke-width="2" stroke-linecap="round" fill="none"/>
-</svg><span style="font-family:'Fredoka',sans-serif;font-weight:600;letter-spacing:-0.01em;">Entrena<em style="color:var(--violet);font-style:italic;">Mente</em></span></div>
-  </div>
-</header>
-
 <main>
 
 <div class="ready-screen" id="ready-screen">
   <div class="ready-inner">
-    <div class="ready-logo">Entrena<em>Mente</em> · Lectura Visual</div>
     <div class="ready-title">Visión <em>Paralela</em></div>
-    <div class="ready-sub">Un destello de letras por un instante. Memoriza todo lo que puedas.</div>
-
+    <div class="ready-sub">Memoriza los caracteres del destello y selecciónalos en orden.</div>
     <div class="ready-preview">
       <div class="preview-label">Vista previa</div>
-      <div class="preview-inner" style="flex-direction:column;gap:10px;">
-        <div id="rdy-vp-string" style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--teal);letter-spacing:0.12em;min-height:44px;transition:opacity 0.08s;text-align:center;"></div>
+      <div class="preview-inner" style="flex-direction:column;gap:10px;align-items:center;justify-content:center;">
+        <div id="rdy-vp-string" style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--teal);letter-spacing:0.12em;min-height:44px;transition:opacity 0.15s;text-align:center;"></div>
         <div id="rdy-vp-msg" style="font-size:12px;color:var(--text3);letter-spacing:0.06em;text-align:center;min-height:18px;"></div>
       </div>
     </div>
-
-    <div style="width:100%;margin-bottom:24px;">
-      <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);text-align:center;margin-bottom:10px;">Dificultad — ¿cuántas letras?</div>
-      <div style="display:flex;gap:8px;justify-content:center;">
-        <button class="diff-pick" data-len="3" onclick="pickDiff(this,3)">3</button>
-        <button class="diff-pick sel" data-len="4" onclick="pickDiff(this,4)">4 ⭐</button>
-        <button class="diff-pick" data-len="5" onclick="pickDiff(this,5)">5</button>
-        <button class="diff-pick" data-len="6" onclick="pickDiff(this,6)">6</button>
-      </div>
-      <div style="font-size:12px;color:var(--text3);text-align:center;margin-top:8px;" id="diff-hint">Empieza con 4 — sube cuando llegues al 80% de aciertos</div>
-    </div>
-
-    <div style="font-size:13px;color:var(--text3);text-align:center;margin-bottom:20px;">3 modos · 5 ejercicios cada uno · sesión completa</div>
-    <button class="ready-btn" onclick="startFullSession()">▶ Empecemos</button>
+    <button class="ready-btn" onclick="dismissReady()">▶ Comenzar</button>
   </div>
+
 </div>
-<style>
-.diff-pick{padding:10px 18px;border-radius:10px;border:1.5px solid var(--border2);background:var(--card2);font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;color:var(--text3);cursor:pointer;transition:all 0.15s;min-width:52px;}
-.diff-pick:hover{border-color:var(--teal);color:var(--teal);}
-.diff-pick.sel{background:var(--teal);border-color:var(--teal);color:var(--bg);}
-/* Mode transition overlay */
-.mode-transition{position:fixed;inset:0;z-index:300;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:32px;}
-.mode-transition.hidden{display:none;}
-.mt-label{font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);}
-.mt-title{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--text);}
-.mt-title em{color:var(--teal);font-style:italic;}
-.mt-desc{font-size:16px;color:var(--text2);text-align:center;max-width:340px;line-height:1.65;}
-.mt-preview{background:var(--card);border:1px solid var(--border2);border-radius:14px;padding:20px 28px;min-height:80px;display:flex;align-items:center;justify-content:center;width:100%;max-width:320px;}
-.mt-btn{width:100%;max-width:320px;padding:15px;background:var(--teal);color:var(--bg);border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:all 0.2s;}
-</style>
-<script>
-(function(){
-  const strings=['BAFE','MIKO','SURA','DETO'];
-  let si=0;
-  const el=document.getElementById('rdy-vp-string');
-  const msg=document.getElementById('rdy-vp-msg');
-  if(!el||!msg) return;
-  function cycle(){
-    el.style.opacity='0';
-    setTimeout(()=>{el.textContent=strings[si];el.style.opacity='1';msg.textContent='';},80);
-    setTimeout(()=>{el.style.opacity='0';msg.textContent='¿Cuántas recuerdas?';
-      setTimeout(()=>{el.textContent='';msg.textContent='';si=(si+1)%strings.length;setTimeout(cycle,800);},1200);
-    },700);
-  }
-  setTimeout(cycle,600);
-})();
-
-let sessionLen=4; // letters per trial, set by user
-function pickDiff(btn,len){
-  document.querySelectorAll('.diff-pick').forEach(b=>b.classList.remove('sel'));
-  btn.classList.add('sel'); sessionLen=len;
-  const hints={3:'Empieza aquí si es tu primera vez',4:'Empieza con 4 — sube cuando llegues al 80%',5:'Intermedio — buen desafío',6:'Avanzado — máxima concentración'};
-  document.getElementById('diff-hint').textContent=hints[len]||'';
-}
-
-// ── Session flow ──
-let sessionPhase=0;
-let _fromTransitionCard=false; // 0=WR,1=PR,2=SM
-let sessionScores={wr:{h:0,t:0},pr:{h:0,t:0},sm:{h:0,t:0}};
-
-function startFullSession(){
-  requestWakeLock();
-  // Set lengths based on user choice
-  wrLen=sessionLen; prLen=sessionLen; smLen=sessionLen;
-  document.getElementById('ready-screen').classList.add('hidden');
-  sessionPhase=0;
-  beginPhase(0);
-}
-
-function beginPhase(phase){
-  sessionPhase=phase;
-  switchTask(phase);
-  showCountdownThenStart(phase);
-}
-
-function showCountdownThenStart(phase){
-  // Skip countdown if we just showed a transition card (it had its own preview)
-  if(_fromTransitionCard) {
-    _fromTransitionCard = false;
-    if(phase===0){startWR();}
-    else if(phase===1){startPR();}
-    else if(phase===2){startSM();}
-    return;
-  }
-  const names=['Informe completo','Informe parcial','Coincidencia de cadenas'];
-  const descs=['Memoriza todos los caracteres del destello','Identifica la letra en la posición señalada','¿Son iguales las dos cadenas?'];
-
-  // Remove existing countdown
-  const old = document.getElementById('vp-countdown');
-  if(old) old.remove();
-
-  const ov = document.createElement('div');
-  ov.id = 'vp-countdown';
-  ov.style.cssText = 'position:fixed;inset:0;z-index:8000;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;';
-  ov.innerHTML = `
-    <div style="font-size:11px;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;color:var(--text3);">Modo ${phase+1} de 3</div>
-    <div style="font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--text);">${names[phase]}</div>
-    <div style="font-size:15px;color:var(--text2);text-align:center;max-width:280px;">${descs[phase]}</div>
-    <div id="vp-cd-num" style="font-family:'Cormorant Garamond',serif;font-size:96px;font-weight:300;color:var(--violet);line-height:1;margin-top:8px;">3</div>
-  `;
-  document.body.appendChild(ov);
-
-  let n = 3;
-  const tick = setInterval(()=>{
-    n--;
-    const el = document.getElementById('vp-cd-num');
-    if(el) el.textContent = n > 0 ? n : '¡Ya!';
-    if(n <= 0){
-      clearInterval(tick);
-      setTimeout(()=>{
-        ov.remove();
-        if(phase===0){startWR();}
-        else if(phase===1){startPR();}
-        else if(phase===2){startSM();}
-      }, 400);
-    }
-  }, 1000);
-}
-
-function showModeTransition(nextPhase, title, em, desc, previewHTML, btnText){
-  // Create or reuse transition overlay
-  let ov=document.getElementById('mode-transition');
-  if(!ov){ ov=document.createElement('div'); ov.id='mode-transition'; ov.className='mode-transition'; document.body.appendChild(ov); }
-  ov.innerHTML=`
-    <div class="mt-label">Siguiente modo</div>
-    <div class="mt-title">${title} <em>${em}</em></div>
-    <div class="mt-desc">${desc}</div>
-    <div class="mt-preview">${previewHTML}</div>
-    <button class="mt-btn" onclick="dismissTransition(${nextPhase})">${btnText}</button>
-  `;
-  ov.classList.remove('hidden');
-}
-function dismissTransition(phase){
-  const ov=document.getElementById('mode-transition');
-  if(ov) ov.classList.add('hidden');
-  _fromTransitionCard = true;
-  beginPhase(phase);
-}
-
-// Override finishWR/PR to trigger flow
-const _origFinishWR=window.finishWR; // will be defined later
-
-// ── Session completion tracking ──
-function markComplete() {
-  try {
-    const today = new Date().toISOString().slice(0,10);
-    const all = JSON.parse(localStorage.getItem('em_completions') || '{}');
-    if(!all[today]) all[today] = [];
-    if(!all[today].includes('vision')) all[today].push('vision');
-    localStorage.setItem('em_completions', JSON.stringify(all));
-  } catch(e) {}
-  showSessionUI();
-}
-
-function completeAndContinue() {
-  markComplete();
-  setTimeout(() => goNextOrHome('index.html'), 1200);
-}
-
-
-// ── Session navigation ──
-function getSessionNext() {
-  try {
-    const q = JSON.parse(localStorage.getItem('em_session_queue')||'null');
-    if(!q) return null;
-    const today = new Date().toISOString().slice(0,10);
-    if(q.date !== today) return null; // stale queue
-
-    // Get completed today
-    const all = JSON.parse(localStorage.getItem('em_completions')||'{}');
-    const done = all[today] || [];
-
-    // Find next uncompleted in queue
-    const remaining = q.keys.filter(k => !done.includes(k));
-    if(remaining.length === 0) return 'done'; // all finished
-
-    const urls = {
-      flash:'lectura_flash_rsvp.html', bloques:'lectura_por_bloques_prototype.html',
-      contra:'contrarreloj.html', vision:'vision_paralela.html',
-      saltos:'saltos_visuales.html', memoria:'memoria_activa.html',
-      cats:'actualizacion_categorias.html', continua:'actualizacion_continua.html',
-    };
-    return urls[remaining[0]] ? urls[remaining[0]] + '?session=1' : null;
-  } catch(e) { return null; }
-}
-
-function isInSession() {
-  return new URLSearchParams(window.location.search).get('session') === '1';
-}
-
-function goNextOrHome(homeUrl) {
-  if(!isInSession()) { window.location.href = homeUrl; return; }
-  const next = getSessionNext();
-  if(!next || next === 'done') {
-    window.location.href = 'index.html?done=session';
-  } else {
-    window.location.href = next;
-  }
-}
-
-</script>
-
-
-  <div class="prog-dots" style="display:none">
-    <div class="pdot active" id="pd0"></div>
-    <div class="pdot" id="pd1"></div>
-    <div class="pdot" id="pd2"></div>
-  </div>
-
-  <!-- Task selector -->
-  <div class="task-tabs" style="display:none">
+<div class="task-tabs" style="display:none">
     <div class="ttab active" onclick="switchTask(0)"><span class="ticon">▦</span>Informe completo</div>
     <div class="ttab" onclick="switchTask(1)"><span class="ticon">◎</span>Informe parcial</div>
     <div class="ttab" onclick="switchTask(2)"><span class="ticon">≈</span>Coincidencia</div>
@@ -1561,6 +1310,72 @@ function releaseWakeLock() {
 document.addEventListener('visibilitychange', () => {
   if(document.visibilityState === 'visible') requestWakeLock();
 });
+
+// ── Ready screen ──
+function dismissReady(){
+  document.getElementById('ready-screen').classList.add('hidden');
+  if(typeof requestWakeLock === 'function') requestWakeLock();
+}
+
+(function startVPPreview(){
+  const words = ['BARO','TEVI','KAMU','SOLI'];
+  let idx = 0;
+  const strEl = document.getElementById('rdy-vp-string');
+  const msgEl = document.getElementById('rdy-vp-msg');
+  if(!strEl) return;
+  function tick(){
+    strEl.style.opacity='0';
+    setTimeout(function(){
+      strEl.textContent = words[idx % words.length];
+      strEl.style.opacity='1';
+      if(msgEl) msgEl.textContent = 'selecciona en orden';
+      idx++;
+      setTimeout(function(){ strEl.style.opacity='0'; if(msgEl) msgEl.textContent=''; }, 400);
+    }, 150);
+  }
+  tick();
+  setInterval(tick, 2200);
+})();
+
+
+// ── Session tracking ──
+function markComplete(){
+  try{
+    const today=new Date().toISOString().slice(0,10);
+    const all=JSON.parse(localStorage.getItem('em_completions')||'{}');
+    if(!all[today])all[today]=[];
+    if(!all[today].includes('vision'))all[today].push('vision');
+    localStorage.setItem('em_completions',JSON.stringify(all));
+  }catch(e){}
+}
+function getSessionNext(){
+  try{
+    const q=JSON.parse(localStorage.getItem('em_session_queue')||'null');
+    if(!q)return null;
+    const today=new Date().toISOString().slice(0,10);
+    if(q.date!==today)return null;
+    const all=JSON.parse(localStorage.getItem('em_completions')||'{}');
+    const done=all[today]||[];
+    const remaining=q.keys.filter(k=>!done.includes(k));
+    if(remaining.length===0)return 'done';
+    const urls={flash:'lectura_flash_rsvp.html',bloques:'lectura_por_bloques_prototype.html',contra:'contrarreloj.html',vision:'vision_paralela.html',saltos:'saltos_visuales.html',memoria:'memoria_activa.html',cats:'actualizacion_categorias.html',continua:'actualizacion_continua.html'};
+    return urls[remaining[0]]?urls[remaining[0]]+'?session=1':null;
+  }catch(e){return null;}
+}
+function isInSession(){return new URLSearchParams(window.location.search).get('session')==='1';}
+function goNextOrHome(homeUrl){
+  if(!isInSession()){window.location.href=homeUrl;return;}
+  const next=getSessionNext();
+  window.location.href=(!next||next==='done')?'index.html?done=session':next;
+}
+function completeAndContinue(){markComplete();setTimeout(()=>goNextOrHome('index.html'),400);}
+
 </script>
+
+<div style="position:fixed;bottom:0;left:0;right:0;z-index:40;display:flex;justify-content:center;padding:10px 20px 20px;pointer-events:none;">
+  <a href="index.html" style="font-family:'Fredoka',sans-serif;font-size:14px;font-weight:600;color:var(--text3);letter-spacing:-0.01em;text-decoration:none;pointer-events:all;opacity:0.6;transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">Entrena<em style="color:var(--violet);font-style:italic;">Mente</em></a>
+</div>
+
+<div style="position:fixed;bottom:0;left:0;right:0;z-index:40;display:flex;justify-content:center;padding:10px 20px 20px;pointer-events:none;"><a href="index.html" style="font-family:'Fredoka',sans-serif;font-size:14px;font-weight:600;color:var(--text3);letter-spacing:-0.01em;text-decoration:none;pointer-events:all;opacity:0.6;transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">Entrena<em style="color:var(--violet);font-style:italic;">Mente</em></a></div>
 </body>
 </html>

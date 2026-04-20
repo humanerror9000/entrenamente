@@ -475,30 +475,17 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
   content:''; position:absolute; inset:0; pointer-events:none; z-index:0; opacity:0.4;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
 }
-.ready-inner {
-  position:relative; z-index:1;
-  width:100%; max-width:440px;
-  display:flex; flex-direction:column; align-items:center; gap:0;
-  animation: rdyUp 0.5s ease both;
-}
+.ready-inner{display:flex;flex-direction:column;align-items:center;width:100%;max-width:400px;padding:12px 0 8px;text-align:center;}
 @keyframes rdyUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-.ready-logo {
-  font-family:'Cormorant Garamond',serif;
-  font-size:16px; font-weight:300; color:var(--text3);
-  letter-spacing:0.08em; text-transform:uppercase;
-  margin-bottom:28px;
-}
-.ready-logo em { color:var(--gold); font-style:italic; }
+.ready-logo{font-family:'Fredoka',sans-serif;font-size:14px;font-weight:600;color:var(--text3);letter-spacing:0.02em;margin-bottom:16px;text-align:center;}
+.ready-logo em{color:var(--violet);font-style:italic;}
 .ready-title {
   font-family:'Cormorant Garamond',serif;
   font-size:clamp(32px,8vw,48px); font-weight:300;
   color:var(--text); line-height:1.1; margin-bottom:12px;
 }
 .ready-title em { color:var(--teal); font-style:italic; }
-.ready-sub {
-  font-size:17px; color:var(--text2); line-height:1.7;
-  margin-bottom:28px; max-width:360px;
-}
+.ready-sub{font-size:17px;color:var(--text2);line-height:1.6;text-align:center;margin-bottom:24px;max-width:320px;}
 .ready-sub strong { color:var(--text); font-weight:600; }
 
 /* Animation preview box */
@@ -520,24 +507,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
   display:flex; align-items:center; justify-content:center;
 }
 
-/* Steps */
-.ready-steps {
-  display:flex; gap:6px; margin-bottom:28px;
-}
-.ready-step {
-  display:flex; align-items:flex-start; gap:10px;
-  text-align:left; padding:12px 14px;
-  background:var(--card2); border:1px solid var(--border);
-  border-radius:10px; flex:1;
-}
-.ready-step-num {
-  font-family:'Cormorant Garamond',serif;
-  font-size:22px; font-weight:300; color:var(--teal);
-  line-height:1; flex-shrink:0; margin-top:1px;
-}
-.ready-step-text {
-  font-size:14px; color:var(--text2); line-height:1.5;
-}
+
 .ready-step-text strong { color:var(--text); font-weight:600; }
 
 .ready-btn {
@@ -612,53 +582,20 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 </head>
 <body>
 
-<header>
-  <a class="hdr-back" href="index.html">← Inicio</a>
-  <span class="hdr-ex-name">N-back</span>
-  <div style="display:flex;align-items:center;gap:12px;">
-    <div class="hdr-stat">nivel <b id="hdr-n">1-back</b></div>
-    <div class="hdr-stat">precisión <b id="hdr-acc">–</b></div>
-    <div class="logo"><svg width="22" height="26" viewBox="0 0 22 26" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;margin-right:7px;flex-shrink:0;">
-  <rect x="1.5" y="1.5" width="19" height="14" rx="7" stroke="var(--violet)" stroke-width="1.8"/>
-  <path d="M1.5 11 Q1.5 19 11 19 Q20.5 19 20.5 11" stroke="var(--violet)" stroke-width="1.8" stroke-linecap="round" fill="none"/>
-  <path d="M5 7 Q11 2 17 7" stroke="var(--teal)" stroke-width="2" stroke-linecap="round" fill="none"/>
-</svg><span style="font-family:'Fredoka',sans-serif;font-weight:600;letter-spacing:-0.01em;">Entrena<em style="color:var(--violet);font-style:italic;">Mente</em></span></div>
-  </div>
-</header>
-
 <main>
 
 <div class="ready-screen" id="ready-screen">
   <div class="ready-inner">
-    <div class="ready-logo">Entrena<em>Mente</em> · Memoria Activa</div>
     <div class="ready-title">Actualización <em>Continua</em></div>
-    <div class="ready-sub">¿La celda que brilla ahora es la <strong>misma</strong> que brilló hace 1 paso? Responde tan rápido como puedas.</div>
+    <div class="ready-sub">¿La celda que se ilumina ahora es la misma de hace uno o más pasos atrás?</div>
 
-    <div class="ready-preview" style="min-height:150px;">
-      <div class="preview-label">Vista previa · 1-back</div>
-      <div class="preview-inner">
-        <div style="display:flex;flex-direction:column;align-items:center;gap:12px;">
-          <div id="rdy-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:150px;"></div>
+    
+    <div style="margin-bottom:24px;"><div style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+          <div id="rdy-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;width:120px;"></div>
           <div id="rdy-nb-msg" style="font-size:13px;color:var(--text3);min-height:18px;"></div>
-        </div>
+    
       </div>
     </div>
-
-    <div class="ready-steps">
-      <div class="ready-step">
-        <div class="ready-step-num">1</div>
-        <div class="ready-step-text"><strong>Observa</strong> qué celda brilla</div>
-      </div>
-      <div class="ready-step">
-        <div class="ready-step-num">2</div>
-        <div class="ready-step-text"><strong>Recuerda</strong> la anterior</div>
-      </div>
-      <div class="ready-step">
-        <div class="ready-step-num">3</div>
-        <div class="ready-step-text"><strong>Toca</strong> Sí o No</div>
-      </div>
-    </div>
-
     <button class="ready-btn" onclick="dismissReady()">▶ Empecemos</button>
     <div class="ready-hint">Empieza con 1-back · el tutorial te guía paso a paso</div>
   </div>
@@ -1312,5 +1249,12 @@ document.addEventListener('visibilitychange', () => {
   if(document.visibilityState === 'visible') requestWakeLock();
 });
 </script>
+
+<div style="position:fixed;bottom:0;left:0;right:0;z-index:40;display:flex;justify-content:center;align-items:center;padding:10px 20px 20px;pointer-events:none;">
+  <a href="index.html" style="font-family:'Fredoka',sans-serif;font-size:14px;font-weight:600;color:var(--text3);letter-spacing:-0.01em;text-decoration:none;pointer-events:all;opacity:0.6;transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">
+    Entrena<em style="color:var(--violet);font-style:italic;">Mente</em>
+  </a>
+</div>
+
 </body>
 </html>

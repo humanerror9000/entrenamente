@@ -9,12 +9,9 @@
   --bg:#0C0C10; --bg2:#13131A; --card:#18181F; --card2:#1E1E28;
   --border:rgba(255,255,255,0.06); --border2:rgba(255,255,255,0.11);
   --text:#EAE8F2; --text2:#8E8CA8; --text3:#4A4860;
-  /* Brand violet — primary accent */
   --violet:#B8A9FF; --violet-d:rgba(184,169,255,0.12); --violet-b:rgba(184,169,255,0.28);
   --violet-deep:#534AB7;
-  /* Teal — action/success/interactive */
   --teal:#2ECFB8; --teal-d:rgba(46,207,184,0.12); --teal-b:rgba(46,207,184,0.28);
-  /* Supporting palette */
   --gold:#C9A84C; --gold-l:rgba(201,168,76,0.12); --gold-b:rgba(201,168,76,0.30);
   --amber:#F5A623; --amber-d:rgba(245,166,35,0.12); --amber-b:rgba(245,166,35,0.28);
   --coral:#E05C5C; --coral-d:rgba(224,92,92,0.12); --coral-b:rgba(224,92,92,0.30);
@@ -417,30 +414,17 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
   content:''; position:absolute; inset:0; pointer-events:none; z-index:0; opacity:0.4;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
 }
-.ready-inner {
-  position:relative; z-index:1;
-  width:100%; max-width:440px;
-  display:flex; flex-direction:column; align-items:center; gap:0;
-  animation: rdyUp 0.5s ease both;
-}
+.ready-inner{display:flex;flex-direction:column;align-items:center;width:100%;max-width:400px;padding:12px 0 8px;text-align:center;}
 @keyframes rdyUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-.ready-logo {
-  font-family:'Cormorant Garamond',serif;
-  font-size:16px; font-weight:300; color:var(--text3);
-  letter-spacing:0.08em; text-transform:uppercase;
-  margin-bottom:28px;
-}
-.ready-logo em { color:var(--gold); font-style:italic; }
+.ready-logo{font-family:'Fredoka',sans-serif;font-size:14px;font-weight:600;color:var(--text3);letter-spacing:0.02em;margin-bottom:16px;text-align:center;}
+.ready-logo em{color:var(--violet);font-style:italic;}
 .ready-title {
   font-family:'Cormorant Garamond',serif;
   font-size:clamp(32px,8vw,48px); font-weight:300;
   color:var(--text); line-height:1.1; margin-bottom:12px;
 }
 .ready-title em { color:var(--teal); font-style:italic; }
-.ready-sub {
-  font-size:17px; color:var(--text2); line-height:1.7;
-  margin-bottom:28px; max-width:360px;
-}
+.ready-sub{font-size:17px;color:var(--text2);line-height:1.6;text-align:center;margin-bottom:24px;max-width:320px;}
 .ready-sub strong { color:var(--text); font-weight:600; }
 
 /* Animation preview box */
@@ -462,24 +446,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
   display:flex; align-items:center; justify-content:center;
 }
 
-/* Steps */
-.ready-steps {
-  display:flex; gap:6px; margin-bottom:28px;
-}
-.ready-step {
-  display:flex; align-items:flex-start; gap:10px;
-  text-align:left; padding:12px 14px;
-  background:var(--card2); border:1px solid var(--border);
-  border-radius:10px; flex:1;
-}
-.ready-step-num {
-  font-family:'Cormorant Garamond',serif;
-  font-size:22px; font-weight:300; color:var(--teal);
-  line-height:1; flex-shrink:0; margin-top:1px;
-}
-.ready-step-text {
-  font-size:14px; color:var(--text2); line-height:1.5;
-}
+
 .ready-step-text strong { color:var(--text); font-weight:600; }
 
 .ready-btn {
@@ -554,27 +521,12 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 </head>
 <body>
 
-<header>
-  <a class="hdr-back" href="index.html">← Inicio</a>
-  <span class="hdr-ex-name">Memoria Activa</span>
-  <div style="display:flex;align-items:center;gap:12px;">
-    <div class="hdr-stat">precisión <b id="hdr-acc">–</b></div>
-    <div class="logo"><svg width="22" height="26" viewBox="0 0 22 26" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;margin-right:7px;flex-shrink:0;">
-  <rect x="1.5" y="1.5" width="19" height="14" rx="7" stroke="var(--violet)" stroke-width="1.8"/>
-  <path d="M1.5 11 Q1.5 19 11 19 Q20.5 19 20.5 11" stroke="var(--violet)" stroke-width="1.8" stroke-linecap="round" fill="none"/>
-  <path d="M5 7 Q11 2 17 7" stroke="var(--teal)" stroke-width="2" stroke-linecap="round" fill="none"/>
-</svg><span style="font-family:'Fredoka',sans-serif;font-weight:600;letter-spacing:-0.01em;">Entrena<em style="color:var(--violet);font-style:italic;">Mente</em></span></div>
-  </div>
-</header>
-
 <main>
 
 <div class="ready-screen" id="ready-screen">
   <div class="ready-inner">
-    <div class="ready-logo">Entrena<em>Mente</em></div>
     <div class="ready-title">Memoria <em>Activa</em></div>
-    <div class="ready-sub">Verás palabras intercaladas con <strong>pequeños problemas</strong>. Al final de cada serie, recuerda las palabras en orden.</div>
-    <div class="ready-steps"><div class="ready-step"><div class="ready-step-num">1</div><div class="ready-step-text"><strong>Lee</strong> cada palabra</div></div><div class="ready-step"><div class="ready-step-num">2</div><div class="ready-step-text"><strong>Resuelve</strong> el problema</div></div><div class="ready-step"><div class="ready-step-num">3</div><div class="ready-step-text"><strong>Recuerda</strong> las palabras en orden</div></div></div>
+    <div class="ready-sub">Recuerda palabras mientras resuelves pequeños problemas.</div>
     <button class="ready-btn" onclick="dismissReady()">▶ Empecemos</button>
     <div class="ready-hint">Puntuación de crédito parcial — cada palabra cuenta</div>
   </div>
@@ -1193,6 +1145,7 @@ function endSession() {
     return;
   }
   // Otherwise show real results (reading span just finished)
+  markComplete();
   const acc = sessionPossibleTotal>0 ? Math.round(sessionPartialTotal/sessionPossibleTotal*100) : 0;
   const spanScore = (sessionPartialTotal/TOTAL_TRIALS).toFixed(1);
   const procAcc = procTotal>0 ? Math.round(procCorrect/procTotal*100) : 0;
@@ -1272,24 +1225,34 @@ function showSessionUI() {
 }
 
 // ── Wake Lock: prevent screen sleep during exercise ──
-let _wakeLock = null;
-async function requestWakeLock() {
-  if(!('wakeLock' in navigator)) return;
-  try {
-    _wakeLock = await navigator.wakeLock.request('screen');
-  } catch(e) {}
-}
-function releaseWakeLock() {
-  if(_wakeLock) { _wakeLock.release().catch(()=>{}); _wakeLock = null; }
-}
 // Re-acquire on tab visibility change
 document.addEventListener('visibilitychange', () => {
   if(document.visibilityState === 'visible') requestWakeLock();
 });
-</script>
 
-<script>
-// ── Session navigation ──
+let _wakeLock = null;
+async function requestWakeLock() {
+  if(!('wakeLock' in navigator)) return;
+  try { _wakeLock = await navigator.wakeLock.request('screen'); } catch(e) {}
+}
+function releaseWakeLock() {
+  if(_wakeLock) { _wakeLock.release().catch(()=>{}); _wakeLock = null; }
+}
+document.addEventListener('visibilitychange', () => {
+  if(document.visibilityState === 'visible') requestWakeLock();
+});
+
+// ── Session completion tracking ──
+function markComplete() {
+  try {
+    const today = new Date().toISOString().slice(0,10);
+    const all = JSON.parse(localStorage.getItem('em_completions') || '{}');
+    if(!all[today]) all[today] = [];
+    if(!all[today].includes('memoria')) all[today].push('memoria');
+    localStorage.setItem('em_completions', JSON.stringify(all));
+  } catch(e) {}
+}
+
 function getSessionNext() {
   try {
     const q = JSON.parse(localStorage.getItem('em_session_queue')||'null');
@@ -1298,70 +1261,73 @@ function getSessionNext() {
     if(q.date !== today) return null;
     const all = JSON.parse(localStorage.getItem('em_completions')||'{}');
     const done = all[today] || [];
-    const remaining = q.keys.filter(function(k){ return !done.includes(k); });
+    const remaining = q.keys.filter(k => !done.includes(k));
     if(remaining.length === 0) return 'done';
     const urls = {
-      flash:'lectura_flash_rsvp.html',bloques:'lectura_por_bloques_prototype.html',
-      contra:'contrarreloj.html',vision:'vision_paralela.html',
-      saltos:'saltos_visuales.html',memoria:'memoria_activa.html',
-      cats:'actualizacion_categorias.html',continua:'actualizacion_continua.html'
+      flash:'lectura_flash_rsvp.html', bloques:'lectura_por_bloques_prototype.html',
+      contra:'contrarreloj.html', vision:'vision_paralela.html',
+      saltos:'saltos_visuales.html', memoria:'memoria_activa.html',
+      cats:'actualizacion_categorias.html', continua:'actualizacion_continua.html',
     };
     return urls[remaining[0]] ? urls[remaining[0]] + '?session=1' : null;
   } catch(e) { return null; }
 }
+
 function isInSession() {
   return new URLSearchParams(window.location.search).get('session') === '1';
 }
+
+function goNextOrHome(homeUrl) {
+  if(!isInSession()) { window.location.href = homeUrl; return; }
+  const next = getSessionNext();
+  window.location.href = (!next || next === 'done') ? 'index.html?done=session' : next;
+}
+
 function completeAndContinue() {
   markComplete();
-  var next = getSessionNext();
-  setTimeout(function(){
-    if(!next || next === 'done') window.location.href = 'index.html?done=session';
-    else window.location.href = next;
-  }, 400);
+  setTimeout(() => goNextOrHome('index.html'), 400);
 }
+
 function showSessionOverlay() {
   if(!isInSession()) return;
-  var existing = document.getElementById('ma-session-overlay');
+  const existing = document.getElementById('ma-session-overlay');
   if(existing) existing.remove();
-  var next = getSessionNext();
-  var isLast = !next || next === 'done';
-  var ov = document.createElement('div');
+  const next = getSessionNext();
+  const isLast = !next || next === 'done';
+  const btnLabel = isLast ? 'Finalizar sesi\u00f3n \u2192' : 'Siguiente ejercicio \u2192';
+  const ov = document.createElement('div');
   ov.id = 'ma-session-overlay';
   ov.style.cssText = 'position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center;';
-  var wrap = document.createElement('div');
-  wrap.style.cssText = 'width:100%;max-width:360px;display:flex;flex-direction:column;align-items:center;gap:16px;';
-  var icon = document.createElement('div');
-  icon.style.cssText = 'font-size:44px;';
-  icon.textContent = '✓';
-  var title = document.createElement('div');
+  const inner = document.createElement('div');
+  inner.style.cssText = 'width:100%;max-width:360px;display:flex;flex-direction:column;align-items:center;gap:16px;';
+  const icon = document.createElement('div');
+  icon.style.cssText = 'font-size:48px;margin-bottom:4px;';
+  icon.textContent = '\u2713';
+  const title = document.createElement('div');
   title.style.cssText = "font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300;color:var(--text);";
   title.textContent = 'Memoria Activa';
-  var sub = document.createElement('div');
-  sub.style.cssText = 'font-size:15px;color:var(--text2);margin-top:4px;';
+  const sub = document.createElement('div');
+  sub.style.cssText = 'font-size:15px;color:var(--text2);';
   sub.textContent = 'Ejercicio completado';
-  var btn = document.createElement('button');
-  btn.style.cssText = "width:100%;padding:16px;background:var(--violet-deep);color:#fff;border:none;border-radius:13px;font-family:'Fredoka','DM Sans',sans-serif;font-size:17px;font-weight:600;cursor:pointer;margin-top:8px;";
-  btn.textContent = isLast ? 'Finalizar sesión →' : 'Siguiente ejercicio →';
+  const btn = document.createElement('button');
+  btn.style.cssText = "width:100%;padding:16px;background:var(--violet-deep);color:#fff;border:none;border-radius:13px;font-family:'Fredoka','DM Sans',sans-serif;font-size:17px;font-weight:600;cursor:pointer;";
+  btn.textContent = btnLabel;
   btn.onclick = completeAndContinue;
-  wrap.appendChild(icon); wrap.appendChild(title);
-  wrap.appendChild(sub); wrap.appendChild(btn);
-  ov.appendChild(wrap);
+  inner.appendChild(icon);
+  inner.appendChild(title);
+  inner.appendChild(sub);
+  inner.appendChild(btn);
+  ov.appendChild(inner);
   document.body.appendChild(ov);
 }
-// ── Wake Lock ──
-var _wakeLock = null;
-function requestWakeLock() {
-  if(!('wakeLock' in navigator)) return;
-  navigator.wakeLock.request('screen').then(function(wl){ _wakeLock = wl; }).catch(function(){});
-}
-function releaseWakeLock() {
-  if(_wakeLock) { _wakeLock.release().catch(function(){}); _wakeLock = null; }
-}
-document.addEventListener('visibilitychange', function(){
-  if(document.visibilityState === 'visible') requestWakeLock();
-});
+
 </script>
+
+<div style="position:fixed;bottom:0;left:0;right:0;z-index:40;display:flex;justify-content:center;align-items:center;padding:10px 20px 20px;pointer-events:none;">
+  <a href="index.html" style="font-family:'Fredoka',sans-serif;font-size:14px;font-weight:600;color:var(--text3);letter-spacing:-0.01em;text-decoration:none;pointer-events:all;opacity:0.6;transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">
+    Entrena<em style="color:var(--violet);font-style:italic;">Mente</em>
+  </a>
+</div>
 
 </body>
 </html>
