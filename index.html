@@ -112,9 +112,9 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 
 .main-cta{width:100%;padding:20px;background:var(--violet-deep);color:#fff;border:none;border-radius:16px;font-family:'Fredoka','DM Sans',sans-serif;font-size:20px;font-weight:600;cursor:pointer;transition:all 0.2s;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center;gap:10px;}
 
-.cta-footer{position:fixed;bottom:0;left:0;right:0;z-index:50;padding:12px 20px 28px;background:linear-gradient(to top,var(--bg) 70%,transparent);max-width:480px;margin:0 auto;left:50%;transform:translateX(-50%);}
-.main-cta:hover{background:var(--violet);transform:translateY(-2px);}
-.main-cta:active{transform:translateY(0);}
+.cta-footer{position:fixed;bottom:0;left:0;right:0;z-index:50;padding:12px 20px 32px;background:linear-gradient(to top,var(--bg) 75%,transparent);}
+.main-cta:hover{background:var(--violet);}
+.main-cta:active{opacity:0.9;}
 .main-cta:disabled{background:var(--card2);color:var(--text3);cursor:default;transform:none;}
 
 .prog-bar-wrap{margin-bottom:20px;display:flex;align-items:center;gap:10px;}
@@ -280,9 +280,11 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 </div>
 
 <div class="cta-footer" id="cta-footer">
-  <button class="main-cta" id="main-cta" onclick="startDailySession()">
-    ▶&nbsp;<span id="cta-label">Comenzar sesión</span>
-  </button>
+  <div style="max-width:480px;margin:0 auto;">
+    <button class="main-cta" id="main-cta" onclick="startDailySession()">
+      <span style="font-size:16px;line-height:1;">▶</span><span id="cta-label">Comenzar sesión</span>
+    </button>
+  </div>
 </div>
 
 <script>
