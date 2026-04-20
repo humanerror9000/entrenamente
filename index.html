@@ -83,10 +83,10 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 /* MAIN APP */
 #app{display:none;}
 #app.show{display:block;}
-.app-wrap{position:relative;z-index:10;max-width:480px;margin:0 auto;padding:0 20px 60px;display:flex;flex-direction:column;min-height:100vh;}
+.app-wrap{position:relative;z-index:10;max-width:480px;margin:0 auto;padding:0 20px 120px;display:flex;flex-direction:column;min-height:100vh;}
 
 .top-bar{display:flex;align-items:center;justify-content:space-between;padding:28px 0 0;}
-.top-logo{font-family:'Fredoka',sans-serif;font-size:22px;font-weight:600;color:var(--text);letter-spacing:-0.01em;display:flex;align-items:center;gap:7px;}
+.top-logo{font-family:'Fredoka',sans-serif;font-size:22px;font-weight:600;color:var(--text);letter-spacing:-0.01em;display:flex;align-items:center;gap:7px;white-space:nowrap;}
 .top-logo em{color:var(--violet);font-style:italic;}
 .top-right{display:flex;align-items:center;gap:14px;}
 .streak-wrap{display:flex;align-items:center;gap:5px;cursor:default;}
@@ -99,9 +99,9 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .top-settings:hover{color:var(--text2);}
 
 .greeting-block{padding:36px 0 28px;}
-.greeting-hi{font-family:'Cormorant Garamond',serif;font-size:clamp(34px,8vw,46px);font-weight:300;color:var(--text);line-height:1.1;margin-bottom:8px;}
+.greeting-hi{font-family:'Fredoka',sans-serif;font-size:clamp(36px,9vw,52px);font-weight:600;color:var(--text);line-height:1.1;margin-bottom:8px;}
 .greeting-hi em{color:var(--violet);font-style:italic;}
-.greeting-date{font-size:14px;color:var(--text3);}
+.greeting-date{font-family:'Fredoka',sans-serif;font-size:15px;font-weight:400;color:var(--text3);letter-spacing:0.01em;}
 
 .done-block{display:none;flex-direction:column;align-items:center;text-align:center;padding:8px 0 28px;gap:10px;}
 .done-block.show{display:flex;}
@@ -110,7 +110,9 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .done-msg{font-family:'Fredoka',sans-serif;font-size:28px;font-weight:600;color:var(--text);}
 .done-sub{font-size:15px;color:var(--text2);line-height:1.6;max-width:280px;}
 
-.main-cta{width:100%;padding:20px;background:var(--violet-deep);color:#fff;border:none;border-radius:16px;font-family:'Fredoka','DM Sans',sans-serif;font-size:20px;font-weight:600;cursor:pointer;transition:all 0.2s;-webkit-tap-highlight-color:transparent;margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:10px;}
+.main-cta{width:100%;padding:20px;background:var(--violet-deep);color:#fff;border:none;border-radius:16px;font-family:'Fredoka','DM Sans',sans-serif;font-size:20px;font-weight:600;cursor:pointer;transition:all 0.2s;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center;gap:10px;}
+
+.cta-footer{position:fixed;bottom:0;left:0;right:0;z-index:50;padding:12px 20px 28px;background:linear-gradient(to top,var(--bg) 70%,transparent);max-width:480px;margin:0 auto;left:50%;transform:translateX(-50%);}
 .main-cta:hover{background:var(--violet);transform:translateY(-2px);}
 .main-cta:active{transform:translateY(0);}
 .main-cta:disabled{background:var(--card2);color:var(--text3);cursor:default;transform:none;}
@@ -218,7 +220,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
         <path d="M1.5 11 Q1.5 19 11 19 Q20.5 19 20.5 11" stroke="var(--violet)" stroke-width="1.8" stroke-linecap="round" fill="none"/>
         <path d="M5 7 Q11 2 17 7" stroke="var(--teal)" stroke-width="2" stroke-linecap="round" fill="none"/>
       </svg>
-      Entrena<em>Mente</em>
+      <span style="letter-spacing:-0.02em;">Entrena<em style="color:var(--violet);font-style:italic;letter-spacing:-0.02em;">Mente</em></span>
     </div>
     <div class="top-right">
       <div class="streak-wrap zero" id="streak-wrap">
@@ -230,7 +232,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   </div>
 
   <div class="greeting-block">
-    <div class="greeting-hi">Hola, <em id="greeting-name"></em></div>
+    <div class="greeting-hi">Hola, <em id="greeting-name" style="color:var(--violet);font-style:normal;"></em></div>
     <div class="greeting-date" id="greeting-date"></div>
   </div>
 
@@ -239,10 +241,6 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <div class="done-msg" id="done-msg">¡Sesión completada!</div>
     <div class="done-sub" id="done-sub"></div>
   </div>
-
-  <button class="main-cta" id="main-cta" onclick="startDailySession()">
-    ▶&nbsp;<span id="cta-label">Comenzar sesión</span>
-  </button>
 
   <div class="prog-bar-wrap" id="prog-wrap" style="display:none;">
     <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
@@ -279,6 +277,12 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     </div>
   </div>
 </div>
+</div>
+
+<div class="cta-footer" id="cta-footer">
+  <button class="main-cta" id="main-cta" onclick="startDailySession()">
+    ▶&nbsp;<span id="cta-label">Comenzar sesión</span>
+  </button>
 </div>
 
 <script>
@@ -363,6 +367,7 @@ function buildHomeScreen(){
   if(allDone){
     cta.disabled=true;
     document.getElementById('cta-label').textContent='Sesión completada ✓';
+    const footer=document.getElementById('cta-footer');if(footer)footer.style.display='none';
     document.getElementById('done-block').classList.add('show');
     document.getElementById('prog-wrap').style.display='none';
     list.style.display='none';
