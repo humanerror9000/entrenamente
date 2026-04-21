@@ -528,14 +528,6 @@ details.sci[open] summary{border-bottom:1px solid var(--border);}
         oninput="document.getElementById('rdy-speed-val').textContent=this.value"
         style="width:100%;accent-color:var(--violet);">
     </div>
-    <div style="width:100%;margin-bottom:24px;">
-      <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:8px;">Texto</div>
-      <select id="rdy-text-sel" style="width:100%;padding:12px 14px;background:var(--card);border:1.5px solid var(--border2);border-radius:11px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;outline:none;cursor:pointer;">
-        <option value="0">Un día en el parque</option>
-<option value="1">La biodiversidad marina</option>
-<option value="2">Economía circular en América Latina</option>
-      </select>
-    </div>
     <button class="ready-btn" onclick="dismissReady()">▶ Empecemos</button>
     <div class="ready-hint">Puedes pausar en cualquier momento</div>
   </div>
@@ -558,8 +550,6 @@ details.sci[open] summary{border-bottom:1px solid var(--border);}
 })();
 function dismissReady(){
   window._stopRdy && window._stopRdy();
-  const sel = document.getElementById('rdy-text-sel');
-  if(sel) selectedTextIdx = parseInt(sel.value)||0;
   const spd = document.getElementById('rdy-speed-slider');
   if(spd){ currentWpm=parseInt(spd.value)||150; syncSpeed(spd.value); }
   document.getElementById('ready-screen').classList.add('hidden');
@@ -640,78 +630,14 @@ function updateSessionBtnLabels() {
 </script>
 
 
-  <div class="steps">
+  <div class="steps" style="display:none;">
     <div class="step active" id="st0"></div>
     <div class="step" id="st1"></div>
     <div class="step" id="st2"></div>
   </div>
 
   <!-- ─── STAGE 0: Settings ─── -->
-  <div class="card visible" id="stage-settings">
-
-    <div class="instr-text">
-        <strong>¿Cómo funciona?</strong> Las palabras (o frases) aparecen una a la vez en el centro de la pantalla. Léelas sin mover los ojos. Al terminar, responde tres preguntas sobre el texto.
-      </div>
-    </div>
-
-    <div class="card-head">
-      <div>
-        <div class="card-title">Lectura Flash</div>
-        <div class="card-sub">Elige tu velocidad y texto. Empieza despacio — ¡siempre puedes subir!</div>
-        <div class="card-pills">
-          <span class="pill pill-teal">RSVP</span>
-          <span class="pill pill-gold">Adaptativo</span>
-          <span class="pill pill-purple">Comprensión</span>
-        </div>
-      </div>
-      <div class="card-live">
-        <div class="card-live-val" id="speed-val">150</div>
-        <div class="card-live-lbl">ppm</div>
-      </div>
-    </div>
-
-    <div class="controls">
-      <div>
-        <span class="ctrl-label">Velocidad inicial</span>
-        <div class="ctrl-val"><span id="speed-val2">150</span> <span>ppm</span></div>
-        <input type="range" id="speed-slider" min="100" max="350" step="10" value="150"
-          oninput="syncSpeed(this.value)">
-        <div class="range-labels">
-          <span>100</span>
-          <span class="range-rec">≤350 recomendado</span>
-          <span>350</span>
-        </div>
-      </div>
-      <div>
-        <span class="ctrl-label">Modo de presentación</span>
-        <div class="mode-toggle">
-          <button class="mode-btn active" id="mode-word" onclick="setMode('word')">Palabra</button>
-          <button class="mode-btn" id="mode-phrase" onclick="setMode('phrase')">Frase</button>
-        </div>
-        <div class="mode-desc" id="mode-desc">Una palabra a la vez — bueno para empezar.</div>
-      </div>
-    </div>
-
-    <div class="text-selector">
-      <div class="text-selector-label">Elige el texto de hoy</div>
-      <div class="text-opt selected" onclick="selectText(this,0)">
-        <span class="text-opt-name">Un día en el parque</span>
-        <span class="text-opt-meta">Narrativo · 86 palabras · A2 ⭐ Recomendado</span>
-      </div>
-      <div class="text-opt" onclick="selectText(this,1)">
-        <span class="text-opt-name">La biodiversidad marina</span>
-        <span class="text-opt-meta">Divulgación · 142 palabras · B2</span>
-      </div>
-      <div class="text-opt" onclick="selectText(this,2)">
-        <span class="text-opt-name">Economía circular en América Latina</span>
-        <span class="text-opt-meta">Ensayo · 118 palabras · C1</span>
-      </div>
-    </div>
-
-    <div class="start-btn-wrap">
-      <button class="start-btn" onclick="startRSVP()">▶ Comenzar Lectura Flash</button>
-    </div>
-  </div>
+  <div class="card visible" id="stage-settings"></div>
 
   <!-- ─── STAGE 1: RSVP ─── -->
   <div class="card" id="stage-rsvp">
@@ -734,14 +660,8 @@ function updateSessionBtnLabels() {
     </div>
 
     <div class="rsvp-controls">
-      <div class="speed-live">
-        <span>Velocidad:</span>
-        <input type="range" id="live-speed" min="100" max="350" step="10" value="150"
-          oninput="adjustLiveSpeed(this.value)">
-        <span class="speed-live-val" id="ctrl-wpm-val">150</span>
-        <span>ppm</span>
-      </div>
-      <div style="display:flex;gap:8px;">
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span style="font-size:13px;color:var(--text3);" id="live-wpm-ctrl"></span>
         <button class="btn btn-ghost btn-sm" id="pause-btn" onclick="togglePause()">⏸ Pausa</button>
         <button class="btn btn-danger btn-sm" onclick="stopRSVP()">✕</button>
       </div>
@@ -888,25 +808,20 @@ let correctCount = 0;
 // UI helpers
 // ──────────────────────────────────
 function setStage(n) {
-  [document.getElementById('stage-settings'),
-   document.getElementById('stage-rsvp'),
-   document.getElementById('stage-q'),
-   document.getElementById('stage-results')].forEach(el => {
-    el.classList.remove('visible');
-    if (el.tagName === 'DIV' && el.id === 'stage-settings') el.style.display = '';
+  const ids = ['stage-settings','stage-rsvp','stage-q','stage-results'];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if(el){ el.classList.remove('visible'); el.style.display='none'; }
   });
   ['st0','st1','st2'].forEach((id,i) => {
     const d = document.getElementById(id);
+    if(!d) return;
     d.classList.remove('active','done');
-    if (i < n) d.classList.add('done');
-    else if (i === n) d.classList.add('active');
+    if(i < n) d.classList.add('done');
+    else if(i === n) d.classList.add('active');
   });
-  const ids = ['stage-settings','stage-rsvp','stage-q','stage-results'];
   const target = document.getElementById(ids[n] || ids[0]);
-  if (target) {
-    target.classList.add('visible');
-    if (target.id === 'stage-settings') target.style.display = '';
-  }
+  if(target){ target.classList.add('visible'); target.style.display=''; }
 }
 
 function setMode(m) {
@@ -948,16 +863,15 @@ function orpSplit(word) {
 function startRSVP() {
   requestWakeLock();
   const text = TEXTS[selectedTextIdx];
-  const tokens = presentMode === 'word' ? text.words : text.phrases;
+  const tokens = presentMode === 'word' ? text.words : (text.phrases || text.words.map(w => [w]));
   totalWords = text.words.length;
   wordIdx = 0;
   paused = false;
 
   // Setup UI — show RSVP stage first so user can scroll to it
   setStage(1);
-  document.getElementById('live-speed').value = currentWpm;
-  document.getElementById('ctrl-wpm-val').textContent = currentWpm;
-  document.getElementById('live-wpm').textContent = currentWpm + ' ppm';
+  const lw=document.getElementById('live-wpm'); if(lw) lw.textContent=currentWpm+' ppm';
+  const lc=document.getElementById('live-wpm-ctrl'); if(lc) lc.textContent=currentWpm+' ppm';
   document.getElementById('rsvp-prog').textContent = `0 / ${totalWords} palabras`;
 
   const wordWrap = document.getElementById('rsvp-word-wrap');
@@ -1023,17 +937,26 @@ function scheduleNext(tokens, allWords) {
     document.getElementById('rsvp-context').textContent = ctx;
   } else {
     const el = document.getElementById('rsvp-phrase');
+    // Clear immediately, show new phrase after clean fade
+    el.style.transition = 'none';
     el.style.opacity = '0';
-    setTimeout(() => { el.textContent = displayText; el.style.opacity = '1'; }, 80);
+    el.textContent = '';
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        el.style.transition = 'opacity 0.15s';
+        el.textContent = displayText;
+        el.style.opacity = '1';
+      });
+    });
   }
 
   // Update progress
   const allWordIdx = Array.isArray(tokens[wordIdx])
     ? tokens.slice(0, wordIdx).reduce((s,t) => s + (Array.isArray(t)?t.length:1), 0)
     : wordIdx;
-  const prog = allWordArr => (allWordIdx / (allWordArr || 1)) * 100;
-  document.getElementById('rsvp-bar').style.width = Math.min(100, (allWordIdx / (allWords ? allWords.length : tokens.length)) * 100) + '%';
-  document.getElementById('rsvp-prog').textContent = `${Math.min(allWordIdx + wordCount, allWords ? allWords.length : tokens.length)} / ${allWords ? allWords.length : tokens.length} palabras`;
+  const totalCount = allWords ? allWords.length : tokens.length;
+  document.getElementById('rsvp-bar').style.width = Math.min(100, (allWordIdx / totalCount) * 100) + '%';
+  document.getElementById('rsvp-prog').textContent = `${Math.min(allWordIdx + wordCount, totalCount)} / ${totalCount} palabras`;
 
   wordIdx++;
 
@@ -1060,7 +983,7 @@ function togglePause() {
   document.getElementById('pause-btn').textContent = paused ? '▶ Continuar' : '⏸ Pausa';
   if (!paused) {
     const text = TEXTS[selectedTextIdx];
-    const tokens = presentMode === 'word' ? text.words : text.phrases;
+    const tokens = presentMode === 'word' ? text.words : (text.phrases || text.words.map(w => [w]));
     scheduleNext(tokens, text.words);
   } else {
     clearTimeout(rsvpTimer);
@@ -1089,7 +1012,7 @@ function finishRSVP(wordCount) {
   const elapsed = (Date.now() - startTime) / 60000;
   const finalWpm = Math.round(wordCount / elapsed);
   document.getElementById('result-wpm').textContent = finalWpm;
-  document.getElementById('header-wpm').textContent = '↑ ' + finalWpm + ' ppm';
+  const hw = document.getElementById('header-wpm'); if(hw) hw.textContent = '↑ ' + finalWpm + ' ppm';
   buildQuestions();
   setStage(2);
 }
