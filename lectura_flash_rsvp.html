@@ -700,13 +700,13 @@ function updateSessionBtnLabels() {
       <div class="insight" id="insight-box"></div>
       <div class="results-btns">
         <button class="btn btn-ghost session-hide" onclick="resetAll()">← Nuevo texto</button>
-        <button class="btn btn-teal session-hide" onclick="resetAll()">Repetir →</button>
+        <button class="btn btn-teal session-hide" onclick="repeatText()">Repetir →</button>
       </div>
       <button class="session-next-btn" onclick="completeAndContinue()">Siguiente ejercicio →</button>
     </div>
   </div>
 
-  <details class="sci">
+  <details class="sci session-hide">
     <summary>⚗ Base científica — por qué el límite de 350 ppm</summary>
     <div class="sci-body">
       Las investigaciones de Acklin &amp; Papesh (2017) y Benedetto et al. (2015) confirman que no existe diferencia significativa en comprensión entre lectura normal y RSVP a 250–350 ppm, pero la comprensión cae significativamente por encima de ese umbral. El modo <em>por frases</em> preserva las señales sintácticas que el modo palabra-por-palabra elimina, lo que reduce la carga cognitiva en oraciones complejas.
@@ -719,8 +719,10 @@ function updateSessionBtnLabels() {
 // ── sync speed display across both elements ──
 function syncSpeed(v) {
   currentWpm = parseInt(v);
-  document.getElementById('speed-val').textContent = v;
-  document.getElementById('speed-val2').textContent = v;
+  const sv = document.getElementById('speed-val'); if(sv) sv.textContent = v;
+  const sv2 = document.getElementById('speed-val2'); if(sv2) sv2.textContent = v;
+  const lw = document.getElementById('live-wpm'); if(lw) lw.textContent = v + ' ppm';
+  const lc = document.getElementById('live-wpm-ctrl'); if(lc) lc.textContent = v + ' ppm';
 }
 
 const TEXTS = [
@@ -826,11 +828,10 @@ function setStage(n) {
 
 function setMode(m) {
   presentMode = m;
-  document.getElementById('mode-word').classList.toggle('active', m==='word');
-  document.getElementById('mode-phrase').classList.toggle('active', m==='phrase');
-  document.getElementById('mode-desc').textContent = m === 'word'
-    ? 'Una palabra a la vez con Punto de Reconocimiento Óptico marcado.'
-    : 'Frases sintácticas completas, preservando estructura gramatical.';
+  const mw = document.getElementById('mode-word'); if(mw) mw.classList.toggle('active', m==='word');
+  const mp = document.getElementById('mode-phrase'); if(mp) mp.classList.toggle('active', m==='phrase');
+  const md = document.getElementById('mode-desc');
+  if(md) md.textContent = m==='word' ? 'Una palabra a la vez — bueno para empezar.' : 'Frases completas — mejor comprensión.';
 }
 
 function selectText(el, idx) {
@@ -992,14 +993,10 @@ function togglePause() {
 
 function adjustLiveSpeed(v) {
   currentWpm = parseInt(v);
-  document.getElementById('ctrl-wpm-val').textContent = v;
-  document.getElementById('live-wpm').textContent = v + ' ppm';
-
-  const fb = document.getElementById('flash-fb');
-  fb.className = 'flash-feedback show ' + (currentWpm > 250 ? 'up' : 'down');
-  fb.textContent = (currentWpm > 250 ? '▲ ' : '▼ ') + currentWpm + ' ppm';
-  clearTimeout(fb._t);
-  fb._t = setTimeout(() => fb.classList.remove('show'), 1200);
+  const cw = document.getElementById('ctrl-wpm-val'); if(cw) cw.textContent = v;
+  const lw = document.getElementById('live-wpm'); if(lw) lw.textContent = v + ' ppm';
+  const lc = document.getElementById('live-wpm-ctrl'); if(lc) lc.textContent = v + ' ppm';
+  if(rsvpTimer) { clearTimeout(rsvpTimer); }
 }
 
 function stopRSVP() {
@@ -1089,7 +1086,17 @@ function resetAll() {
   clearTimeout(rsvpTimer);
   wordIdx = 0; paused = false; answeredCount = 0; correctCount = 0;
   document.getElementById('rsvp-bar').style.width = '0%';
+  // Go back to ready screen so user can pick a new text + speed
+  document.getElementById('ready-screen').classList.remove('hidden');
   setStage(0);
+}
+
+function repeatText() {
+  clearTimeout(rsvpTimer);
+  wordIdx = 0; paused = false; answeredCount = 0; correctCount = 0;
+  document.getElementById('rsvp-bar').style.width = '0%';
+  setStage(1);
+  startRSVP();
 }
 
 // Init
