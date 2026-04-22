@@ -11,7 +11,7 @@
   --text:#EAE8F2; --text2:#8E8CA8; --text3:#4A4860;
   /* Brand violet — primary accent */
   --violet:#B8A9FF; --violet-d:rgba(184,169,255,0.12); --violet-b:rgba(184,169,255,0.28);
-  --violet-deep:#534AB7;
+  --violet-deep:#534AB7; --ink:var(--text); --ink2:var(--text2); --muted:var(--text3);
   /* Teal — action/success/interactive */
   --teal:#2ECFB8; --teal-d:rgba(46,207,184,0.12); --teal-b:rgba(46,207,184,0.28);
   /* Supporting palette */
@@ -66,11 +66,14 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
   overflow: hidden; display: none;
 }
 .card.show { display: block; }
+#stage-0.show, #stage-1.show, #stage-2.show { min-height:100dvh; border-radius:0; border-left:none; border-right:none; border-top:none; display:flex; flex-direction:column; }
 
 .chead {
   padding: 16px 22px 14px; border-bottom: 1.5px solid var(--border);
   display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;
 }
+#stage-1 .chead, #stage-2 .chead, #stage-3 .chead { display:none; }
+
 .ctitle { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
 .csub { font-size: 12px; color: var(--ink2); line-height: 1.55; max-width: 380px; }
 .cpills { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
@@ -93,18 +96,15 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
   padding: 9px 18px; border-radius: 10px; border: none; cursor: pointer;
   letter-spacing: 0.02em; transition: all 0.15s;
 }
-.btn-ink { background: var(--ink); color: #fff; }
+.btn-ink { background: var(--violet-deep); color: #fff; border:none; }
 .btn-ink:hover { background: var(--purple); }
-.btn-teal { background: var(--teal); color: #fff; }
+.btn-teal { background:var(--violet-deep); color:#fff; border:none; }
 .btn-teal:hover { opacity: 0.88; }
 .btn-ghost { background: transparent; color: var(--ink2); border: 1.5px solid var(--border2); }
 .btn-ghost:hover { border-color: var(--ink); color: var(--ink); }
 .btn-sm { padding: 7px 13px; font-size: 12px; }
 
-.cfooter {
-  padding: 12px 22px; border-top: 1.5px solid var(--border);
-  display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;
-}
+.cfooter { padding:14px 20px 28px; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:auto; }
 
 /* ════════════════
    STAGE 0: Calibration
@@ -113,16 +113,11 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
 .calib-intro p { font-size: 14px; color: var(--ink2); line-height: 1.7; margin-bottom: 14px; }
 .calib-intro strong { color: var(--ink); }
 
-.calib-text-area {
-  padding: 22px 28px 18px;
-  background: var(--card2);
-  border-top: 1.5px solid var(--border);
-  border-bottom: 1.5px solid var(--border);
-}
+.calib-text-area { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; }
 .calib-sentence {
-  font-family: 'Lora', serif;
-  font-size: 17px; line-height: 1.85; color: var(--ink);
-  margin-bottom: 10px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px; line-height: 1.8; color: var(--text);
+  text-align: center; max-width: 520px;
 }
 .calib-q { font-size: 13px; color: var(--ink2); margin-bottom: 10px; line-height: 1.5; }
 .calib-q strong { color: var(--ink); }
@@ -133,7 +128,7 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
   font-size: 13px; color: var(--ink2); cursor: pointer; transition: all 0.13s;
   font-family: 'Instrument Sans', sans-serif;
 }
-.copt:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-m); }
+.copt:hover { border-color: var(--border2); color: var(--text); background: var(--card); }
 .copt.c-correct { border-color: var(--teal); background: var(--teal-m); color: var(--teal); pointer-events: none; }
 .copt.c-wrong { border-color: var(--coral); background: var(--coral-m); color: var(--coral); pointer-events: none; }
 .copt.c-locked { pointer-events: none; opacity: 0.45; }
@@ -141,16 +136,12 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
 /* ════════════════
    STAGE 1: Reading + fading
    ════════════════ */
-.reading-area {
-  padding: 26px 32px 22px;
-  min-height: 220px;
-  position: relative;
-}
+.reading-area { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; }
 
 .sentence-display {
-  font-family: 'Lora', serif;
-  font-size: 18px; line-height: 2.0; color: var(--ink);
-  min-height: 52px; position: relative;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px; line-height: 1.8; color: var(--text);
+  position: relative; width: 100%; text-align: center; max-width: 520px;
 }
 
 /* Fading overlay — left-to-right masking */
@@ -204,7 +195,7 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
   font-size: 14px; font-family: 'Instrument Sans', sans-serif;
   color: var(--ink2); cursor: pointer; transition: all 0.13s;
 }
-.qopt:hover { border-color:var(--teal);color:var(--text);background:var(--teal-d); background: var(--purple-m); }
+.qopt:hover { border-color:var(--border2);color:var(--text);background:var(--card); }
 .qopt.q-correct { border-color: var(--teal); background: var(--teal-m); color: var(--teal); pointer-events: none; }
 .qopt.q-wrong { border-color: var(--coral); background: var(--coral-m); color: var(--coral); pointer-events: none; }
 .qopt.q-locked { pointer-events: none; opacity: 0.4; }
@@ -548,27 +539,27 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 <div class="ready-screen" id="ready-screen">
   <div class="ready-inner">
     <div class="ready-title"><em>Contra</em>reloj</div>
-    <div class="ready-sub">El texto se desvanece mientras lees — sigue el ritmo.</div>
-    
-    <div id="rdy-calib-note" style="width:100%;padding:12px 16px;background:var(--card);border:1.5px solid var(--border2);border-radius:11px;margin-bottom:20px;text-align:left;">
-      <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:4px;" id="rdy-calib-title">Primera vez</div>
-      <div style="font-size:13px;color:var(--text3);line-height:1.5;" id="rdy-calib-desc">Primero medimos tu ritmo de lectura natural — sin presión. Solo tarda un momento.</div>
+    <div class="ready-sub">Las oraciones aparecen y se desvanecen mientras lees — tienes que terminar antes de que desaparezcan.</div>
+    <div id="rdy-calib-note" style="width:100%;margin-bottom:24px;">
+      <div style="font-size:15px;color:var(--text3);line-height:1.65;text-align:center;" id="rdy-calib-desc">Antes de empezar, mediremos tu ritmo de lectura natural. Solo tardará un momento.</div>
     </div>
     <button class="ready-btn" onclick="dismissReady()">▶ Empecemos</button>
-    <div class="ready-hint">Modo inicial: Párrafo completo — el más suave para empezar</div>
   </div>
 </div>
 <script>function dismissReady(){
   document.getElementById('ready-screen').classList.add('hidden');
   const saved = localStorage.getItem('em_contra_wpm');
   if(saved){
-    // Returning user — skip calibration, use saved pace
-    calibratedWpm = parseInt(saved);
-  try{ localStorage.setItem('em_contra_wpm', calibratedWpm); }catch(e){}
+    const savedWpm = parseInt(saved);
+    baseRateMs = Math.round(60000 / (savedWpm * 5));
+    currentRate = baseRateMs;
+    const hr = document.getElementById('hdr-rate');
+    if(hr) hr.textContent = baseRateMs + 'ms/c';
     setStage(1);
+    startTraining();
   } else {
-    // First visit — go through calibration
     setStage(0);
+    startCalib();
   }
 }
 // ── Session completion tracking ──
@@ -655,17 +646,9 @@ function updateSessionBtnLabels() {
        STAGE 0: Calibration
        ═══════════════════════ -->
   <div class="card show" id="stage-0">
-    <div class="chead">
-      <div>
-        <div class="ctitle" style="font-family:\'Cormorant Garamond\',serif;font-weight:300;font-size:24px;">Calibración — establece tu tasa base</div>
-        <div class="csub" style="font-size:13px;color:var(--text2);">Lee cada oración a tu ritmo natural. Pulsa la tecla de espacio (o el botón) al terminar. Esto establece el tiempo de exposición inicial para el entrenamiento.</div>
-        <div class="cpills">
-          <span class="pill pt">RAP protocol</span>
-          <span class="pill pa">12 oraciones</span>
-          <span class="pill pp">Tasa individual</span>
-        </div>
-      </div>
-      <div class="clive"><div class="cv" id="calib-prog">0/12</div><div class="cl">oraciones</div></div>
+    <div class="chead" style="padding:14px 20px;">
+      <div style="font-size:14px;color:var(--text3);">Lee a tu ritmo natural — sin presión</div>
+      <div class="clive"><div class="cv" id="calib-prog">0/6</div><div class="cl">oraciones</div></div>
     </div>
     <div class="prog-bar"><div class="prog-fill" id="calib-fill" style="width:0%;background:var(--teal)"></div></div>
 
@@ -692,21 +675,14 @@ function updateSessionBtnLabels() {
        STAGE 1: Training
        ═══════════════════════ -->
   <div class="card" id="stage-1">
-    <div class="chead">
-      <div>
-        <div class="ctitle">Lectura con desvanecimiento</div>
-        <div class="csub">Lee cada oración antes de que desaparezca. La velocidad se adapta según tu comprensión.</div>
-        <div class="cpills">
-          <span class="pill pt">Texto adaptativo</span>
-          <span class="pill pa" id="mode-pill">Modo: Párrafo completo</span>
-        </div>
-      </div>
+    <div class="chead" style="padding:14px 20px;">
+      <div style="font-size:14px;color:var(--text3);" id="mode-pill">Párrafo completo</div>
       <div class="clive"><div class="cv" id="train-prog">0/15</div><div class="cl">oraciones</div></div>
     </div>
     <div class="prog-bar"><div class="prog-fill" id="train-fill" style="width:0%;background:var(--amber)"></div></div>
 
     <!-- Fading mode selector -->
-    <div class="mode-row">
+    <div class="mode-row" style="display:none;">
       <div class="mtab" id="m0" onclick="setFadeMode(0)">← Izq. → Der.</div>
       <div class="mtab" id="m1" onclick="setFadeMode(1)">Palabras</div>
       <div class="mtab mactive" id="m2" onclick="setFadeMode(2)">Párrafo completo</div>
@@ -765,7 +741,7 @@ function updateSessionBtnLabels() {
   </div>
 
   <!-- Science note -->
-  <details class="sci-details">
+  <details class="sci-details session-hide">
   <summary>⚗ Cómo funciona la adaptación RAP</summary>
   <div class="sci-details-body">El Programa de Aceleración Lectora (Breznitz, University of Haifa) calibra individualmente la tasa de borrado en ms/carácter. La tasa se <strong>aumenta 2 ms/car.</strong> si se acierta en 9 de cada 10 oraciones consecutivas, se <strong>mantiene</strong> si se acierta entre 8–9, y se <strong>reduce 2 ms/car.</strong> si hay más de 2 errores en 10. Este ajuste se hace hasta 5 veces por sesión. Los estudios muestran mejoras de fluidez y comprensión en 24 sesiones, con efectos de transferencia a la lectura sin restricción de tiempo.</div>
 </details>
@@ -836,7 +812,7 @@ let fadeTimer = null, paused = false;
 
 let qAnswered = 0, qCorrect = 0;
 const TRAIN_COUNT = 15;
-const CALIB_COUNT = 12;
+const CALIB_COUNT = 6;
 // Adaptation thresholds (RAP protocol)
 const ADAPT_WINDOW = 10;
 const ADAPT_UP_THRESHOLD = 9;   // ≥9/10 correct → increase rate (faster = shorter time per char)
@@ -860,6 +836,8 @@ function setStage(n) {
 // STAGE 0: Calibration
 // ──────────────────────────────────────────
 function startCalib() {
+  const ch = document.querySelector('#stage-0 .chead');
+  if(ch) ch.style.display='none';
   requestWakeLock();
   calibIdx=0; calibTimes=[]; calibCorrect=0;
   document.getElementById('calib-start-btn').style.display='none';
@@ -875,7 +853,10 @@ function spaceHandler(e) {
 
 function showCalibItem() {
   const item = CALIB_ITEMS[calibIdx];
-  document.getElementById('calib-sent').textContent = item.s;
+  const sentEl = document.getElementById('calib-sent');
+  sentEl.style.opacity = '1';
+  sentEl.style.transition = 'opacity 0.3s';
+  sentEl.textContent = item.s;
   document.getElementById('calib-q-wrap').style.display='none';
   document.getElementById('calib-opts').innerHTML='';
   document.getElementById('calib-prog').textContent = (calibIdx+1)+'/'+CALIB_COUNT;
@@ -890,7 +871,8 @@ function calibNext() {
   const item = CALIB_ITEMS[calibIdx];
   const charCount = item.s.length;
   const msPerChar = elapsed / charCount;
-  // Show question
+  // Hide sentence, show question
+  document.getElementById('calib-sent').style.opacity='0';
   document.getElementById('calib-space-btn').style.display='none';
   document.getElementById('calib-q-wrap').style.display='';
   document.getElementById('calib-q').innerHTML='<strong>'+item.q+'</strong>';
@@ -941,7 +923,7 @@ function finishCalib() {
   baseRateMs = Math.round(mean);
   // RAP starts training at the calibrated rate
   currentRate = baseRateMs;
-  document.getElementById('hdr-rate').textContent = baseRateMs+'ms/c';
+  const _hr2=document.getElementById('hdr-rate'); if(_hr2) _hr2.textContent = baseRateMs+'ms/c';
   document.getElementById('calib-area').innerHTML=`
     <div style="padding:14px 0;text-align:center">
       <div style="font-size:28px;font-weight:300;color:var(--teal)">${baseRateMs} ms/car.</div>
@@ -1124,7 +1106,7 @@ function applyRAPAdaptation() {
   else delta = +ADAPT_STEP_MS * 2; // slow down significantly
   // Clamp: never go below 30ms/char or above 200ms/char
   currentRate = Math.max(30, Math.min(200, currentRate + delta));
-  document.getElementById('hdr-rate').textContent=currentRate+'ms/c';
+  const _hr2=document.getElementById('hdr-rate'); if(_hr2) _hr2.textContent=currentRate+'ms/c';
 }
 
 function showResults() {
@@ -1153,10 +1135,10 @@ function showResults() {
       <div class="rg"><div class="rv">${currentRate>baseRateMs?'↑':'↓'} ${Math.abs(currentRate-baseRateMs)}</div><div class="rl">ms/car. vs. base</div></div>
     </div>
     <div class="insight">${insight}</div>
-    <div class="res-btns">
+    <div class="res-btns session-hide">
       <button class="btn btn-ghost" onclick="restartSession()">← Nueva sesión</button>
-      <button class="btn btn-ink" onclick="restartSession()">Siguiente ejercicio →</button>
     </div>
+    <button class="btn btn-ink session-next-btn" onclick="completeAndContinue()" style="display:none;">Siguiente ejercicio →</button>
   `;
   setStage(3);
 }
