@@ -60,6 +60,7 @@ main { width: 100%; max-width: 680px; padding: 22px 16px 0; display: flex; flex-
 /* Cards */
 .card { background: var(--card); border-radius: var(--r); border: 1px solid var(--border2); overflow: hidden; display: none; }
 .card.show { display: block; }
+#s1.show { display:flex; flex-direction:column; min-height:100dvh; border-radius:0; border-left:none; border-right:none; border-top:none; }
 
 .chead { padding: 15px 20px 13px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
 .ctitle { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
@@ -86,7 +87,7 @@ main { width: 100%; max-width: 680px; padding: 22px 16px 0; display: flex; flex-
 .btn-amber { background: var(--amber); color: var(--bg); }
 .btn-sm { padding: 6px 12px; font-size: 12px; }
 
-.cfooter { padding: 11px 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.cfooter { padding:14px 20px 28px; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:auto; }
 
 /* ══════════════════
    MODE SELECTOR
@@ -666,10 +667,9 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 function dismissReady(){
   document.getElementById('ready-screen').classList.add('hidden');
   if(typeof requestWakeLock==='function') requestWakeLock();
-  // Apply ready selections to the s0 card and start
-  selectN(_rdyN);
-  selectMode(document.querySelector('[data-mode="'+_rdyMode+'"]'), _rdyMode);
-  // Save for next time
+  // Apply selections directly without relying on s0 DOM elements
+  nLevel = _rdyN;
+  mode = _rdyMode;
   try{ localStorage.setItem('em_continua_settings', JSON.stringify({n:_rdyN, mode:_rdyMode})); }catch(e){}
   startGame();
 }
@@ -747,7 +747,7 @@ function updateSessionBtnLabels() {
 </script>
 
 
-  <div class="sdots">
+  <div class="sdots" style="display:none;">
     <div class="sdot active" id="sd0"></div>
     <div class="sdot" id="sd1"></div>
     <div class="sdot" id="sd2"></div>
@@ -800,16 +800,11 @@ function updateSessionBtnLabels() {
        STAGE 1: Game
        ═══════════════════════ -->
   <div class="card" id="s1">
-    <div class="chead">
-      <div>
-        <div class="ctitle" id="g-title">1-back Visual</div>
-        <div class="csub">Pulsa <strong>¡Coincide!</strong> si lo que ves ahora es igual a lo que apareció hace <span id="g-n-label">2</span> pasos. Si no coincide, no hagas nada.</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px">
-        <span class="n-indicator" id="g-n-badge">1-back</span>
-        <div class="clive"><div class="cv" id="g-trial">1/20</div><div class="cl">turno</div></div>
-      </div>
+    <div class="chead" style="padding:12px 20px;">
+      <div style="font-size:13px;color:var(--text3);"><span id="g-n-badge">1-back</span> · <span id="g-title"></span></div>
+      <div class="clive"><div class="cv" id="g-trial">1/20</div><div class="cl">turno</div></div>
     </div>
+    <span id="g-n-label" style="display:none">1</span>
     <div class="prog-bar"><div class="prog-fill" id="g-fill" style="width:0%;background:var(--teal)"></div></div>
 
     <div class="arena" id="arena"></div>
@@ -841,7 +836,7 @@ function updateSessionBtnLabels() {
     <div class="res-body" id="res-body"></div>
   </div>
 
-  <details class="sci-details">
+  <details class="sci-details session-hide">
   <summary>⚗ Por qué el n-back actualiza la memoria de trabajo</summary>
   <div class="sci-details-body">El n-back exige <em>codificación continua, monitoreo y actualización</em> — los tres procesos del componente ejecutivo de la memoria de trabajo. A diferencia de las tareas de amplitud (Memoria Activa), que entrenan el <em>mantenimiento</em> bajo interferencia, el n-back entrena la capacidad de <em>descartar</em> lo obsoleto y priorizar lo nuevo. El modo dual amplifica el efecto al requerir actualización simultánea en dos modalidades. Una reciente revisión en Nature Human Behaviour (2023) con 460 participantes en tres RCTs mostró que la mejora en n-back no entrenado media la transferencia a razonamiento matricial — el indicador más limpio de inteligencia fluida.</div>
 </details>
@@ -936,6 +931,7 @@ function hideAllFeedback() {
 }
 function selectMode(el, m) {
   mode=m;
+  if(!el) return; // called without DOM element
   document.querySelectorAll('.mcard').forEach(c=>{
     c.classList.remove('msel');
     c.style.borderColor='var(--border2)';
@@ -1167,7 +1163,7 @@ function respond(type) {
     if(cell&&(mode==='visual'||mode==='dual')) { cell.classList.add('miss-flash'); setTimeout(()=>cell.classList.remove('miss-flash'),300); }
     updateStreak(trialIdx-nLevel, 'miss');
   }
-  document.getElementById('hdr-acc').textContent=calcAcc()+'%';
+  (document.getElementById('hdr-acc')||{textContent:''}).textContent=calcAcc()+'%';
 }
 
 function scoreNoResponse(idx) {
@@ -1177,7 +1173,7 @@ function scoreNoResponse(idx) {
   if(r.posTarget && !r.posResponded) { misses++; updateStreak(idx-nLevel,'miss'); }
   if(r.letTarget && !r.letResponded) { misses++; }
   if(!r.anyTarget) { correctRejections++; updateStreak(idx-nLevel,'cr'); }
-  document.getElementById('hdr-acc').textContent=calcAcc()+'%';
+  (document.getElementById('hdr-acc')||{textContent:''}).textContent=calcAcc()+'%';
 }
 
 function calcAcc() {
@@ -1210,7 +1206,7 @@ function endGame() {
 
   const acc=calcAcc();
   const dprime = hits>0||misses>0 ? (hits/(hits+misses||1) - falseAlarms/(falseAlarms+correctRejections||1)).toFixed(2) : '–';
-  document.getElementById('hdr-acc').textContent=acc+'%';
+  (document.getElementById('hdr-acc')||{textContent:''}).textContent=acc+'%';
 
   // Recommend next n-level
   let nextN=nLevel, recommendation='';
