@@ -85,7 +85,7 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
   border: 1px solid var(--border2);
   overflow: hidden; display: none;
 }
-.drill-card.active { display: block; }
+.drill-card.active { display:flex; flex-direction:column; min-height:100dvh; position:fixed; inset:0; overflow-y:auto; z-index:10; background:var(--bg); }
 
 .card-head {
   padding: 16px 20px 14px;
@@ -108,11 +108,7 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
 /* ═══════════════════════════════
    DRILL 1 — Horizontal jump targets
    ═══════════════════════════════ */
-.jump-arena {
-  padding: 28px 24px 20px;
-  display: flex; flex-direction: column; align-items: center; gap: 20px;
-  min-height: 260px; position: relative;
-}
+.jump-arena { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; gap:20px; }
 .jump-track {
   width: 100%; position: relative;
   height: 64px; display: flex; align-items: center;
@@ -162,14 +158,8 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
 /* ═══════════════════════════════
    DRILL 2 — Return sweep
    ═══════════════════════════════ */
-.sweep-arena { padding: 16px 20px 12px; }
-.sweep-text-display {
-  font-family: 'Fraunces', serif; font-size: 15px; line-height: 1.9;
-  color: var(--text); letter-spacing: 0.01em;
-  margin-bottom: 12px;
-  user-select: none;
-  max-height: 52vh; overflow-y: auto;
-}
+.sweep-arena { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; gap:16px; }
+.sweep-text-display { width:100%; max-width:560px; font-family:"Cormorant Garamond",serif; font-size:22px; line-height:2.0; color:var(--text); }
 @media (max-width: 600px) {
   .sweep-text-display { font-size: 14px; line-height: 1.8; max-height: 44vh; }
 }
@@ -193,7 +183,7 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
 /* ═══════════════════════════════
    DRILL 3 — Span digit scan
    ═══════════════════════════════ */
-.span-arena { padding: 24px 24px 20px; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+.span-arena { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; gap:16px; }
 .span-grid {
   display: grid; gap: 10px; width: 100%;
   max-width: 540px;
@@ -234,7 +224,7 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
 /* ═══════════════════════════════
    DRILL 4 — King-Devick style number scan
    ═══════════════════════════════ */
-.kd-arena { padding: 20px 24px; }
+.kd-arena { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; gap:16px; }
 .kd-board {
   display: flex; flex-direction: column; gap: 14px;
   margin-bottom: 18px;
@@ -600,7 +590,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 <div class="ready-screen" id="ready-screen">
   <div class="ready-inner">
     <div class="ready-title">Saltos <em>Visuales</em></div>
-    <div class="ready-sub">Cuatro ejercicios de movimiento ocular, uno tras otro. Unos 5 minutos en total.</div>
+    <div class="ready-sub">Sigue el punto con los ojos y tócalo cuando se ilumine.</div>
     
     <div style="display:flex;gap:8px;justify-content:center;margin-bottom:24px;flex-wrap:wrap;">
       <div style="padding:6px 12px;background:var(--card);border:1px solid var(--border2);border-radius:20px;font-size:12px;color:var(--text3);">⇄ Saltos</div>
@@ -616,8 +606,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 function dismissReady(){
   document.getElementById('ready-screen').classList.add('hidden');
   if(typeof requestWakeLock==='function') requestWakeLock();
-  switchDrill(0);
-  startJump();
+  showDrillIntro(0);
 }
 
 // ── Session completion tracking ──
@@ -721,7 +710,7 @@ function updateSessionBtnLabels() {
   </div>
 
   <!-- Drill tab selector -->
-  <div class="drill-tabs">
+  <div class="drill-tabs" style="display:none;">
     <div class="dtab active" onclick="switchDrill(0)"><span class="icon">⇄</span>Saltos horizontales</div>
     <div class="dtab" onclick="switchDrill(1)"><span class="icon">↵</span>Barrido de retorno</div>
     <div class="dtab" onclick="switchDrill(2)"><span class="icon">◈</span>Amplitud visual</div>
@@ -732,21 +721,11 @@ function updateSessionBtnLabels() {
        DRILL 0: Horizontal jump targets
        ═══════════════════════════════ -->
   <div class="drill-card active" id="drill-0">
-    <div class="card-head">
-      <div class="card-head-left">
-        <div class="title">Saltos horizontales</div>
-        <div class="sub">Toca el blanco iluminado lo más rápido posible. Entrena la precisión y velocidad de los movimientos sacádicos dentro de una línea.</div>
-        <div class="pills">
-          <span class="pill p-teal">Sacadas intralínea</span>
-          <span class="pill p-amber">Amplitud variable</span>
-        </div>
-      </div>
-      <div class="live-stat">
-        <div class="val" id="j-rt">–</div>
-        <div class="lbl">ms / salto</div>
-      </div>
+    <div class="card-head" style="padding:12px 20px;display:flex;align-items:center;justify-content:space-between;">
+      <div style="font-size:14px;color:var(--text3);">Saltos horizontales</div>
+      <div class="live-stat"><div class="val" id="j-rt">–</div><div class="lbl">ms / salto</div></div>
     </div>
-    <div class="fb-bar"><div class="fb-fill" id="j-fb" style="width:0%;background:var(--teal)"></div></div>
+  <div class="fb-bar"><div class="fb-fill" id="j-fb" style="width:0%;background:var(--teal)"></div></div>
     <div class="jump-arena" id="jump-arena">
       <div class="jump-track" id="jump-track">
         <div class="jump-rail"></div>
@@ -767,16 +746,8 @@ function updateSessionBtnLabels() {
       </div>
     </div>
     <div class="drill-footer">
-      <div style="display:flex;gap:6px;align-items:center">
-        <span style="font-size:12px;color:var(--text3)">Amplitud:</span>
-        <button class="btn btn-ghost" onclick="setJumpWidth('short')" id="jw-short" style="padding:5px 10px">Corta</button>
-        <button class="btn btn-ghost" onclick="setJumpWidth('medium')" id="jw-med" style="padding:5px 10px;border-color:var(--purple);color:var(--purple)">Media</button>
-        <button class="btn btn-ghost" onclick="setJumpWidth('long')" id="jw-long" style="padding:5px 10px">Larga</button>
-      </div>
-      <div style="display:flex;gap:8px">
-        <button class="btn btn-ghost" onclick="resetJump()">Reiniciar</button>
-        <button class="btn btn-teal" id="j-start-btn" onclick="startJump()">▶ Iniciar</button>
-      </div>
+      <div></div>
+      <button class="btn btn-teal" id="j-start-btn" onclick="startJump()">▶ Iniciar</button>
     </div>
   </div>
 
@@ -784,21 +755,11 @@ function updateSessionBtnLabels() {
        DRILL 1: Return sweep
        ═══════════════════════════════ -->
   <div class="drill-card" id="drill-1">
-    <div class="card-head">
-      <div class="card-head-left">
-        <div class="title">Barrido de retorno</div>
-        <div class="sub">Presiona la tecla (o botón) al terminar cada línea para avanzar. Entrena la precisión del salto de fin de línea, que falla en el 40–60% de las lecturas.</div>
-        <div class="pills">
-          <span class="pill p-coral">Return sweep</span>
-          <span class="pill p-amber">Corrective saccade reduction</span>
-        </div>
-      </div>
-      <div class="live-stat">
-        <div class="val" id="sw-regressions">0</div>
-        <div class="lbl">regresiones</div>
-      </div>
+    <div class="card-head" style="padding:12px 20px;display:flex;align-items:center;justify-content:space-between;">
+      <div style="font-size:14px;color:var(--text3);">Barrido de retorno</div><span id="sw-regressions" style="display:none"></span>
+      <div class="live-stat"><div class="val" id="s-rt">–</div><div class="lbl">ms / línea</div></div>
     </div>
-    <div class="fb-bar"><div class="fb-fill" id="sw-fb" style="width:0%;background:var(--teal)"></div></div>
+  <div class="fb-bar"><div class="fb-fill" id="sw-fb" style="width:0%;background:var(--teal)"></div></div>
     <div class="sweep-arena">
       <div class="sweep-text-display" id="sweep-display"></div>
       <div class="sweep-controls">
@@ -825,21 +786,11 @@ function updateSessionBtnLabels() {
        DRILL 2: Visual span / amplitude
        ═══════════════════════════════ -->
   <div class="drill-card" id="drill-2">
-    <div class="card-head">
-      <div class="card-head-left">
-        <div class="title">Amplitud visual</div>
-        <div class="sub">Memoriza el número mostrado brevemente, luego encuéntralo en la cuadrícula sin mover la cabeza. Expande tu campo sacádico.</div>
-        <div class="pills">
-          <span class="pill p-purple">Visual span</span>
-          <span class="pill p-teal">Parafoveal attention</span>
-        </div>
-      </div>
-      <div class="live-stat">
-        <div class="val" id="sp-acc">–</div>
-        <div class="lbl">precisión</div>
-      </div>
+    <div class="card-head" style="padding:12px 20px;display:flex;align-items:center;justify-content:space-between;">
+      <div style="font-size:14px;color:var(--text3);">Amplitud visual</div><span id="sp-acc" style="display:none"></span>
+      <div class="live-stat"><div class="val" id="v-acc">–</div><div class="lbl">precisión</div></div>
     </div>
-    <div class="fb-bar"><div class="fb-fill" id="sp-fb" style="width:0%;background:var(--purple)"></div></div>
+  <div class="fb-bar"><div class="fb-fill" id="sp-fb" style="width:0%;background:var(--purple)"></div></div>
     <div class="span-arena">
       <div class="span-prompt" id="sp-prompt">
         Presiona <strong>Iniciar</strong>. Se mostrará un número durante <strong>500ms</strong>. Luego encuéntralo en la cuadrícula.
@@ -862,22 +813,11 @@ function updateSessionBtnLabels() {
        DRILL 3: King-Devick scan
        ═══════════════════════════════ -->
   <div class="drill-card" id="drill-3">
-    <div class="card-head">
-      <div class="card-head-left">
-        <div class="title">Escaneo numérico</div>
-        <div class="sub">Toca los números en orden ascendente lo más rápido posible. Basado en el protocolo King-Devick de seguimiento visual.</div>
-        <div class="pills">
-          <span class="pill p-teal">King-Devick</span>
-          <span class="pill p-amber">Visual sequencing</span>
-          <span class="pill p-purple">RAN training</span>
-        </div>
-      </div>
-      <div class="live-stat">
-        <div class="val" id="kd-time">0.0s</div>
-        <div class="lbl">tiempo</div>
-      </div>
+    <div class="card-head" style="padding:12px 20px;display:flex;align-items:center;justify-content:space-between;">
+      <div style="font-size:14px;color:var(--text3);">Escaneo numérico</div><span id="kd-time" style="display:none"></span>
+      <div class="live-stat"><div class="val" id="k-rt">–</div><div class="lbl">ms / número</div></div>
     </div>
-    <div class="fb-bar"><div class="fb-fill" id="kd-fb" style="width:0%;background:var(--purple)"></div></div>
+  <div class="fb-bar"><div class="fb-fill" id="kd-fb" style="width:0%;background:var(--purple)"></div></div>
     <div class="kd-arena">
       <div class="kd-instruction" id="kd-instr">Presiona <strong>Iniciar</strong> y luego toca los números en orden: 1, 2, 3… lo más rápido posible sin errores.</div>
       <div class="kd-board" id="kd-board"></div>
@@ -897,11 +837,41 @@ function updateSessionBtnLabels() {
   </div>
 
   <!-- Science note -->
-  <details class="sci-details">
+  <details class="sci-details session-hide">
   <summary>⚗ Base científica — sacadas y lectura</summary>
   <div class="sci-details-body">Los ojos adultos expertos hacen 4–5 sacadas por segundo durante la lectura, cubriendo 7–9 caracteres por salto. El 10–15% de los movimientos son regresiones — costosas en tiempo pero necesarias para la comprensión. El barrido de retorno de fin de línea falla en el 40–60% de los casos: los ojos aterrizan a mitad de la siguiente línea y requieren una corrección. El estudio King-Devick (RCT, 2016) mostró +6.2% de fluidez y +7.5% de comprensión con 20 min/día de entrenamiento sacádico durante 6 semanas. El escaneo numérico entrena también el denominado "nombramiento automático rápido" (RAN), predictor independiente de la velocidad lectora.</div>
 </details>
 
+
+
+<div id="intro-0" style="display:none;position:fixed;inset:0;z-index:200;background:var(--bg);flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;text-align:center;">
+  <div style="font-size:56px;margin-bottom:16px;">⇄</div>
+  <div style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--text);margin-bottom:12px;">Saltos horizontales</div>
+  <div style="font-size:16px;color:var(--text2);line-height:1.65;max-width:320px;margin-bottom:36px;">Toca el círculo que se ilumina en dorado. Mueve solo los ojos, no la cabeza.</div>
+  <button onclick="dismissDrillIntro(0)" style="width:100%;max-width:320px;padding:18px;background:var(--violet-deep);color:#fff;border:none;border-radius:14px;font-family:'Fredoka','DM Sans',sans-serif;font-size:18px;font-weight:600;cursor:pointer;">▶ Iniciar</button>
+  <div style="margin-top:14px;font-size:12px;color:var(--text3);">Ejercicio 1 de 4</div>
+</div>
+<div id="intro-1" style="display:none;position:fixed;inset:0;z-index:200;background:var(--bg);flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;text-align:center;">
+  <div style="font-size:56px;margin-bottom:16px;">↵</div>
+  <div style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--text);margin-bottom:12px;">Barrido de retorno</div>
+  <div style="font-size:16px;color:var(--text2);line-height:1.65;max-width:320px;margin-bottom:36px;">Lee cada línea de izquierda a derecha, luego salta a la siguiente. Toca "Listo" al terminar cada línea.</div>
+  <button onclick="dismissDrillIntro(1)" style="width:100%;max-width:320px;padding:18px;background:var(--violet-deep);color:#fff;border:none;border-radius:14px;font-family:'Fredoka','DM Sans',sans-serif;font-size:18px;font-weight:600;cursor:pointer;">▶ Iniciar</button>
+  <div style="margin-top:14px;font-size:12px;color:var(--text3);">Ejercicio 2 de 4</div>
+</div>
+<div id="intro-2" style="display:none;position:fixed;inset:0;z-index:200;background:var(--bg);flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;text-align:center;">
+  <div style="font-size:56px;margin-bottom:16px;">◈</div>
+  <div style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--text);margin-bottom:12px;">Amplitud visual</div>
+  <div style="font-size:16px;color:var(--text2);line-height:1.65;max-width:320px;margin-bottom:36px;">Memoriza el número que aparece brevemente, luego encuéntralo en la cuadrícula.</div>
+  <button onclick="dismissDrillIntro(2)" style="width:100%;max-width:320px;padding:18px;background:var(--violet-deep);color:#fff;border:none;border-radius:14px;font-family:'Fredoka','DM Sans',sans-serif;font-size:18px;font-weight:600;cursor:pointer;">▶ Iniciar</button>
+  <div style="margin-top:14px;font-size:12px;color:var(--text3);">Ejercicio 3 de 4</div>
+</div>
+<div id="intro-3" style="display:none;position:fixed;inset:0;z-index:200;background:var(--bg);flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;text-align:center;">
+  <div style="font-size:56px;margin-bottom:16px;">#</div>
+  <div style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--text);margin-bottom:12px;">Escaneo numérico</div>
+  <div style="font-size:16px;color:var(--text2);line-height:1.65;max-width:320px;margin-bottom:36px;">Toca los números en orden ascendente lo más rápido posible.</div>
+  <button onclick="dismissDrillIntro(3)" style="width:100%;max-width:320px;padding:18px;background:var(--violet-deep);color:#fff;border:none;border-radius:14px;font-family:'Fredoka','DM Sans',sans-serif;font-size:18px;font-weight:600;cursor:pointer;">▶ Iniciar</button>
+  <div style="margin-top:14px;font-size:12px;color:var(--text3);">Ejercicio 4 de 4</div>
+</div>
 </main>
 
 <script>
@@ -1007,7 +977,7 @@ function jumpHit(idx) {
     if(correct) correct.className='jump-target miss';
   }
   document.getElementById('j-score').textContent = jHits+'/'+jTrials;
-  document.getElementById('hdr-acc').textContent = Math.round(jHits/jTrials*100)+'%';
+  const _ha=document.getElementById('hdr-acc'); if(_ha) _ha.textContent=Math.round(jHits/jTrials*100)+'%';
   // progress bar
   document.getElementById('j-fb').style.width=(jTrials/J_ROUNDS*100)+'%';
   document.getElementById('j-fb').style.background=hit?'var(--green)':'var(--coral)';
@@ -1060,7 +1030,7 @@ function startSweep() {
   document.getElementById('sw-advance').disabled=false;
   document.getElementById('sw-start-btn').textContent='↺ Reiniciar';
   document.getElementById('sw-total').textContent=SWEEP_LINES.length;
-  document.getElementById('sw-regressions').textContent='0';
+  (document.getElementById('sw-regressions')||{textContent:''}).textContent='0';
   document.getElementById('sw-hits').textContent='0';
   document.getElementById('sw-fb').style.width='0%';
   document.getElementById('sw-questions').style.display='none';
@@ -1176,6 +1146,12 @@ function sweepAnswer(qi, chosen, correct) {
     res.innerHTML=good
       ? `<strong>✓ Comprensión: ${pct}%</strong> — Tu barrido fue eficiente y la retención del texto se mantiene alta. La combinación de movimiento ocular fluido y comprensión sólida es el objetivo del entrenamiento.`
       : `<strong>Comprensión: ${pct}%</strong> — Velocidad de barrido lograda, pero la comprensión necesita atención. Intenta leer las líneas con más intención antes de presionar avanzar — el objetivo no es solo velocidad, sino barrido preciso <em>con</em> comprensión.`;
+    // Add continue button
+    const contBtn = document.createElement('button');
+    contBtn.textContent = '▶ Continuar';
+    contBtn.style.cssText = 'margin-top:14px;width:100%;padding:15px;background:var(--violet-deep);color:#fff;border:none;border-radius:12px;font-family:"Fredoka","DM Sans",sans-serif;font-size:16px;font-weight:600;cursor:pointer;';
+    contBtn.onclick = () => nextSaltosDrill();
+    res.parentNode.appendChild(contBtn);
   }
 }
 
@@ -1183,7 +1159,7 @@ function sweepAnswer(qi, chosen, correct) {
 // DRILL 2: Visual span
 // ─────────────────────────────────────
 const SP_GRID_SIZE = 20;
-const SP_MAX_TRIALS = 20;
+const SP_MAX_TRIALS = 10;
 let spExposure=500, spTarget=-1, spHits=0, spTrials=0, spRunning=false;
 
 function setSpanExposure(ms) {
@@ -1251,8 +1227,8 @@ function spanTap(n, target, cell) {
     });
   }
   const acc=Math.round(spHits/spTrials*100);
-  document.getElementById('sp-acc').textContent=acc+'%';
-  document.getElementById('hdr-acc').textContent=acc+'%';
+  (document.getElementById('sp-acc')||{textContent:''}).textContent=acc+'%';
+  (document.getElementById('hdr-acc')||{textContent:''}).textContent=acc+'%';
   document.getElementById('sp-fb').style.width=(spTrials/SP_MAX_TRIALS*100)+'%';
   document.getElementById('sp-fb').style.background=hit?'var(--green)':'var(--coral)';
   document.getElementById('sp-prompt').innerHTML=hit
@@ -1336,7 +1312,7 @@ function buildKDBoard(count) {
 function initKD() {
   kdNext=1; kdErrors=0; kdRunning=false;
   clearInterval(kdTicker);
-  document.getElementById('kd-time').textContent='0.0s';
+  (document.getElementById('kd-time')||{textContent:''}).textContent='0.0s';
   document.getElementById('kd-errors').textContent='0';
   document.getElementById('kd-next').textContent='1';
   document.getElementById('kd-fb').style.width='0%';
@@ -1353,7 +1329,7 @@ function startKD() {
   document.getElementById('kd-instr').innerHTML='Toca los números en orden: <strong style="color:var(--amber)">'+kdNext+'</strong>';
   kdTicker=setInterval(()=>{
     const elapsed=((performance.now()-kdStartTime)/1000).toFixed(1);
-    document.getElementById('kd-time').textContent=elapsed+'s';
+    (document.getElementById('kd-time')||{textContent:''}).textContent=elapsed+'s';
   },100);
 }
 
@@ -1382,7 +1358,7 @@ function finishKD() {
   if(!kdBest || parseFloat(elapsed)<parseFloat(kdBest)) kdBest=elapsed;
   document.getElementById('kd-best').textContent=kdBest+'s';
   const _hr=document.getElementById('hdr-rt'); if(_hr) _hr.textContent=elapsed+'s';
-  document.getElementById('kd-time').textContent=elapsed+'s';
+  (document.getElementById('kd-time')||{textContent:''}).textContent=elapsed+'s';
   document.getElementById('kd-fb').style.background=kdErrors===0?'var(--green)':'var(--amber)';
   const msg=kdErrors===0
     ?`<strong style="color:var(--green)">✓ Perfecto — ${elapsed}s sin errores.</strong> Dificultad aumentada para la próxima ronda.`
@@ -1446,8 +1422,7 @@ function nextSaltosDrill(){
     showSaltosComplete();
     return;
   }
-  switchDrill(_saltosDrill);
-  setTimeout(()=>{ _saltosOrder[_saltosDrill].start(); }, 600);
+  showDrillIntro(_saltosDrill);
 }
 
 function showSaltosComplete(){
@@ -1473,6 +1448,22 @@ function showSaltosComplete(){
   btn.onclick=isInSession()?completeAndContinue:()=>window.location.href='index.html';
   inner.appendChild(icon);inner.appendChild(title);inner.appendChild(sub);inner.appendChild(btn);
   ov.appendChild(inner);document.body.appendChild(ov);
+}
+
+
+// ── Drill intro overlays ──
+const _drillStarts = [startJump, startSweep, startSpan, startKD];
+
+function showDrillIntro(n) {
+  const ov = document.getElementById('intro-' + n);
+  if(ov) { ov.style.display = 'flex'; }
+}
+
+function dismissDrillIntro(n) {
+  const ov = document.getElementById('intro-' + n);
+  if(ov) ov.style.display = 'none';
+  switchDrill(n);
+  _drillStarts[n]();
 }
 
 </script>
