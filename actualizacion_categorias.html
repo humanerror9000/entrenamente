@@ -1071,11 +1071,16 @@ function endSession() {
     <div class="insight">${insight}</div>
     <div class="res-btns">
       <button class="btn btn-ghost session-hide" onclick="setStage(0)">← Cambiar dificultad</button>
-      <button class="session-next-btn" onclick="completeAndContinue()">Siguiente ejercicio →</button>
+      <button class="session-next-btn" onclick="completeAndContinue()" style="display:none;width:100%;padding:16px;background:var(--violet-deep);color:#fff;border:none;border-radius:13px;font-family:'Fredoka','DM Sans',sans-serif;font-size:17px;font-weight:600;cursor:pointer;margin-top:8px;">Siguiente ejercicio →</button>
       <button class="btn btn-teal" onclick="startGame()">Repetir sesión →</button>
     </div>
   `;
   setStage(2);
+  markComplete();
+  if(isInSession()){
+    document.querySelectorAll('.session-next-btn').forEach(b=>{b.style.display='block';});
+    document.querySelectorAll('.session-hide').forEach(b=>{b.style.display='none';});
+  }
 }
 
 // ─────────────────────────────
