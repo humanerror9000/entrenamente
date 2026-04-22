@@ -59,6 +59,7 @@ main { width: 100%; max-width: 680px; padding: 22px 16px 0; display: flex; flex-
 /* Cards */
 .card { background: var(--card); border-radius: var(--r); border: 1.5px solid var(--border2); box-shadow: var(--sh); overflow: hidden; display: none; }
 .card.show { display: block; }
+#s1.show { display:flex; flex-direction:column; min-height:100dvh; border-radius:0; border-left:none; border-right:none; border-top:none; }
 
 .chead { padding: 15px 20px 13px; border-bottom: 1.5px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
 .ctitle { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
@@ -82,7 +83,7 @@ main { width: 100%; max-width: 680px; padding: 22px 16px 0; display: flex; flex-
 .btn-ghost { background: transparent; color: var(--ink2); border: 1.5px solid var(--border2); }
 .btn-ghost:hover { border-color: var(--ink); color: var(--ink); }
 .btn-sm { padding: 6px 12px; font-size: 12px; }
-.cfooter { padding: 11px 20px; border-top: 1.5px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.cfooter { padding:14px 20px 28px; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:auto; }
 
 /* ════════════════════════
    TUTORIAL / INTRO
@@ -143,7 +144,8 @@ main { width: 100%; max-width: 680px; padding: 22px 16px 0; display: flex; flex-
 /* ════════════════════════
    GAME — word stream
    ════════════════════════ */
-.stream-area { padding: 24px 20px 16px; display: flex; flex-direction: column; align-items: center; gap: 20px; min-height: 180px; justify-content: center; }
+#stream-phase { display:flex; flex-direction:column; flex:1; }
+.stream-area { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; gap:20px; }
 
 .word-stage {
   display: flex; flex-direction: column; align-items: center; gap: 8px;
@@ -157,26 +159,13 @@ main { width: 100%; max-width: 680px; padding: 22px 16px 0; display: flex; flex-
 .cat-badge.cb-objects { background: var(--purple-l); color: var(--purple); }
 .cat-badge.cb-places { background: var(--coral-l); color: var(--coral); }
 
-.word-big {
-  font-family: 'Fraunces', serif;
-  font-size: 42px; font-weight: 600; color: var(--ink);
-  text-align: center; transition: opacity 0.1s;
-  min-height: 56px; display: flex; align-items: center;
-}
+.word-big { font-family:"Cormorant Garamond",serif; font-size:56px; font-weight:300; color:var(--text); text-align:center; line-height:1.1; letter-spacing:0.01em; }
 .word-big.hidden { opacity: 0; }
 .word-num { font-size: 11px; color: var(--muted); letter-spacing: 0.06em; }
 
 /* Memory slots — one per category, always visible */
-.memory-slots {
-  display: grid; grid-template-columns: repeat(2, 1fr);
-  gap: 10px; width: 100%;
-}
-.mem-slot {
-  padding: 10px 12px; border-radius: 10px;
-  border: 1.5px solid var(--border);
-  background: var(--card2);
-  transition: all 0.2s;
-}
+.memory-slots { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; padding:0 16px; }
+.mem-slot { background:var(--card); border:1px solid var(--border2); border-radius:10px; padding:8px 12px; min-width:90px; text-align:center; }
 .mem-slot .ms-cat { font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 5px; }
 .mem-slot .ms-word {
   font-family: 'Fraunces', serif;
@@ -659,7 +648,7 @@ function updateSessionBtnLabels() {
 </script>
 
 
-  <div class="sdots">
+  <div class="sdots" style="display:none;">
     <div class="sdot active" id="sd0"></div>
     <div class="sdot" id="sd1"></div>
     <div class="sdot" id="sd2"></div>
@@ -701,11 +690,8 @@ function updateSessionBtnLabels() {
        STAGE 1: Stream + Recall
        ══════════════════════ -->
   <div class="card" id="s1">
-    <div class="chead">
-      <div>
-        <div class="ctitle" id="g-title">Observa y actualiza</div>
-        <div class="csub">Recuerda siempre la <strong>última</strong> palabra de cada categoría.</div>
-      </div>
+    <div class="chead" style="padding:12px 20px;">
+      <div style="font-size:13px;color:var(--text3);">Recuerda la última de cada categoría</div>
       <div class="clive"><div class="cv" id="g-prog">1/12</div><div class="cl">palabra</div></div>
     </div>
     <div class="prog-bar"><div class="prog-fill" id="g-fill" style="width:0%;background:var(--amber)"></div></div>
@@ -770,7 +756,7 @@ function updateSessionBtnLabels() {
     <div class="res-body" id="res-body"></div>
   </div>
 
-  <details class="sci-details">
+  <details class="sci-details session-hide">
   <summary>⚗ Base científica — actualización por categorías</summary>
   <div class="sci-details-body">Esta tarea es la medida de <em>updating</em> del modelo de Miyake et al. (2000), el framework más citado de funciones ejecutivas. <strong>El updating fue el predictor más fuerte de razonamiento fluido y comprensión lectora</strong> entre los tres componentes ejecutivos (updating, shifting, inhibición). La tarea de categorías es más accesible que el n-back porque la regla es natural ("guarda solo la última"), el estímulo es verbal-semántico (activando directamente redes de lectura), y no requiere decisiones de respuesta rápida — pero mantiene el mismo proceso de actualización continua que hace al n-back efectivo.</div>
 </details>
@@ -970,7 +956,7 @@ function endStream() {
     document.getElementById('stream-phase').style.display='none';
     buildRecallUI();
     document.getElementById('recall-phase').style.display='';
-    document.getElementById('g-title').textContent='¿Cuál fue la última?';
+    (document.getElementById('g-title')||{textContent:''}).textContent ='¿Cuál fue la última?';
     document.getElementById('g-fill').style.width='100%';
     document.getElementById('g-fill').style.background='var(--teal)';
   }, 300);
