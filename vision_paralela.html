@@ -20,7 +20,7 @@
   --coral:#E05C5C; --coral-d:rgba(224,92,92,0.12); --coral-b:rgba(224,92,92,0.30);
   --purple:#B8A9FF; --purple-d:rgba(184,169,255,0.12); --purple-b:rgba(184,169,255,0.28);
   --green:#52C98A; --green-d:rgba(82,201,138,0.12); --green-b:rgba(82,201,138,0.30);
-  --muted:#4A4860;
+  --ink:var(--text); --ink2:var(--text2); --muted:#4A4860;
   --r:14px; --sh:0 2px 20px rgba(0,0,0,0.35);
 }
 
@@ -79,7 +79,7 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
   border: 1.5px solid var(--border2); box-shadow: var(--sh);
   overflow: hidden; display: none;
 }
-.task-card.active { display: block; }
+.task-card.active { display:flex; flex-direction:column; position:fixed; inset:0; overflow-y:auto; z-index:10; background:var(--bg); border-radius:0; }
 
 .chead {
   padding: 16px 22px 14px; border-bottom: 1.5px solid var(--border);
@@ -106,16 +106,13 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
 
 /* ── Shared arena ── */
 .arena {
-  min-height: 220px; display: flex; flex-direction: column;
+  flex:1; display: flex; flex-direction: column;
   align-items: center; justify-content: center; gap: 16px;
   padding: 28px 24px;
 }
 
 /* ── Shared footer ── */
-.cfooter {
-  padding: 12px 22px; border-top: 1.5px solid var(--border);
-  display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;
-}
+.cfooter { padding:14px 20px 28px; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:auto; }
 .btn {
   font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; font-weight: 600;
   padding: 8px 16px; border-radius: 9px; border: none; cursor: pointer;
@@ -577,6 +574,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
   </div>
 
 </div>
+<span id="pd0" style="display:none"></span><span id="pd1" style="display:none"></span><span id="pd2" style="display:none"></span>
 <div class="task-tabs" style="display:none">
     <div class="ttab active" onclick="switchTask(0)"><span class="ticon">▦</span>Informe completo</div>
     <div class="ttab" onclick="switchTask(1)"><span class="ticon">◎</span>Informe parcial</div>
@@ -587,16 +585,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
        TASK 0: Whole Report
        ═══════════════════════ -->
   <div class="task-card active" id="task-0">
-    <div class="chead">
-      <div class="chead-left">
-        <div class="ctitle" style="font-family:\'Cormorant Garamond\',serif;font-weight:300;font-size:24px;">Informe completo</div>
-        <div class="csub" style="font-size:13px;color:var(--text2);">Memoriza todos los caracteres del destello y reprodúcelos en orden. Entrena el procesamiento paralelo de strings completos.</div>
-        <div class="cpills">
-          <span class="cpill cp-teal">Whole report</span>
-          <span class="cpill cp-amber">Procesamiento paralelo</span>
-          <span class="cpill cp-purple">Longitud adaptativa</span>
-        </div>
-      </div>
+    <div class="chead" style="padding:12px 20px;">
+      <div style="font-size:13px;color:var(--text3);">Informe completo</div>
       <div class="clive"><div class="cv" id="wr-acc">–</div><div class="cl">precisión</div></div>
     </div>
     <div class="prog-bar"><div class="prog-fill" id="wr-pfill" style="width:0%;background:var(--teal)"></div></div>
@@ -609,16 +599,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
       <div class="response-row" id="wr-choices" style="display:none"></div>
     </div>
     <div class="cfooter">
-      <div style="display:flex;gap:5px;align-items:center">
-        <span style="font-size:11px;color:var(--muted)">Exposición:</span>
-        <button class="exp-btn" onclick="setWRExp(300)" id="wr-300">300ms</button>
-        <button class="exp-btn active" onclick="setWRExp(200)" id="wr-200">200ms</button>
-        <button class="exp-btn" onclick="setWRExp(150)" id="wr-150">150ms</button>
-      </div>
-      <div style="display:flex;gap:8px">
-        <button class="btn btn-ghost" onclick="initWR()">Reiniciar</button>
-        <button class="btn btn-teal" id="wr-start" onclick="startWR()">▶ Iniciar</button>
-      </div>
+      <div></div>
+      <button class="btn btn-teal" id="wr-start" onclick="startWR()">▶ Iniciar</button>
     </div>
     <div class="results-panel" id="wr-results"></div>
   </div>
@@ -627,16 +609,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
        TASK 1: Partial Report
        ═══════════════════════ -->
   <div class="task-card" id="task-1">
-    <div class="chead">
-      <div class="chead-left">
-        <div class="ctitle">Informe parcial</div>
-        <div class="csub">Se muestra una cadena de letras; después se señala una posición. Identifica la letra que estaba en esa posición. Activa atención distribuida vs. focalizada.</div>
-        <div class="cpills">
-          <span class="cpill cp-teal">Partial report</span>
-          <span class="cpill cp-purple">Atención distribuida</span>
-          <span class="cpill cp-coral">Posición variable</span>
-        </div>
-      </div>
+    <div class="chead" style="padding:12px 20px;">
+      <div style="font-size:13px;color:var(--text3);">Informe parcial</div>
       <div class="clive"><div class="cv" id="pr-acc">–</div><div class="cl">precisión</div></div>
     </div>
     <div class="prog-bar"><div class="prog-fill" id="pr-pfill" style="width:0%;background:var(--teal)"></div></div>
@@ -651,17 +625,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
       <div class="partial-choice" id="pr-choices" style="display:none"></div>
     </div>
     <div class="cfooter">
-      <div style="display:flex;gap:5px;align-items:center">
-        <span style="font-size:11px;color:var(--muted)">Longitud:</span>
-        <button class="exp-btn" onclick="setPRLen(4)" id="pr-4">4</button>
-        <button class="exp-btn active" onclick="setPRLen(5)" id="pr-5">5</button>
-        <button class="exp-btn" onclick="setPRLen(6)" id="pr-6">6</button>
-        <button class="exp-btn" onclick="setPRLen(7)" id="pr-7">7</button>
-      </div>
-      <div style="display:flex;gap:8px">
-        <button class="btn btn-ghost" onclick="initPR()">Reiniciar</button>
-        <button class="btn btn-teal" id="pr-start" onclick="startPR()">▶ Iniciar</button>
-      </div>
+      <div></div>
+      <button class="btn btn-teal" id="pr-start" onclick="startPR()">▶ Iniciar</button>
     </div>
     <div class="results-panel" id="pr-results"></div>
   </div>
@@ -670,16 +635,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
        TASK 2: String Matching (2AFC)
        ═══════════════════════════════ -->
   <div class="task-card" id="task-2">
-    <div class="chead">
-      <div class="chead-left">
-        <div class="ctitle">Coincidencia de cadenas</div>
-        <div class="csub">Se muestra una cadena brevemente. Luego aparecen dos opciones — elige la que coincide con la vista. Entrena procesamiento holístico de grupos de letras.</div>
-        <div class="cpills">
-          <span class="cpill cp-teal">2AFC string matching</span>
-          <span class="cpill cp-purple">Procesamiento holístico</span>
-          <span class="cpill cp-amber">Codificación ortográfica</span>
-        </div>
-      </div>
+    <div class="chead" style="padding:12px 20px;">
+      <div style="font-size:13px;color:var(--text3);">Coincidencia de cadenas</div>
       <div class="clive"><div class="cv" id="sm-acc">–</div><div class="cl">precisión</div></div>
     </div>
     <div class="prog-bar"><div class="prog-fill" id="sm-pfill" style="width:0%;background:var(--teal)"></div></div>
@@ -694,22 +651,14 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
       <div class="match-options" id="sm-options" style="display:none"></div>
     </div>
     <div class="cfooter">
-      <div style="display:flex;gap:5px;align-items:center">
-        <span style="font-size:11px;color:var(--muted)">Exposición:</span>
-        <button class="exp-btn" onclick="setSMExp(250)" id="sm-250">250ms</button>
-        <button class="exp-btn active" onclick="setSMExp(150)" id="sm-150">150ms</button>
-        <button class="exp-btn" onclick="setSMExp(100)" id="sm-100">100ms</button>
-      </div>
-      <div style="display:flex;gap:8px">
-        <button class="btn btn-ghost" onclick="initSM()">Reiniciar</button>
-        <button class="btn btn-teal" id="sm-start" onclick="startSM()">▶ Iniciar</button>
-      </div>
+      <div></div>
+      <button class="btn btn-teal" id="sm-start" onclick="startSM()">▶ Iniciar</button>
     </div>
     <div class="results-panel" id="sm-results"></div>
   </div>
 
   <!-- Science note -->
-  <details class="sci-details">
+  <details class="sci-details session-hide">
   <summary>⚗ Base científica — VAS y lectura</summary>
   <div class="sci-details-body">El Amplio de Atención Visual (VAS) es la cantidad de elementos distintos que el cerebro puede procesar en paralelo en una sola fijación. <strong>Es el predictor único de comprensión de texto</strong> en lectores adultos (Frontiers in Psychology, 2022) y el factor más sensible al entrenamiento en lectura en español. La activación bilateral de los lóbulos parietales superiores es la firma neural del procesamiento multi-letra — estas regiones se fortalecen directamente con el entrenamiento de informe de cadenas (BRAID-Learn, 2023). El estudio EVASION (Reading Research Quarterly, 2025) demostró que 10 horas de entrenamiento VAS produce mejoras significativas y longitudinales en fluidez lectora y ortografía, con efecto causal confirmado.</div>
 </details>
@@ -721,6 +670,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 // Shared constants & utilities
 // ────────────────────────────────────
 const CONSONANTS = 'BCDFGHJKLMNPQRSTVWXYZ';
+let sessionScores = {wr:{h:0,t:0}, pr:{h:0,t:0}, sm:{h:0,t:0}};
 const VOWELS = 'AEIOU';
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const WR_TRIALS = 5;
@@ -748,10 +698,10 @@ function switchTask(n) {
   document.querySelectorAll('.ttab').forEach((t,i) => t.classList.toggle('active', i===n));
   document.querySelectorAll('.task-card').forEach((c,i) => c.classList.toggle('active', i===n));
   ['pd0','pd1','pd2'].forEach((id,i) => {
-    const d = document.getElementById(id);
-    d.classList.remove('active','done');
-    if(i<n) d.classList.add('done');
-    else if(i===n) d.classList.add('active');
+    const _pd=document.getElementById(id); if(!_pd) return;
+    _pd.classList.remove('active','done');
+    if(i<n) _pd.classList.add('done');
+    else if(i===n) _pd.classList.add('active');
   });
 }
 
@@ -788,7 +738,7 @@ function showResults(panelId, hits, total, task) {
     </div>
   `;
   panel.classList.add('show');
-  document.getElementById('hdr-acc').textContent = acc + '%';
+  (document.getElementById('hdr-acc')||{textContent:''}).textContent = acc + '%';
 }
 
 // ────────────────────────────────────
@@ -826,7 +776,21 @@ function startWR() {
   document.getElementById('wr-start').disabled=true;
   document.getElementById('wr-start').textContent='…';
   document.getElementById('wr-results').classList.remove('show');
-  wrNextTrial();
+  // Countdown before first trial
+  const prompt = document.getElementById('wr-prompt');
+  prompt.style.display='';
+  let count = 3;
+  prompt.innerHTML = `<span style="font-size:52px;font-weight:300;color:var(--violet);font-family:'Cormorant Garamond',serif;">${count}</span>`;
+  const cd = setInterval(()=>{
+    count--;
+    if(count > 0) {
+      prompt.innerHTML = `<span style="font-size:52px;font-weight:300;color:var(--violet);font-family:'Cormorant Garamond',serif;">${count}</span>`;
+    } else {
+      clearInterval(cd);
+      prompt.style.display='none';
+      wrNextTrial();
+    }
+  }, 1000);
 }
 
 function wrNextTrial() {
@@ -945,7 +909,7 @@ function checkWRAnswer() {
     document.getElementById('wr-flash').className='flash-display hidden';
     document.getElementById('wr-flash').style.display='';
     wrNextTrial();
-  }, 2200);
+  }, 800);
 }
 
 
@@ -996,15 +960,15 @@ function showFinalResults(){
 
   const ov = document.createElement('div');
   ov.id = 'vp-final-overlay';
-  ov.style.cssText = 'position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;padding:32px 24px;overflow-y:auto;';
+  ov.style.cssText = 'position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;overflow-y:auto;';
 
   ov.innerHTML = `
-    <div style="width:100%;max-width:380px;display:flex;flex-direction:column;align-items:center;gap:0;text-align:center;">
-      <div style="font-size:40px;margin-bottom:12px;">🎯</div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300;color:var(--text);margin-bottom:6px;">Visión Paralela</div>
-      <div style="font-size:52px;font-weight:300;font-family:'Cormorant Garamond',serif;color:var(--teal);line-height:1;margin:8px 0;">${pct}%</div>
-      <div style="font-size:13px;color:var(--text3);margin-bottom:20px;">precisión global · ${total}/${maxTotal} correctas</div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%;margin-bottom:16px;">
+    <div style="width:100%;max-width:380px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;">
+      <div style="font-size:40px;">🎯</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300;color:var(--text);">Visión Paralela</div>
+      <div style="font-size:52px;font-weight:300;font-family:'Cormorant Garamond',serif;color:var(--teal);line-height:1;">${pct}%</div>
+      <div style="font-size:13px;color:var(--text3);">precisión global · ${total}/${maxTotal} correctas</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%;">
         <div style="background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:12px 8px;">
           <div style="font-size:20px;font-weight:700;color:var(--text);">${Math.round(sessionScores.wr.h/sessionScores.wr.t*100)}%</div>
           <div style="font-size:10px;color:var(--text3);margin-top:3px;text-transform:uppercase;letter-spacing:0.06em;">Completo</div>
@@ -1018,7 +982,7 @@ function showFinalResults(){
           <div style="font-size:10px;color:var(--text3);margin-top:3px;text-transform:uppercase;letter-spacing:0.06em;">Coincidencia</div>
         </div>
       </div>
-      <div style="background:var(--violet-d);border:1px solid var(--violet-b);border-radius:11px;padding:14px 16px;font-size:14px;color:var(--text2);line-height:1.65;width:100%;margin-bottom:20px;text-align:left;">${insight}</div>
+      <div style="background:var(--violet-d);border:1px solid var(--violet-b);border-radius:11px;padding:14px 16px;font-size:14px;color:var(--text2);line-height:1.65;width:100%;text-align:left;">${insight}</div>
       ${isInSession() ? `
         <button onclick="completeAndContinue()" style="width:100%;padding:16px;background:var(--violet-deep);color:#fff;border:none;border-radius:13px;font-family:'Fredoka','DM Sans',sans-serif;font-size:17px;font-weight:600;cursor:pointer;margin-bottom:10px;">${_btnLabel}</button>
       ` : `
@@ -1038,8 +1002,10 @@ function finishWR() {
   wrRunning=false;
   document.getElementById('wr-slots').style.display='none';
   document.getElementById('wr-choices').style.display='none';
-  document.getElementById('wr-prompt').style.display='none';
-  afterWR();
+  const prompt = document.getElementById('wr-prompt');
+  prompt.style.display='';
+  prompt.innerHTML='<span style="color:var(--teal);font-size:18px;">✓ Completado</span>';
+  setTimeout(afterWR, 800);
 }
 
 // ────────────────────────────────────
@@ -1070,22 +1036,9 @@ function startPR() {
   document.getElementById('pr-start').disabled=true;
   document.getElementById('pr-start').textContent='…';
   document.getElementById('pr-results').classList.remove('show');
-
-  // 3-second countdown
   const prompt = document.getElementById('pr-prompt');
-  prompt.style.display='';
-  let count = 3;
-  prompt.innerHTML = `<span style="font-size:40px;font-weight:700;color:var(--amber)">${count}</span>`;
-  const cd = setInterval(()=>{
-    count--;
-    if(count > 0) {
-      prompt.innerHTML = `<span style="font-size:40px;font-weight:700;color:var(--amber)">${count}</span>`;
-    } else {
-      clearInterval(cd);
-      prompt.style.display='none';
-      prNextTrial();
-    }
-  }, 1000);
+  if(prompt) prompt.style.display='none';
+  prNextTrial();
 }
 
 function prNextTrial() {
@@ -1276,10 +1229,11 @@ function checkSM(btn, hit, pair, target) {
 
 function finishSM() {
   document.getElementById('sm-options').style.display='none';
-  showResults('sm-results', smHits, SM_TRIALS, 'startSM');
+  afterSM();
 }
 
 // Init
+sessionScores = {wr:{h:0,t:0}, pr:{h:0,t:0}, sm:{h:0,t:0}};
 initWR(); initPR(); initSM();
 
 // ── Show session navigation UI ──
@@ -1315,6 +1269,7 @@ document.addEventListener('visibilitychange', () => {
 function dismissReady(){
   document.getElementById('ready-screen').classList.add('hidden');
   if(typeof requestWakeLock === 'function') requestWakeLock();
+  switchTask(0);
 }
 
 (function startVPPreview(){
@@ -1369,6 +1324,134 @@ function goNextOrHome(homeUrl){
   window.location.href=(!next||next==='done')?'index.html?done=session':next;
 }
 function completeAndContinue(){markComplete();setTimeout(()=>goNextOrHome('index.html'),400);}
+
+
+// ── Mode transition — skip straight to next task ──
+function showModeTransition(nextTask, t1, t2, desc, preview, btnLabel) {
+  const explanations = {
+    1: {
+      title: 'Informe <em style="color:var(--teal)">Parcial</em>',
+      icon: '🎯',
+      desc: 'Aparece una cadena de letras brevemente. Luego se señala <strong style="color:var(--text);">una posición</strong> — identifica solo la letra que estaba allí.',
+      buildAnim: buildPRAnimation
+    },
+    2: {
+      title: 'Coincidencia <em style="color:var(--teal)">de cadenas</em>',
+      icon: '🔍',
+      desc: 'Aparece una cadena brevemente. Luego ves dos opciones — elige la que <strong style="color:var(--text);">coincide exactamente</strong>.',
+      buildAnim: buildSMAnimation
+    }
+  };
+
+  const ex = explanations[nextTask];
+  if(!ex) { switchTask(nextTask); if(nextTask===1) startPR(); else startSM(); return; }
+
+  const ov = document.createElement('div');
+  ov.id = 'mode-transition-ov';
+  ov.style.cssText = 'position:fixed;inset:0;z-index:500;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;text-align:center;';
+  ov.innerHTML = `
+    <div style="font-size:44px;margin-bottom:14px;">${ex.icon}</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--text);margin-bottom:14px;">${ex.title}</div>
+    <div style="font-size:17px;color:var(--text2);line-height:1.7;max-width:320px;margin-bottom:24px;">${ex.desc}</div>
+    <div id="transition-anim" style="min-height:80px;display:flex;align-items:center;justify-content:center;margin-bottom:28px;"></div>
+    <button onclick="startTransitionCountdown(${nextTask})" style="width:100%;max-width:320px;padding:18px;background:var(--violet-deep);color:#fff;border:none;border-radius:14px;font-family:'Fredoka','DM Sans',sans-serif;font-size:18px;font-weight:600;cursor:pointer;">Listo &rarr;</button>
+  `;
+  document.body.appendChild(ov);
+  ex.buildAnim(ov.querySelector('#transition-anim'));
+}
+
+function buildPRAnimation(container) {
+  const words = ['MAKO','TEVI','BARO'];
+  let i = 0;
+  const strEl = document.createElement('div');
+  strEl.style.cssText = 'font-family:Cormorant Garamond,serif;font-size:36px;letter-spacing:0.12em;transition:opacity 0.15s;min-width:160px;text-align:center;';
+  const labelEl = document.createElement('div');
+  labelEl.style.cssText = 'font-size:13px;color:var(--text3);margin-top:8px;min-height:20px;';
+  container.style.flexDirection = 'column';
+  container.appendChild(strEl);
+  container.appendChild(labelEl);
+  function tick() {
+    const w = words[i % words.length];
+    const pos = Math.floor(Math.random() * w.length);
+    strEl.style.opacity = '0'; labelEl.textContent = '';
+    setTimeout(()=>{
+      strEl.style.color = 'var(--teal)';
+      strEl.textContent = w; strEl.style.opacity = '1';
+      setTimeout(()=>{
+        strEl.style.opacity = '0';
+        setTimeout(()=>{
+          strEl.innerHTML = w.split('').map((c,j)=>
+            j===pos ? '<span style="color:var(--amber);text-decoration:underline">'+c+'</span>'
+                    : '<span style="opacity:0.25">'+c+'</span>'
+          ).join('');
+          strEl.style.opacity = '1';
+          labelEl.textContent = 'Posición ' + (pos+1) + ' señalada';
+        }, 200);
+      }, 500);
+    }, 150);
+    i++;
+  }
+  tick();
+  window._transitionIv = setInterval(tick, 2600);
+}
+
+function buildSMAnimation(container) {
+  const pairs = [['BARO','BALO'],['TEVI','TEVI'],['MAKO','MOKU']];
+  let i = 0;
+  const strEl = document.createElement('div');
+  strEl.style.cssText = 'font-family:Cormorant Garamond,serif;font-size:36px;color:var(--teal);letter-spacing:0.12em;transition:opacity 0.15s;';
+  const optsEl = document.createElement('div');
+  optsEl.style.cssText = 'display:flex;gap:12px;margin-top:12px;';
+  container.style.flexDirection = 'column';
+  container.appendChild(strEl);
+  container.appendChild(optsEl);
+  function tick() {
+    const [orig, alt] = pairs[i % pairs.length];
+    const isMatch = orig === alt;
+    strEl.style.opacity = '1'; strEl.textContent = orig; optsEl.innerHTML = '';
+    setTimeout(()=>{
+      strEl.style.opacity = '0';
+      const makeOpt = (txt, correct) => {
+        const s = document.createElement('span');
+        s.textContent = txt;
+        s.style.cssText = 'padding:8px 16px;border-radius:10px;font-size:22px;font-family:Cormorant Garamond,serif;letter-spacing:0.08em;border:1.5px solid;'
+          + (correct ? 'color:var(--teal);border-color:var(--teal-b);background:var(--teal-d);'
+                     : 'color:var(--text3);border-color:var(--border2);');
+        return s;
+      };
+      const left = Math.random() < 0.5;
+      optsEl.appendChild(makeOpt(left ? orig : alt, left));
+      optsEl.appendChild(makeOpt(left ? alt : orig, !left));
+    }, 400);
+    i++;
+  }
+  tick();
+  window._transitionIv = setInterval(tick, 2400);
+}
+
+function startTransitionCountdown(nextTask) {
+  if(window._transitionIv) { clearInterval(window._transitionIv); window._transitionIv = null; }
+  const ov = document.getElementById('mode-transition-ov');
+  if(!ov) return;
+  ov.innerHTML = '<div style="font-family:Cormorant Garamond,serif;font-size:96px;font-weight:300;color:var(--violet);" id="tc-num">3</div>';
+  let count = 3;
+  const cd = setInterval(()=>{
+    count--;
+    const el = document.getElementById('tc-num');
+    if(count > 0 && el) {
+      el.textContent = count;
+    } else {
+      clearInterval(cd);
+      if(ov.parentNode) ov.parentNode.removeChild(ov);
+      switchTask(nextTask);
+      if(nextTask === 1) startPR();
+      else if(nextTask === 2) startSM();
+    }
+  }, 1000);
+}
+
+
+// ── Mode transition — auto-advance to next task ──
 
 </script>
 
