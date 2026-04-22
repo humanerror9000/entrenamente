@@ -102,13 +102,7 @@
   .mode-tab .tab-num { font-size: 10px; opacity: 0.7; display: block; margin-bottom: 2px; }
 
   /* ── Exercise card ── */
-  .exercise-card {
-    background: var(--card);
-    border-radius: 18px;
-    box-shadow: var(--shadow);
-    overflow: hidden;
-    border: 1px solid var(--border);
-  }
+  .exercise-card { flex:1; display:flex; flex-direction:column; padding:20px; gap:16px; max-width:600px; margin:0 auto; width:100%; }
   .card-header {
     padding: 20px 24px 16px;
     border-bottom: 1px solid var(--border);
@@ -366,8 +360,8 @@
   }
 
   /* ── Hidden sections ── */
-  .mode-section { display: none; }
-  .mode-section.active { display: block; }
+  .mode-section { display: none; overflow:hidden; }
+  .mode-section.active { display:flex; flex-direction:column; position:fixed; inset:0; overflow-y:auto; z-index:10; background:var(--bg); }
 
 @media (max-width: 640px) {
   main { padding: 16px 12px 0 !important; }
@@ -552,33 +546,33 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
     <div class="ready-title">Lectura por <em>Bloques</em></div>
     <div class="ready-sub">Lee grupos de palabras como una sola unidad.</div>
     
-    <div style="width:100%;margin-bottom:16px;" id="rdy-mode-wrap">
-      
-      <button onclick="selectBloqueMode(0,this)" style="width:100%;padding:13px 16px;background:var(--card);border:1.5px solid var(--border2);border-radius:11px;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;text-align:left;cursor:pointer;transition:all 0.15s;margin-bottom:8px;" id="rdy-mode-0">
-        <span style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:2px;">Modo 1</span>
-        Modo 1Reconocimiento guiado
-      </button>
-      <button onclick="selectBloqueMode(1,this)" style="width:100%;padding:13px 16px;background:var(--card);border:1.5px solid var(--border2);border-radius:11px;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;text-align:left;cursor:pointer;transition:all 0.15s;margin-bottom:8px;" id="rdy-mode-1">
-        <span style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:2px;">Modo 2</span>
-        Modo 2Análisis activo
-      </button>
-      <button onclick="selectBloqueMode(2,this)" style="width:100%;padding:13px 16px;background:var(--card);border:1.5px solid var(--border2);border-radius:11px;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;text-align:left;cursor:pointer;transition:all 0.15s;margin-bottom:8px;" id="rdy-mode-2">
-        <span style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:2px;">Modo 3</span>
-        Modo 3Flash por bloques
-      </button>
-      <button onclick="selectBloqueMode(3,this)" style="width:100%;padding:13px 16px;background:var(--card);border:1.5px solid var(--border2);border-radius:11px;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;text-align:left;cursor:pointer;transition:all 0.15s;margin-bottom:8px;" id="rdy-mode-3">
-        <span style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:2px;">Modo 4</span>
-        Modo 4Reconstrucción
-      </button>
+    <div style="width:100%;margin-bottom:24px;display:flex;flex-direction:column;gap:8px;">
+      <div style="display:flex;gap:8px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border2);border-radius:10px;">
+        <span style="font-size:18px;">👁</span>
+        <div><div style="font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;">Modo 1</div><div style="font-size:14px;color:var(--text2);">Reconocimiento guiado</div></div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border2);border-radius:10px;">
+        <span style="font-size:18px;">✏️</span>
+        <div><div style="font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;">Modo 2</div><div style="font-size:14px;color:var(--text2);">Análisis activo</div></div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border2);border-radius:10px;">
+        <span style="font-size:18px;">⚡</span>
+        <div><div style="font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;">Modo 3</div><div style="font-size:14px;color:var(--text2);">Flash por bloques</div></div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border2);border-radius:10px;">
+        <span style="font-size:18px;">🧩</span>
+        <div><div style="font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;">Modo 4</div><div style="font-size:14px;color:var(--text2);">Reconstrucción</div></div>
+      </div>
     </div>
-    <button class="ready-btn" onclick="dismissReady()">▶ Empecemos</button>
+    <button class="ready-btn"<button class="ready-btn" onclick="dismissReady()">▶ Empecemos</button>
     <div class="ready-hint">Empieza por el Modo 1 — puedes cambiar cuando quieras</div>
   </div>
 </div>
 <script>
 function dismissReady(){
   document.getElementById('ready-screen').classList.add('hidden');
-  switchMode(_rdyBloqueMode);
+  if(typeof requestWakeLock==='function') requestWakeLock();
+  switchMode(0);
 }
 
 // ── Session completion tracking ──
@@ -675,7 +669,7 @@ function updateSessionBtnLabels() {
 
 
   <!-- Mode selector -->
-  <div class="mode-tabs">
+  <div class="mode-tabs" style="display:none;">
     <button class="mode-tab active" onclick="switchMode(0)">
       <span class="tab-num">Modo 1</span>Reconocimiento guiado
     </button>
@@ -695,16 +689,8 @@ function updateSessionBtnLabels() {
   <!-- ═══════════════════════════════════════ -->
   <div class="mode-section active" id="mode-0">
     <div class="exercise-card">
-      <div class="card-header">
-        <div class="card-meta">
-          <span class="pill pill-teal">Principiante</span>
-          <span class="pill pill-amber">~3 min</span>
-          <span class="pill pill-purple">Priming sintáctico</span>
-        </div>
-        <div class="timer-display"><div class="timer-dot"></div> <span id="timer0">2:45</span></div>
-      </div>
       <div class="card-instruction">
-        Lee el párrafo con atención. Los <strong>bloques sintácticos</strong> están marcados con colores. <strong>Toca o pasa el cursor</strong> sobre cada bloque para ver su tipo. Luego responde las preguntas.
+        Lee el párrafo. Toca cualquier bloque para ver su tipo gramatical.
       </div>
       <div class="passage" id="passage-m1">
         <span class="chunk chunk-disc">Sin embargo,<span class="chunk-label">MARCADOR DISCURSIVO</span></span>
@@ -721,13 +707,6 @@ function updateSessionBtnLabels() {
         &nbsp;
         <span class="chunk chunk-prep">de materiales sostenibles.<span class="chunk-label">FRASE PREPOSICIONAL</span></span>
       </div>
-      <div class="legend">
-        <div class="legend-item"><div class="legend-line" style="background:var(--teal)"></div>Frase preposicional</div>
-        <div class="legend-item"><div class="legend-line" style="background:var(--coral)"></div>Perífrasis verbal</div>
-        <div class="legend-item"><div class="legend-line" style="background:var(--amber-dark)"></div>Grupo nominal</div>
-        <div class="legend-item"><div class="legend-line" style="background:var(--purple)"></div>Marcador discursivo</div>
-      </div>
-
       <div class="question-area">
         <div class="question-label">Comprensión inferencial</div>
         <div class="question-text">¿Cuál es la actitud implícita del autor hacia la comunidad científica?</div>
@@ -741,7 +720,7 @@ function updateSessionBtnLabels() {
 
       <div class="feedback-panel" id="feedback-0"></div>
       <div class="exercise-nav">
-        <button class="btn btn-ghost" onclick="switchMode(1)">Siguiente modo →</button>
+        <button class="btn btn-ghost" onclick="showBloqueTransition(1)">Siguiente modo →</button>
       </div>
     </div>
   </div>
@@ -751,14 +730,6 @@ function updateSessionBtnLabels() {
   <!-- ═══════════════════════════════════════ -->
   <div class="mode-section" id="mode-1">
     <div class="exercise-card">
-      <div class="card-header">
-        <div class="card-meta">
-          <span class="pill pill-teal">Intermedio</span>
-          <span class="pill pill-amber">~4 min</span>
-          <span class="pill pill-purple">Análisis activo</span>
-        </div>
-        <div class="timer-display"><div class="timer-dot"></div> <span id="timer1">3:30</span></div>
-      </div>
       <div class="card-instruction">
         <strong>Toca las palabras</strong> donde termina cada bloque sintáctico para insertar un divisor <strong style="color:var(--coral)">/</strong>. Divide la oración en sus grupos naturales de significado.
       </div>
@@ -774,7 +745,7 @@ function updateSessionBtnLabels() {
       </div>
       <div class="feedback-panel" id="feedback-1"></div>
       <div class="exercise-nav">
-        <button class="btn btn-ghost" onclick="switchMode(2)">Siguiente modo →</button>
+        <button class="btn btn-ghost" onclick="showBloqueTransition(2)">Siguiente modo →</button>
       </div>
     </div>
   </div>
@@ -784,13 +755,6 @@ function updateSessionBtnLabels() {
   <!-- ═══════════════════════════════════════ -->
   <div class="mode-section" id="mode-2">
     <div class="exercise-card">
-      <div class="card-header">
-        <div class="card-meta">
-          <span class="pill pill-teal">Avanzado</span>
-          <span class="pill pill-amber">~4 min</span>
-          <span class="pill pill-purple">RSVP por bloques</span>
-        </div>
-      </div>
       <div class="card-instruction">
         Lee cada <strong>bloque</strong> que aparece. Cuando termine la secuencia, responde la pregunta de comprensión. El ritmo se adapta a tu velocidad de lectura.
       </div>
@@ -809,7 +773,7 @@ function updateSessionBtnLabels() {
         </div>
       </div>
       <div class="exercise-nav">
-        <button class="btn btn-ghost" onclick="switchMode(3)">Siguiente modo →</button>
+        <button class="btn btn-ghost" onclick="showBloqueTransition(3)">Siguiente modo →</button>
       </div>
     </div>
   </div>
@@ -819,14 +783,6 @@ function updateSessionBtnLabels() {
   <!-- ═══════════════════════════════════════ -->
   <div class="mode-section" id="mode-3">
     <div class="exercise-card">
-      <div class="card-header">
-        <div class="card-meta">
-          <span class="pill pill-teal">Avanzado</span>
-          <span class="pill pill-amber">~3 min</span>
-          <span class="pill pill-purple">Reconstrucción textual</span>
-        </div>
-        <div class="timer-display"><div class="timer-dot"></div> <span id="timer3">2:30</span></div>
-      </div>
       <div class="card-instruction">
         <strong>Toca los bloques</strong> para colocarlos en orden y reconstruir la oración completa.
       </div>
@@ -850,7 +806,7 @@ function updateSessionBtnLabels() {
   </div>
 
   <!-- Science note -->
-  <details class="sci-details">
+  <details class="sci-details session-hide">
   <summary>⚗ Base científica — por qué funciona</summary>
   <div class="sci-body">El entrenamiento por bloques activa el <strong>priming sintáctico</strong>: la exposición repetida a estructuras frásicas aumenta la probabilidad de reconocerlas automáticamente en lecturas futuras, reduciendo la carga sobre la memoria de trabajo. La investigación de Conti (Applied Linguistics, 2025) muestra que el aprendizaje de bloques léxicos en L1 genera mejoras del <strong>30% en fluidez</strong> versus el aprendizaje palabra por palabra. En español, las perífrasis verbales y las frases preposicionales son los bloques de mayor rendimiento cognitivo por su alta frecuencia y variabilidad interna.</div>
 </details>
@@ -1186,6 +1142,28 @@ function selectBloqueMode(n, el){
   el.style.borderColor='var(--violet)';
   el.style.color='var(--violet)';
   el.style.background='var(--violet-d)';
+}
+
+
+// ── Lectura por Bloques mode transitions ──
+function showBloqueTransition(toMode) {
+  const transitions = {
+    1: { icon: '✏️', title: 'Análisis <em style="color:var(--teal)">Activo</em>', desc: 'Ahora <strong>toca las palabras</strong> donde percibes los límites entre grupos. Desarrolla tu instinto de chunking.' },
+    2: { icon: '⚡', title: 'Flash por <em style="color:var(--teal)">Bloques</em>', desc: 'Los bloques aparecen uno a uno. Léelos como unidades, no palabra por palabra.' },
+    3: { icon: '🧩', title: '<em style="color:var(--teal)">Reconstrucción</em>', desc: 'Los bloques aparecen desordenados. Tócalos en el orden correcto.' },
+  };
+  const t = transitions[toMode];
+  if(!t) { switchMode(toMode); return; }
+
+  const ov = document.createElement('div');
+  ov.style.cssText = 'position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;text-align:center;gap:16px;';
+  ov.innerHTML = `
+    <div style="font-size:48px;">${t.icon}</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;color:var(--text);">${t.title}</div>
+    <div style="font-size:17px;color:var(--text2);line-height:1.7;max-width:320px;">${t.desc}</div>
+    <button onclick="this.parentNode.remove();switchMode(${toMode});" style="width:100%;max-width:320px;padding:18px;background:var(--violet-deep);color:#fff;border:none;border-radius:14px;font-family:'Fredoka','DM Sans',sans-serif;font-size:18px;font-weight:600;cursor:pointer;margin-top:8px;">Continuar →</button>
+  `;
+  document.body.appendChild(ov);
 }
 
 </script>
