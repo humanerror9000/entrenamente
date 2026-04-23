@@ -778,6 +778,14 @@ const CALIB_ITEMS = [
   { s: "Los bosques tropicales generan más del veinte por ciento del oxígeno atmosférico mundial.", q: "¿Cuánto oxígeno generan los bosques tropicales?", opts: ["El diez por ciento", "El cuarenta por ciento", "Más del veinte por ciento", "El cincuenta por ciento"], correct: 2 },
   { s: "La meditación regular reduce los niveles de cortisol y mejora la regulación emocional.", q: "¿Qué reduce la meditación regular?", opts: ["Los niveles de adrenalina", "Los niveles de cortisol", "La presión arterial", "Los niveles de glucosa"], correct: 1 },
   { s: "El pensamiento crítico permite evaluar argumentos con mayor objetividad y precisión.", q: "¿Qué permite el pensamiento crítico?", opts: ["Generar ideas originales", "Evaluar argumentos con objetividad", "Memorizar información con eficiencia", "Comunicarse de forma persuasiva"], correct: 1 },
+  { s: "El microbioma intestinal influye directamente en el estado de ánimo y el bienestar mental.", q: "¿Qué influye directamente en el estado de ánimo?", opts: ["El sistema nervioso autónomo", "El microbioma intestinal", "La actividad hormonal", "El ritmo circadiano"], correct: 1 },
+  { s: "La neuroplasticidad permite al cerebro reorganizarse en respuesta a nuevas experiencias.", q: "¿Qué permite la neuroplasticidad?", opts: ["Aumentar el volumen cerebral", "Reorganizarse ante nuevas experiencias", "Acelerar la transmisión sináptica", "Reducir el consumo de glucosa"], correct: 1 },
+  { s: "El silencio activo facilita la consolidación de recuerdos y la generación de ideas creativas.", q: "¿Qué facilita el silencio activo?", opts: ["La concentración en tareas específicas", "La consolidación de recuerdos y creatividad", "La regulación del ritmo cardíaco", "El procesamiento visual de estímulos"], correct: 1 },
+  { s: "Las lenguas en peligro de extinción representan sistemas únicos de conocimiento cultural.", q: "¿Qué representan las lenguas en peligro de extinción?", opts: ["Dialectos sin gramática formal", "Sistemas únicos de conocimiento cultural", "Variantes regionales del mismo idioma", "Códigos de comunicación obsoletos"], correct: 1 },
+  { s: "La desigualdad educativa limita el desarrollo del potencial cognitivo en etapas tempranas.", q: "¿Qué limita el desarrollo cognitivo en etapas tempranas?", opts: ["La falta de estimulación sensorial", "La desigualdad educativa", "La nutrición deficiente exclusivamente", "La ausencia de actividad física"], correct: 1 },
+  { s: "El ejercicio aeróbico mejora la función ejecutiva y la memoria de trabajo en adultos.", q: "¿Qué mejora el ejercicio aeróbico en adultos?", opts: ["La memoria visual a largo plazo", "La función ejecutiva y la memoria de trabajo", "La capacidad de atención selectiva", "La velocidad de procesamiento auditivo"], correct: 1 },
+  { s: "La escritura a mano activa regiones cerebrales distintas a las que usa la escritura digital.", q: "¿Qué diferencia hay entre escritura a mano y digital neurológicamente?", opts: ["La escritura digital es más precisa", "Activan regiones cerebrales distintas", "La escritura a mano es más lenta siempre", "No existe diferencia neurológica"], correct: 1 },
+  { s: "Los hábitos de lectura sostenidos desde la infancia predicen el rendimiento académico futuro.", q: "¿Qué predicen los hábitos de lectura sostenidos desde la infancia?", opts: ["El coeficiente intelectual adulto", "El rendimiento académico futuro", "La capacidad de memorización", "El desarrollo del lenguaje oral"], correct: 1 },
 ];
 
 const TRAIN_ITEMS = [
@@ -796,12 +804,23 @@ const TRAIN_ITEMS = [
   { s: "La variabilidad interindividual en la velocidad lectora puede alcanzar un factor de diez entre lectores.", q: "¿Cuánto puede variar la velocidad lectora entre individuos?", opts: ["Un factor de dos", "Un factor de cinco", "Un factor de diez", "Un factor de veinte"], correct: 2 },
   { s: "Las metáforas conceptuales estructuran gran parte de nuestro pensamiento abstracto cotidiano.", q: "¿Qué estructuran las metáforas conceptuales?", opts: ["El lenguaje poético", "El pensamiento abstracto cotidiano", "La comprensión literal de textos", "Las habilidades matemáticas"], correct: 1 },
   { s: "El dominio de una segunda lengua retrasa la aparición de síntomas de deterioro cognitivo.", q: "¿Qué efecto tiene el dominio de una segunda lengua?", opts: ["Mejora el rendimiento en matemáticas", "Retrasa el deterioro cognitivo", "Aumenta la velocidad de procesamiento visual", "Mejora la memoria episódica"], correct: 1 },
+  { s: "La empatía cognitiva implica comprender el punto de vista ajeno sin necesariamente compartirlo.", q: "¿Qué implica la empatía cognitiva?", opts: ["Sentir las emociones del otro como propias", "Comprender el punto de vista ajeno sin compartirlo", "Expresar solidaridad en momentos difíciles", "Identificar las emociones propias con precisión"], correct: 1 },
+  { s: "Las ciudades con mayor densidad verde reportan menores niveles de estrés en sus habitantes.", q: "¿Qué reportan las ciudades con mayor densidad verde?", opts: ["Mayor productividad laboral", "Menores niveles de estrés", "Mejor calidad del aire interior", "Mayor cohesión social entre vecinos"], correct: 1 },
+  { s: "La sobrecarga informativa reduce la capacidad de tomar decisiones de calidad de forma sostenida.", q: "¿Qué efecto tiene la sobrecarga informativa?", opts: ["Mejora la velocidad de respuesta", "Reduce la calidad de las decisiones sostenidas", "Aumenta la capacidad de análisis crítico", "Facilita la priorización de tareas"], correct: 1 },
+  { s: "El aprendizaje por error activado es más duradero que el aprendizaje por exposición pasiva.", q: "¿Qué tipo de aprendizaje es más duradero?", opts: ["El aprendizaje por observación repetida", "El aprendizaje por error activado", "El estudio memorístico intensivo", "La revisión pasiva de material previo"], correct: 1 },
+  { s: "La conciencia fonológica es el predictor más sólido del éxito en la adquisición de la lectura.", q: "¿Qué predice mejor el éxito en la adquisición lectora?", opts: ["El cociente intelectual verbal", "La conciencia fonológica", "El vocabulario receptivo temprano", "La coordinación visomotora fina"], correct: 1 },
+  { s: "El pensamiento lateral genera soluciones innovadoras al romper los patrones de razonamiento habitual.", q: "¿Cómo genera soluciones el pensamiento lateral?", opts: ["Siguiendo los pasos del método científico", "Rompiendo los patrones de razonamiento habitual", "Aplicando fórmulas lógicas establecidas", "Consultando fuentes de autoridad reconocidas"], correct: 1 },
+  { s: "La autorregulación emocional es una habilidad cognitiva que puede desarrollarse con entrenamiento.", q: "¿Cómo se clasifica la autorregulación emocional?", opts: ["Como un rasgo de personalidad fijo", "Como una habilidad cognitiva entrenable", "Como una respuesta puramente instintiva", "Como un proceso exclusivamente inconsciente"], correct: 1 },
+  { s: "Los mapas mentales mejoran la organización del conocimiento al representar relaciones entre conceptos.", q: "¿Cómo mejoran los mapas mentales la organización del conocimiento?", opts: ["Reduciendo la cantidad de información a procesar", "Representando relaciones entre conceptos", "Ordenando la información de forma lineal", "Eliminando la información redundante"], correct: 1 },
+  { s: "La recuperación activa del conocimiento fortalece las trazas de memoria de forma exponencial.", q: "¿Qué fortalece la recuperación activa del conocimiento?", opts: ["Las conexiones sinápticas visuales", "Las trazas de memoria de forma exponencial", "La velocidad de procesamiento lingüístico", "La capacidad de atención dividida"], correct: 1 },
+  { s: "El fenómeno de la fluidez cognitiva hace que la información familiar parezca más verdadera.", q: "¿Qué hace la fluidez cognitiva con la información familiar?", opts: ["La hace parecer más compleja", "La hace parecer más verdadera", "La hace más fácil de olvidar", "La convierte en memoria procedimental"], correct: 1 },
 ];
 
 // ──────────────────────────────────────────
 // State
 // ──────────────────────────────────────────
 let calibIdx = 0, calibTimes = [], calibStart = 0, calibCorrect = 0;
+let _currentCalibItem = null, _currentTrainItem = null;
 let baseRateMs = 0; // ms per character — the calibration result
 let currentRate = 0; // live training rate (ms per character)
 
@@ -851,7 +870,7 @@ function spaceHandler(e) {
 }
 
 function showCalibItem() {
-  const item = CALIB_ITEMS[calibIdx];
+  const item = nextCalibItem();
   const sentEl = document.getElementById('calib-sent');
   sentEl.style.opacity = '1';
   sentEl.style.transition = 'opacity 0.3s';
@@ -867,7 +886,7 @@ function showCalibItem() {
 
 function calibNext() {
   const elapsed = performance.now() - calibStart;
-  const item = CALIB_ITEMS[calibIdx];
+  const item = currentCalibItem();
   const charCount = item.s.length;
   const msPerChar = elapsed / charCount;
   // Hide sentence, show question
@@ -949,6 +968,13 @@ function setFadeMode(n) {
 
 function startTraining() {
   trainIdx=0; trainCorrect=0; trainWindow=[]; paused=false;
+  // Build shuffled session set from the full pool
+  const pool = TRAIN_ITEMS.slice();
+  for(let i=pool.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [pool[i],pool[j]]=[pool[j],pool[i]];
+  }
+  sessionTrainItems = pool.slice(0, TRAIN_COUNT);
   setStage(1);
   document.addEventListener('keydown', spaceHandler2);
   runNextSentence();
@@ -961,7 +987,7 @@ function spaceHandler2(e) {
 function runNextSentence() {
   if(trainIdx >= TRAIN_COUNT) { endTraining(); return; }
   clearTimeout(fadeTimer);
-  const item = TRAIN_ITEMS[trainIdx];
+  const item = sessionTrainItems[trainIdx];
   const text = item.s;
   const totalMs = text.length * currentRate;
 
@@ -1040,11 +1066,13 @@ function endTraining() {
 // ──────────────────────────────────────────
 // STAGE 2: Comprehension
 // ──────────────────────────────────────────
-// Pick 5 questions from the 15 training sentences (every 3rd)
 let questionItems = [];
+let sessionTrainItems = []; // shuffled set for this session
 
 function buildQuestions() {
-  questionItems = [0,3,6,9,12].map(i=>TRAIN_ITEMS[i]);
+  // Pick 5 evenly spaced from the session items actually shown
+  const step = Math.floor(TRAIN_COUNT / 5);
+  questionItems = [0,1,2,3,4].map(i => sessionTrainItems[i * step]);
   qAnswered=0; qCorrect=0;
   const area = document.getElementById('q-area');
   area.innerHTML='';
@@ -1201,6 +1229,40 @@ document.addEventListener('visibilitychange', () => {
     title.style.color = 'var(--teal)';
   }
 })();
+
+
+// ── Shuffled sentence rotation ──
+function _shuffleArr(arr) {
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function getShuffledQueue(key, pool) {
+  let queue;
+  try { queue = JSON.parse(localStorage.getItem(key) || '[]'); } catch(e) { queue = []; }
+  queue = queue.filter(i => i < pool.length);
+  if(queue.length === 0) {
+    const lastSeen = (() => { try { return parseInt(localStorage.getItem(key+'_last') || '-1'); } catch(e) { return -1; } })();
+    const fresh = _shuffleArr(pool.map((_,i)=>i));
+    if(fresh[0] === lastSeen && fresh.length > 1) fresh.push(fresh.shift());
+    queue = fresh;
+  }
+  const next = queue.shift();
+  try {
+    localStorage.setItem(key, JSON.stringify(queue));
+    localStorage.setItem(key+'_last', String(next));
+  } catch(e) {}
+  return next;
+}
+
+function nextCalibItem() { _currentCalibItem = CALIB_ITEMS[getShuffledQueue('em_ct_calib', CALIB_ITEMS)]; return _currentCalibItem; }
+function currentCalibItem() { return _currentCalibItem || nextCalibItem(); }
+function nextTrainItem() { _currentTrainItem = TRAIN_ITEMS[getShuffledQueue('em_ct_train', TRAIN_ITEMS)]; return _currentTrainItem; }
+function currentTrainItem() { return _currentTrainItem || nextTrainItem(); }
 
 </script>
 
