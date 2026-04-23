@@ -562,6 +562,7 @@ function dismissReady(){
   window._stopRdy && window._stopRdy();
   const spd = document.getElementById('rdy-speed-slider');
   if(spd){ currentWpm=parseInt(spd.value)||150; syncSpeed(spd.value); }
+  selectedTextIdx = getNextTextIdx('adult');
   document.getElementById('ready-screen').classList.add('hidden');
   setStage(1);
   startRSVP();
@@ -738,6 +739,7 @@ function syncSpeed(v) {
 const TEXTS = [
   {
     title: "Un día en el parque",
+    ages: ["child", "teen"],
     words: "El parque estaba lleno de vida aquella mañana. Los niños corrían entre los árboles mientras sus padres conversaban en los bancos. Un perro jugaba con una pelota roja cerca de la fuente. El sol brillaba con fuerza y el aire olía a flores recién abiertas. Una anciana alimentaba a las palomas con migas de pan. Dos ciclistas pasaron a gran velocidad por el camino principal. Un vendedor de helados empujaba su carrito entre los visitantes. La gente sonreía y disfrutaba del buen tiempo. Era uno de esos días perfectos que uno no olvida fácilmente."
       .split(' '),
     questions: [
@@ -757,6 +759,7 @@ const TEXTS = [
   },
   {
     title: "La biodiversidad marina",
+    ages: ["adult"],
     words: "Los océanos cubren más del setenta por ciento de la superficie terrestre y albergan una biodiversidad extraordinaria que aún no hemos logrado comprender del todo. Cada año, los científicos descubren miles de especies nuevas en las profundidades marinas, lo que pone de manifiesto cuánto queda por explorar. Sin embargo, esta riqueza biológica enfrenta amenazas sin precedentes: la contaminación plástica, el calentamiento global y la sobrepesca están transformando los ecosistemas a un ritmo alarmante. Algunos estudios recientes indican que los arrecifes de coral podrían desaparecer antes de finales de este siglo si no se toman medidas urgentes. La pérdida de estos ecosistemas no solo afecta a las especies marinas, sino también a los millones de personas que dependen del océano para su alimentación y sustento. Proteger la biodiversidad marina es, en última instancia, proteger nuestra propia supervivencia."
       .split(' '),
     questions: [
@@ -780,6 +783,7 @@ const TEXTS = [
   },
   {
     title: "Economía circular en América Latina",
+    ages: ["adult"],
     words: "La economía circular propone un modelo en el que los residuos de un proceso se convierten en los recursos de otro, rompiendo así con la lógica lineal de producir, usar y desechar. En América Latina, esta transición resulta especialmente relevante dado el crecimiento acelerado del consumo y la fragilidad de muchos ecosistemas regionales. Países como Chile, Colombia y México ya han comenzado a implementar marcos legislativos que incentivan el rediseño de productos y la gestión responsable de materiales. No obstante, los avances son desiguales: mientras algunas ciudades lideran iniciativas innovadoras, las zonas rurales siguen enfrentando déficits importantes en infraestructura de reciclaje. Para que la economía circular deje de ser una aspiración y se convierta en política pública efectiva, es necesario articular esfuerzos entre el sector privado, los gobiernos y las comunidades locales."
       .split(' '),
     questions: [
@@ -798,6 +802,221 @@ const TEXTS = [
       ["las zonas rurales"], ["siguen enfrentando déficits"], ["en infraestructura de reciclaje."],
       ["Para que la economía circular"], ["se convierta en política pública efectiva,"],
       ["es necesario articular esfuerzos"], ["entre el sector privado,"], ["los gobiernos"], ["y las comunidades locales."]
+    ]
+  },
+  {
+    title: "El sueño y la memoria",
+    ages: ["adult"],
+    words: "Durante el sueño, el cerebro no descansa: procesa, consolida y reorganiza la información acumulada durante el día. La fase de sueño profundo es especialmente crítica para la consolidación de la memoria declarativa, aquella que nos permite recordar hechos y eventos. Investigaciones recientes demuestran que las personas que duermen menos de seis horas rinden significativamente peor en pruebas de memoria al día siguiente. Más sorprendente aún es que el sueño también parece cumplir una función de limpieza: durante la noche, el sistema glinfático elimina toxinas acumuladas en el cerebro, incluidas proteínas asociadas con el Alzheimer. Dormir bien no es un lujo; es una necesidad biológica fundamental para el funcionamiento cognitivo óptimo."
+      .split(' '),
+    questions: [
+      { text: "¿Cuál es la función del sueño profundo según el texto?", opts: ["Relajar los músculos del cuerpo","Consolidar la memoria declarativa","Acelerar el metabolismo","Regular la temperatura corporal"], correct: 1 },
+      { text: "¿Qué implica la referencia al sistema glinfático?", opts: ["Que el cerebro produce toxinas durante el día","Que dormir mal no tiene consecuencias graves","Que las toxinas se acumulan durante el sueño","Que el Alzheimer es causado por falta de sueño"], correct: 0 },
+      { text: "¿Cuál es la postura central del autor sobre el sueño?", opts: ["Es una actividad opcional para personas ocupadas","Solo importa la cantidad, no la calidad","Es una necesidad biológica, no un lujo","Afecta solo a personas mayores"], correct: 2 }
+    ],
+    phrases: [
+      ["Durante el sueño,"], ["el cerebro no descansa:"],
+      ["procesa, consolida y reorganiza"], ["la información acumulada durante el día."],
+      ["La fase de sueño profundo"], ["es especialmente crítica"],
+      ["para la consolidación"], ["de la memoria declarativa."],
+      ["Investigaciones recientes demuestran"], ["que las personas que duermen menos de seis horas"],
+      ["rinden significativamente peor"], ["en pruebas de memoria al día siguiente."],
+      ["Más sorprendente aún"], ["es que el sueño cumple una función de limpieza:"],
+      ["el sistema glinfático"], ["elimina toxinas acumuladas en el cerebro."],
+      ["Dormir bien no es un lujo;"], ["es una necesidad biológica fundamental."]
+    ]
+  },
+  {
+    title: "Ciudades y cambio climático",
+    ages: ["adult"],
+    words: "Las ciudades concentran más del cincuenta y cinco por ciento de la población mundial y son responsables de aproximadamente el setenta por ciento de las emisiones globales de dióxido de carbono. Esta paradoja urbana —centros de innovación que también son motores de contaminación— está impulsando un replanteamiento profundo del diseño de las ciudades. Conceptos como la ciudad de quince minutos, donde todos los servicios esenciales se encuentran a una distancia caminable, están ganando terreno en Europa y América Latina. Sin embargo, adaptar las ciudades al cambio climático no es solo una cuestión de infraestructura: requiere transformar hábitos culturales profundamente arraigados en torno al automóvil y al consumo. El urbanismo del siglo veintiuno debe ser, ante todo, un proyecto colectivo y democrático."
+      .split(' '),
+    questions: [
+      { text: "¿Qué paradoja describe el texto sobre las ciudades?", opts: ["Son pobres pero consumen mucho","Son centros de innovación y a la vez fuentes de contaminación","Tienen mucha población pero poca infraestructura","Lideran la economía pero ignoran la tecnología"], correct: 1 },
+      { text: "¿Qué es la 'ciudad de quince minutos'?", opts: ["Una ciudad que se construye en quince minutos","Una ciudad donde los desplazamientos en auto duran quince minutos","Un modelo donde los servicios esenciales están a distancia caminable","Una iniciativa para reducir jornadas laborales"], correct: 2 },
+      { text: "Según el autor, ¿qué más requiere la adaptación climática urbana?", opts: ["Solo inversión en infraestructura","Únicamente cambios legislativos","Transformar hábitos culturales además de la infraestructura","Reducir la población de las ciudades"], correct: 2 }
+    ],
+    phrases: [
+      ["Las ciudades concentran"], ["más del cincuenta y cinco por ciento"], ["de la población mundial"],
+      ["y son responsables"], ["del setenta por ciento"], ["de las emisiones globales."],
+      ["Esta paradoja urbana"], ["—centros de innovación"], ["que también son motores de contaminación—"],
+      ["está impulsando un replanteamiento"], ["del diseño de las ciudades."],
+      ["La ciudad de quince minutos,"], ["donde los servicios esenciales"], ["están a distancia caminable,"],
+      ["está ganando terreno"], ["en Europa y América Latina."],
+      ["Adaptar las ciudades al cambio climático"], ["requiere transformar hábitos culturales."],
+      ["El urbanismo del siglo veintiuno"], ["debe ser un proyecto colectivo y democrático."]
+    ]
+  },
+  {
+    title: "La atención en la era digital",
+    ages: ["adult"],
+    words: "La capacidad de sostener la atención durante períodos prolongados está disminuyendo en la población adulta de las sociedades digitalizadas. Los estudios sugieren que el uso intensivo de plataformas diseñadas para capturar la atención en fragmentos breves entrena al cerebro para buscar novedad constante, dificultando la concentración sostenida. Esta tendencia tiene consecuencias directas sobre la lectura profunda, el pensamiento crítico y la capacidad de resolver problemas complejos. No obstante, la neuroplasticidad ofrece una respuesta esperanzadora: el cerebro puede recuperar su capacidad de atención sostenida con práctica deliberada. Ejercicios como la lectura de textos largos, la meditación y el trabajo cognitivo sin interrupciones digitales han demostrado ser efectivos para reconectar los circuitos atencionales."
+      .split(' '),
+    questions: [
+      { text: "¿Cuál es la causa principal de la disminución de la atención según el texto?", opts: ["El trabajo excesivo y el estrés","El envejecimiento natural de la población","El diseño de plataformas digitales que fragmentan la atención","La reducción de horas de sueño"], correct: 2 },
+      { text: "¿Qué consecuencias tiene esta tendencia?", opts: ["Solo afecta el entretenimiento","Afecta la lectura, el pensamiento crítico y la resolución de problemas","Mejora la capacidad de hacer varias cosas a la vez","No tiene consecuencias comprobadas"], correct: 1 },
+      { text: "¿Qué mensaje transmite la mención de la neuroplasticidad?", opts: ["El daño causado por la tecnología es irreversible","Solo los jóvenes pueden recuperar la atención","El cerebro puede recuperarse con práctica adecuada","La meditación es la única solución efectiva"], correct: 2 }
+    ],
+    phrases: [
+      ["La capacidad de sostener la atención"], ["durante períodos prolongados"],
+      ["está disminuyendo"], ["en las sociedades digitalizadas."],
+      ["El uso intensivo de plataformas"], ["diseñadas para capturar la atención en fragmentos breves"],
+      ["entrena al cerebro"], ["para buscar novedad constante."],
+      ["Esta tendencia tiene consecuencias"], ["sobre la lectura profunda,"],
+      ["el pensamiento crítico"], ["y la resolución de problemas complejos."],
+      ["No obstante, la neuroplasticidad"], ["ofrece una respuesta esperanzadora:"],
+      ["el cerebro puede recuperar"], ["su capacidad de atención sostenida"],
+      ["con práctica deliberada."]
+    ]
+  },
+  {
+    title: "Microbioma y salud mental",
+    ages: ["adult"],
+    words: "Durante décadas, el cerebro fue considerado el órgano rector de las emociones y el comportamiento. Hoy sabemos que existe una comunicación bidireccional constante entre el intestino y el cerebro, mediada por millones de microorganismos que habitan en el tracto digestivo. Este ecosistema microbiano, conocido como microbioma intestinal, produce neurotransmisores como la serotonina, de la que se estima que el noventa por ciento se sintetiza en el intestino. Investigaciones recientes asocian la composición del microbioma con trastornos como la depresión, la ansiedad y el autismo. Aunque el campo es aún joven y muchas relaciones de causalidad no están establecidas, los hallazgos apuntan hacia una medicina más integrativa que considere la salud intestinal como parte esencial del bienestar mental."
+      .split(' '),
+    questions: [
+      { text: "¿Qué descubrimiento central describe el texto?", opts: ["Que el cerebro controla el sistema digestivo","Que existe comunicación bidireccional entre intestino y cerebro","Que la serotonina solo se produce en el cerebro","Que el microbioma causa directamente la depresión"], correct: 1 },
+      { text: "¿Por qué es relevante que el 90% de la serotonina se produce en el intestino?", opts: ["Porque confirma que el cerebro no regula las emociones","Porque sugiere que la salud intestinal influye en el estado de ánimo","Porque demuestra que los microorganismos son dañinos","Porque explica por qué comemos en exceso"], correct: 1 },
+      { text: "¿Cuál es la actitud del autor hacia este campo de investigación?", opts: ["Escéptica y negativa","Entusiasta pero cautelosa","Completamente segura de las causas","Indiferente a sus implicaciones"], correct: 1 }
+    ],
+    phrases: [
+      ["Durante décadas,"], ["el cerebro fue considerado"], ["el órgano rector de las emociones."],
+      ["Hoy sabemos que existe"], ["una comunicación bidireccional"], ["entre el intestino y el cerebro,"],
+      ["mediada por millones de microorganismos"], ["que habitan en el tracto digestivo."],
+      ["El microbioma intestinal"], ["produce neurotransmisores como la serotonina,"],
+      ["de la que el noventa por ciento"], ["se sintetiza en el intestino."],
+      ["Investigaciones recientes asocian"], ["la composición del microbioma"],
+      ["con trastornos como la depresión"], ["y la ansiedad."],
+      ["Los hallazgos apuntan"], ["hacia una medicina más integrativa."]
+    ]
+  },
+  {
+    title: "El valor del silencio",
+    ages: ["adult"],
+    words: "En un mundo saturado de estímulos sonoros, el silencio se ha convertido en un recurso escaso y valioso. La investigación en neurociencia sugiere que los períodos de silencio no son simplemente ausencias de ruido, sino estados activos durante los cuales el cerebro procesa experiencias, consolida recuerdos y genera conexiones creativas. Un estudio con ratones demostró que dos horas diarias de silencio promovían el desarrollo de nuevas células en el hipocampo, región asociada con la memoria y el aprendizaje. En el ámbito humano, las personas que practican períodos regulares de quietud reportan mayor claridad mental, mejor regulación emocional y mayor capacidad creativa. Paradójicamente, en la cultura contemporánea, el silencio incomoda: llenamos cada pausa con pantallas, música o conversación, privándonos de uno de los recursos cognitivos más potentes que tenemos."
+      .split(' '),
+    questions: [
+      { text: "¿Cómo describe el texto al silencio desde la perspectiva neurocientífica?", opts: ["Como ausencia total de actividad cerebral","Como un estado activo de procesamiento cerebral","Como una fuente de estrés para el cerebro","Como algo que solo beneficia a los ratones"], correct: 1 },
+      { text: "¿Qué efecto tuvo el silencio en el estudio con ratones?", opts: ["Redujo su capacidad de memorizar","Aumentó su nivel de ansiedad","Promovió el desarrollo de nuevas células en el hipocampo","No tuvo ningún efecto medible"], correct: 2 },
+      { text: "¿Qué paradoja señala el autor al final del texto?", opts: ["Que el silencio es ruidoso en realidad","Que buscamos el silencio pero no lo encontramos","Que sabemos que el silencio es valioso pero constantemente lo evitamos","Que el silencio beneficia a los ratones pero no a los humanos"], correct: 2 }
+    ],
+    phrases: [
+      ["En un mundo saturado de estímulos sonoros,"], ["el silencio se ha convertido"],
+      ["en un recurso escaso y valioso."],
+      ["Los períodos de silencio"], ["no son simplemente ausencias de ruido,"],
+      ["sino estados activos"], ["durante los cuales el cerebro"],
+      ["procesa experiencias"], ["y genera conexiones creativas."],
+      ["Un estudio con ratones demostró"], ["que el silencio promovía"],
+      ["el desarrollo de nuevas células"], ["en el hipocampo."],
+      ["Paradójicamente,"], ["el silencio incomoda en la cultura contemporánea:"],
+      ["llenamos cada pausa"], ["con pantallas, música o conversación."]
+    ]
+  },
+  {
+    title: "Lenguas en peligro",
+    ages: ["adult"],
+    words: "Se estima que de las aproximadamente siete mil lenguas que existen en el mundo, la mitad desaparecerá antes de finales de este siglo. Una lengua muere, en promedio, cada dos semanas. Más allá de la pérdida cultural evidente, la extinción lingüística supone también una pérdida de conocimiento: muchas lenguas contienen categorías conceptuales, sistemas de clasificación de la naturaleza y formas de entender el tiempo y el espacio que no tienen equivalente en las lenguas dominantes. Algunos lingüistas argumentan que cada lengua representa una ventana única hacia la cognición humana. Los esfuerzos de revitalización lingüística, como los que han dado resultado en el caso del euskera en España o el maorí en Nueva Zelanda, demuestran que la extinción no es inevitable si existe voluntad política y comunitaria."
+      .split(' '),
+    questions: [
+      { text: "Además de la pérdida cultural, ¿qué otro tipo de pérdida implica la extinción de una lengua?", opts: ["Pérdida de recursos económicos","Pérdida de conocimiento y formas únicas de entender el mundo","Pérdida de biodiversidad animal","Pérdida de infraestructura educativa"], correct: 1 },
+      { text: "¿Qué sugiere la afirmación de que cada lengua es 'una ventana única hacia la cognición humana'?", opts: ["Que todas las lenguas son iguales en estructura","Que las lenguas dominantes son superiores cognitivamente","Que distintas lenguas reflejan distintas formas de pensar","Que el número de lenguas no importa"], correct: 2 },
+      { text: "¿Qué conclusión extrae el texto de los casos del euskera y el maorí?", opts: ["Que la revitalización siempre fracasa","Que solo las lenguas europeas pueden sobrevivir","Que la extinción lingüística puede evitarse con voluntad política y comunitaria","Que los gobiernos son los únicos responsables"], correct: 2 }
+    ],
+    phrases: [
+      ["Se estima que la mitad"], ["de las siete mil lenguas del mundo"],
+      ["desaparecerá antes de finales de este siglo."],
+      ["Una lengua muere,"], ["en promedio,"], ["cada dos semanas."],
+      ["Más allá de la pérdida cultural,"], ["la extinción lingüística supone"],
+      ["una pérdida de conocimiento:"], ["formas de entender el tiempo y el espacio"],
+      ["sin equivalente en las lenguas dominantes."],
+      ["Cada lengua representa"], ["una ventana única hacia la cognición humana."],
+      ["Los esfuerzos de revitalización"], ["como el euskera o el maorí"],
+      ["demuestran que la extinción no es inevitable."]
+    ]
+  },
+  {
+    title: "Inteligencia artificial y creatividad",
+    ages: ["adult"],
+    words: "Durante años, la creatividad fue considerada el último bastión exclusivamente humano, inmune a la automatización. Esta certeza ha sido sacudida por sistemas de inteligencia artificial capaces de generar texto, música, imágenes y código con una fluidez que sorprende incluso a sus creadores. Sin embargo, el debate sobre si estas máquinas realmente crean o simplemente recombinan patrones estadísticos de lo que han procesado es filosóficamente profundo. La creatividad humana, argumentan algunos, no es solo producción novedosa: implica intención, experiencia vivida, emoción y contexto cultural. Lo que la inteligencia artificial produce puede ser extraordinariamente útil y estéticamente impactante, pero surge de un proceso radicalmente distinto. La pregunta relevante quizás no es si las máquinas pueden crear, sino qué queremos hacer los humanos con nuestra propia capacidad creativa en este nuevo contexto."
+      .split(' '),
+    questions: [
+      { text: "¿Qué certeza menciona el texto que ha sido sacudida?", opts: ["Que las máquinas son más eficientes que los humanos","Que la creatividad era un dominio exclusivamente humano","Que la inteligencia artificial no puede aprender","Que el arte no tiene valor económico"], correct: 1 },
+      { text: "¿Cuál es el argumento de quienes cuestionan que la IA realmente crea?", opts: ["Que las máquinas no tienen electricidad suficiente","Que la IA produce resultados de mala calidad","Que la creatividad humana implica intención, emoción y experiencia vivida","Que la IA solo funciona con música"], correct: 2 },
+      { text: "¿Cuál es la pregunta final que propone el autor?", opts: ["¿Pueden las máquinas superar a los humanos?","¿Debemos prohibir la inteligencia artificial?","¿Qué haremos los humanos con nuestra creatividad en este nuevo contexto?","¿Es la IA más inteligente que nosotros?"], correct: 2 }
+    ],
+    phrases: [
+      ["Durante años,"], ["la creatividad fue considerada"], ["el último bastión exclusivamente humano."],
+      ["Esta certeza ha sido sacudida"], ["por sistemas de inteligencia artificial"],
+      ["capaces de generar texto, música,"], ["imágenes y código."],
+      ["El debate sobre si estas máquinas realmente crean"], ["es filosóficamente profundo."],
+      ["La creatividad humana"], ["no es solo producción novedosa:"],
+      ["implica intención,"], ["experiencia vivida,"], ["emoción y contexto cultural."],
+      ["La pregunta relevante"], ["quizás no es si las máquinas pueden crear,"],
+      ["sino qué queremos hacer los humanos"], ["con nuestra propia capacidad creativa."]
+    ]
+  },
+  {
+    title: "La lectura y el cerebro",
+    ages: ["adult"],
+    words: "La lectura es una tecnología cultural relativamente reciente —apenas cinco mil años de antigüedad— y, sin embargo, ha transformado la arquitectura del cerebro humano. A diferencia del lenguaje oral, que tiene bases neurológicas innatas, leer exige un aprendizaje explícito que reconfigura regiones cerebrales originalmente destinadas a otras funciones, como el reconocimiento de objetos y caras. La lectura profunda, aquella que implica análisis, inferencia y empatía narrativa, activa una red neuronal extensa que incluye áreas visuales, lingüísticas y emocionales. Investigadores como Maryanne Wolf advierten que el predominio de la lectura superficial en pantallas podría estar erosionando esta capacidad. Desarrollar lectores profundos no es solo una meta educativa: es una inversión en la calidad del pensamiento humano colectivo."
+      .split(' '),
+    questions: [
+      { text: "¿Por qué la lectura es notable desde una perspectiva neurológica?", opts: ["Porque es una habilidad innata de los humanos","Porque reconfigura regiones cerebrales destinadas a otras funciones","Porque es idéntica al procesamiento del lenguaje oral","Porque no requiere aprendizaje explícito"], correct: 1 },
+      { text: "¿Qué distingue a la lectura profunda de la lectura ordinaria?", opts: ["Que se hace solo en papel","Que activa una red neuronal extensa incluyendo áreas emocionales","Que es más rápida que la lectura en pantalla","Que solo la practican los académicos"], correct: 1 },
+      { text: "¿Cuál es la preocupación central del texto?", opts: ["Que los libros están desapareciendo físicamente","Que la lectura en pantallas mejora demasiado la velocidad","Que la lectura superficial digital podría erosionar la capacidad de pensar profundamente","Que los niños leen demasiado"], correct: 2 }
+    ],
+    phrases: [
+      ["La lectura es una tecnología cultural"], ["relativamente reciente"],
+      ["—apenas cinco mil años de antigüedad—"], ["y ha transformado la arquitectura del cerebro."],
+      ["A diferencia del lenguaje oral,"], ["leer exige un aprendizaje explícito"],
+      ["que reconfigura regiones cerebrales"], ["destinadas originalmente a otras funciones."],
+      ["La lectura profunda"], ["implica análisis, inferencia"], ["y empatía narrativa."],
+      ["Activa una red neuronal extensa"], ["que incluye áreas visuales,"],
+      ["lingüísticas y emocionales."],
+      ["Desarrollar lectores profundos"], ["es una inversión"], ["en el pensamiento humano colectivo."]
+    ]
+  },
+  {
+    title: "Migración y pertenencia",
+    ages: ["adult"],
+    words: "La migración es uno de los fenómenos más antiguos y definitorios de la historia humana. Hoy, más de doscientos ochenta millones de personas viven fuera de su país de nacimiento, una cifra sin precedentes en la era moderna. Los debates públicos sobre migración suelen polarizarse entre visiones que enfatizan los riesgos y las que destacan los beneficios económicos y culturales. Lo que con frecuencia se pierde en estas discusiones es la experiencia subjetiva del migrante: la negociación constante entre la cultura de origen y la cultura de acogida, el duelo por lo que se deja y la construcción de una identidad que no encaja perfectamente en ningún lugar. Esta condición de pertenencia múltiple, aunque compleja, puede también ser fuente de una perspectiva única y enriquecedora, tanto para el individuo como para las sociedades que saben acogerla."
+      .split(' '),
+    questions: [
+      { text: "¿Qué aspecto de la migración señala el texto como frecuentemente ignorado?", opts: ["Las cifras económicas de los migrantes","Los riesgos para los países receptores","La experiencia subjetiva e identitaria del migrante","Las rutas migratorias más comunes"], correct: 2 },
+      { text: "¿Cómo describe el texto la identidad del migrante?", opts: ["Como completamente integrada en la cultura de acogida","Como una identidad que no encaja perfectamente en ningún lugar","Como idéntica a la de cualquier ciudadano local","Como irrelevante para el debate migratorio"], correct: 1 },
+      { text: "¿Cuál es la postura del autor sobre la pertenencia múltiple?", opts: ["Es un problema sin solución","Es exclusivamente fuente de sufrimiento","Puede ser fuente de una perspectiva única y enriquecedora","Solo beneficia a los países ricos"], correct: 2 }
+    ],
+    phrases: [
+      ["La migración es uno de los fenómenos"], ["más antiguos de la historia humana."],
+      ["Hoy, más de doscientos ochenta millones de personas"], ["viven fuera de su país de nacimiento."],
+      ["Los debates sobre migración"], ["suelen polarizarse"],
+      ["entre quienes enfatizan los riesgos"], ["y quienes destacan los beneficios."],
+      ["Lo que se pierde con frecuencia"], ["es la experiencia subjetiva del migrante:"],
+      ["la negociación entre culturas,"], ["el duelo por lo que se deja"],
+      ["y la construcción de una identidad"], ["que no encaja perfectamente en ningún lugar."],
+      ["La pertenencia múltiple"], ["puede ser fuente de una perspectiva enriquecedora."]
+    ]
+  },
+  {
+    title: "El tiempo libre y la productividad",
+    ages: ["adult"],
+    words: "La cultura del trabajo contemporánea glorifica la ocupación constante como señal de valor y compromiso. Sin embargo, la evidencia científica apunta en una dirección diferente: el descanso no es el opuesto de la productividad, sino una de sus condiciones. Estudios sobre el funcionamiento de la red neuronal por defecto, activa precisamente cuando la mente no está enfocada en una tarea específica, revelan que este estado es crucial para la consolidación del aprendizaje, la generación de ideas creativas y la toma de decisiones complejas. Los países con menor cantidad de horas laborales promedio, como los escandinavos, consistentemente muestran mayores índices de productividad por hora trabajada. Redefinir el tiempo libre no como un premio al trabajo sino como parte integral de él podría transformar profundamente tanto la salud individual como el rendimiento colectivo."
+      .split(' '),
+    questions: [
+      { text: "¿Qué contradicción central plantea el texto?", opts: ["Que trabajar más horas produce menos resultados","Que los países escandinavos trabajan demasiado","Que el descanso daña la creatividad","Que la productividad no se puede medir"], correct: 0 },
+      { text: "¿Qué es la red neuronal por defecto según el contexto?", opts: ["Una red que se activa durante el trabajo intenso","Un sistema que solo funciona durante el sueño","Una red activa cuando la mente no está enfocada en ninguna tarea específica","Un término para describir el agotamiento mental"], correct: 2 },
+      { text: "¿Qué propone el autor como cambio de perspectiva?", opts: ["Eliminar el trabajo y solo descansar","Ver el tiempo libre como parte integral del trabajo, no como un premio","Adoptar el modelo escandinavo sin modificaciones","Reducir las horas laborales a la mitad en todo el mundo"], correct: 1 }
+    ],
+    phrases: [
+      ["La cultura del trabajo contemporánea"], ["glorifica la ocupación constante."],
+      ["Sin embargo,"], ["el descanso no es el opuesto de la productividad,"],
+      ["sino una de sus condiciones."],
+      ["La red neuronal por defecto,"], ["activa cuando la mente no está enfocada,"],
+      ["es crucial para la consolidación del aprendizaje"], ["y la generación de ideas creativas."],
+      ["Los países escandinavos,"], ["con menos horas laborales,"],
+      ["muestran mayor productividad por hora trabajada."],
+      ["Redefinir el tiempo libre"], ["como parte integral del trabajo"],
+      ["podría transformar la salud individual"], ["y el rendimiento colectivo."]
     ]
   }
 ];
@@ -1144,6 +1363,58 @@ function releaseWakeLock() {
 document.addEventListener('visibilitychange', () => {
   if(document.visibilityState === 'visible') requestWakeLock();
 });
+
+// ── Age-filtered text pool ──
+function getFilteredTexts(age) {
+  age = age || 'adult';
+  return TEXTS.filter(t => !t.ages || t.ages.includes(age));
+}
+
+
+// ── Shuffled text queue — ensures all texts seen before repeats ──
+const LS_QUEUE_KEY = 'em_lf_queue';
+const LS_SEEN_KEY  = 'em_lf_seen';
+
+function _shuffle(arr) {
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function getNextTextIdx(age) {
+  const pool = getFilteredTexts(age || 'adult');
+  const poolIds = pool.map((_,i) => TEXTS.indexOf(pool[i]));
+
+  let queue;
+  try { queue = JSON.parse(localStorage.getItem(LS_QUEUE_KEY) || '[]'); } catch(e) { queue = []; }
+
+  // Filter queue to only include valid pool ids
+  queue = queue.filter(id => poolIds.includes(id));
+
+  if(queue.length === 0) {
+    // Reshuffle full pool, skip the last-seen text to avoid immediate repeat
+    let lastSeen = -1;
+    try { lastSeen = parseInt(localStorage.getItem(LS_SEEN_KEY) || '-1'); } catch(e) {}
+    const fresh = _shuffle(poolIds);
+    // Move last-seen to end if it would be first
+    if(fresh[0] === lastSeen && fresh.length > 1) {
+      fresh.push(fresh.shift());
+    }
+    queue = fresh;
+  }
+
+  const nextIdx = queue.shift();
+  try {
+    localStorage.setItem(LS_QUEUE_KEY, JSON.stringify(queue));
+    localStorage.setItem(LS_SEEN_KEY, String(nextIdx));
+  } catch(e) {}
+
+  return nextIdx;
+}
+
 </script>
 
 <div style="position:fixed;bottom:0;left:0;right:0;z-index:40;display:flex;justify-content:center;align-items:center;padding:10px 20px 20px;pointer-events:none;">
