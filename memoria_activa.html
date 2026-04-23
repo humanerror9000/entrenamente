@@ -819,11 +819,21 @@ const EQUATIONS = [
   { eq:'13 − 5 = 8', ans: true },  { eq:'7 + 9 = 15', ans: false },
   { eq:'6 × 6 = 36', ans: true },  { eq:'48 ÷ 8 = 7', ans: false },
   { eq:'15 − 7 = 8', ans: true },  { eq:'3 × 9 = 28', ans: false },
-  { eq:'24 ÷ 4 = 6', ans: true },  { eq:'8 + 7 = 16', ans: false },
-  { eq:'5 × 9 = 45', ans: true },  { eq:'30 − 8 = 23', ans: false },
-  { eq:'7 × 8 = 56', ans: true },  { eq:'9 × 6 = 52', ans: false },
-  { eq:'18 ÷ 3 = 6', ans: true },  { eq:'4 + 9 = 14', ans: false },
-  { eq:'6 × 7 = 42', ans: true },  { eq:'55 ÷ 5 = 12', ans: false },
+  { eq:'72 ÷ 9 = 8', ans: true },  { eq:'11 + 8 = 20', ans: false },
+  { eq:'8 × 4 = 32', ans: true },  { eq:'25 − 8 = 18', ans: false },
+  { eq:'56 ÷ 7 = 8', ans: true },  { eq:'6 + 7 = 14', ans: false },
+  { eq:'9 × 9 = 81', ans: true },  { eq:'42 ÷ 6 = 8', ans: false },
+  { eq:'17 − 9 = 8', ans: true },  { eq:'4 × 6 = 25', ans: false },
+  { eq:'3 × 7 = 21', ans: true },  { eq:'64 ÷ 8 = 9', ans: false },
+  { eq:'18 + 7 = 25', ans: true }, { eq:'5 × 7 = 36', ans: false },
+  { eq:'45 ÷ 9 = 5', ans: true },  { eq:'16 − 9 = 8', ans: false },
+  { eq:'7 × 8 = 56', ans: true },  { eq:'27 ÷ 3 = 8', ans: false },
+  { eq:'24 − 6 = 18', ans: true }, { eq:'9 + 8 = 16', ans: false },
+  { eq:'6 × 9 = 54', ans: true },  { eq:'35 ÷ 5 = 8', ans: false },
+  { eq:'22 − 7 = 15', ans: true }, { eq:'4 × 9 = 37', ans: false },
+  { eq:'81 ÷ 9 = 9', ans: true },  { eq:'13 + 9 = 21', ans: false },
+  { eq:'5 × 6 = 30', ans: true },  { eq:'63 ÷ 7 = 8', ans: false },
+  { eq:'19 − 8 = 11', ans: true }, { eq:'8 × 7 = 54', ans: false },
 ];
 const SENTENCES = [
   { s:'El mar siempre está en movimiento.', ans: true },
@@ -831,22 +841,40 @@ const SENTENCES = [
   { s:'La lluvia cae de las nubes hacia la tierra.', ans: true },
   { s:'El sol sale por el oeste cada mañana.', ans: false },
   { s:'Las plantas necesitan luz para crecer.', ans: true },
-  { s:'Los peces vuelan sobre los árboles.', ans: false },
-  { s:'El fuego necesita oxígeno para arder.', ans: true },
-  { s:'La luna produce su propia luz solar.', ans: false },
-  { s:'Los libros contienen palabras escritas.', ans: true },
-  { s:'El viento es invisible pero se puede sentir.', ans: true },
-  { s:'Los caballos tienen seis patas.', ans: false },
-  { s:'El agua hierve a cien grados centígrados.', ans: true },
-  { s:'Las flores crecen debajo de la tierra.', ans: false },
-  { s:'El sonido viaja a través del aire.', ans: true },
-  { s:'Los peces duermen con los ojos abiertos.', ans: true },
+  { s:'Los peces viven en el desierto.', ans: false },
+  { s:'El cerebro humano procesa información constantemente.', ans: true },
+  { s:'La luna genera su propia luz.', ans: false },
+  { s:'El oxígeno es esencial para la respiración.', ans: true },
+  { s:'Los volcanes se forman en el fondo del mar únicamente.', ans: false },
+  { s:'La memoria se consolida durante el sueño.', ans: true },
+  { s:'Los diamantes son más blandos que el papel.', ans: false },
+  { s:'El agua se expande al congelarse.', ans: true },
+  { s:'Los humanos usan el cien por ciento del cerebro a la vez.', ans: false },
+  { s:'La velocidad de la luz supera la del sonido.', ans: true },
+  { s:'Las abejas producen miel a partir del agua de lluvia.', ans: false },
+  { s:'El corazón humano late sin descanso toda la vida.', ans: true },
+  { s:'Los elefantes son el animal terrestre más rápido.', ans: false },
+  { s:'La atmósfera protege la Tierra de los rayos solares.', ans: true },
+  { s:'El ADN es idéntico en todas las células del cuerpo.', ans: false },
+  { s:'Los árboles absorben dióxido de carbono del aire.', ans: true },
+  { s:'El fuego necesita agua para mantenerse encendido.', ans: false },
+  { s:'El sistema nervioso transmite señales eléctricas.', ans: true },
+  { s:'Los humanos tienen cuatro pulmones.', ans: false },
+  { s:'La gravedad mantiene los planetas en órbita.', ans: true },
+  { s:'El sonido viaja más rápido que la luz.', ans: false },
+  { s:'El hipocampo está relacionado con la formación de memorias.', ans: true },
+  { s:'Las plantas carnívoras obtienen energía del suelo únicamente.', ans: false },
+  { s:'La corteza terrestre está en constante movimiento.', ans: true },
+  { s:'Los humanos pueden sobrevivir semanas sin agua.', ans: false },
 ];
 // Memory words — Spanish domain-relevant vocabulary
 const MEM_WORDS = [
   'LUNA','MESA','CIELO','LIBRO','AGUA','MANO','NOCHE','VIENTO','CAMPO','TIEMPO',
   'MUNDO','FLOR','CLAVE','MARCO','FONDO','RITMO','ORDEN','SABOR','CALMA','FORMA',
   'PLUMA','ROCA','BORDE','TINTE','CUEVA','RUIDO','PRISA','TURNO','NUDO','PALMA',
+  'BRISA','HUESO','CARTA','LLAMA','MONTE','PAUSA','RASGO','SUELO','TRAMO','VUELO',
+  'BOSQUE','CAUCE','CUMBRE','FIEBRE','HERIDA','IMAGEN','JUICIO','LECHO','MEZCLA','NIEBLA',
+  'ÓPTICA','PATRÓN','QUILLA','UMBRAL','VÁLVULA','XERÓF','YACIMIENTO','ZAFIRO','ABISMO','BRECHA',
 ];
 const RECALL_ALPHABET = 'ABCDEFGHIJKLMNOPRSTUVZ';
 
@@ -937,7 +965,7 @@ function startTrial() {
   document.getElementById('trial-hint').textContent = mode==='operation' ? 'Responde la ecuación para continuar' : '¿Tiene sentido la oración?';
 
   // Generate this trial's memory words (random sample of setSize, no repeats within trial)
-  const available = MEM_WORDS.filter((_,i)=>!trialWords.includes(MEM_WORDS[i]));
+  const available = MEM_WORDS.filter(w=>!trialWords.includes(w));
   trialWords = shuffle(MEM_WORDS).slice(0, setSize);
   document.getElementById('adapt-banner').className='adapt-banner';
   showProcessingItem();
@@ -1363,6 +1391,33 @@ function showSessionOverlay() {
   ov.appendChild(inner);
   document.body.appendChild(ov);
 }
+
+
+// ── Memoria Activa pool rotation ──
+function _maShuffled(arr) {
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+function _maNextFromPool(key, pool) {
+  let q; try { q=JSON.parse(localStorage.getItem(key)||'[]'); } catch(e){ q=[]; }
+  q = q.filter(i=>i<pool.length);
+  if(!q.length) {
+    const last = (() => { try { return parseInt(localStorage.getItem(key+'_l')||'-1'); } catch(e){ return -1; } })();
+    const fresh = _maShuffled(pool.map((_,i)=>i));
+    if(fresh[0]===last && fresh.length>1) fresh.push(fresh.shift());
+    q = fresh;
+  }
+  const n = q.shift();
+  try { localStorage.setItem(key,JSON.stringify(q)); localStorage.setItem(key+'_l',String(n)); } catch(e){}
+  return pool[n];
+}
+function nextMemWord() { return _maNextFromPool('em_ma_words', MEM_WORDS); }
+function nextEquation() { return _maNextFromPool('em_ma_eq', EQUATIONS); }
+function nextSentence() { return _maNextFromPool('em_ma_sent', SENTENCES); }
 
 </script>
 
