@@ -262,7 +262,15 @@
   .flash-start-btn:hover { background: #5a4bd1; transform: translateY(-1px); }
 
   /* ── MODE 4: Reconstruction ── */
-  .recon-area { padding: 24px 28px; }
+  .recon-area { padding: 16px 20px; display:flex; flex-direction:column; gap:0; }
+.recon-drop-zone { min-height:80px; background:var(--card); border:2px solid var(--violet-b);
+  border-radius:14px; padding:14px; display:flex; flex-wrap:wrap; gap:8px;
+  margin-bottom:0; }
+.recon-drop-zone .placeholder { color:var(--text3); font-size:14px; align-self:center; }
+.recon-divider { display:flex; align-items:center; gap:10px; margin:14px 0 10px;
+  font-size:11px; color:var(--text3); text-transform:uppercase; letter-spacing:0.08em; }
+.recon-divider::before, .recon-divider::after { content:''; flex:1; height:1px; background:var(--border); }
+.chunk-bank { display:flex; flex-wrap:wrap; gap:8px; }
   .recon-drop-zone {
     min-height: 72px;
     border: 2px dashed var(--border);
@@ -277,7 +285,8 @@
   .recon-drop-zone .placeholder {
     font-size: 13px; color: var(--muted); font-style: italic; width: 100%; text-align: center; padding: 8px 0;
   }
-  .chunk-tile {
+  .recon-drop-zone .chunk-tile { background:var(--violet-d); border-color:var(--violet-b); color:var(--violet); }
+.chunk-tile {
     display: inline-flex; align-items: center;
     font-family: 'Lora', serif; font-size: 16px;
     padding: 8px 16px; border-radius: 10px;
@@ -372,7 +381,8 @@
   .flash-area { padding: 24px 16px !important; }
   .flash-chunk { font-size: 20px !important; padding: 10px 16px !important; }
   .recon-area { padding: 16px 16px !important; }
-  .chunk-tile { font-size: 14px !important; padding: 10px 14px !important; min-height: 44px !important; }
+  .recon-drop-zone .chunk-tile { background:var(--violet-d); border-color:var(--violet-b); color:var(--violet); }
+.chunk-tile { font-size: 14px !important; padding: 10px 14px !important; min-height: 44px !important; }
   .recon-drop-zone { min-height: 60px !important; padding: 10px 12px !important; }
   .card-instruction { padding: 12px 16px !important; font-size: 14px !important; }
   .card-header { padding: 14px 16px 12px !important; }
@@ -548,20 +558,16 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
     
     <div style="width:100%;margin-bottom:24px;display:flex;flex-direction:column;gap:8px;">
       <div style="display:flex;gap:8px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border2);border-radius:10px;">
-        <span style="font-size:18px;">👁</span>
-        <div><div style="font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;">Modo 1</div><div style="font-size:14px;color:var(--text2);">Reconocimiento guiado</div></div>
-      </div>
-      <div style="display:flex;gap:8px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border2);border-radius:10px;">
         <span style="font-size:18px;">✏️</span>
-        <div><div style="font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;">Modo 2</div><div style="font-size:14px;color:var(--text2);">Análisis activo</div></div>
+        <div><div style="font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;">Modo 1</div><div style="font-size:14px;color:var(--text2);">Análisis activo</div></div>
       </div>
       <div style="display:flex;gap:8px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border2);border-radius:10px;">
         <span style="font-size:18px;">⚡</span>
-        <div><div style="font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;">Modo 3</div><div style="font-size:14px;color:var(--text2);">Flash por bloques</div></div>
+        <div><div style="font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;">Modo 2</div><div style="font-size:14px;color:var(--text2);">Flash por bloques</div></div>
       </div>
       <div style="display:flex;gap:8px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border2);border-radius:10px;">
         <span style="font-size:18px;">🧩</span>
-        <div><div style="font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;">Modo 4</div><div style="font-size:14px;color:var(--text2);">Reconstrucción</div></div>
+        <div><div style="font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;">Modo 3</div><div style="font-size:14px;color:var(--text2);">Reconstrucción</div></div>
       </div>
     </div>
     <button class="ready-btn"<button class="ready-btn" onclick="dismissReady()">▶ Empecemos</button>
@@ -572,7 +578,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 function dismissReady(){
   document.getElementById('ready-screen').classList.add('hidden');
   if(typeof requestWakeLock==='function') requestWakeLock();
-  switchMode(0);
+  switchMode(1);
 }
 
 // ── Session completion tracking ──
@@ -764,13 +770,8 @@ function updateSessionBtnLabels() {
       <div class="feedback-panel" id="feedback-2"></div>
       <div class="question-area" id="flash-question" style="display:none">
         <div class="question-label">Pregunta de comprensión</div>
-        <div class="question-text">¿Qué relación se menciona en el texto entre las tradiciones locales y el diseño contemporáneo?</div>
-        <div class="q-options">
-          <div class="q-option" onclick="answerQ(this, false, 2)">Son conceptos opuestos e incompatibles</div>
-          <div class="q-option" onclick="answerQ(this, true, 2)">Pueden integrarse para crear soluciones más ricas</div>
-          <div class="q-option" onclick="answerQ(this, false, 2)">Las tradiciones frenan el diseño moderno</div>
-          <div class="q-option" onclick="answerQ(this, false, 2)">El texto no establece ninguna relación</div>
-        </div>
+        <div class="question-text" id="flash-q-text"></div>
+        <div class="q-options" id="flash-q-opts"></div>
       </div>
       <div class="exercise-nav">
         <button class="btn btn-ghost" onclick="showBloqueTransition(3)">Siguiente modo →</button>
@@ -790,6 +791,7 @@ function updateSessionBtnLabels() {
         <div class="recon-drop-zone" id="drop-zone" ondragover="dragOver(event)" ondrop="dropChunk(event)" ondragleave="dragLeave(event)">
           <span class="placeholder" id="drop-placeholder">Toca un bloque del banco para colocarlo aquí</span>
         </div>
+        <div class="recon-divider" id="bank-divider">Bloques disponibles</div>
         <div class="chunk-bank" id="chunk-bank">
           <!-- tiles injected by JS -->
         </div>
@@ -800,7 +802,7 @@ function updateSessionBtnLabels() {
       </div>
       <div class="feedback-panel" id="feedback-3"></div>
       <div class="exercise-nav">
-        <button class="btn btn-primary" onclick="finishSession()">Finalizar sesión ✓</button>
+        <button class="session-next-btn btn btn-primary" onclick="completeAndContinue ? completeAndContinue() : (markComplete(), window.location.href='index.html')">Finalizar sesión ✓</button>
       </div>
     </div>
   </div>
@@ -864,29 +866,166 @@ function answerQ(el, correct, mode) {
 }
 
 // ── MODE 2: Active Parsing ──
-const parseSentence = [
-  { word: 'A',            correct: false },
-  { word: 'lo',           correct: false },
-  { word: 'largo',        correct: false },
-  { word: 'del',          correct: true  }, // boundary: "A lo largo del" → no, actually after "del siglo XX,"
-  { word: 'siglo',        correct: false },
-  { word: 'XX,',          correct: true  }, // end of temporal phrase
-  { word: 'los',          correct: false },
-  { word: 'avances',      correct: false },
-  { word: 'tecnológicos', correct: true  }, // end of subject NP
-  { word: 'han',          correct: false },
-  { word: 'transformado', correct: true  }, // end of verb phrase
-  { word: 'profundamente',correct: true  }, // adverb — own chunk
-  { word: 'la',           correct: false },
-  { word: 'forma',        correct: false },
-  { word: 'en',           correct: false },
-  { word: 'que',          correct: true  }, // end of "la forma en que"
-  { word: 'nos',          correct: false },
-  { word: 'comunicamos.', correct: false },
+// ── Lectura por Bloques — shared passage pool ──
+// Each passage has: parseSentence, boundaries, flashChunks, reconChunks
+const BLOQUE_POOL = [
+  {
+    parseSentence: [
+      {word:'A',correct:false},{word:'lo',correct:false},{word:'largo',correct:false},{word:'del',correct:false},
+      {word:'siglo',correct:false},{word:'XX,',correct:true},
+      {word:'los',correct:false},{word:'avances',correct:false},{word:'tecnológicos',correct:true},
+      {word:'han',correct:false},{word:'transformado',correct:true},
+      {word:'profundamente',correct:true},
+      {word:'la',correct:false},{word:'forma',correct:false},{word:'en',correct:false},{word:'que',correct:true},
+      {word:'nos',correct:false},{word:'comunicamos.',correct:false},
+    ],
+    boundaries: new Set([5,8,10,11,15]),
+    flashChunks: ['A lo largo del siglo XX,','los avances tecnológicos','han transformado','profundamente','la forma en que','nos comunicamos.'],
+    reconChunks: [{id:'a',text:'A lo largo del siglo XX,'},{id:'b',text:'los avances tecnológicos'},{id:'c',text:'han transformado profundamente'},{id:'d',text:'la forma en que'},{id:'e',text:'nos comunicamos.'}],
+    question: {text:'¿Qué han transformado los avances tecnológicos?', opts:['El clima del planeta','La forma en que nos comunicamos','Los sistemas de transporte','La estructura del lenguaje'], correct:1},
+  },
+  {
+    parseSentence: [
+      {word:'La',correct:false},{word:'memoria',correct:false},{word:'de',correct:false},{word:'trabajo',correct:true},
+      {word:'retiene',correct:false},{word:'información',correct:true},
+      {word:'de',correct:false},{word:'forma',correct:false},{word:'temporal',correct:true},
+      {word:'para',correct:false},{word:'su',correct:false},{word:'uso',correct:false},{word:'inmediato',correct:true},
+      {word:'en',correct:false},{word:'tareas',correct:false},{word:'cognitivas.',correct:false},
+    ],
+    boundaries: new Set([3,5,8,12]),
+    flashChunks: ['La memoria de trabajo','retiene información','de forma temporal','para su uso inmediato','en tareas cognitivas.'],
+    reconChunks: [{id:'a',text:'La memoria de trabajo'},{id:'b',text:'retiene información'},{id:'c',text:'de forma temporal'},{id:'d',text:'para su uso inmediato'},{id:'e',text:'en tareas cognitivas.'}],
+    question: {text:'¿Para qué sirve la memoria de trabajo?', opts:['Para almacenar recuerdos a largo plazo','Para retener información temporalmente en uso inmediato','Para procesar emociones','Para coordinar movimientos'], correct:1},
+  },
+  {
+    parseSentence: [
+      {word:'El',correct:false},{word:'cerebro',correct:false},{word:'humano',correct:true},
+      {word:'procesa',correct:false},{word:'y',correct:false},{word:'reorganiza',correct:true},
+      {word:'la',correct:false},{word:'información',correct:false},{word:'adquirida',correct:true},
+      {word:'durante',correct:false},{word:'las',correct:false},{word:'horas',correct:false},{word:'de',correct:false},{word:'sueño.',correct:false},
+    ],
+    boundaries: new Set([2,5,8]),
+    flashChunks: ['El cerebro humano','procesa y reorganiza','la información adquirida','durante las horas de sueño.'],
+    reconChunks: [{id:'a',text:'El cerebro humano'},{id:'b',text:'procesa y reorganiza'},{id:'c',text:'la información adquirida'},{id:'d',text:'durante las horas de sueño.'}],
+    question: {text:'¿Cuándo reorganiza el cerebro la información?', opts:['Durante el ejercicio físico','Durante la meditación','Durante las horas de sueño','Durante la lectura activa'], correct:2},
+  },
+  {
+    parseSentence: [
+      {word:'Las',correct:false},{word:'ciudades',correct:false},{word:'más',correct:false},{word:'sostenibles',correct:true},
+      {word:'integran',correct:false},{word:'espacios',correct:false},{word:'verdes,',correct:true},
+      {word:'transporte',correct:false},{word:'público',correct:false},{word:'eficiente',correct:true},
+      {word:'y',correct:false},{word:'diseño',correct:false},{word:'centrado',correct:false},{word:'en',correct:false},{word:'las',correct:false},{word:'personas.',correct:false},
+    ],
+    boundaries: new Set([3,6,9]),
+    flashChunks: ['Las ciudades más sostenibles','integran espacios verdes,','transporte público eficiente','y diseño centrado','en las personas.'],
+    reconChunks: [{id:'a',text:'Las ciudades más sostenibles'},{id:'b',text:'integran espacios verdes,'},{id:'c',text:'transporte público eficiente'},{id:'d',text:'y diseño centrado en las personas.'}],
+    question: {text:'¿Qué integran las ciudades más sostenibles?', opts:['Solo energía solar','Espacios verdes, transporte eficiente y diseño centrado en personas','Tecnología avanzada únicamente','Infraestructura digital'], correct:1},
+  },
+  {
+    parseSentence: [
+      {word:'La',correct:false},{word:'lectura',correct:false},{word:'profunda',correct:true},
+      {word:'activa',correct:false},{word:'una',correct:false},{word:'red',correct:false},{word:'neuronal',correct:false},{word:'extensa',correct:true},
+      {word:'que',correct:false},{word:'incluye',correct:false},{word:'áreas',correct:false},{word:'visuales,',correct:true},
+      {word:'lingüísticas',correct:false},{word:'y',correct:false},{word:'emocionales.',correct:false},
+    ],
+    boundaries: new Set([2,7,11]),
+    flashChunks: ['La lectura profunda','activa una red neuronal extensa','que incluye áreas visuales,','lingüísticas y emocionales.'],
+    reconChunks: [{id:'a',text:'La lectura profunda'},{id:'b',text:'activa una red neuronal extensa'},{id:'c',text:'que incluye áreas visuales,'},{id:'d',text:'lingüísticas y emocionales.'}],
+    question: {text:'¿Qué tipo de áreas activa la lectura profunda?', opts:['Solo áreas visuales','Solo áreas lingüísticas','Áreas visuales, lingüísticas y emocionales','Áreas motoras y sensoriales'], correct:2},
+  },
+  {
+    parseSentence: [
+      {word:'El',correct:false},{word:'microbioma',correct:false},{word:'intestinal',correct:true},
+      {word:'produce',correct:false},{word:'neurotransmisores',correct:true},
+      {word:'que',correct:false},{word:'influyen',correct:false},{word:'directamente',correct:true},
+      {word:'en',correct:false},{word:'el',correct:false},{word:'estado',correct:false},{word:'de',correct:false},{word:'ánimo.',correct:false},
+    ],
+    boundaries: new Set([2,4,7]),
+    flashChunks: ['El microbioma intestinal','produce neurotransmisores','que influyen directamente','en el estado de ánimo.'],
+    reconChunks: [{id:'a',text:'El microbioma intestinal'},{id:'b',text:'produce neurotransmisores'},{id:'c',text:'que influyen directamente'},{id:'d',text:'en el estado de ánimo.'}],
+    question: {text:'¿Qué produce el microbioma intestinal?', opts:['Hormonas de crecimiento','Neurotransmisores que influyen en el estado de ánimo','Enzimas digestivas únicamente','Células del sistema inmune'], correct:1},
+  },
+  {
+    parseSentence: [
+      {word:'A',correct:false},{word:'pesar',correct:false},{word:'de',correct:false},{word:'las',correct:false},{word:'dificultades',correct:false},{word:'iniciales,',correct:true},
+      {word:'el',correct:false},{word:'equipo',correct:false},{word:'de',correct:false},{word:'investigación',correct:true},
+      {word:'logró',correct:false},{word:'desarrollar',correct:true},
+      {word:'un',correct:false},{word:'método',correct:false},{word:'innovador',correct:true},
+      {word:'para',correct:false},{word:'el',correct:false},{word:'análisis',correct:false},{word:'de',correct:false},{word:'datos',correct:false},{word:'complejos.',correct:false},
+    ],
+    boundaries: new Set([5,9,11,14]),
+    flashChunks: ['A pesar de las dificultades iniciales,','el equipo de investigación','logró desarrollar','un método innovador','para el análisis de datos complejos.'],
+    reconChunks: [{id:'a',text:'A pesar de las dificultades iniciales,'},{id:'b',text:'el equipo de investigación'},{id:'c',text:'logró desarrollar'},{id:'d',text:'un método innovador'},{id:'e',text:'para el análisis de datos complejos.'}],
+    question: {text:'¿Qué logró desarrollar el equipo de investigación?', opts:['Un nuevo laboratorio','Un método innovador para el análisis de datos','Un algoritmo de inteligencia artificial','Una base de datos global'], correct:1},
+  },
+  {
+    parseSentence: [
+      {word:'La',correct:false},{word:'neuroplasticidad',correct:true},
+      {word:'permite',correct:false},{word:'al',correct:false},{word:'cerebro',correct:true},
+      {word:'reorganizarse',correct:false},{word:'y',correct:false},{word:'formar',correct:false},{word:'nuevas',correct:false},{word:'conexiones',correct:true},
+      {word:'en',correct:false},{word:'respuesta',correct:false},{word:'a',correct:false},{word:'la',correct:false},{word:'experiencia.',correct:false},
+    ],
+    boundaries: new Set([1,4,9]),
+    flashChunks: ['La neuroplasticidad','permite al cerebro','reorganizarse y formar nuevas conexiones','en respuesta a la experiencia.'],
+    reconChunks: [{id:'a',text:'La neuroplasticidad'},{id:'b',text:'permite al cerebro'},{id:'c',text:'reorganizarse y formar nuevas conexiones'},{id:'d',text:'en respuesta a la experiencia.'}],
+    question: {text:'¿Qué le permite la neuroplasticidad al cerebro?', opts:['Crecer físicamente','Reorganizarse y formar nuevas conexiones','Funcionar sin oxígeno','Almacenar más recuerdos'], correct:1},
+  },
+  {
+    parseSentence: [
+      {word:'El',correct:false},{word:'silencio',correct:false},{word:'activo',correct:true},
+      {word:'facilita',correct:false},{word:'la',correct:false},{word:'consolidación',correct:false},{word:'de',correct:false},{word:'recuerdos',correct:true},
+      {word:'y',correct:false},{word:'la',correct:false},{word:'generación',correct:false},{word:'de',correct:false},{word:'nuevas',correct:false},{word:'conexiones',correct:false},{word:'creativas.',correct:false},
+    ],
+    boundaries: new Set([2,7]),
+    flashChunks: ['El silencio activo','facilita la consolidación de recuerdos','y la generación de nuevas conexiones creativas.'],
+    reconChunks: [{id:'a',text:'El silencio activo'},{id:'b',text:'facilita la consolidación de recuerdos'},{id:'c',text:'y la generación de nuevas conexiones creativas.'}],
+    question: {text:'¿Qué facilita el silencio activo?', opts:['El descanso muscular','La consolidación de recuerdos y conexiones creativas','La concentración en tareas específicas','La regulación del ritmo cardíaco'], correct:1},
+  },
+  {
+    parseSentence: [
+      {word:'Los',correct:false},{word:'hábitos',correct:false},{word:'de',correct:false},{word:'lectura',correct:true},
+      {word:'sostenidos',correct:false},{word:'desde',correct:false},{word:'la',correct:false},{word:'infancia',correct:true},
+      {word:'predicen',correct:false},{word:'el',correct:false},{word:'rendimiento',correct:false},{word:'académico',correct:true},
+      {word:'en',correct:false},{word:'etapas',correct:false},{word:'posteriores.',correct:false},
+    ],
+    boundaries: new Set([3,7,11]),
+    flashChunks: ['Los hábitos de lectura','sostenidos desde la infancia','predicen el rendimiento académico','en etapas posteriores.'],
+    reconChunks: [{id:'a',text:'Los hábitos de lectura'},{id:'b',text:'sostenidos desde la infancia'},{id:'c',text:'predicen el rendimiento académico'},{id:'d',text:'en etapas posteriores.'}],
+    question: {text:'¿Qué predicen los hábitos de lectura desde la infancia?', opts:['El coeficiente intelectual','El rendimiento académico en etapas posteriores','La velocidad de escritura','La capacidad atlética'], correct:1},
+  },
 ];
-const correctBoundaries = new Set([5, 8, 10, 11, 15]);
-// 5 boundaries: after XX,(5), tecnológicos(8), transformado(10), profundamente(11), que(15)
-const TOTAL_BOUNDARIES = correctBoundaries.size; // 5
+
+// ── Shared rotation — all three modes use the same passage per session ──
+function getCurrentPassage(modeKey, exclude) {
+  exclude = exclude || [];
+  const lsKey = 'em_bloque_' + modeKey + '_q';
+  const ssKey = 'em_bloque_' + modeKey;
+  let idx;
+  try { idx = parseInt(sessionStorage.getItem(ssKey) || '-1'); } catch(e){ idx = -1; }
+  if(idx >= 0 && idx < BLOQUE_POOL.length && !exclude.includes(idx)) return BLOQUE_POOL[idx];
+
+  let q; try{ q=JSON.parse(localStorage.getItem(lsKey)||'[]'); }catch(e){ q=[]; }
+  q = q.filter(i => i < BLOQUE_POOL.length && !exclude.includes(i));
+  if(!q.length){
+    const fresh = BLOQUE_POOL.map((_,i)=>i)
+      .filter(i => !exclude.includes(i))
+      .sort(()=>Math.random()-0.5);
+    q = fresh;
+  }
+  idx = q.shift();
+  try{
+    localStorage.setItem(lsKey, JSON.stringify(q));
+    sessionStorage.setItem(ssKey, String(idx));
+  }catch(e){}
+  return BLOQUE_POOL[idx];
+}
+
+const _parsePassage  = getCurrentPassage('parse', []);
+const _flashPassage  = getCurrentPassage('flash', [BLOQUE_POOL.indexOf(_parsePassage)]);
+const _reconPassage  = getCurrentPassage('recon', [BLOQUE_POOL.indexOf(_parsePassage), BLOQUE_POOL.indexOf(_flashPassage)]);
+const parseSentence = _parsePassage.parseSentence;
+let correctBoundaries = _parsePassage.boundaries;
+const TOTAL_BOUNDARIES = _parsePassage.boundaries.size; // 5
 let selectedBoundaries = new Set();
 
 function initParse() {
@@ -923,7 +1062,8 @@ function checkParse() {
   const fb = document.getElementById('feedback-1');
   if (hits >= Math.ceil(total * 0.6) && fp <= 2) {
     fb.className = 'feedback-panel correct';
-    fb.innerHTML = `<div class="feedback-label">✓ Muy bien — ${hits}/${total} bloques correctos</div>Identificaste correctamente los principales grupos sintácticos. Los bloques clave son: <em>"A lo largo del siglo XX,"</em> (frase preposicional temporal), <em>"los avances tecnológicos"</em> (grupo nominal), <em>"han transformado"</em> (perífrasis verbal), <em>"profundamente"</em> (adverbio), y <em>"la forma en que"</em> (grupo nominal con cláusula relativa).`;
+    const correctChunks = _parsePassage.flashChunks.map(c=>`<em>"${c}"</em>`).join(', ');
+    fb.innerHTML = `<div class="feedback-label">✓ Muy bien — ${hits}/${total} bloques correctos</div>Los bloques naturales de esta oración son: ${correctChunks}.`;
     document.getElementById('main-progress').style.width = '60%';
   } else {
     fb.className = 'feedback-panel incorrect';
@@ -944,16 +1084,7 @@ function showParseHint() {
 }
 
 // ── MODE 3: Chunk Flash ──
-const flashChunks = [
-  'Las tradiciones locales',
-  'no son un obstáculo',
-  'para el diseño contemporáneo,',
-  'sino una fuente de riqueza',
-  'que puede integrarse',
-  'con las técnicas modernas',
-  'para crear soluciones',
-  'más auténticas y sostenibles.'
-];
+const flashChunks = _flashPassage.flashChunks;
 let flashIdx = 0, flashTimer = null;
 
 function startFlash() {
@@ -976,13 +1107,14 @@ function advanceFlash() {
       <div style="font-size:15px;font-weight:600;color:var(--ink)">✓ Secuencia completada</div>
       <div style="font-size:13px;color:var(--muted);margin-top:4px;">Responde la pregunta de comprensión</div>
     `;
-    document.getElementById('flash-question').style.display = 'flex';
-    document.getElementById('flash-question').style.flexDirection = 'column';
+    showFlashQuestion();
     return;
   }
   const textEl = document.getElementById('flash-text');
   if (textEl) {
+    textEl.style.transition = 'none';
     textEl.style.opacity = '0';
+    textEl.textContent = '';
     setTimeout(() => { textEl.textContent = flashChunks[flashIdx]; textEl.style.opacity = '1'; }, 200);
     document.getElementById('flash-ctr').textContent = `Bloque ${flashIdx+1} de ${flashChunks.length}`;
     document.getElementById('flash-pb').style.width = ((flashIdx+1)/flashChunks.length*100) + '%';
@@ -991,15 +1123,8 @@ function advanceFlash() {
 
 // ── MODE 4: Reconstruction ──
 // Uses tap-to-place instead of drag — works on both desktop and mobile
-const reconChunks = [
-  { id: 'a', text: 'A pesar de las dificultades iniciales,' },
-  { id: 'b', text: 'el equipo de investigación' },
-  { id: 'c', text: 'logró desarrollar' },
-  { id: 'd', text: 'un método innovador' },
-  { id: 'e', text: 'para el análisis' },
-  { id: 'f', text: 'de datos complejos.' },
-];
-const correctOrder = ['a','b','c','d','e','f'];
+const reconChunks = _reconPassage.reconChunks;
+const correctOrder = reconChunks.map(c => c.id);
 let dropOrder = [];
 let draggingId = null; // kept for desktop drag fallback
 
@@ -1007,9 +1132,11 @@ function initRecon() {
   dropOrder = [];
   const bank = document.getElementById('chunk-bank');
   const dropZone = document.getElementById('drop-zone');
+  if(!bank || !dropZone) return;
   bank.innerHTML = '';
   dropZone.innerHTML = '<span class="placeholder" id="drop-placeholder">Toca un bloque para colocarlo aquí</span>';
-  document.getElementById('feedback-3').className = 'feedback-panel';
+  const fb3 = document.getElementById('feedback-3'); if(fb3) fb3.className='feedback-panel';
+  if(!reconChunks || !reconChunks.length) return;
 
   const shuffled = [...reconChunks].sort(() => Math.random() - 0.5);
   shuffled.forEach(c => {
@@ -1084,8 +1211,12 @@ function checkRecon() {
   const isCorrect = JSON.stringify(dropOrder) === JSON.stringify(correctOrder);
   if (isCorrect) {
     fb.className = 'feedback-panel correct';
-    fb.innerHTML = '<div class="feedback-label">✓ Perfecto</div>Reconstruiste la oración correctamente. Observa la estructura: <em>marcador adversativo → sujeto → verbo principal → objeto → frases preposicionales encadenadas</em>. Este patrón es muy frecuente en textos académicos y periodísticos en español.';
+    const fullSentence = correctOrder.map(id => reconChunks.find(c=>c.id===id).text).join(' ');
+    fb.innerHTML = '<div class="feedback-label">✓ Perfecto</div>Reconstruiste la oración correctamente: <em style="color:var(--teal)">' + fullSentence + '</em>';
     document.getElementById('main-progress').style.width = '90%';
+    // Reveal finalizar button
+    document.querySelectorAll('#mode-3 .session-next-btn, #mode-3 .btn-primary[onclick*="Finalizar"], #mode-3 .btn-primary[onclick*="completeAndContinue"]').forEach(b=>{ b.style.display='block'; });
+    markComplete();
   } else {
     fb.className = 'feedback-panel incorrect';
     fb.innerHTML = '<div class="feedback-label">Orden incorrecto</div>Pista: el marcador "A pesar de las dificultades iniciales" siempre va al inicio. El sujeto ("el equipo de investigación") precede al verbo. Las frases preposicionales van al final.';
@@ -1098,7 +1229,12 @@ function finishSession() {
   markComplete();
   document.getElementById('main-progress').style.width = '100%';
   const _sc=document.getElementById('streak-count'); if(_sc) _sc.textContent='8';
-  alert('¡Sesión completada! Mañana: Modo 3 con textos más complejos.');
+  // Navigate away — don't use alert() which blocks and loops
+  if(typeof completeAndContinue === 'function') {
+    completeAndContinue();
+  } else {
+    setTimeout(() => { window.location.href = 'index.html'; }, 800);
+  }
 }
 
 // ── Show session navigation UI ──
@@ -1161,9 +1297,26 @@ function showBloqueTransition(toMode) {
     <div style="font-size:48px;">${t.icon}</div>
     <div style="font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;color:var(--text);">${t.title}</div>
     <div style="font-size:17px;color:var(--text2);line-height:1.7;max-width:320px;">${t.desc}</div>
-    <button onclick="this.parentNode.remove();switchMode(${toMode});" style="width:100%;max-width:320px;padding:18px;background:var(--violet-deep);color:#fff;border:none;border-radius:14px;font-family:'Fredoka','DM Sans',sans-serif;font-size:18px;font-weight:600;cursor:pointer;margin-top:8px;">Continuar →</button>
+    <button onclick="const _ov=this.parentNode; setTimeout(()=>{ if(_ov.parentNode) _ov.parentNode.removeChild(_ov); switchMode(${toMode}); },50);" style="width:100%;max-width:320px;padding:18px;background:var(--violet-deep);color:#fff;border:none;border-radius:14px;font-family:'Fredoka','DM Sans',sans-serif;font-size:18px;font-weight:600;cursor:pointer;margin-top:8px;">Continuar →</button>
   `;
   document.body.appendChild(ov);
+}
+
+
+function showFlashQuestion() {
+  const q = _flashPassage.question;
+  if(!q) return;
+  document.getElementById('flash-q-text').textContent = q.text;
+  const optsEl = document.getElementById('flash-q-opts');
+  optsEl.innerHTML = '';
+  q.opts.forEach((o, i) => {
+    const d = document.createElement('div');
+    d.className = 'q-option';
+    d.textContent = o;
+    d.onclick = () => answerQ(d, i === q.correct, 2);
+    optsEl.appendChild(d);
+  });
+  document.getElementById('flash-question').style.display = '';
 }
 
 </script>
