@@ -83,7 +83,8 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 /* MAIN APP */
 #app{display:none;}
 #app.show{display:block;}
-.app-wrap{position:relative;z-index:10;max-width:480px;margin:0 auto;padding:0 20px 48px;display:flex;flex-direction:column;min-height:100vh;}
+.app-wrap{position:relative;z-index:10;max-width:480px;margin:0 auto;padding:0 20px 48px;display:flex;flex-direction:column;min-height:100vh;  padding-bottom:100px;
+}
 
 .top-bar{display:flex;align-items:center;justify-content:space-between;padding:28px 0 0;}
 .top-logo{font-family:'Fredoka',sans-serif;font-size:22px;font-weight:600;color:var(--text);letter-spacing:-0.01em;display:flex;align-items:center;gap:7px;white-space:nowrap;}
@@ -104,7 +105,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .greeting-date{font-family:'Fredoka',sans-serif;font-size:15px;font-weight:400;color:var(--text3);letter-spacing:0.01em;}
 
 /* ── Post-session state ── */
-.done-block { display:none; flex-direction:column; margin-bottom:16px; }
+.done-block { display:none; flex-direction:column; margin-bottom:20px; }
 .done-block.show { display:flex; }
 .done-unified-card {
   background:var(--card); border:1.5px solid var(--teal-b);
@@ -112,13 +113,13 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   display:flex; align-items:center; gap:14px;
 }
 .done-summary-icon {
-  width:36px; height:36px; border-radius:50%; background:var(--teal-d);
+  width:38px; height:38px; border-radius:50%; background:var(--teal-d);
   border:1.5px solid var(--teal-b); color:var(--teal);
   display:flex; align-items:center; justify-content:center;
-  font-size:17px; font-weight:700; flex-shrink:0;
+  font-size:18px; font-weight:700; flex-shrink:0;
 }
-.done-summary-title { font-family:'Fredoka',sans-serif; font-size:17px; font-weight:600; color:var(--text); line-height:1.2; }
-.done-summary-sub { font-size:12px; color:var(--text3); margin-top:2px; }
+.done-summary-title { font-family:'Fredoka',sans-serif; font-size:18px; font-weight:600; color:var(--text); line-height:1.2; }
+.done-summary-sub { font-size:13px; color:var(--text3); margin-top:3px; }
 .done-tomorrow-sub { font-size:12px; color:var(--text3); opacity:0.6; }
 .done-block.show{display:flex;}
 .done-fire{font-size:60px;filter:drop-shadow(0 0 14px rgba(255,140,0,0.6));animation:firePop 0.5s ease both;margin-bottom:4px;}
@@ -148,14 +149,21 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .today-ex-pill{font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:3px 9px;border-radius:20px;background:var(--violet-d);color:var(--violet);border:1px solid var(--violet-b);}
 .today-ex.done .today-ex-pill{background:var(--teal-d);color:var(--teal);border-color:var(--teal-b);}
 
+.explore-footer {
+  position:fixed; bottom:0; left:0; right:0;
+  padding:12px 20px 32px; background:var(--bg);
+  border-top:1px solid var(--border);
+  z-index:50;
+}
 .see-all-btn {
-  width:100%; padding:16px 20px; border-radius:14px; cursor:pointer;
-  background:var(--card); border:1.5px solid rgba(234,232,242,0.15);
+  width:100%; padding:14px 20px; border-radius:14px; cursor:pointer;
+  background:var(--card); border:1.5px solid rgba(234,232,242,0.2);
   text-align:left; transition:all 0.15s;
 }
-.see-all-btn:hover { border-color:rgba(234,232,242,0.3); background:var(--card2); }
+.see-all-btn:hover { border-color:rgba(234,232,242,0.35); background:var(--card2); }
 .see-all-main { font-family:'Fredoka',sans-serif; font-size:17px; font-weight:500; color:var(--text); display:flex; align-items:center; justify-content:space-between; }
-.see-all-sub { font-size:12px; color:var(--text3); margin-top:3px; }
+.see-all-sub { font-size:12px; color:var(--text3); margin-top:2px; }
+.see-all-arrow { transition:transform 0.2s; color:var(--text3); font-size:13px; }
 .see-all-btn:hover{color:var(--text2);}
 .see-all-arrow { transition:transform 0.2s; color:var(--text3); font-size:14px; }
 .see-all-btn.open .see-all-arrow{transform:rotate(180deg);}
@@ -262,8 +270,10 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   <div class="done-block" id="done-block">
     <div class="done-unified-card">
       <span class="done-summary-icon">✓</span>
-      <div class="done-summary-title" id="done-msg">¡Sesión completada!</div>
-      <div class="done-summary-sub" id="done-sub"></div>
+      <div>
+        <div class="done-summary-title" id="done-msg">¡Sesión completada!</div>
+        <div class="done-summary-sub" id="done-sub"></div>
+      </div>
     </div>
   </div>
 
@@ -279,11 +289,14 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <span style="font-size:16px;line-height:1;">▶</span><span id="cta-label">Comenzar sesión</span>
   </button>
 
-  <button class="see-all-btn" id="see-all-btn" onclick="toggleExGrid()">
-    <div class="see-all-main">Explorar ejercicios&nbsp;<span class="see-all-arrow">↓</span></div>
-    <div class="see-all-sub">Practica cuando quieras</div>
-  </button>
 
+
+  <div class="explore-footer" id="explore-footer">
+    <button class="see-all-btn" id="see-all-btn" onclick="toggleExGrid()">
+      <div class="see-all-main">Explorar ejercicios&nbsp;<span class="see-all-arrow">↓</span></div>
+      <div class="see-all-sub">Practica cuando quieras</div>
+    </button>
+  </div>
   <div class="ex-grid-wrap" id="ex-grid-wrap">
     <div>
       <div class="pillar-title" style="color:var(--teal);">Lectura Visual</div>
