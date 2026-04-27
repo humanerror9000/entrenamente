@@ -103,7 +103,39 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .greeting-hi em{color:var(--violet);font-style:italic;}
 .greeting-date{font-family:'Fredoka',sans-serif;font-size:15px;font-weight:400;color:var(--text3);letter-spacing:0.01em;}
 
-.done-block{display:none;flex-direction:column;align-items:center;text-align:center;padding:8px 0 28px;gap:10px;}
+/* ── Post-session state ── */
+.done-block { display:none; flex-direction:column; gap:12px; margin-bottom:16px; }
+.done-block.show { display:flex; }
+.done-summary-card {
+  background:var(--card); border:1.5px solid var(--teal-b);
+  border-radius:16px; padding:18px 20px;
+}
+.done-summary-header { display:flex; align-items:flex-start; gap:14px; margin-bottom:14px; }
+.done-summary-icon {
+  width:38px; height:38px; border-radius:50%; background:var(--teal-d);
+  border:1.5px solid var(--teal-b); color:var(--teal);
+  display:flex; align-items:center; justify-content:center;
+  font-size:18px; font-weight:700; flex-shrink:0;
+}
+.done-summary-title { font-family:'Fredoka',sans-serif; font-size:18px; font-weight:600; color:var(--text); }
+.done-summary-sub { font-size:13px; color:var(--text3); margin-top:2px; }
+.done-exercises { display:flex; flex-direction:column; gap:8px; }
+.done-ex-row { display:flex; align-items:center; gap:10px; }
+.done-ex-dot { width:8px; height:8px; border-radius:50%; background:var(--teal); flex-shrink:0; }
+.done-ex-name { font-size:14px; color:var(--text2); }
+.done-tomorrow-card {
+  background:var(--card); border:1px solid var(--border2);
+  border-radius:16px; padding:16px 20px;
+}
+.done-tomorrow-label {
+  font-size:11px; font-weight:700; letter-spacing:0.10em;
+  text-transform:uppercase; color:var(--text3); margin-bottom:10px;
+}
+.done-tomorrow-exercises { display:flex; flex-direction:column; gap:6px; margin-bottom:8px; }
+.done-tomorrow-ex { display:flex; align-items:center; gap:10px; }
+.done-tomorrow-dot { width:6px; height:6px; border-radius:50%; background:var(--border2); flex-shrink:0; }
+.done-tomorrow-name { font-size:14px; color:var(--text3); }
+.done-tomorrow-sub { font-size:12px; color:var(--text3); opacity:0.6; }
 .done-block.show{display:flex;}
 .done-fire{font-size:60px;filter:drop-shadow(0 0 14px rgba(255,140,0,0.6));animation:firePop 0.5s ease both;margin-bottom:4px;}
 @keyframes firePop{from{transform:scale(0.4);opacity:0}to{transform:scale(1);opacity:1}}
@@ -237,9 +269,21 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   </div>
 
   <div class="done-block" id="done-block">
-    <div class="done-fire">🔥</div>
-    <div class="done-msg" id="done-msg">¡Sesión completada!</div>
-    <div class="done-sub" id="done-sub"></div>
+    <div class="done-summary-card" id="done-summary-card">
+      <div class="done-summary-header">
+        <span class="done-summary-icon">✓</span>
+        <div>
+          <div class="done-summary-title" id="done-msg">¡Sesión completada!</div>
+          <div class="done-summary-sub" id="done-sub"></div>
+        </div>
+      </div>
+      <div class="done-exercises" id="done-exercises"></div>
+    </div>
+    <div class="done-tomorrow-card" id="done-tomorrow-card">
+      <div class="done-tomorrow-label">Mañana</div>
+      <div class="done-tomorrow-exercises" id="done-tomorrow-exercises"></div>
+      <div class="done-tomorrow-sub">Tu siguiente sesión te espera</div>
+    </div>
   </div>
 
   <div class="prog-bar-wrap" id="prog-wrap" style="display:none;">
@@ -365,20 +409,49 @@ function buildHomeScreen(){
   });
   const cta=document.getElementById('main-cta');
   if(allDone){
-    cta.disabled=true;
-    document.getElementById('cta-label').textContent='Sesión completada ✓';
+    cta.disabled=true; cta.style.cssText='background:var(--card);border:1.5px solid var(--border2);color:var(--text3);cursor:default;';
+    document.getElementById('cta-label').textContent='Vuelve mañana ✓';
 
     document.getElementById('done-block').classList.add('show');
     document.getElementById('prog-wrap').style.display='none';
     list.style.display='none';
+    // Streak message
     const s=getStreak();
     let msg,sub;
-    if(s.count>=7){msg='¡'+s.count+' días seguidos!';sub='Eso es disciplina real. Tu mente lo nota.';}
-    else if(s.count>=3){msg=s.count+' días consecutivos';sub='La constancia es el entrenamiento más poderoso.';}
-    else if(s.count===1){msg='¡Primera sesión!';sub='El primer paso es el más importante. Vuelve mañana.';}
-    else{msg='¡Sesión completada!';sub='Excelente trabajo. Vuelve mañana.';}
+    if(s.count>=7){msg='🔥 '+s.count+' días seguidos';sub='Eso es disciplina real.';}
+    else if(s.count>=3){msg='🔥 '+s.count+' días seguidos';sub='La constancia es el entrenamiento más poderoso.';}
+    else if(s.count===1){msg='Primera sesión completada';sub='El primer paso es el más importante.';}
+    else{msg='Sesión completada';sub='Excelente trabajo hoy.';}
     document.getElementById('done-msg').textContent=msg;
     document.getElementById('done-sub').textContent=sub;
+    // Populate completed exercises
+    const doneExEl=document.getElementById('done-exercises');
+    if(doneExEl){
+      doneExEl.innerHTML='';
+      todayKeys.filter(k=>done.includes(k)).forEach(k=>{
+        const ex=EXERCISES[k];
+        const row=document.createElement('div'); row.className='done-ex-row';
+        const dot=document.createElement('div'); dot.className='done-ex-dot';
+        const name=document.createElement('div'); name.className='done-ex-name';
+        name.textContent=ex?ex.name:k;
+        row.appendChild(dot); row.appendChild(name); doneExEl.appendChild(row);
+      });
+    }
+    // Populate tomorrow's exercises
+    const tomorrowEl=document.getElementById('done-tomorrow-exercises');
+    if(tomorrowEl){
+      const tomorrowDay=(now.getDay()+1)%7;
+      const tomorrowKeys=(schedule[tomorrowDay]||[]);
+      tomorrowEl.innerHTML='';
+      tomorrowKeys.forEach(k=>{
+        const ex=EXERCISES[k];
+        const row=document.createElement('div'); row.className='done-tomorrow-ex';
+        const dot=document.createElement('div'); dot.className='done-tomorrow-dot';
+        const name=document.createElement('div'); name.className='done-tomorrow-name';
+        name.textContent=ex?ex.name:k;
+        row.appendChild(dot); row.appendChild(name); tomorrowEl.appendChild(row);
+      });
+    }
   } else if(doneCount>0){
     document.getElementById('cta-label').textContent='Continuar sesión';
   }
