@@ -1080,7 +1080,10 @@ function resetParse() {
 function showParseHint() {
   const fb = document.getElementById('feedback-1');
   fb.className = 'feedback-panel info';
-  fb.innerHTML = '<div class="feedback-label">💡 Pista</div>Hay 5 divisores en esta oración. Empieza por la coma después de "XX" — siempre marca un límite. Luego busca el sujeto completo ("los avances tecnológicos") antes del verbo, y el adverbio "profundamente" después del verbo principal.';
+  const chunks = _parsePassage.flashChunks;
+  const total = _parsePassage.boundaries.size;
+  const chunkList = chunks.map(c => `<em>"${c}"</em>`).join(', ');
+  fb.innerHTML = `<div class="feedback-label">💡 Pista</div>Hay ${total} divisores en esta oración. Los grupos naturales son: ${chunkList}.`;
 }
 
 // ── MODE 3: Chunk Flash ──

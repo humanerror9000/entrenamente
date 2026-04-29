@@ -1199,7 +1199,6 @@ function abortGame() {
 // End game
 // ─────────────────────────────────────────
 function endGame() {
-  markComplete();
   releaseWakeLock();
   clearTimeout(gameTimer);
   hideStimulus();
@@ -1240,6 +1239,14 @@ function endGame() {
     </div>
   `;
   setStage(2);
+  markComplete();
+  // Reveal session-next-btn now that it exists in the DOM
+  if(isInSession()) {
+    document.querySelectorAll('.session-next-btn').forEach(b => {
+      b.style.cssText = 'display:block!important;width:100%;padding:16px;background:var(--violet-deep);color:#fff;border:none;border-radius:13px;font-family:Fredoka,DM Sans,sans-serif;font-size:17px;font-weight:600;cursor:pointer;margin-top:8px;';
+    });
+    document.querySelectorAll('.session-hide').forEach(b => b.style.display='none');
+  }
 }
 
 function resetToSetup() { setStage(0); }

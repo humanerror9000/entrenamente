@@ -469,34 +469,16 @@ function checkReturnCompletion(){
 }
 
 function showSessionCompleteOverlay(){
-  const streak=getStreak(); const today=TODAY_KEY();
+  // Update streak
+  const today=TODAY_KEY();
+  const streak=getStreak();
   if(streak.lastDate!==today){
     const yesterday=new Date(); yesterday.setDate(yesterday.getDate()-1);
     const yKey=yesterday.toISOString().slice(0,10);
     saveStreak({count:streak.lastDate===yKey?streak.count+1:1,lastDate:today});
   }
-  const s=getStreak();
-  let msg,sub;
-  if(s.count>=7){msg='¡'+s.count+' días seguidos!';sub='Eso es disciplina real. Tu mente lo nota.';}
-  else if(s.count>=3){msg=s.count+' días consecutivos';sub='La constancia es el entrenamiento más poderoso.';}
-  else if(s.count===1){msg='¡Primera sesión!';sub='El primer paso es el más importante. Vuelve mañana.';}
-  else{msg='¡Sesión completada!';sub='Excelente trabajo. Vuelve mañana.';}
-  const ov=document.createElement('div'); ov.className='session-complete-overlay';
-  const fire=document.createElement('div');
-  fire.style.cssText='font-size:64px;margin-bottom:16px;filter:drop-shadow(0 0 16px rgba(255,140,0,0.6))';
-  fire.textContent='🔥';
-  const title=document.createElement('div');
-  title.style.cssText="font-family:'Fredoka',sans-serif;font-size:36px;font-weight:600;color:var(--text);margin-bottom:8px;";
-  title.textContent=msg;
-  const sub_el=document.createElement('div');
-  sub_el.style.cssText='font-size:16px;color:var(--text2);line-height:1.65;max-width:300px;margin-bottom:32px;';
-  sub_el.textContent=sub;
-  const btn=document.createElement('button');
-  btn.style.cssText="padding:16px 32px;background:var(--violet-deep);color:#fff;border:none;border-radius:13px;font-family:'Fredoka','DM Sans',sans-serif;font-size:18px;font-weight:600;cursor:pointer;";
-  btn.textContent='¡Genial!';
-  btn.onclick=()=>{ov.classList.add('hidden');buildHomeScreen();};
-  ov.appendChild(fire);ov.appendChild(title);ov.appendChild(sub_el);ov.appendChild(btn);
-  document.body.appendChild(ov);
+  // Go straight to home — buildHomeScreen handles the done state cleanly
+  buildHomeScreen();
 }
 
 let _profile='',_conf='';
