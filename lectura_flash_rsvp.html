@@ -217,25 +217,32 @@ input[type=range]{width:100%; accent-color:var(--teal); cursor:pointer;}
 .rsvp-bar-wrap{height:2px; background:var(--border2);}
 .rsvp-bar-fill{height:100%; background:var(--teal); transition:width 0.2s linear;}
 
-.rsvp-stage{
-  flex:1;
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  gap:10px; padding:0 24px; position:relative;
-}
+.rsvp-stage{ position:relative; display:flex; flex-direction:column; align-items:stretch; justify-content:center; min-height:120px; padding:16px 0; width:100%; }
 .orp-guide{
-  position:absolute; top:0; bottom:0;
-  width:1px; background:rgba(224,92,92,0.15); pointer-events:none;
+  position:absolute; top:0; bottom:0; left:50%;
+  width:1px; background:rgba(46,207,184,0.20); pointer-events:none; transform:translateX(-50%);
 }
 .rsvp-context{
   font-size:12px; color:var(--text3);
   font-family:'Cormorant Garamond',serif;
   font-style:italic; min-height:18px;
 }
-.rsvp-word-wrap{display:flex; align-items:center; min-height:56px;}
-.rsvp-pre{font-family:'Cormorant Garamond',serif; font-size:34px; font-weight:300; color:var(--text2);}
-.rsvp-focal{font-family:'Cormorant Garamond',serif; font-size:34px; font-weight:400; color:var(--teal);}
-.rsvp-post{font-family:'Cormorant Garamond',serif; font-size:34px; font-weight:300; color:var(--text2);}
+.rsvp-word-wrap{
+  display:flex; align-items:center; justify-content:center;
+  min-height:56px; width:100%; position:relative;
+}
+.rsvp-pre{
+  font-family:'Cormorant Garamond',serif; font-size:34px; font-weight:300; color:var(--text2);
+  flex:1; text-align:right; padding-right:1px;
+}
+.rsvp-focal{
+  font-family:'Cormorant Garamond',serif; font-size:34px; font-weight:600; color:var(--coral);
+  flex:0 0 auto; text-align:center; min-width:20px;
+}
+.rsvp-post{
+  font-family:'Cormorant Garamond',serif; font-size:34px; font-weight:300; color:var(--text2);
+  flex:1; text-align:left; padding-left:1px;
+}
 .rsvp-phrase{
   font-family:'Cormorant Garamond',serif;
   font-size:28px; font-weight:300; color:var(--text);
