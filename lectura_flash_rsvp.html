@@ -96,6 +96,11 @@ main{
   overflow:hidden;
   display:none;
 }
+#stage-rsvp.show {
+  display:flex; flex-direction:column;
+  position:fixed; inset:0; z-index:10;
+  background:var(--bg); border:none; border-radius:0;
+}
 .card.visible#stage-rsvp{
   display:flex;
   flex-direction:column;
@@ -217,7 +222,7 @@ input[type=range]{width:100%; accent-color:var(--teal); cursor:pointer;}
 .rsvp-bar-wrap{height:2px; background:var(--border2);}
 .rsvp-bar-fill{height:100%; background:var(--teal); transition:width 0.2s linear;}
 
-.rsvp-stage{ position:relative; display:flex; flex-direction:column; align-items:stretch; justify-content:center; min-height:120px; padding:16px 0; width:100%; }
+.rsvp-stage{ position:relative; display:flex; flex-direction:column; align-items:stretch; justify-content:center; flex:1; padding:16px 0; width:100%; }
 .orp-guide{
   position:absolute; top:0; bottom:0; left:50%;
   width:1px; background:rgba(46,207,184,0.20); pointer-events:none; transform:translateX(-50%);
@@ -250,11 +255,7 @@ input[type=range]{width:100%; accent-color:var(--teal); cursor:pointer;}
 }
 .rsvp-hidden{opacity:0;}
 
-.rsvp-controls{
-  padding:16px 20px 32px;
-  border-top:1px solid var(--border);
-  display:flex; align-items:center; justify-content:space-between; gap:10px;
-}
+.rsvp-controls{ padding:14px 20px 28px; border-top:1px solid var(--border); display:flex; align-items:center; gap:10px; background:var(--bg); }
 .speed-live{display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text3);}
 .speed-live input{width:90px; accent-color:var(--teal);}
 .speed-live-val{font-weight:700; color:var(--teal); min-width:3ch;}
@@ -515,6 +516,58 @@ details.sci[open] summary{border-bottom:1px solid var(--border);}
 }
 .session-next-btn:hover { background: var(--violet); }
 
+
+/* ── Single-question stage ── */
+#stage-q.show {
+  display:flex; flex-direction:column;
+  position:fixed; inset:0; z-index:10;
+  background:var(--bg); border:none; border-radius:0;
+}
+.sq-header {
+  padding:16px 20px 0;
+  display:flex; align-items:center; justify-content:center;
+}
+.sq-progress {
+  font-size:12px; color:var(--text3);
+  letter-spacing:0.08em; text-transform:uppercase;
+}
+.sq-body {
+  flex:1; display:flex; flex-direction:column;
+  justify-content:center; padding:28px 24px; gap:24px;
+}
+.sq-question {
+  font-family:'Cormorant Garamond',serif;
+  font-size:26px; font-weight:300; color:var(--text);
+  line-height:1.45; text-align:center;
+}
+.sq-opts {
+  display:flex; flex-direction:column; gap:10px;
+}
+.sq-opt {
+  padding:16px 18px; border-radius:13px;
+  border:1.5px solid var(--border2); background:var(--card);
+  font-size:16px; color:var(--text2); cursor:pointer;
+  transition:all 0.12s; text-align:left;
+}
+.sq-opt:active { transform:scale(0.98); }
+.sq-opt.correct { border-color:var(--teal-b); background:var(--teal-d); color:var(--teal); }
+.sq-opt.wrong   { border-color:rgba(255,107,91,0.3); background:rgba(255,107,91,0.08); color:var(--coral); }
+.sq-opt.locked  { pointer-events:none; }
+.sq-feedback {
+  font-size:14px; color:var(--text3); text-align:center;
+  min-height:20px; transition:opacity 0.2s;
+}
+.sq-footer {
+  padding:14px 24px 36px;
+}
+.sq-next-btn {
+  width:100%; padding:17px;
+  background:var(--violet-deep); color:#fff;
+  border:none; border-radius:14px;
+  font-family:'Fredoka','DM Sans',sans-serif;
+  font-size:18px; font-weight:600; cursor:pointer;
+}
+
 </style>
 </head>
 <body>
@@ -688,18 +741,16 @@ function updateSessionBtnLabels() {
 
   <!-- ─── STAGE 2: Questions ─── -->
   <div class="card" id="stage-q">
-    <div class="q-head">
-      <div class="q-head-title">¿Qué recuerdas del texto?</div>
-      <div class="q-head-sub">Responde las preguntas — no hay prisa.</div>
+    <div class="sq-header">
+      <div class="sq-progress" id="sq-progress">1 / 2</div>
     </div>
-    <div class="q-score-row">
-      <span class="q-score-lbl">Respuestas correctas</span>
-      <span class="q-score-val" id="score-display">–</span>
+    <div class="sq-body">
+      <div class="sq-question" id="sq-question"></div>
+      <div class="sq-opts" id="sq-opts"></div>
+      <div class="sq-feedback" id="sq-feedback"></div>
     </div>
-    <div class="questions" id="questions-container"></div>
-    <div class="q-footer">
-      <button class="btn btn-ghost btn-sm" onclick="resetAll()">← Volver</button>
-      <button class="btn btn-teal" onclick="showResults()">Ver resultados →</button>
+    <div class="sq-footer">
+      <button class="sq-next-btn" id="sq-next-btn" onclick="nextQuestion()" style="display:none">Siguiente →</button>
     </div>
   </div>
 
@@ -1257,42 +1308,69 @@ function finishRSVP(wordCount) {
 // Questions
 // ──────────────────────────────────
 function buildQuestions() {
-  answeredCount = 0; correctCount = 0;
-  const qs = TEXTS[selectedTextIdx].questions;
-  const container = document.getElementById('questions-container');
-  container.innerHTML = '';
-  document.getElementById('score-display').textContent = '–';
+  const text = TEXTS[selectedTextIdx];
+  const allQs = text.questions || [];
+  // Pick 2 questions — first and last for variety
+  window._sqQuestions = allQs.length > 2
+    ? [allQs[0], allQs[allQs.length - 1]]
+    : allQs.slice(0, 2);
+  window._sqIdx = 0;
+  window._sqCorrect = 0;
+  showCurrentQuestion();
+}
 
-  qs.forEach((q, qi) => {
-    const block = document.createElement('div');
-    block.className = 'q-block';
-    block.innerHTML = `
-      <div class="q-num">Pregunta ${qi+1}</div>
-      <div class="q-text">${q.text}</div>
-      <div class="q-opts" id="opts-${qi}">
-        ${q.opts.map((o,oi) => `<div class="q-opt" onclick="answerQ(${qi},${oi},${q.correct})">${o}</div>`).join('')}
-      </div>
-    `;
-    container.appendChild(block);
+function showCurrentQuestion() {
+  const qs = window._sqQuestions;
+  const qi = window._sqIdx;
+  const q = qs[qi];
+
+  document.getElementById('sq-progress').textContent = (qi + 1) + ' / ' + qs.length;
+  document.getElementById('sq-question').textContent = q.text;
+  document.getElementById('sq-feedback').textContent = '';
+  document.getElementById('sq-next-btn').style.display = 'none';
+
+  const optsEl = document.getElementById('sq-opts');
+  optsEl.innerHTML = '';
+  q.opts.forEach((o, oi) => {
+    const d = document.createElement('div');
+    d.className = 'sq-opt';
+    d.textContent = o;
+    d.onclick = () => answerSQ(oi, q.correct);
+    optsEl.appendChild(d);
   });
 }
 
-function answerQ(qi, chosen, correct) {
-  const opts = document.querySelectorAll(`#opts-${qi} .q-opt`);
+function answerSQ(chosen, correct) {
+  const opts = document.querySelectorAll('.sq-opt');
   opts.forEach(o => o.classList.add('locked'));
   opts[chosen].classList.add(chosen === correct ? 'correct' : 'wrong');
   if (chosen !== correct) opts[correct].classList.add('correct');
-  answeredCount++;
-  if (chosen === correct) correctCount++;
-  document.getElementById('score-display').textContent = `${correctCount}/${answeredCount}`;
+  if (chosen === correct) {
+    window._sqCorrect++;
+    document.getElementById('sq-feedback').textContent = '✓ Correcto';
+  } else {
+    document.getElementById('sq-feedback').textContent = 'La respuesta correcta está marcada en verde.';
+  }
+  document.getElementById('sq-next-btn').style.display = 'block';
+  document.getElementById('sq-next-btn').textContent =
+    window._sqIdx < window._sqQuestions.length - 1 ? 'Siguiente →' : 'Ver resultado →';
 }
+
+function nextQuestion() {
+  window._sqIdx++;
+  if (window._sqIdx >= window._sqQuestions.length) {
+    showResults();
+  } else {
+    showCurrentQuestion();
+  }
+}
+
 
 function showResults() {
   releaseWakeLock();
   markComplete();
-  const qs = TEXTS[selectedTextIdx].questions;
-  const total = qs.length;
-  const pct = Math.round((correctCount / total) * 100);
+  const total = window._sqQuestions ? window._sqQuestions.length : 1;
+  const pct = Math.round(((window._sqCorrect || 0) / total) * 100);
   const wpm = parseInt(document.getElementById('result-wpm').textContent) || currentWpm;
 
   document.getElementById('r-comp').textContent = pct + '%';
@@ -1324,8 +1402,13 @@ function showResults() {
 function resetAll() {
   clearTimeout(rsvpTimer);
   wordIdx = 0; paused = false; answeredCount = 0; correctCount = 0;
+  // Clear word display
+  const pre = document.getElementById('w-pre'); if(pre) pre.textContent = '';
+  const focal = document.getElementById('w-focal'); if(focal) focal.textContent = '';
+  const post = document.getElementById('w-post'); if(post) post.textContent = '';
+  const phrase = document.getElementById('rsvp-phrase'); if(phrase) phrase.textContent = '';
+  const ctx = document.getElementById('rsvp-context'); if(ctx) ctx.textContent = '';
   document.getElementById('rsvp-bar').style.width = '0%';
-  // Go back to ready screen so user can pick a new text + speed
   document.getElementById('ready-screen').classList.remove('hidden');
   setStage(0);
 }
