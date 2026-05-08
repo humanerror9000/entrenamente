@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EntrenaMente — Lectura Flash</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 /* ── Design system ── */
 :root {
@@ -29,7 +29,7 @@
 
 *{box-sizing:border-box;margin:0;padding:0;}
 body{
-  font-family:'DM Sans',sans-serif;
+  font-family:'Poppins',sans-serif;
   background:var(--bg); color:var(--text);
   min-height:100vh; display:flex; flex-direction:column; align-items:center;
   padding-bottom:60px;
@@ -49,7 +49,7 @@ header{
   padding:14px 24px;
 }
 .logo{
-  font-family:'Cormorant Garamond',serif;
+  font-family:'Poppins',sans-serif;
   font-size:20px; font-weight:300; color:var(--text); letter-spacing:-0.01em;
 }
 .logo em{color:var(--gold); font-style:italic;}
@@ -130,7 +130,7 @@ main{
   display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
 }
 .card-title{
-  font-family:'Cormorant Garamond',serif;
+  font-family:'Poppins',sans-serif;
   font-size:24px; font-weight:300; color:var(--text); line-height:1.1;
   margin-bottom:4px;
 }
@@ -147,7 +147,7 @@ main{
 .card-live-val{
   font-size:26px; font-weight:300; color:var(--teal);
   line-height:1; font-variant-numeric:tabular-nums;
-  font-family:'Cormorant Garamond',serif;
+  font-family:'Poppins',sans-serif;
 }
 .card-live-lbl{font-size:10px; color:var(--text3); letter-spacing:0.06em; text-transform:uppercase; margin-top:2px;}
 
@@ -159,10 +159,10 @@ main{
   display:block; margin-bottom:8px;
 }
 .ctrl-val{
-  font-family:'Cormorant Garamond',serif;
+  font-family:'Poppins',sans-serif;
   font-size:28px; font-weight:300; color:var(--text); margin-bottom:8px; line-height:1;
 }
-.ctrl-val span{font-family:'DM Sans',sans-serif; font-size:14px; color:var(--text3); font-weight:400;}
+.ctrl-val span{font-family:'Poppins',sans-serif; font-size:14px; color:var(--text3); font-weight:400;}
 input[type=range]{width:100%; accent-color:var(--teal); cursor:pointer;}
 .range-labels{display:flex; justify-content:space-between; margin-top:4px;}
 .range-labels span{font-size:10px; color:var(--text3);}
@@ -172,7 +172,7 @@ input[type=range]{width:100%; accent-color:var(--teal); cursor:pointer;}
 .mode-btn{
   flex:1; padding:9px 8px; border-radius:9px;
   border:1.5px solid var(--border2); background:var(--card2);
-  font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600;
+  font-family:'Poppins',sans-serif; font-size:13px; font-weight:600;
   color:var(--text3); cursor:pointer; transition:all 0.15s;
   -webkit-tap-highlight-color:transparent;
 }
@@ -205,7 +205,7 @@ input[type=range]{width:100%; accent-color:var(--teal); cursor:pointer;}
   width:100%; padding:15px;
   background:var(--teal); color:var(--bg);
   border:none; border-radius:11px; cursor:pointer;
-  font-family:'DM Sans',sans-serif;
+  font-family:'Poppins',sans-serif;
   font-size:15px; font-weight:700; letter-spacing:0.02em;
   transition:all 0.2s; -webkit-tap-highlight-color:transparent;
 }
@@ -229,7 +229,7 @@ input[type=range]{width:100%; accent-color:var(--teal); cursor:pointer;}
 }
 .rsvp-context{
   font-size:12px; color:var(--text3);
-  font-family:'Cormorant Garamond',serif;
+  font-family:'Poppins',sans-serif;
   font-style:italic; min-height:18px;
 }
 .rsvp-word-wrap{
@@ -237,19 +237,19 @@ input[type=range]{width:100%; accent-color:var(--teal); cursor:pointer;}
   min-height:56px; width:100%; position:relative;
 }
 .rsvp-pre{
-  font-family:'Cormorant Garamond',serif; font-size:34px; font-weight:300; color:var(--text2);
+  font-family:'Poppins',sans-serif; font-size:34px; font-weight:300; color:var(--text2);
   flex:1; text-align:right; padding-right:1px;
 }
 .rsvp-focal{
-  font-family:'Cormorant Garamond',serif; font-size:34px; font-weight:600; color:var(--coral);
+  font-family:'Poppins',sans-serif; font-size:34px; font-weight:600; color:var(--coral);
   flex:0 0 auto; text-align:center; min-width:20px;
 }
 .rsvp-post{
-  font-family:'Cormorant Garamond',serif; font-size:34px; font-weight:300; color:var(--text2);
+  font-family:'Poppins',sans-serif; font-size:34px; font-weight:300; color:var(--text2);
   flex:1; text-align:left; padding-left:1px;
 }
 .rsvp-phrase{
-  font-family:'Cormorant Garamond',serif;
+  font-family:'Poppins',sans-serif;
   font-size:28px; font-weight:300; color:var(--text);
   text-align:center; line-height:1.35; transition:opacity 0.15s;
 }
@@ -262,7 +262,7 @@ input[type=range]{width:100%; accent-color:var(--teal); cursor:pointer;}
 
 /* Countdown overlay */
 #rsvp-countdown{
-  font-family:'Cormorant Garamond',serif;
+  font-family:'Poppins',sans-serif;
   font-size:64px; font-weight:300; color:var(--gold);
   text-align:center;
 }
@@ -280,7 +280,7 @@ input[type=range]{width:100%; accent-color:var(--teal); cursor:pointer;}
 
 /* ── Buttons ── */
 .btn{
-  font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600;
+  font-family:'Poppins',sans-serif; font-size:13px; font-weight:600;
   padding:10px 18px; border-radius:10px; border:none; cursor:pointer;
   transition:all 0.15s; -webkit-tap-highlight-color:transparent;
   min-height:40px;
@@ -295,7 +295,7 @@ input[type=range]{width:100%; accent-color:var(--teal); cursor:pointer;}
 /* ── Questions ── */
 .q-head{padding:18px 20px 14px; border-bottom:1px solid var(--border);}
 .q-head-title{
-  font-family:'Cormorant Garamond',serif;
+  font-family:'Poppins',sans-serif;
   font-size:22px; font-weight:300; color:var(--text); margin-bottom:3px;
 }
 .q-head-sub{font-size:13px; color:var(--text2);}
@@ -318,7 +318,7 @@ input[type=range]{width:100%; accent-color:var(--teal); cursor:pointer;}
 .q-opt{
   padding:12px 16px; border-radius:10px;
   border:1.5px solid var(--border2); background:var(--card2);
-  cursor:pointer; font-family:'DM Sans',sans-serif;
+  cursor:pointer; font-family:'Poppins',sans-serif;
   font-size:14px; color:var(--text2); transition:all 0.15s;
   -webkit-tap-highlight-color:transparent; min-height:44px;
   display:flex; align-items:center;
@@ -337,7 +337,7 @@ input[type=range]{width:100%; accent-color:var(--teal); cursor:pointer;}
 .results-inner{padding:28px 20px;}
 .results-wpm-wrap{text-align:center; margin-bottom:24px;}
 .results-wpm{
-  font-family:'Cormorant Garamond',serif;
+  font-family:'Poppins',sans-serif;
   font-size:72px; font-weight:300; color:var(--teal); line-height:1;
 }
 .results-wpm-lbl{font-size:13px; color:var(--text3); margin-top:4px; letter-spacing:0.04em;}
@@ -420,7 +420,7 @@ details.sci[open] summary{border-bottom:1px solid var(--border);}
 .ready-logo{font-family:'Fredoka',sans-serif;font-size:14px;font-weight:600;color:var(--text3);letter-spacing:0.02em;margin-bottom:16px;text-align:center;}
 .ready-logo em{color:var(--violet);font-style:italic;}
 .ready-title {
-  font-family:'Cormorant Garamond',serif;
+  font-family:'Poppins',sans-serif;
   font-size:clamp(32px,8vw,48px); font-weight:300;
   color:var(--text); line-height:1.1; margin-bottom:12px;
 }
@@ -454,7 +454,7 @@ details.sci[open] summary{border-bottom:1px solid var(--border);}
   width:100%; padding:17px;
   background:var(--teal); color:var(--bg);
   border:none; border-radius:13px; cursor:pointer;
-  font-family:'DM Sans',sans-serif;
+  font-family:'Poppins',sans-serif;
   font-size:17px; font-weight:700; letter-spacing:0.02em;
   transition:all 0.2s; -webkit-tap-highlight-color:transparent;
   margin-bottom:14px;
@@ -476,7 +476,7 @@ details.sci[open] summary{border-bottom:1px solid var(--border);}
 
 /* ── Brand logo ── */
 .logo, .brand-name {
-  font-family: 'Fredoka', 'Cormorant Garamond', serif;
+  font-family: 'Fredoka', 'Poppins', sans-serif;
   font-size: 20px; font-weight: 600;
   color: var(--text); letter-spacing: -0.01em;
   display: flex; align-items: center;
@@ -506,7 +506,7 @@ details.sci[open] summary{border-bottom:1px solid var(--border);}
   color: #fff;
   border: none;
   border-radius: 13px;
-  font-family: 'Fredoka', 'DM Sans', sans-serif;
+  font-family: 'Fredoka', 'Poppins', sans-serif;
   font-size: 17px;
   font-weight: 600;
   cursor: pointer;
@@ -536,7 +536,7 @@ details.sci[open] summary{border-bottom:1px solid var(--border);}
   justify-content:center; padding:28px 24px; gap:24px;
 }
 .sq-question {
-  font-family:'Cormorant Garamond',serif;
+  font-family:'Poppins',sans-serif;
   font-size:26px; font-weight:300; color:var(--text);
   line-height:1.45; text-align:center;
 }
@@ -564,7 +564,7 @@ details.sci[open] summary{border-bottom:1px solid var(--border);}
   width:100%; padding:17px;
   background:var(--violet-deep); color:#fff;
   border:none; border-radius:14px;
-  font-family:'Fredoka','DM Sans',sans-serif;
+  font-family:'Fredoka','Poppins',sans-serif;
   font-size:18px; font-weight:600; cursor:pointer;
 }
 
@@ -583,7 +583,7 @@ details.sci[open] summary{border-bottom:1px solid var(--border);}
       <div class="preview-label">Vista previa</div>
       <div class="preview-inner">
         <div style="text-align:center;">
-          <div id="rdy-word" style="font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:300;color:var(--text);min-height:50px;transition:opacity 0.12s;"></div>
+          <div id="rdy-word" style="font-family:'Poppins',sans-serif;font-size:38px;font-weight:300;color:var(--text);min-height:50px;transition:opacity 0.12s;"></div>
           <div style="font-size:11px;color:var(--text3);margin-top:8px;letter-spacing:0.06em;">150 ppm</div>
         </div>
       </div>

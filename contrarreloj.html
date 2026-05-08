@@ -27,7 +27,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: 'Instrument Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
   background:var(--bg);
   color:var(--text);
   min-height: 100vh;
@@ -92,7 +92,7 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
 
 /* Buttons */
 .btn {
-  font-family: 'Instrument Sans', sans-serif; font-size: 13px; font-weight: 600;
+  font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 600;
   padding: 9px 18px; border-radius: 10px; border: none; cursor: pointer;
   letter-spacing: 0.02em; transition: all 0.15s;
 }
@@ -115,7 +115,7 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
 
 .calib-text-area { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:16px 24px; gap:20px; }
 .calib-sentence {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 32px; line-height: 1.4; color: var(--text);
   text-align: center; padding: 0 24px; width: 100%;
 }
@@ -134,7 +134,7 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
 .reading-area { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:16px 24px; gap:16px; }
 
 .sentence-display {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 32px; line-height: 1.4; color: var(--text);
   text-align: center; padding: 0 24px; width: 100%;
 }
@@ -187,7 +187,7 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
 .qopt {
   padding: 11px 15px; border-radius: 9px;
   border: 1.5px solid var(--border2); background: var(--card2);
-  font-size: 14px; font-family: 'Instrument Sans', sans-serif;
+  font-size: 14px; font-family: 'Poppins', sans-serif;
   color: var(--ink2); cursor: pointer; transition: all 0.13s;
 }
 .qopt:hover { border-color:var(--border2);color:var(--text);background:var(--card); }
@@ -319,7 +319,7 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
 
   /* Sentence display in Contrarreloj */
   .sentence-display {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 32px; line-height: 1.4; color: var(--text);
   text-align: center; padding: 0 24px; width: 100%;
 }
@@ -391,7 +391,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");}
 
 /* ── Shared design system classes ── */
-.logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:var(--text);letter-spacing:-0.01em;}
+.logo{font-family:'Poppins',sans-serif;font-size:20px;font-weight:300;color:var(--text);letter-spacing:-0.01em;}
 .logo em{color:var(--gold);font-style:italic;}
 .hdr-back{font-size:12px;color:var(--text3);text-decoration:none;display:flex;align-items:center;gap:4px;transition:color 0.15s;}
 .hdr-back:hover{color:var(--text2);}
@@ -402,7 +402,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 .instr-icon{font-size:20px;flex-shrink:0;margin-top:1px;}
 .instr-text{font-size:14px;color:var(--text2);line-height:1.65;}
 .instr-text strong{color:var(--text);font-weight:600;}
-.card-title-serif{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--text);line-height:1.1;margin-bottom:4px;}
+.card-title-serif{font-family:'Poppins',sans-serif;font-size:24px;font-weight:300;color:var(--text);line-height:1.1;margin-bottom:4px;}
 .sci-details{background:var(--card);border:1px solid var(--border2);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;}
 .sci-details summary{padding:13px 18px;font-size:12px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--text3);cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;-webkit-tap-highlight-color:transparent;}
 .sci-details summary::-webkit-details-marker{display:none;}
@@ -432,7 +432,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 .ready-logo{font-family:'Fredoka',sans-serif;font-size:14px;font-weight:600;color:var(--text3);letter-spacing:0.02em;margin-bottom:16px;text-align:center;}
 .ready-logo em{color:var(--violet);font-style:italic;}
 .ready-title {
-  font-family:'Cormorant Garamond',serif;
+  font-family:'Poppins',sans-serif;
   font-size:clamp(32px,8vw,48px); font-weight:300;
   color:var(--text); line-height:1.1; margin-bottom:12px;
 }
@@ -466,7 +466,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
   width:100%; padding:17px;
   background:var(--teal); color:var(--bg);
   border:none; border-radius:13px; cursor:pointer;
-  font-family:'DM Sans',sans-serif;
+  font-family:'Poppins',sans-serif;
   font-size:17px; font-weight:700; letter-spacing:0.02em;
   transition:all 0.2s; -webkit-tap-highlight-color:transparent;
   margin-bottom:14px;
@@ -488,7 +488,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 
 /* ── Brand logo ── */
 .logo, .brand-name {
-  font-family: 'Fredoka', 'Cormorant Garamond', serif;
+  font-family: 'Fredoka', 'Poppins', sans-serif;
   font-size: 20px; font-weight: 600;
   color: var(--text); letter-spacing: -0.01em;
   display: flex; align-items: center;
@@ -518,7 +518,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
   color: #fff;
   border: none;
   border-radius: 13px;
-  font-family: 'Fredoka', 'DM Sans', sans-serif;
+  font-family: 'Fredoka', 'Poppins', sans-serif;
   font-size: 17px;
   font-weight: 600;
   cursor: pointer;
@@ -530,7 +530,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -750,12 +750,12 @@ function updateSessionBtnLabels() {
   <div id="end-screen" style="display:none;background:var(--card);border:1px solid var(--border2);border-radius:14px;box-shadow:var(--sh);overflow:hidden;">
     <div style="padding:28px 24px;text-align:center;">
       <div style="font-size:40px;margin-bottom:12px;">🎯</div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--text);margin-bottom:8px;">Sesión completada</div>
+      <div style="font-family:'Poppins',sans-serif;font-size:28px;font-weight:300;color:var(--text);margin-bottom:8px;">Sesión completada</div>
       <div style="font-size:15px;color:var(--text2);line-height:1.65;margin-bottom:24px;">Tu velocidad se ha ajustado para la próxima sesión. La consistencia es la clave del progreso.</div>
       <button class="session-next-btn" onclick="completeAndContinue()">Siguiente ejercicio →</button>
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;" class="session-hide">
-        <button onclick="restartSession()" style="padding:13px 24px;background:var(--teal);color:var(--bg);border:none;border-radius:11px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;">Nueva sesión →</button>
-        <a href="index.html" onclick="event.preventDefault(); completeAndContinue();" style="padding:13px 24px;background:transparent;color:var(--text2);border:1.5px solid var(--border2);border-radius:11px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;">← Inicio</a>
+        <button onclick="restartSession()" style="padding:13px 24px;background:var(--teal);color:var(--bg);border:none;border-radius:11px;font-family:'Poppins',sans-serif;font-size:15px;font-weight:700;cursor:pointer;">Nueva sesión →</button>
+        <a href="index.html" onclick="event.preventDefault(); completeAndContinue();" style="padding:13px 24px;background:transparent;color:var(--text2);border:1.5px solid var(--border2);border-radius:11px;font-family:'Poppins',sans-serif;font-size:15px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;">← Inicio</a>
       </div>
     </div>
   </div>
