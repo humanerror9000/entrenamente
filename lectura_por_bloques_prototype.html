@@ -539,6 +539,35 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 }
 .session-next-btn:hover { background: var(--violet); }
 
+
+/* ── Lectura por Focos ── */
+#mode-1.active { display:flex; flex-direction:column; position:fixed; inset:0;
+  overflow-y:auto; z-index:10; background:var(--bg); }
+.focos-header { padding:14px 20px 0; display:flex; align-items:center;
+  justify-content:space-between; flex-shrink:0; }
+.focos-label { font-size:13px; color:var(--text3); }
+.focos-speed { font-size:13px; color:var(--teal); font-family:'Fredoka',sans-serif; }
+.focos-area { flex:1; display:flex; align-items:center; justify-content:center;
+  padding:24px 28px; }
+.focos-para { font-family:'Lora',serif; font-size:20px; line-height:2.0;
+  color:var(--text); width:100%; }
+.focos-chunk { transition:opacity 0.08s; }
+.focos-chunk.dim { opacity:0.12; }
+.focos-chunk.lit { opacity:1; color:var(--text); }
+.focos-chunk.done { opacity:0.35; }
+.focos-footer { padding:16px 20px 32px; border-top:1px solid var(--border);
+  flex-shrink:0; display:flex; flex-direction:column; gap:10px; }
+.focos-start-btn { width:100%; padding:17px; background:var(--violet-deep);
+  color:#fff; border:none; border-radius:14px;
+  font-family:'Fredoka','DM Sans',sans-serif; font-size:18px;
+  font-weight:600; cursor:pointer; }
+.focos-nav { display:flex; justify-content:flex-end; }
+.focos-question { margin-bottom:12px; }
+.focos-q-text { font-size:16px; color:var(--text); margin-bottom:12px; line-height:1.5; }
+.focos-opt { padding:13px 16px; border-radius:12px; border:1.5px solid var(--border2);
+  background:var(--card); font-size:15px; color:var(--text2); cursor:pointer;
+  margin-bottom:8px; transition:all 0.12s; }
+
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -558,8 +587,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
     
     <div style="width:100%;margin-bottom:24px;display:flex;flex-direction:column;gap:8px;">
       <div style="display:flex;gap:8px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border2);border-radius:10px;">
-        <span style="font-size:18px;">✏️</span>
-        <div><div style="font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;">Modo 1</div><div style="font-size:14px;color:var(--text2);">Análisis activo</div></div>
+        <span style="font-size:18px;">🔦</span>
+        <div><div style="font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;">Modo 1</div><div style="font-size:14px;color:var(--text2);">Lectura por focos</div></div>
       </div>
       <div style="display:flex;gap:8px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border2);border-radius:10px;">
         <span style="font-size:18px;">⚡</span>
@@ -736,22 +765,18 @@ function updateSessionBtnLabels() {
   <!-- ═══════════════════════════════════════ -->
   <div class="mode-section" id="mode-1">
     <div class="exercise-card">
-      <div class="card-instruction">
-        <strong>Toca las palabras</strong> donde termina cada bloque sintáctico para insertar un divisor <strong style="color:var(--coral)">/</strong>. Divide la oración en sus grupos naturales de significado.
+      <div class="focos-header">
+        <div class="focos-label" id="focos-label">Lectura por focos</div>
+        <div class="focos-speed" id="focos-speed"></div>
       </div>
-      <div class="parse-area">
-        <div class="parse-sentence" id="parse-sentence">
-          <!-- words injected by JS -->
-        </div>
-        <div class="parse-controls">
-          <button class="btn btn-primary" onclick="checkParse()">Verificar análisis</button>
-          <button class="btn btn-secondary" onclick="resetParse()">Reiniciar</button>
-          <button class="btn btn-ghost" onclick="showParseHint()">Ver pista</button>
-        </div>
+      <div class="focos-area" id="focos-area">
+        <!-- paragraph injected by JS -->
       </div>
-      <div class="feedback-panel" id="feedback-1"></div>
-      <div class="exercise-nav">
-        <button class="btn btn-ghost" onclick="showBloqueTransition(2)">Siguiente modo →</button>
+      <div class="focos-footer">
+        <button class="focos-start-btn" id="focos-start-btn" onclick="startFocos()">▶ Iniciar</button>
+        <div class="focos-nav" id="focos-nav" style="display:none">
+          <button class="btn btn-ghost" onclick="showBloqueTransition(2)">Siguiente modo →</button>
+        </div>
       </div>
     </div>
   </div>
@@ -820,7 +845,7 @@ function updateSessionBtnLabels() {
 function switchMode(n) {
   document.querySelectorAll('.mode-section').forEach((el,i) => el.classList.toggle('active', i===n));
   document.querySelectorAll('.mode-tab').forEach((el,i) => el.classList.toggle('active', i===n));
-  if (n===1) initParse();
+  if (n===1) prepareFocos();
   if (n===3) initRecon();
 }
 
@@ -1023,68 +1048,143 @@ function getCurrentPassage(modeKey, exclude) {
 const _parsePassage  = getCurrentPassage('parse', []);
 const _flashPassage  = getCurrentPassage('flash', [BLOQUE_POOL.indexOf(_parsePassage)]);
 const _reconPassage  = getCurrentPassage('recon', [BLOQUE_POOL.indexOf(_parsePassage), BLOQUE_POOL.indexOf(_flashPassage)]);
-const parseSentence = _parsePassage.parseSentence;
-let correctBoundaries = _parsePassage.boundaries;
-const TOTAL_BOUNDARIES = _parsePassage.boundaries.size; // 5
-let selectedBoundaries = new Set();
+// ── MODE 1: Lectura por Focos ──
+// Uses flashChunks from _parsePassage (reusing same passage pool)
+const focosChunks = _parsePassage.flashChunks;
 
-function initParse() {
-  selectedBoundaries = new Set();
-  const container = document.getElementById('parse-sentence');
-  container.innerHTML = '';
-  parseSentence.forEach((w, i) => {
+// Speed levels: ms per chunk, decreases as user levels up
+const FOCOS_SPEEDS = [1800, 1400, 1100, 850, 650];
+let focosLevel = 0;
+try { focosLevel = Math.min(parseInt(localStorage.getItem('em_focos_level')||'0'), FOCOS_SPEEDS.length-1); } catch(e){}
+
+let focosTimer = null;
+let focosIdx = 0;
+let focosRunning = false;
+
+
+function prepareFocos() {
+  // Just show the start button, don't render paragraph yet
+  const area = document.getElementById('focos-area');
+  area.innerHTML = '<div style="text-align:center;color:var(--text3);font-size:15px;line-height:1.7;padding:0 16px;">Sigue el bloque iluminado<br>con los ojos.<br>Lee cada grupo como una unidad.</div>';
+  document.getElementById('focos-start-btn').style.display = 'block';
+  document.getElementById('focos-nav').style.display = 'none';
+  document.getElementById('focos-speed').textContent = 'Nivel ' + (focosLevel + 1);
+}
+
+function initFocos() {
+  // Build paragraph with each chunk as a span
+  const area = document.getElementById('focos-area');
+  const para = document.createElement('div');
+  para.className = 'focos-para';
+  para.id = 'focos-para';
+
+  focosChunks.forEach((chunk, i) => {
     const span = document.createElement('span');
-    span.className = 'parse-word';
-    span.textContent = w.word;
-    span.dataset.idx = i;
-    span.addEventListener('click', () => toggleBoundary(span, i));
-    container.appendChild(span);
-    container.appendChild(document.createTextNode(' '));
+    span.className = 'focos-chunk dim';
+    span.id = 'fc-' + i;
+    span.textContent = chunk + (i < focosChunks.length - 1 ? ' ' : '');
+    para.appendChild(span);
   });
+
+  area.innerHTML = '';
+  area.appendChild(para);
+
+  const speedMs = FOCOS_SPEEDS[focosLevel];
+  const wpm = Math.round(60000 / speedMs * 3); // approx words per minute
+  document.getElementById('focos-speed').textContent = 'Nivel ' + (focosLevel + 1);
 }
 
-function toggleBoundary(el, idx) {
-  if (selectedBoundaries.has(idx)) {
-    selectedBoundaries.delete(idx);
-    el.classList.remove('boundary-after');
-  } else {
-    selectedBoundaries.add(idx);
-    el.classList.add('boundary-after');
+function startFocos() {
+  document.getElementById('focos-start-btn').style.display = 'none';
+  focosIdx = 0;
+  focosRunning = true;
+  // Brief countdown
+  const area = document.getElementById('focos-area');
+  area.innerHTML = '<div style="font-family:Cormorant Garamond,serif;font-size:72px;font-weight:300;color:var(--violet);text-align:center;width:100%;">3</div>';
+  let count = 3;
+  const cd = setInterval(() => {
+    count--;
+    if(count > 0) {
+      area.innerHTML = '<div style="font-family:Cormorant Garamond,serif;font-size:72px;font-weight:300;color:var(--violet);text-align:center;width:100%);">' + count + '</div>';
+    } else {
+      clearInterval(cd);
+      initFocos();
+      runFocosStep();
+    }
+  }, 900);
+}
+
+function runFocosStep() {
+  if(!focosRunning || focosIdx >= focosChunks.length) {
+    finishFocos();
+    return;
   }
-}
-
-function checkParse() {
-  let hits = 0, fp = 0;
-  selectedBoundaries.forEach(i => {
-    if (correctBoundaries.has(i)) hits++; else fp++;
+  // Dim all, light up current
+  focosChunks.forEach((_, i) => {
+    const el = document.getElementById('fc-' + i);
+    if(!el) return;
+    if(i < focosIdx) { el.className = 'focos-chunk done'; }
+    else if(i === focosIdx) { el.className = 'focos-chunk lit'; }
+    else { el.className = 'focos-chunk dim'; }
   });
-  const total = TOTAL_BOUNDARIES;
-  const fb = document.getElementById('feedback-1');
-  if (hits >= Math.ceil(total * 0.6) && fp <= 2) {
-    fb.className = 'feedback-panel correct';
-    const correctChunks = _parsePassage.flashChunks.map(c=>`<em>"${c}"</em>`).join(', ');
-    fb.innerHTML = `<div class="feedback-label">✓ Muy bien — ${hits}/${total} bloques correctos</div>Los bloques naturales de esta oración son: ${correctChunks}.`;
-    document.getElementById('main-progress').style.width = '60%';
-  } else {
-    fb.className = 'feedback-panel incorrect';
-    fb.innerHTML = `<div class="feedback-label">Sigue practicando — ${hits}/${total} bloques</div>Busca los grupos naturales de significado: las frases preposicionales (comienzan con preposición), los grupos nominales (artículo + sustantivo ± adjetivo) y las perífrasis verbales (verbo auxiliar + participio/infinitivo). Prueba con la pista.`;
+
+  // Scroll active chunk into view on mobile
+  const activeEl = document.getElementById('fc-' + focosIdx);
+  if(activeEl) activeEl.scrollIntoView({ behavior:'smooth', block:'nearest' });
+
+  const speedMs = FOCOS_SPEEDS[focosLevel];
+  focosIdx++;
+  focosTimer = setTimeout(runFocosStep, speedMs);
+}
+
+function finishFocos() {
+  focosRunning = false;
+  // Light all chunks
+  focosChunks.forEach((_, i) => {
+    const el = document.getElementById('fc-' + i);
+    if(el) el.className = 'focos-chunk lit';
+  });
+
+  // Advance level
+  if(focosLevel < FOCOS_SPEEDS.length - 1) {
+    focosLevel++;
+    try { localStorage.setItem('em_focos_level', String(focosLevel)); } catch(e){}
   }
+
+  // Show comprehension question after brief pause
+  setTimeout(() => {
+    const q = _parsePassage.question;
+    if(!q) {
+      document.getElementById('focos-nav').style.display = 'flex';
+      return;
+    }
+    const footer = document.getElementById('focos-footer');
+    const qDiv = document.createElement('div');
+    qDiv.className = 'focos-question';
+    qDiv.innerHTML = '<div class="focos-q-text">' + q.text + '</div><div class="focos-q-opts" id="focos-q-opts"></div>';
+    footer.insertBefore(qDiv, footer.firstChild);
+
+    q.opts.forEach((o, i) => {
+      const d = document.createElement('div');
+      d.className = 'focos-opt';
+      d.textContent = o;
+      d.onclick = () => {
+        document.querySelectorAll('.focos-opt').forEach(el => el.style.pointerEvents='none');
+        if(i === q.correct) {
+          d.style.cssText += 'border-color:var(--teal-b);background:var(--teal-d);color:var(--teal);';
+        } else {
+          d.style.cssText += 'border-color:rgba(255,107,91,0.3);color:var(--coral);';
+          document.querySelectorAll('.focos-opt')[q.correct].style.cssText += 'border-color:var(--teal-b);background:var(--teal-d);color:var(--teal);';
+        }
+        setTimeout(() => {
+          document.getElementById('focos-nav').style.display = 'flex';
+        }, 600);
+      };
+      document.getElementById('focos-q-opts').appendChild(d);
+    });
+  }, 600);
 }
 
-function resetParse() {
-  selectedBoundaries = new Set();
-  document.querySelectorAll('.parse-word').forEach(w => w.classList.remove('boundary-after'));
-  document.getElementById('feedback-1').className = 'feedback-panel';
-}
-
-function showParseHint() {
-  const fb = document.getElementById('feedback-1');
-  fb.className = 'feedback-panel info';
-  const chunks = _parsePassage.flashChunks;
-  const total = _parsePassage.boundaries.size;
-  const chunkList = chunks.map(c => `<em>"${c}"</em>`).join(', ');
-  fb.innerHTML = `<div class="feedback-label">💡 Pista</div>Hay ${total} divisores en esta oración. Los grupos naturales son: ${chunkList}.`;
-}
 
 // ── MODE 3: Chunk Flash ──
 const flashChunks = _flashPassage.flashChunks;
@@ -1287,8 +1387,7 @@ function selectBloqueMode(n, el){
 // ── Lectura por Bloques mode transitions ──
 function showBloqueTransition(toMode) {
   const transitions = {
-    1: { icon: '✏️', title: 'Análisis <em style="color:var(--teal)">Activo</em>', desc: 'Ahora <strong>toca las palabras</strong> donde percibes los límites entre grupos. Desarrolla tu instinto de chunking.' },
-    2: { icon: '⚡', title: 'Flash por <em style="color:var(--teal)">Bloques</em>', desc: 'Los bloques aparecen uno a uno. Léelos como unidades, no palabra por palabra.' },
+    2: { icon: '⚡', title: 'Flash por <em style="color:var(--teal)">Bloques</em>', desc: 'Los bloques aparecen uno a uno. Léelos como unidades completas — sin contexto.' },
     3: { icon: '🧩', title: '<em style="color:var(--teal)">Reconstrucción</em>', desc: 'Los bloques aparecen desordenados. Tócalos en el orden correcto.' },
   };
   const t = transitions[toMode];
