@@ -85,7 +85,7 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
   border: 1px solid var(--border2);
   overflow: hidden; display: none;
 }
-.drill-card.active { display:flex; flex-direction:column; min-height:100dvh; position:fixed; inset:0; overflow-y:auto; z-index:10; background:var(--bg); }
+.drill-card.active { display:flex; flex-direction:column; min-height:100dvh; height:100dvh; position:fixed; inset:0; overflow:hidden; z-index:10; background:var(--bg); }
 
 .card-head {
   padding: 16px 20px 14px;
@@ -158,10 +158,10 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
 /* ═══════════════════════════════
    DRILL 2 — Return sweep
    ═══════════════════════════════ */
-.sweep-arena { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding:16px 24px 8px; gap:8px; overflow-y:auto; }
-.sweep-text-display { width:100%; max-width:560px; font-family:"Poppins",sans-serif; font-size:16px; line-height:1.8; color:var(--text); padding-bottom:120px; }
+.sweep-arena { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding:16px 24px 8px; gap:8px; overflow:hidden; min-height:0; }
+.sweep-text-display { width:100%; max-width:560px; font-family:'Poppins',sans-serif; font-size:16px; line-height:1.8; color:var(--text); overflow:hidden; flex:1; min-height:0; display:flex; flex-direction:column; justify-content:flex-end; }
 @media (max-width: 600px) {
-  .sweep-text-display { font-size: 14px; line-height: 1.8; max-height: 44vh; }
+  .sweep-text-display { font-size: 14px; line-height: 1.7; }
 }
 .sweep-line { display: block; margin-bottom: 4px; white-space: pre-wrap; }
 .sweep-word {
@@ -1075,11 +1075,6 @@ const SWEEP_QUESTIONS = [
     q: '¿Cuál de estas amenazas se menciona explícitamente en el texto?',
     opts: ['La deforestación', 'El turismo masivo', 'La contaminación plástica', 'La acidificación'],
     correct: 2
-  },
-  {
-    q: '¿Qué relación establece el texto entre la biodiversidad marina y los seres humanos?',
-    opts: ['Son independientes entre sí', 'La pérdida marina no afecta a las personas', 'Proteger el océano es también proteger a las personas', 'Los humanos son la principal solución al problema'],
-    correct: 2
   }
 ];
 let swQAnswered=0, swQCorrect=0;
@@ -1106,59 +1101,72 @@ function sweepAdvance() {
   renderSweepLine();
 }
 
+let swCurrentQ = 0;
+
 function buildSweepQuestions() {
-  const container=document.getElementById('sw-q-container');
-  container.innerHTML='';
+  swCurrentQ = 0;
+  swQAnswered = 0;
+  swQCorrect = 0;
   document.getElementById('sw-q-result').style.display='none';
-  SWEEP_QUESTIONS.forEach((q,qi)=>{
-    const block=document.createElement('div');
-    block.innerHTML=`
-      <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--text3);margin-bottom:5px">Pregunta ${qi+1}</div>
-      <div style="font-size:14px;color:var(--text);margin-bottom:9px;line-height:1.5">${q.q}</div>
-      <div id="sw-opts-${qi}" style="display:flex;flex-direction:column;gap:6px">
-        ${q.opts.map((o,oi)=>`<div class="q-opt" style="padding:9px 14px;border-radius:9px;border:1px solid var(--border2);background:var(--card2);cursor:pointer;font-size:13px;color:var(--text2);transition:all 0.15s" onclick="sweepAnswer(${qi},${oi},${q.correct})">${o}</div>`).join('')}
-      </div>
-    `;
-    container.appendChild(block);
-  });
+  showSweepQuestion(0);
+}
+
+function showSweepQuestion(qi) {
+  const q = SWEEP_QUESTIONS[qi];
+  const container = document.getElementById('sw-q-container');
+  container.innerHTML = `
+    <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--text3);margin-bottom:6px">Pregunta ${qi+1} de ${SWEEP_QUESTIONS.length}</div>
+    <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.5">${q.q}</div>
+    <div id="sw-opts-${qi}" style="display:flex;flex-direction:column;gap:9px">
+      ${q.opts.map((o,oi)=>`<div class="q-opt" style="padding:12px 16px;border-radius:10px;border:1px solid var(--border2);background:var(--card2);cursor:pointer;font-size:14px;color:var(--text2);transition:all 0.15s" onclick="sweepAnswer(${qi},${oi},${q.correct})">${o}</div>`).join('')}
+    </div>
+  `;
 }
 
 function sweepAnswer(qi, chosen, correct) {
-  const opts=document.querySelectorAll(`#sw-opts-${qi} .q-opt`);
-  opts.forEach(o=>o.style.pointerEvents='none');
-  const hit=chosen===correct;
-  if(hit) {
+  const opts = document.querySelectorAll(`#sw-opts-${qi} .q-opt`);
+  opts.forEach(o => o.style.pointerEvents = 'none');
+  const hit = chosen === correct;
+  if (hit) {
     swQCorrect++;
-    opts[chosen].style.background='var(--green-d)';
-    opts[chosen].style.borderColor='var(--green)';
-    opts[chosen].style.color='var(--green)';
+    opts[chosen].style.background = 'var(--green-d)';
+    opts[chosen].style.borderColor = 'var(--green)';
+    opts[chosen].style.color = 'var(--green)';
   } else {
-    opts[chosen].style.background='var(--coral-d)';
-    opts[chosen].style.borderColor='var(--coral)';
-    opts[chosen].style.color='var(--coral)';
-    opts[correct].style.background='var(--green-d)';
-    opts[correct].style.borderColor='var(--green)';
-    opts[correct].style.color='var(--green)';
+    opts[chosen].style.background = 'var(--coral-d)';
+    opts[chosen].style.borderColor = 'var(--coral)';
+    opts[chosen].style.color = 'var(--coral)';
+    opts[correct].style.background = 'var(--green-d)';
+    opts[correct].style.borderColor = 'var(--green)';
+    opts[correct].style.color = 'var(--green)';
   }
   swQAnswered++;
-  if(swQAnswered===SWEEP_QUESTIONS.length) {
-    const pct=Math.round(swQCorrect/SWEEP_QUESTIONS.length*100);
-    const res=document.getElementById('sw-q-result');
-    res.style.display='block';
-    const good=pct>=67;
-    res.style.background=good?'var(--green-d)':'var(--coral-d)';
-    res.style.border='1px solid '+(good?'rgba(78,203,160,0.25)':'rgba(255,107,91,0.25)');
-    res.style.color=good?'var(--green)':'var(--coral)';
-    res.innerHTML=good
-      ? `<strong>✓ Comprensión: ${pct}%</strong> — Tu barrido fue eficiente y la retención del texto se mantiene alta. La combinación de movimiento ocular fluido y comprensión sólida es el objetivo del entrenamiento.`
-      : `<strong>Comprensión: ${pct}%</strong> — Velocidad de barrido lograda, pero la comprensión necesita atención. Intenta leer las líneas con más intención antes de presionar avanzar — el objetivo no es solo velocidad, sino barrido preciso <em>con</em> comprensión.`;
-    // Add continue button
-    const contBtn = document.createElement('button');
-    contBtn.textContent = '▶ Continuar';
-    contBtn.style.cssText = 'margin-top:14px;width:100%;padding:15px;background:var(--violet-deep);color:#fff;border:none;border-radius:12px;font-family:"Fredoka","Poppins",sans-serif;font-size:16px;font-weight:600;cursor:pointer;';
-    contBtn.onclick = () => nextSaltosDrill();
-    res.parentNode.appendChild(contBtn);
-  }
+
+  // After a short delay, either show next question or show result
+  setTimeout(() => {
+    if (swQAnswered < SWEEP_QUESTIONS.length) {
+      swCurrentQ++;
+      showSweepQuestion(swCurrentQ);
+    } else {
+      // All answered — show result
+      const pct = Math.round(swQCorrect / SWEEP_QUESTIONS.length * 100);
+      const res = document.getElementById('sw-q-result');
+      document.getElementById('sw-q-container').innerHTML = '';
+      res.style.display = 'block';
+      const good = pct >= 50;
+      res.style.background = good ? 'var(--green-d)' : 'var(--coral-d)';
+      res.style.border = '1px solid ' + (good ? 'rgba(78,203,160,0.25)' : 'rgba(255,107,91,0.25)');
+      res.style.color = good ? 'var(--green)' : 'var(--coral)';
+      res.innerHTML = good
+        ? `<strong>✓ Comprensión: ${pct}%</strong> — Tu barrido fue eficiente y la retención del texto se mantiene alta.`
+        : `<strong>Comprensión: ${pct}%</strong> — Velocidad lograda, pero la comprensión necesita atención. Intenta leer las líneas con más intención antes de presionar avanzar.`;
+      const contBtn = document.createElement('button');
+      contBtn.textContent = '▶ Continuar';
+      contBtn.style.cssText = 'margin-top:14px;width:100%;padding:15px;background:var(--violet-deep);color:#fff;border:none;border-radius:12px;font-family:"Fredoka","Poppins",sans-serif;font-size:16px;font-weight:600;cursor:pointer;';
+      contBtn.onclick = () => nextSaltosDrill();
+      res.parentNode.appendChild(contBtn);
+    }
+  }, 600);
 }
 
 // ─────────────────────────────────────

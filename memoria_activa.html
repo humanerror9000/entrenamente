@@ -111,7 +111,7 @@ main { width: 100%; max-width: 680px; padding: 24px 16px 0; display: flex; flex-
 
 /* Operation span: equation */
 .equation-display {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Poppins',sans-serif;
   font-size: 52px; font-weight: 300; color: var(--text);
   text-align: center; letter-spacing: -0.01em; margin-bottom: 36px;
 }
@@ -120,7 +120,7 @@ main { width: 100%; max-width: 680px; padding: 24px 16px 0; display: flex; flex-
 .tf-btn {
   width: 140px; padding: 18px; border-radius: 14px;
   border: 1.5px solid var(--border2); background: var(--card2);
-  font-family: 'Fredoka', 'Poppins', sans-serif; font-size: 18px; font-weight: 600;
+  font-family: 'Fredoka', 'Poppins',sans-serif; font-size: 18px; font-weight: 600;
   cursor: pointer; text-align: center; transition: all 0.14s; color: var(--text2);
 }
 .tf-btn:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-m); }
@@ -147,7 +147,7 @@ main { width: 100%; max-width: 680px; padding: 24px 16px 0; display: flex; flex-
 }
 .mem-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
 .mem-item {
-  font-family: 'Fredoka', 'Poppins', sans-serif;
+  font-family: 'Fredoka', 'Poppins',sans-serif;
   font-size: 52px; font-weight: 600; color: var(--violet);
   letter-spacing: 0.06em; min-height: 60px;
 }
@@ -476,7 +476,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 
 /* ── Brand logo ── */
 .logo, .brand-name {
-  font-family: 'Fredoka', 'Poppins', sans-serif;
+  font-family: 'Fredoka','Poppins',sans-serif;
   font-size: 20px; font-weight: 600;
   color: var(--text); letter-spacing: -0.01em;
   display: flex; align-items: center;
@@ -506,7 +506,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
   color: #fff;
   border: none;
   border-radius: 13px;
-  font-family: 'Fredoka', 'Poppins', sans-serif;
+  font-family: 'Fredoka', 'Poppins',sans-serif;
   font-size: 17px;
   font-weight: 600;
   cursor: pointer;
@@ -677,7 +677,7 @@ function updateSessionBtnLabels() {
         eqEl.style.display = 'block';
         wdEl.style.display = 'none';
         eqEl.style.fontSize = '36px';
-        eqEl.style.fontFamily = "'Poppins', sans-serif";
+        eqEl.style.fontFamily = "'Poppins',sans-serif";
         eqEl.style.fontWeight = '300';
         eqEl.style.color = 'var(--text)';
         eqEl.textContent = s.text;
@@ -1260,7 +1260,7 @@ function endSession() {
     <div class="insight">${insight}</div>
     <div class="res-btns">
       <button class="btn btn-ghost session-hide" onclick="resetSession()">← Reiniciar</button>
-      <button class="btn btn-ink session-hide" onclick="resetSession()">Siguiente ejercicio →</button>
+      <a href="index.html" class="btn btn-ghost session-hide" style="text-decoration:none;text-align:center;">🏠 Inicio</a>
       <button class="session-next-btn" onclick="completeAndContinue()">Siguiente ejercicio →</button>
     </div>
   `;
