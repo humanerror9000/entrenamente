@@ -844,7 +844,7 @@ const CATEGORIES = {
             'laguna','archipiélago','cordillera','manantial','oasis','atolón','fiordo','estepa',
             'selva','ciénaga','otero','cabo','promontorio','anfiteatro'] },
 };
-const CAT_KEYS = Object.keys(CATEGORIES);
+let CAT_KEYS = Object.keys(CATEGORIES); // will be recomputed after child swap if needed
 
 // ─────────────────────────────
 // CHILD MODE content
@@ -882,8 +882,16 @@ const CHILD_FEEDBACK = [
 ];
 
 // ─────────────────────────────
+// Core game state (declared early so child init can override)
+// ─────────────────────────────
+let difficulty = 'easy';
+let streamLength = 8;
+let totalRounds = 3;
+
+// ─────────────────────────────
 // Profile detection
 // ─────────────────────────────
+let activeCats = ['animals','professions']; // default easy — overridden by child init
 let userProfile = 'adult';
 try {
   const u = JSON.parse(localStorage.getItem('em_user') || '{}');
@@ -895,13 +903,24 @@ const isChild = userProfile === 'child';
 if (isChild) {
   document.body.classList.add('child-mode');
   // Swap category data
+  // Replace CATEGORIES entirely with child versions
+  for (const k of Object.keys(CATEGORIES)) delete CATEGORIES[k];
   Object.assign(CATEGORIES, CATEGORIES_CHILD);
+  // Rebuild CAT_KEYS from child categories
+  CAT_KEYS.length = 0;
+  CAT_KEYS.push(...Object.keys(CATEGORIES_CHILD));
+  // Update difficulty maps
   Object.assign(DIFF_CATS, DIFF_CATS_CHILD);
   Object.assign(DIFF_LENGTHS, DIFF_LENGTHS_CHILD);
-  // Default to easy, hide hard button
+  // Set child defaults
   streamLength = 4;
   totalRounds = 2;
-  // Update difficulty card labels for child
+  activeCats = DIFF_CATS_CHILD['easy'];
+  // In child mode: auto-start on easy, skip difficulty picker
+  document.addEventListener('DOMContentLoaded', () => {
+    startGame();
+  });
+  // Also update difficulty card labels for child (in case s0 is briefly shown)
   document.addEventListener('DOMContentLoaded', () => {
     const easyCard = document.getElementById('diff-easy');
     const medCard  = document.getElementById('diff-medium');
@@ -920,9 +939,6 @@ if (isChild) {
 // ─────────────────────────────
 // State
 // ─────────────────────────────
-let difficulty = 'easy'; // easy=8, medium=12, hard=16
-let streamLength = 8;
-let totalRounds = 3;
 let roundIdx = 0;
 let streamIdx = 0;
 let sequence = [];       // [{cat, word}]
@@ -975,8 +991,6 @@ const DIFF_CATS = {
   medium: ['animals','professions','objects'],
   hard: ['animals','professions','objects','places'],
 };
-let activeCats = ['animals','professions']; // default easy
-
 function startGame() {
   requestWakeLock();
   activeCats = DIFF_CATS[difficulty] || CAT_KEYS;
