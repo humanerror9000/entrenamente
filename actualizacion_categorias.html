@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EntrenaMente — Actualización por Categorías</title>
+<script>try{const u=JSON.parse(localStorage.getItem("em_user")||"{}");if(u.profile==="child")document.title="EntrenaMente — ¡Categorías!";}catch(e){}</script>
 <style>
 :root {
   --bg:#0C0C10; --bg2:#13131A; --card:#18181F; --card2:#1E1E28;
@@ -22,6 +23,54 @@
   --green:#52C98A; --green-d:rgba(82,201,138,0.12); --green-b:rgba(82,201,138,0.30);
   --muted:#4A4860;
   --r:14px; --sh:0 2px 20px rgba(0,0,0,0.35);
+}
+
+
+/* ════════════════════════
+   CHILD MODE overrides
+   ════════════════════════ */
+body.child-mode {
+  --bg: #0e0c1a;
+}
+body.child-mode .word-big {
+  font-size: 64px;
+  font-weight: 700;
+  color: var(--text);
+}
+body.child-mode .cat-badge {
+  font-size: 13px;
+  padding: 5px 16px;
+  border-radius: 20px;
+}
+body.child-mode .mem-slot .ms-word {
+  font-size: 22px;
+}
+body.child-mode .mem-slot .ms-cat {
+  font-size: 12px;
+}
+body.child-mode .recall-opt {
+  font-size: 17px;
+  padding: 14px 16px;
+}
+body.child-mode .dopt .dv { font-size: 22px; }
+body.child-mode .dopt .dl { font-size: 12px; }
+body.child-mode .dopt .dd { font-size: 13px; }
+body.child-mode .insight {
+  font-size: 15px;
+  line-height: 1.7;
+  text-align: center;
+  padding: 16px 20px;
+}
+body.child-mode .insight strong {
+  font-size: 17px;
+  display: block;
+  margin-bottom: 6px;
+}
+/* Hide hard difficulty in child mode */
+body.child-mode #diff-hard { display: none; }
+/* Bigger round result feedback */
+body.child-mode .round-hint {
+  font-size: 15px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -474,7 +523,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 
 /* ── Brand logo ── */
 .logo, .brand-name {
-  font-family: 'Fredoka', 'Poppins', sans-serif;
+  font-family: 'Fredoka','Poppins',sans-serif;
   font-size: 20px; font-weight: 600;
   color: var(--text); letter-spacing: -0.01em;
   display: flex; align-items: center;
@@ -504,7 +553,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
   color: #fff;
   border: none;
   border-radius: 13px;
-  font-family: 'Fredoka', 'Poppins', sans-serif;
+  font-family: 'Fredoka', 'Poppins',sans-serif;
   font-size: 17px;
   font-weight: 600;
   cursor: pointer;
@@ -798,6 +847,77 @@ const CATEGORIES = {
 const CAT_KEYS = Object.keys(CATEGORIES);
 
 // ─────────────────────────────
+// CHILD MODE content
+// ─────────────────────────────
+const CATEGORIES_CHILD = {
+  animals: { label: 'Animales', icon: '🐾', cls: 'cb-animals', rch: 'rch-animals',
+    words: ['perro','gato','vaca','rana','pato','oso','lobo','pez','león','tigre',
+            'mono','cerdo','cabra','burro','oveja','pollo','conejo','caballo','elefante','jirafa',
+            'cebra','cocodrilo','pingüino','delfín','tortuga','loro','búho','zorro','ratón','pájaro'] },
+  fruits:  { label: 'Frutas',   icon: '🍎', cls: 'cb-objects',  rch: 'rch-objects',
+    words: ['manzana','pera','uva','mango','piña','fresa','melón','kiwi','naranja','limón',
+            'sandía','plátano','cereza','durazno','ciruela','papaya','coco','higo','frambuesa','mandarina',
+            'guayaba','maracuyá','lichi','membrillo','mora','nectarina','arándano','albaricoque','pomelo','tamarindo'] },
+  colors:  { label: 'Colores',  icon: '🎨', cls: 'cb-professions', rch: 'rch-professions',
+    words: ['rojo','azul','verde','negro','blanco','rosa','morado','naranja','amarillo','gris',
+            'café','turquesa','violeta','dorado','plateado','beige','celeste','magenta','oliva','carmesí',
+            'índigo','coral','lima','lavanda','ocre','cian','esmeralda','escarlata','ámbar','marfil'] },
+  places:  { label: 'Lugares',  icon: '📍', cls: 'cb-places',    rch: 'rch-places',
+    words: ['parque','playa','bosque','lago','montaña','ciudad','pueblo','río','jardín','escuela',
+            'tienda','mercado','hospital','iglesia','museo','aeropuerto','granja','castillo','isla','cueva',
+            'estadio','biblioteca','acuario','zoológico','faro','puente','plaza','piscina','campo','volcán'] },
+};
+
+const DIFF_CATS_CHILD = {
+  easy:   ['animals','fruits'],
+  medium: ['animals','fruits','colors'],
+};
+
+const DIFF_LENGTHS_CHILD = { easy: 4, medium: 6, hard: 8 };
+
+const CHILD_FEEDBACK = [
+  { min: 85, msg: '🌟 <strong>¡Increíble!</strong> ¡Tu memoria es súper poderosa! Sigue entrenando así.' },
+  { min: 65, msg: '🎉 <strong>¡Muy bien!</strong> Lo estás haciendo genial. ¡Con práctica vas a ser un campeón!' },
+  { min: 0,  msg: '💪 <strong>¡Buen intento!</strong> Cada vez que practicas tu cerebro se hace más fuerte. ¡Inténtalo de nuevo!' },
+];
+
+// ─────────────────────────────
+// Profile detection
+// ─────────────────────────────
+let userProfile = 'adult';
+try {
+  const u = JSON.parse(localStorage.getItem('em_user') || '{}');
+  userProfile = u.profile || 'adult';
+} catch(e) {}
+
+const isChild = userProfile === 'child';
+
+if (isChild) {
+  document.body.classList.add('child-mode');
+  // Swap category data
+  Object.assign(CATEGORIES, CATEGORIES_CHILD);
+  Object.assign(DIFF_CATS, DIFF_CATS_CHILD);
+  Object.assign(DIFF_LENGTHS, DIFF_LENGTHS_CHILD);
+  // Default to easy, hide hard button
+  streamLength = 4;
+  totalRounds = 2;
+  // Update difficulty card labels for child
+  document.addEventListener('DOMContentLoaded', () => {
+    const easyCard = document.getElementById('diff-easy');
+    const medCard  = document.getElementById('diff-medium');
+    if (easyCard) {
+      easyCard.querySelector('.dv').textContent  = '4';
+      easyCard.querySelector('.dd').textContent  = '2 categorías · fácil';
+    }
+    if (medCard) {
+      medCard.querySelector('.dv').textContent   = '6';
+      medCard.querySelector('.dd').textContent   = '3 categorías · medio';
+    }
+  });
+}
+
+
+// ─────────────────────────────
 // State
 // ─────────────────────────────
 let difficulty = 'easy'; // easy=8, medium=12, hard=16
@@ -1074,9 +1194,14 @@ function endSession() {
   });
 
   let insight;
-  if(acc>=85) insight=`<strong>Actualización excelente.</strong> Tu memoria de trabajo actualiza información con alta eficacia. Prueba el nivel Difícil (16 palabras) o añade una ronda extra en la próxima sesión.`;
-  else if(acc>=65) insight=`<strong>Progreso sólido.</strong> La actualización mejora con práctica diaria. Mantén la dificultad actual durante 3–4 sesiones antes de avanzar.`;
-  else insight=`<strong>En construcción.</strong> La actualización por categorías mejora rápidamente con práctica. Intenta con 8 palabras si la sesión se siente abrumadora — el proceso de descarte es la habilidad que entrenas.`;
+  if (isChild) {
+    const cf = CHILD_FEEDBACK.find(f => acc >= f.min) || CHILD_FEEDBACK[CHILD_FEEDBACK.length-1];
+    insight = cf.msg;
+  } else {
+    if(acc>=85) insight=`<strong>Actualización excelente.</strong> Tu memoria de trabajo actualiza información con alta eficacia. Prueba el nivel Difícil (16 palabras) o añade una ronda extra en la próxima sesión.`;
+    else if(acc>=65) insight=`<strong>Progreso sólido.</strong> La actualización mejora con práctica diaria. Mantén la dificultad actual durante 3–4 sesiones antes de avanzar.`;
+    else insight=`<strong>En construcción.</strong> La actualización por categorías mejora rápidamente con práctica. Intenta con 8 palabras si la sesión se siente abrumadora — el proceso de descarte es la habilidad que entrenas.`;
+  }
 
   document.getElementById('res-body').innerHTML=`
     <div class="res-top">
@@ -1171,5 +1296,22 @@ document.addEventListener('visibilitychange', () => {
   </a>
 </div>
 
+<!-- Child mode UI label updates -->
+<script>
+if (typeof isChild !== 'undefined' && isChild) {
+  document.addEventListener('DOMContentLoaded', () => {
+    // Update difficulty cards text
+    const diffEasy = document.getElementById('diff-easy');
+    const diffMed  = document.getElementById('diff-medium');
+    const diffHard = document.getElementById('diff-hard');
+    if (diffEasy) { diffEasy.querySelector('.dv').textContent='4'; diffEasy.querySelector('.dd').textContent='2 categorías · fácil'; }
+    if (diffMed)  { diffMed.querySelector('.dv').textContent='6';  diffMed.querySelector('.dd').textContent='3 categorías · medio'; }
+    if (diffHard) diffHard.style.display='none';
+    // Simplify any adult-only instructional text
+    const exTag = document.querySelector('.ex-tag');
+    if (exTag) exTag.textContent = '¡Categorías!';
+  });
+}
+</script>
 </body>
 </html>
