@@ -707,37 +707,44 @@ function updateSessionBtnLabels() {
        STAGE 0: Tutorial
        ══════════════════════ -->
     <div class="card show" id="s0">
-    <div style="padding:20px 20px 14px;border-bottom:1px solid var(--border);">
-      <div style="font-family:'Poppins',sans-serif;font-size:24px;font-weight:300;color:var(--text);margin-bottom:4px;">Actualización por <em style="color:var(--teal);font-style:italic;">Categorías</em></div>
-      <div style="font-size:15px;color:var(--text2);line-height:1.6;">Recuerda <strong style="color:var(--text);">solo la última palabra</strong> de cada categoría. ¿Cuántas categorías quieres entrenar?</div>
+    <!-- Adult s0 -->
+    <div id="s0-adult">
+      <div style="padding:20px 20px 14px;border-bottom:1px solid var(--border);">
+        <div style="font-family:'Poppins',sans-serif;font-size:24px;font-weight:300;color:var(--text);margin-bottom:4px;">Actualización por <em style="color:var(--teal);font-style:italic;">Categorías</em></div>
+        <div style="font-size:15px;color:var(--text2);line-height:1.6;">Recuerda <strong style="color:var(--text);">solo la última palabra</strong> de cada categoría. ¿Cuántas categorías quieres entrenar?</div>
+      </div>
+      <div style="padding:16px 20px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+        <div class="dopt dsel" id="diff-easy" onclick="setDiff('easy')" style="text-align:center;padding:14px 8px;">
+          <div style="font-size:26px;font-weight:300;color:var(--teal);font-family:'Poppins',sans-serif;">2</div>
+          <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-top:2px;">categorías</div>
+          <div style="font-size:12px;color:var(--text2);margin-top:6px;line-height:1.4;">Para empezar</div>
+        </div>
+        <div class="dopt" id="diff-medium" onclick="setDiff('medium')" style="text-align:center;padding:14px 8px;">
+          <div style="font-size:26px;font-weight:300;color:var(--teal);font-family:'Poppins',sans-serif;">3</div>
+          <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-top:2px;">categorías</div>
+          <div style="font-size:12px;color:var(--text2);margin-top:6px;line-height:1.4;">Desafío medio</div>
+        </div>
+        <div class="dopt" id="diff-hard" onclick="setDiff('hard')" style="text-align:center;padding:14px 8px;">
+          <div style="font-size:26px;font-weight:300;color:var(--teal);font-family:'Poppins',sans-serif;">4</div>
+          <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-top:2px;">categorías</div>
+          <div style="font-size:12px;color:var(--text2);margin-top:6px;line-height:1.4;">Máxima dificultad</div>
+        </div>
+      </div>
+      <div style="padding:0 20px 18px;">
+        <button class="btn btn-teal btn-wide" style="font-size:16px;" onclick="startGame()">▶ Comenzar</button>
+      </div>
     </div>
 
-    <div style="padding:16px 20px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
-      <div class="dopt dsel" id="diff-easy" onclick="setDiff('easy')" style="text-align:center;padding:14px 8px;">
-        <div style="font-size:26px;font-weight:300;color:var(--teal);font-family:'Poppins',sans-serif;">2</div>
-        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-top:2px;">categorías</div>
-        <div style="font-size:12px;color:var(--text2);margin-top:6px;line-height:1.4;">Para empezar</div>
-      </div>
-      <div class="dopt" id="diff-medium" onclick="setDiff('medium')" style="text-align:center;padding:14px 8px;">
-        <div style="font-size:26px;font-weight:300;color:var(--teal);font-family:'Poppins',sans-serif;">3</div>
-        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-top:2px;">categorías</div>
-        <div style="font-size:12px;color:var(--text2);margin-top:6px;line-height:1.4;">Desafío medio</div>
-      </div>
-      <div class="dopt" id="diff-hard" onclick="setDiff('hard')" style="text-align:center;padding:14px 8px;">
-        <div style="font-size:26px;font-weight:300;color:var(--teal);font-family:'Poppins',sans-serif;">4</div>
-        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-top:2px;">categorías</div>
-        <div style="font-size:12px;color:var(--text2);margin-top:6px;line-height:1.4;">Máxima dificultad</div>
-      </div>
-    </div>
-
-    <div style="padding:0 20px 18px;">
-      <button class="btn btn-teal btn-wide" style="font-size:16px;" onclick="startGame()">▶ Comenzar</button>
+    <!-- Child s0 — friendly fallback -->
+    <div id="s0-child" style="display:none;padding:40px 28px;text-align:center;">
+      <div style="font-size:64px;margin-bottom:16px;line-height:1;">🧠</div>
+      <div style="font-family:'Fredoka',sans-serif;font-size:34px;font-weight:600;color:var(--violet);margin-bottom:10px;">¡Juego de Categorías!</div>
+      <div style="font-size:16px;color:var(--text2);line-height:1.7;margin-bottom:32px;">Vas a ver palabras una por una.<br>¡Recuerda la <strong style="color:var(--text);">última palabra</strong> de cada grupo!</div>
+      <button onclick="startGame()" style="width:100%;padding:20px;background:linear-gradient(135deg,var(--violet-deep),#6c5ce7);color:#fff;border:none;border-radius:18px;font-family:'Fredoka',sans-serif;font-size:22px;font-weight:600;cursor:pointer;box-shadow:0 8px 24px rgba(83,74,183,0.4);">¡Empezar! 🚀</button>
     </div>
   </div>
 
-  <!-- ══════════════════════
-       STAGE 1: Stream + Recall
-       ══════════════════════ -->
+  <!-- STAGE 1: Stream + Recall -->
   <div class="card" id="s1">
     <div class="chead" style="padding:12px 20px;">
       <div style="font-size:13px;color:var(--text3);">Recuerda la última de cada categoría</div>
@@ -916,23 +923,11 @@ if (isChild) {
   streamLength = 4;
   totalRounds = 2;
   activeCats = DIFF_CATS_CHILD['easy'];
-  // In child mode: auto-start on easy, skip difficulty picker
-  document.addEventListener('DOMContentLoaded', () => {
-    startGame();
-  });
-  // Also update difficulty card labels for child (in case s0 is briefly shown)
-  document.addEventListener('DOMContentLoaded', () => {
-    const easyCard = document.getElementById('diff-easy');
-    const medCard  = document.getElementById('diff-medium');
-    if (easyCard) {
-      easyCard.querySelector('.dv').textContent  = '4';
-      easyCard.querySelector('.dd').textContent  = '2 categorías · fácil';
-    }
-    if (medCard) {
-      medCard.querySelector('.dv').textContent   = '6';
-      medCard.querySelector('.dd').textContent   = '3 categorías · medio';
-    }
-  });
+  // In child mode: start game directly (DOM is already parsed at this point)
+  // Use setTimeout(0) to ensure all other init code has run first
+  document.getElementById('s0-adult').style.display = 'none';
+  document.getElementById('s0-child').style.display = '';
+  setTimeout(() => { startGame(); }, 0);
 }
 
 
@@ -1312,20 +1307,7 @@ document.addEventListener('visibilitychange', () => {
 
 <!-- Child mode UI label updates -->
 <script>
-if (typeof isChild !== 'undefined' && isChild) {
-  document.addEventListener('DOMContentLoaded', () => {
-    // Update difficulty cards text
-    const diffEasy = document.getElementById('diff-easy');
-    const diffMed  = document.getElementById('diff-medium');
-    const diffHard = document.getElementById('diff-hard');
-    if (diffEasy) { diffEasy.querySelector('.dv').textContent='4'; diffEasy.querySelector('.dd').textContent='2 categorías · fácil'; }
-    if (diffMed)  { diffMed.querySelector('.dv').textContent='6';  diffMed.querySelector('.dd').textContent='3 categorías · medio'; }
-    if (diffHard) diffHard.style.display='none';
-    // Simplify any adult-only instructional text
-    const exTag = document.querySelector('.ex-tag');
-    if (exTag) exTag.textContent = '¡Categorías!';
-  });
-}
+// Child label updates already handled by auto-start
 </script>
 </body>
 </html>
