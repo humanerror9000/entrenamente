@@ -3,565 +3,455 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EntrenaMente — Contrarreloj</title>
+<title>EntrenaMente — Lectura Adaptativa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg:#0C0C10; --bg2:#13131A; --card:#18181F; --card2:#1E1E28;
   --border:rgba(255,255,255,0.06); --border2:rgba(255,255,255,0.11);
   --text:#EAE8F2; --text2:#8E8CA8; --text3:#4A4860;
-  /* Brand violet — primary accent */
   --violet:#B8A9FF; --violet-d:rgba(184,169,255,0.12); --violet-b:rgba(184,169,255,0.28);
-  --violet-deep:#534AB7; --ink:var(--text); --ink2:var(--text2); --muted:var(--text3);
-  /* Teal — action/success/interactive */
+  --violet-deep:#534AB7;
   --teal:#2ECFB8; --teal-d:rgba(46,207,184,0.12); --teal-b:rgba(46,207,184,0.28);
-  /* Supporting palette */
-  --gold:#C9A84C; --gold-l:rgba(201,168,76,0.12); --gold-b:rgba(201,168,76,0.30);
-  --amber:#F5A623; --amber-d:rgba(245,166,35,0.12); --amber-b:rgba(245,166,35,0.28);
-  --coral:#E05C5C; --coral-d:rgba(224,92,92,0.12); --coral-b:rgba(224,92,92,0.30);
-  --purple:#B8A9FF; --purple-d:rgba(184,169,255,0.12); --purple-b:rgba(184,169,255,0.28);
-  --green:#52C98A; --green-d:rgba(82,201,138,0.12); --green-b:rgba(82,201,138,0.30);
-  --muted:#4A4860;
-  --r:14px; --sh:0 2px 20px rgba(0,0,0,0.35);
+  --gold:#C9A84C; --amber:#F5A623;
+  --coral:#E05C5C; --coral-d:rgba(224,92,92,0.12);
+  --green:#4ECB9A; --green-d:rgba(78,203,154,0.12);
+  --r:14px; --sh:0 2px 16px rgba(0,0,0,0.32);
 }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;
+  min-height:100dvh;overscroll-behavior:none;}
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  font-family: 'Poppins', sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  min-height: 100vh;
-  display: flex; flex-direction: column; align-items: center;
-  padding-bottom: 60px;
+/* ── Ready screen ── */
+#ready-screen {
+  position:fixed;inset:0;background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:40px 28px;text-align:center;gap:0;z-index:100;
 }
+#ready-screen.hidden{display:none;}
+.ready-title{font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:300;
+  color:var(--text);margin-bottom:10px;}
+.ready-title em{color:var(--teal);font-style:italic;}
+.ready-sub{font-size:16px;color:var(--text2);line-height:1.6;margin-bottom:28px;max-width:320px;}
+.ready-steps{display:flex;flex-direction:column;gap:10px;width:100%;max-width:340px;margin-bottom:28px;}
+.ready-step{display:flex;align-items:flex-start;gap:14px;background:var(--card);
+  border:1px solid var(--border2);border-radius:13px;padding:14px 16px;text-align:left;}
+.ready-step-icon{font-size:22px;flex-shrink:0;margin-top:1px;}
+.ready-step-title{font-size:14px;color:var(--text);font-weight:600;margin-bottom:3px;}
+.ready-step-desc{font-size:13px;color:var(--text3);line-height:1.55;}
+.ready-btn{width:100%;max-width:340px;padding:18px;background:var(--violet-deep);
+  color:#fff;border:none;border-radius:14px;
+  font-family:'Fredoka','DM Sans',sans-serif;font-size:18px;font-weight:600;cursor:pointer;}
 
-header {
-  width: 100%; background: var(--ink);
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 13px 26px;
-}
-.logo { font-size: 14px; font-weight: 700; color: #fff; letter-spacing: 0.03em; }
-.logo em { color: #F5C842; font-style: normal; }
-.ex-tag {
-  font-size: 11px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;
-  color: var(--teal-l); background: rgba(13,115,119,0.3);
-  border: 1px solid rgba(13,115,119,0.5); padding: 3px 11px; border-radius: 20px;
-}
-.hstats { display: flex; gap: 14px; }
-.hstat { font-size: 12px; color: rgba(255,255,255,0.45); display: flex; gap: 5px; align-items: center; }
-.hstat b { color: #F5C842; font-size: 13px; }
+/* ── Stage layout ── */
+.stage{display:none;flex-direction:column;position:fixed;inset:0;
+  background:var(--bg);z-index:10;}
+.stage.show{display:flex;}
 
-main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-direction: column; gap: 18px; }
+/* ── Stage header ── */
+.stage-header{padding:14px 20px 0;display:flex;align-items:center;
+  justify-content:space-between;flex-shrink:0;}
+.stage-label{font-size:13px;color:var(--text3);}
+.stage-step{font-size:13px;color:var(--teal);font-family:'Fredoka',sans-serif;}
 
-/* Stage progress */
-.stage-dots { display: flex; gap: 5px; }
-.sdot { flex: 1; height: 4px; border-radius: 2px; background: var(--bg2); transition: background 0.35s; }
-.sdot.done { background: var(--teal); }
-.sdot.active { background: var(--amber); }
+/* ── Progress bar ── */
+.prog-bar-wrap{height:3px;background:var(--border);flex-shrink:0;margin-top:10px;}
+.prog-bar-fill{height:100%;background:var(--teal);width:100%;transition:width linear;}
 
-/* Card shell */
-.card {
-  background: var(--card); border-radius: var(--r);
-  border: 1.5px solid var(--border2); box-shadow: var(--sh);
-  overflow: hidden; display: none;
-}
-.card.show { display: block; }
-#stage-0.show, #stage-1.show, #stage-2.show { min-height:100dvh; border-radius:0; border-left:none; border-right:none; border-top:none; display:flex; flex-direction:column; }
+/* ── Reading area ── */
+.reading-area{flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:28px 28px 16px;}
+.reading-text{font-family:'Cormorant Garamond',serif;font-size:26px;
+  line-height:1.65;color:var(--text);text-align:center;
+  max-width:520px;transition:opacity 0.6s ease;}
 
-.chead {
-  padding: 16px 22px 14px; border-bottom: 1.5px solid var(--border);
-  display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;
-}
-#stage-1 .chead, #stage-2 .chead, #stage-3 .chead { display:none; }
+/* ── Stage footer ── */
+.stage-footer{padding:16px 24px 36px;border-top:1px solid var(--border);flex-shrink:0;}
+.stage-hint{font-size:12px;color:var(--text3);text-align:center;margin-bottom:12px;}
+.btn-primary{width:100%;padding:17px;background:var(--violet-deep);color:#fff;
+  border:none;border-radius:14px;font-family:'Fredoka','DM Sans',sans-serif;
+  font-size:18px;font-weight:600;cursor:pointer;}
+.btn-ghost{padding:12px 20px;background:transparent;color:var(--text2);
+  border:1.5px solid var(--border2);border-radius:12px;
+  font-family:'DM Sans',sans-serif;font-size:15px;cursor:pointer;}
 
-.ctitle { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
-.csub { font-size: 12px; color: var(--ink2); line-height: 1.55; max-width: 380px; }
-.cpills { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
-.pill { font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; padding: 2px 8px; border-radius: 20px; }
-.pt { background: var(--teal-l); color: var(--teal); }
-.pa { background: var(--amber-l); color: var(--amber); }
-.pp { background: var(--purple-l); color: var(--purple); }
-.pc { background: var(--coral-l); color: var(--coral); }
+/* ── Comprehension question ── */
+.q-screen{flex:1;display:flex;flex-direction:column;
+  justify-content:center;padding:28px 24px;gap:20px;}
+.q-text{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;
+  color:var(--text);line-height:1.5;text-align:center;}
+.q-opts{display:flex;flex-direction:column;gap:10px;}
+.q-opt{padding:15px 18px;border-radius:13px;border:1.5px solid var(--border2);
+  background:var(--card);font-size:16px;color:var(--text2);
+  cursor:pointer;transition:all 0.12s;}
+.q-opt.correct{border-color:var(--teal-b);background:var(--teal-d);color:var(--teal);}
+.q-opt.wrong{border-color:rgba(224,92,92,0.3);background:var(--coral-d);color:var(--coral);}
+.q-opt.locked{pointer-events:none;}
+.q-feedback{font-size:14px;color:var(--text3);text-align:center;min-height:18px;}
 
-.clive { text-align: right; flex-shrink: 0; }
-.clive .cv { font-size: 24px; font-weight: 700; color: var(--teal); font-variant-numeric: tabular-nums; line-height: 1; }
-.clive .cl { font-size: 10px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 2px; }
+/* ── Results ── */
+.results-area{flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:28px 24px;gap:16px;}
+.result-wpm{font-family:'Cormorant Garamond',serif;font-size:72px;font-weight:300;
+  color:var(--teal);line-height:1;}
+.result-wpm-label{font-size:13px;color:var(--text3);text-transform:uppercase;
+  letter-spacing:0.10em;margin-top:4px;}
+.result-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:340px;}
+.result-card{background:var(--card);border:1px solid var(--border2);border-radius:13px;
+  padding:14px;text-align:center;}
+.result-card-val{font-size:24px;font-weight:600;font-family:'Fredoka',sans-serif;}
+.result-card-lbl{font-size:11px;color:var(--text3);text-transform:uppercase;
+  letter-spacing:0.08em;margin-top:3px;}
+.result-insight{background:var(--violet-d);border:1px solid var(--violet-b);
+  border-radius:13px;padding:16px;font-size:14px;color:var(--text2);
+  line-height:1.65;width:100%;max-width:340px;}
+.result-btns{display:flex;gap:10px;width:100%;max-width:340px;}
 
-.prog-bar { height: 3px; background: var(--bg2); }
-.prog-fill { height: 100%; transition: width 0.4s ease, background 0.3s; }
-
-/* Buttons */
-.btn {
-  font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 600;
-  padding: 9px 18px; border-radius: 10px; border: none; cursor: pointer;
-  letter-spacing: 0.02em; transition: all 0.15s;
-}
-.btn-ink { background: var(--violet-deep); color: #fff; border:none; }
-.btn-ink:hover { background: var(--purple); }
-.btn-teal { background:var(--violet-deep); color:#fff; border:none; }
-.btn-teal:hover { opacity: 0.88; }
-.btn-ghost { background: transparent; color: var(--ink2); border: 1.5px solid var(--border2); }
-.btn-ghost:hover { border-color: var(--ink); color: var(--ink); }
-.btn-sm { padding: 7px 13px; font-size: 12px; }
-
-.cfooter { padding:14px 20px 28px; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:auto; }
-
-/* ════════════════
-   STAGE 0: Calibration
-   ════════════════ */
-.calib-intro { padding: 22px 24px; }
-.calib-intro p { font-size: 14px; color: var(--ink2); line-height: 1.7; margin-bottom: 14px; }
-.calib-intro strong { color: var(--ink); }
-
-.calib-text-area { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:16px 24px; gap:20px; }
-.calib-sentence {
-  font-family: 'Poppins', sans-serif;
-  font-size: 32px; line-height: 1.4; color: var(--text);
-  text-align: center; padding: 0 24px; width: 100%;
-}
-.calib-q { font-size: 17px; color: var(--text); font-weight: 600; margin-bottom: 14px; line-height: 1.5; text-align: center; }
-.calib-q strong { color: var(--ink); }
-.calib-opts { display: flex; flex-direction: column; gap: 10px; width: 100%; }
-.copt { padding:14px 18px; font-size:16px; background:var(--card2); border:1px solid var(--border2); border-radius:12px; color:var(--text2); cursor:pointer; text-align:center; }
-.copt:hover { border-color: var(--border2); color: var(--text); background: var(--card); }
-.copt.c-correct { border-color: var(--teal); background: var(--teal-m); color: var(--teal); pointer-events: none; }
-.copt.c-wrong { border-color: var(--coral); background: var(--coral-m); color: var(--coral); pointer-events: none; }
-.copt.c-locked { pointer-events: none; opacity: 0.45; }
-
-/* ════════════════
-   STAGE 1: Reading + fading
-   ════════════════ */
-.reading-area { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:16px 24px; gap:16px; }
-
-.sentence-display {
-  font-family: 'Poppins', sans-serif;
-  font-size: 32px; line-height: 1.4; color: var(--text);
-  text-align: center; padding: 0 24px; width: 100%;
-}
-
-/* Fading overlay — left-to-right masking */
-.fade-overlay {
-  position: absolute; top: 0; left: 0;
-  height: 100%; width: 0%;
-  background: var(--card);
-  transition: none;
-  pointer-events: none;
-}
-
-/* Word-level fading */
-.word-span {
-  display: inline;
-  transition: opacity 0.15s;
-}
-.word-span.faded { opacity: 0; }
-
-.sentence-meta {
-  display: flex; justify-content: space-between; align-items: center;
-  margin-top: 12px;
-}
-.sent-counter { font-size: 12px; color: var(--muted); letter-spacing: 0.04em; }
-.rate-badge {
-  font-size: 11px; font-weight: 700; color: var(--teal);
-  background: var(--teal-m); border: 1px solid rgba(13,115,119,0.2);
-  padding: 3px 9px; border-radius: 20px;
-}
-
-/* Mode tabs */
-.mode-row { display: flex; gap: 7px; padding: 14px 22px 0; }
-.mtab {
-  flex: 1; padding: 8px; border-radius: 9px;
-  border: 1.5px solid var(--border2); background: var(--card2);
-  font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
-  color: var(--muted); cursor: pointer; text-align: center; transition: all 0.15s;
-}
-.mtab:hover { border-color: var(--amber); color: var(--amber); }
-.mtab.mactive { background: var(--amber-m); border-color: var(--amber); color: var(--amber); }
-
-/* ════════════════
-   STAGE 2: Comprehension Q
-   ════════════════ */
-.q-area { padding: 20px 24px; display: flex; flex-direction: column; gap: 12px; }
-.q-label { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
-.q-text { font-size: 15px; line-height: 1.55; color: var(--ink); }
-.q-opts { display: flex; flex-direction: column; gap: 7px; }
-.qopt {
-  padding: 11px 15px; border-radius: 9px;
-  border: 1.5px solid var(--border2); background: var(--card2);
-  font-size: 14px; font-family: 'Poppins', sans-serif;
-  color: var(--ink2); cursor: pointer; transition: all 0.13s;
-}
-.qopt:hover { border-color:var(--border2);color:var(--text);background:var(--card); }
-.qopt.q-correct { border-color: var(--teal); background: var(--teal-m); color: var(--teal); pointer-events: none; }
-.qopt.q-wrong { border-color: var(--coral); background: var(--coral-m); color: var(--coral); pointer-events: none; }
-.qopt.q-locked { pointer-events: none; opacity: 0.4; }
-
-.q-fb { display: none; padding: 11px 14px; border-radius: 9px; font-size: 13px; line-height: 1.6; margin-top: 4px; }
-.q-fb.show { display: block; }
-.q-fb.good { background: var(--teal-m); border: 1px solid rgba(13,115,119,0.2); color: var(--teal); }
-.q-fb.bad { background: var(--coral-m); border: 1px solid rgba(185,28,28,0.2); color: var(--coral); }
-
-/* ════════════════
-   STAGE 3: Results
-   ════════════════ */
-.results-inner { padding: 28px 24px; display: flex; flex-direction: column; gap: 16px; }
-.res-top { display: flex; gap: 12px; }
-.res-big {
-  flex: 1; background: var(--card2); border: 1.5px solid var(--border); border-radius: 12px;
-  padding: 16px 14px; text-align: center;
-}
-.res-big .rv { font-size: 38px; font-weight: 300; color: var(--teal); line-height: 1; }
-.res-big .rl { font-size: 11px; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; margin-top: 4px; }
-.res-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.rg {
-  background: var(--card2); border: 1.5px solid var(--border); border-radius: 11px;
-  padding: 12px 10px; text-align: center;
-}
-.rg .rv { font-size: 20px; font-weight: 700; color: var(--ink); }
-.rg .rl { font-size: 10px; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; margin-top: 2px; }
-
-.insight {
-  padding: 14px 16px; border-radius: 11px;
-  background: var(--purple-m); border: 1.5px solid rgba(91,33,182,0.15);
-  font-size: 13px; color: var(--ink2); line-height: 1.65;
-}
-.insight strong { color: var(--purple); }
-.res-btns { display: flex; gap: 10px; justify-content: center; }
-
-/* Adaptation indicator */
-.adapt-banner {
-  display: none; padding: 8px 16px; margin: 0 22px 12px;
-  border-radius: 9px; font-size: 12px; font-weight: 600; text-align: center;
-}
-.adapt-banner.faster { background: var(--teal-m); color: var(--teal); border: 1px solid rgba(13,115,119,0.2); display: block; }
-.adapt-banner.slower { background: var(--coral-m); color: var(--coral); border: 1px solid rgba(185,28,28,0.2); display: block; }
-.adapt-banner.hold { background: var(--amber-m); color: var(--amber); border: 1px solid rgba(193,125,14,0.2); display: block; }
-
-/* Science note */
-.sci {
-  background: var(--card); border: 1.5px solid var(--border2); border-radius: var(--r);
-  padding: 16px 20px; font-size: 12px; color: var(--ink2); line-height: 1.7;
-  box-shadow: var(--sh);
-}
-.sci-hd { font-size: 10px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
-
-/* ═══════════════════════════════════════
-   MOBILE RESPONSIVENESS — applied globally
-   ═══════════════════════════════════════ */
-@media (max-width: 640px) {
-  /* Base text scale up */
-  body { font-size: 16px; }
-
-  /* Header: hide XP bar and secondary stats on very small screens */
-  .xp-bar-wrap { display: none !important; }
-  header { padding: 12px 16px !important; }
-
-  /* Main container: full bleed with comfortable padding */
-  main { padding: 16px 12px 0 !important; gap: 14px !important; }
-
-  /* Cards: reduce padding so content breathes */
-  .chead, .card-top { padding: 14px 16px 12px !important; }
-  .ctitle, .card-title { font-size: 17px !important; }
-  .csub, .card-sub { font-size: 14px !important; }
-
-  /* Controls grid: single column on mobile */
-  .controls-grid { grid-template-columns: 1fr !important; padding: 14px 16px !important; }
-
-  /* Question options: bigger tap targets */
-  .q-opt, .qopt, .copt, .ropt { 
-    padding: 14px 16px !important; 
-    font-size: 15px !important; 
-    min-height: 48px !important;
-  }
-
-  /* RSVP word: bigger on mobile */
-  .rsvp-pre, .rsvp-focal, .rsvp-post, .rsvp-word-full { font-size: 36px !important; }
-  .rsvp-phrase { font-size: 22px !important; line-height: 1.4 !important; }
-  .rsvp-viewport { height: 180px !important; padding: 0 16px !important; }
-
-  /* Buttons: full width on mobile where stacked */
-  .cfooter, .q-footer, .drill-footer { 
-    padding: 12px 14px !important; 
-    flex-wrap: wrap !important; 
-    gap: 8px !important;
-  }
-  .btn { font-size: 14px !important; padding: 11px 16px !important; min-height: 44px !important; }
-  .btn-sm { font-size: 13px !important; padding: 10px 14px !important; }
-  .start-btn { font-size: 16px !important; padding: 16px !important; }
-
-  /* Memory slots: 2 col max */
-  .memory-slots { grid-template-columns: 1fr 1fr !important; }
-
-  /* Recall grid: single col on narrow phones */
-  .recall-grid { grid-template-columns: 1fr !important; }
-
-  /* Word flash display */
-  .word-big { font-size: 34px !important; }
-  .mem-item { font-size: 38px !important; }
-
-  /* n-back grid cells */
-  .vis-grid { width: 192px !important; gap: 6px !important; }
-  .cell { width: 56px !important; height: 56px !important; }
-
-  /* Letter display */
-  .letter-display { font-size: 42px !important; }
-
-  /* Mode/tab grids */
-  .mode-grid { grid-template-columns: 1fr !important; }
-  .mode-tabs { grid-template-columns: 1fr !important; }
-  .task-tabs { grid-template-columns: 1fr !important; }
-
-  /* Pillar section padding on index */
-  .pillar, .section-label, .divider { padding-left: 16px !important; padding-right: 16px !important; }
-
-  /* Results boxes */
-  .res-top, .res-grid { gap: 8px !important; }
-  .res-box .rv, .res-big .rv { font-size: 32px !important; }
-
-  /* Sentence display in Contrarreloj */
-  .sentence-display {
-  font-family: 'Poppins', sans-serif;
-  font-size: 32px; line-height: 1.4; color: var(--text);
-  text-align: center; padding: 0 24px; width: 100%;
-}
-  .reading-area { padding: 18px 16px 14px !important; }
-
-  /* Recall slots in Memoria Activa */
-  .recall-slot { min-width: 44px !important; height: 46px !important; font-size: 12px !important; }
-  .recall-area { padding: 14px 14px 16px !important; }
-  .keyboard { gap: 5px !important; }
-  .key { padding: 10px 5px !important; font-size: 14px !important; }
-
-  /* Equation display */
-  .equation-display { font-size: 26px !important; }
-
-  /* Sent display in Contrarreloj */
-  .sent-display { font-size: 18px !important; }
-
-  /* Tutorial steps */
-  .tut-body { padding: 14px 16px !important; font-size: 14px !important; }
-  .tut-footer { padding: 12px 16px !important; }
-  .tut-head { padding: 10px 16px !important; }
-
-  /* Stats header: smaller */
-  .hstats { gap: 10px !important; }
-  .hstat { font-size: 11px !important; }
-  .hstat b { font-size: 12px !important; }
-
-  /* Science note collapsible */
-  .sci-toggle-btn { font-size: 13px !important; }
-}
-
-/* Collapsible science note */
-.sci-details {
-  background: var(--card, #fff);
-  border: 1.5px solid var(--border2, rgba(0,0,0,0.12));
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-}
-.sci-details summary {
-  padding: 13px 18px;
-  font-size: 13px; font-weight: 700;
-  cursor: pointer; list-style: none;
-  display: flex; align-items: center; justify-content: space-between;
-  color: var(--muted, #888); letter-spacing: 0.03em;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-}
-.sci-details summary::-webkit-details-marker { display: none; }
-.sci-details summary::after {
-  content: '▸';
-  font-size: 11px; transition: transform 0.2s;
-  color: var(--muted, #888);
-}
-.sci-details[open] summary::after { transform: rotate(90deg); }
-.sci-details[open] summary {
-  border-bottom: 1.5px solid var(--border, rgba(0,0,0,0.08));
-}
-.sci-details-body {
-  padding: 14px 18px 16px;
-  font-size: 13px; color:var(--text); line-height: 1.7;
-}
-@media (max-width: 640px) {
-  .sci-details summary { font-size: 14px !important; padding: 14px 16px !important; }
-  .sci-details-body { font-size: 14px !important; padding: 14px 16px 16px !important; }
-}
-
-body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.4;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");}
-
-/* ── Shared design system classes ── */
-.logo{font-family:'Poppins',sans-serif;font-size:20px;font-weight:300;color:var(--text);letter-spacing:-0.01em;}
-.logo em{color:var(--gold);font-style:italic;}
-.hdr-back{font-size:12px;color:var(--text3);text-decoration:none;display:flex;align-items:center;gap:4px;transition:color 0.15s;}
-.hdr-back:hover{color:var(--text2);}
-.hdr-ex-name{font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);}
-.hdr-stat{font-size:12px;color:var(--text3);display:flex;align-items:center;gap:5px;}
-.hdr-stat b{color:var(--teal);font-size:13px;}
-.instr-banner{background:var(--teal-d);border-bottom:1px solid var(--teal-b);padding:14px 20px;display:flex;align-items:flex-start;gap:12px;}
-.instr-icon{font-size:20px;flex-shrink:0;margin-top:1px;}
-.instr-text{font-size:14px;color:var(--text2);line-height:1.65;}
-.instr-text strong{color:var(--text);font-weight:600;}
-.card-title-serif{font-family:'Poppins',sans-serif;font-size:24px;font-weight:300;color:var(--text);line-height:1.1;margin-bottom:4px;}
-.sci-details{background:var(--card);border:1px solid var(--border2);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;}
-.sci-details summary{padding:13px 18px;font-size:12px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--text3);cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;-webkit-tap-highlight-color:transparent;}
-.sci-details summary::-webkit-details-marker{display:none;}
-.sci-details summary::after{content:'▸';font-size:10px;transition:transform 0.2s;color:var(--text3);}
-.sci-details[open] summary::after{transform:rotate(90deg);}
-.sci-details[open] summary{border-bottom:1px solid var(--border);}
-.sci-body,.sci-details-body{padding:14px 18px 16px;font-size:13px;color:var(--text2);line-height:1.7;}
-.sci-body strong,.sci-details-body strong{color:var(--text);}
-
-
-/* ── Ready Screen ── */
-.ready-screen {
-  position:fixed; inset:0; z-index:200;
-  background:var(--bg);
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  padding:32px 24px; text-align:center;
-  overflow:hidden;
-}
-.ready-screen.hidden { display:none; }
-.ready-screen::before {
-  content:''; position:absolute; inset:0; pointer-events:none; z-index:0; opacity:0.4;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
-}
-.ready-inner{display:flex;flex-direction:column;align-items:center;width:100%;max-width:400px;padding:12px 0 8px;text-align:center;}
-@keyframes rdyUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-.ready-logo{font-family:'Fredoka',sans-serif;font-size:14px;font-weight:600;color:var(--text3);letter-spacing:0.02em;margin-bottom:16px;text-align:center;}
-.ready-logo em{color:var(--violet);font-style:italic;}
-.ready-title {
-  font-family:'Poppins',sans-serif;
-  font-size:clamp(32px,8vw,48px); font-weight:300;
-  color:var(--text); line-height:1.1; margin-bottom:12px;
-}
-.ready-title em { color:var(--teal); font-style:italic; }
-.ready-sub{font-size:17px;color:var(--text2);line-height:1.6;text-align:center;margin-bottom:24px;max-width:320px;}
-.ready-sub strong { color:var(--text); font-weight:600; }
-
-/* Animation preview box */
-.ready-preview {
-  width:100%; max-width:340px;
-  background:var(--card); border:1px solid var(--border2);
-  border-radius:16px; overflow:hidden;
-  margin-bottom:28px; min-height:110px;
-  display:flex; align-items:center; justify-content:center;
-  position:relative;
-}
-.preview-label {
-  position:absolute; top:10px; left:14px;
-  font-size:10px; font-weight:700; letter-spacing:0.10em;
-  text-transform:uppercase; color:var(--text3);
-}
-.preview-inner {
-  padding:20px 24px; width:100%;
-  display:flex; align-items:center; justify-content:center;
-}
-
-
-.ready-step-text strong { color:var(--text); font-weight:600; }
-
-.ready-btn {
-  width:100%; padding:17px;
-  background:var(--teal); color:var(--bg);
-  border:none; border-radius:13px; cursor:pointer;
-  font-family:'Poppins',sans-serif;
-  font-size:17px; font-weight:700; letter-spacing:0.02em;
-  transition:all 0.2s; -webkit-tap-highlight-color:transparent;
-  margin-bottom:14px;
-}
-.ready-btn:hover { opacity:0.88; transform:translateY(-1px); }
-.ready-btn:active { transform:translateY(0); }
-.ready-hint {
-  font-size:13px; color:var(--text3); line-height:1.5;
-}
-
-@media(max-width:600px) {
-  .ready-screen { padding:24px 16px; }
-  .ready-title { font-size:34px; }
-  .ready-sub { font-size:16px; }
-  .ready-steps { flex-direction:column; gap:8px; }
-  .ready-btn { font-size:16px; padding:16px; }
-}
-
-
-/* ── Brand logo ── */
-.logo, .brand-name {
-  font-family: 'Fredoka', 'Poppins', sans-serif;
-  font-size: 20px; font-weight: 600;
-  color: var(--text); letter-spacing: -0.01em;
-  display: flex; align-items: center;
-}
-.logo em, .brand-name em {
-  color: var(--violet); font-style: italic;
-}
-/* ── Primary button — violet ── */
-.btn-teal, .ready-btn {
-  background: var(--violet-deep) !important;
-  color: #fff !important;
-}
-.btn-teal:hover, .ready-btn:hover {
-  background: var(--violet) !important;
-  opacity: 1 !important;
-}
-/* Keep teal for success/feedback states */
-.btn-teal.btn-success { background: var(--teal) !important; }
-
-
-/* Session next button — shown only during session flow */
-.session-next-btn {
-  display: none;
-  width: 100%;
-  padding: 16px;
-  background: var(--violet-deep);
-  color: #fff;
-  border: none;
-  border-radius: 13px;
-  font-family: 'Fredoka', 'Poppins', sans-serif;
-  font-size: 17px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-top: 10px;
-  -webkit-tap-highlight-color: transparent;
-}
-.session-next-btn:hover { background: var(--violet); }
-
+/* ── Sci foldable ── */
+.sci-details.session-hide{display:none;}
 </style>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<main>
-<div class="ready-screen" id="ready-screen">
-  <div class="ready-inner">
-    <div class="ready-title"><em>Contra</em>reloj</div>
-    <div class="ready-sub">Las oraciones aparecen y se desvanecen mientras lees — tienes que terminar antes de que desaparezcan.</div>
-    <div id="rdy-calib-note" style="width:100%;margin-bottom:24px;">
-      <div style="font-size:15px;color:var(--text3);line-height:1.65;text-align:center;" id="rdy-calib-desc">Antes de empezar, mediremos tu ritmo de lectura natural. Solo tardará un momento.</div>
+<!-- ═══════════════════════════════════════ -->
+<!-- READY SCREEN                            -->
+<!-- ═══════════════════════════════════════ -->
+<div id="ready-screen">
+  <div class="ready-title">Lectura <em>Adaptativa</em></div>
+  <div class="ready-sub">Dos párrafos. El primero a tu ritmo — el segundo contra el tiempo. Una pregunta al final de cada uno.</div>
+  <div class="ready-steps">
+    <div class="ready-step">
+      <div class="ready-step-icon">📖</div>
+      <div>
+        <div class="ready-step-title">Lee a tu ritmo</div>
+        <div class="ready-step-desc">Toca <strong>Listo</strong> al terminar.</div>
+      </div>
     </div>
-    <button class="ready-btn" onclick="dismissReady()">▶ Empecemos</button>
+    <div class="ready-step">
+      <div class="ready-step-icon">⏱</div>
+      <div>
+        <div class="ready-step-title">Lee antes de que desaparezca</div>
+        <div class="ready-step-desc">El texto se desvanece — lee con atención.</div>
+      </div>
+    </div>
+  </div>
+  <button class="ready-btn" onclick="dismissReady()">▶ Empecemos</button>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- STAGE 0: Baseline read (free pace)      -->
+<!-- ═══════════════════════════════════════ -->
+<div class="stage" id="stage-0">
+  <div class="stage-header">
+    <div class="stage-label">Lee a tu ritmo natural</div>
+    <div class="stage-step">Párrafo 1 de 2</div>
+  </div>
+  <div class="prog-bar-wrap"><div class="prog-bar-fill" id="pb0" style="display:none"></div></div>
+  <div class="reading-area">
+    <div class="reading-text" id="text-0"></div>
+  </div>
+  <div class="stage-footer">
+    <div class="stage-hint">Lee con atención — habrá una pregunta</div>
+    <button class="btn-primary" id="listo-0" onclick="finishBaseline()">Listo →</button>
   </div>
 </div>
-<script>function dismissReady(){
-  document.getElementById('ready-screen').classList.add('hidden');
-  const saved = localStorage.getItem('em_contra_wpm');
-  if(saved){
-    const savedWpm = parseInt(saved);
-    baseRateMs = Math.round(60000 / (savedWpm * 5));
-    currentRate = baseRateMs;
-    const hr = document.getElementById('hdr-rate');
-    if(hr) hr.textContent = baseRateMs + 'ms/c';
-    setStage(1);
-    startTraining();
-  } else {
-    setStage(0);
-    startCalib();
+
+<!-- ═══════════════════════════════════════ -->
+<!-- STAGE 1: Baseline question              -->
+<!-- ═══════════════════════════════════════ -->
+<div class="stage" id="stage-1">
+  <div class="stage-header">
+    <div class="stage-label">Comprensión</div>
+    <div class="stage-step">Párrafo 1</div>
+  </div>
+  <div class="prog-bar-wrap"></div>
+  <div class="q-screen">
+    <div class="q-text" id="q-text-0"></div>
+    <div class="q-opts" id="q-opts-0"></div>
+    <div class="q-feedback" id="q-fb-0"></div>
+  </div>
+  <div class="stage-footer">
+    <button class="btn-primary" id="next-1" onclick="setStage(2)" style="display:none">Siguiente →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- STAGE 1b: Timed intro                   -->
+<!-- ═══════════════════════════════════════ -->
+<div class="stage" id="stage-1b">
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;padding:40px 28px;text-align:center;gap:20px;">
+    <div style="font-size:48px;">⏱</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:34px;
+      font-weight:300;color:var(--text);">Ahora <em style="color:var(--teal)">contra el tiempo</em></div>
+    <div style="font-size:16px;color:var(--text2);line-height:1.7;max-width:300px;">
+      Leerás un segundo párrafo. El texto se irá <strong style="color:var(--text);">desvaneciendo</strong> 
+      mientras lees — termina antes de que desaparezca.
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border2);border-radius:12px;
+      padding:14px 20px;font-size:14px;color:var(--text3);max-width:300px;line-height:1.6;">
+      No hay barra visible — el texto mismo es el reloj.
+    </div>
+  </div>
+  <div class="stage-footer">
+    <button class="btn-primary" onclick="startTimed()">Estoy listo →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- STAGE 2: Timed read                     -->
+<!-- ═══════════════════════════════════════ -->
+<div class="stage" id="stage-2">
+  <div class="stage-header">
+    <div class="stage-label" id="stage2-label">Lee antes de que desaparezca</div>
+    <div class="stage-step">Párrafo 2 de 2</div>
+  </div>
+  <div class="prog-bar-wrap" style="display:none"><div class="prog-bar-fill" id="pb2"></div></div>
+  <div class="reading-area">
+    <div class="reading-text" id="text-2"></div>
+  </div>
+  <div class="stage-footer">
+    <div class="stage-hint" id="hint-2">La barra marca el tiempo — lee con atención</div>
+    <button class="btn-primary" id="listo-2" onclick="finishTimed()" style="display:none">Listo →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- STAGE 3: Timed question                 -->
+<!-- ═══════════════════════════════════════ -->
+<div class="stage" id="stage-3">
+  <div class="stage-header">
+    <div class="stage-label">Comprensión</div>
+    <div class="stage-step">Párrafo 2</div>
+  </div>
+  <div class="prog-bar-wrap"></div>
+  <div class="q-screen">
+    <div class="q-text" id="q-text-2"></div>
+    <div class="q-opts" id="q-opts-2"></div>
+    <div class="q-feedback" id="q-fb-2"></div>
+  </div>
+  <div class="stage-footer">
+    <button class="btn-primary" id="next-3" onclick="showResults()" style="display:none">Ver resultados →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- STAGE 4: Results                        -->
+<!-- ═══════════════════════════════════════ -->
+<div class="stage" id="stage-4">
+  <div class="stage-header">
+    <div class="stage-label">Resultados</div>
+    <div class="stage-step"></div>
+  </div>
+  <div class="prog-bar-wrap"></div>
+  <div class="results-area">
+    <div>
+      <div class="result-wpm" id="result-wpm">—</div>
+      <div class="result-wpm-label">palabras por minuto</div>
+    </div>
+    <div class="result-cards">
+      <div class="result-card">
+        <div class="result-card-val" id="r-comp" style="color:var(--teal)">—</div>
+        <div class="result-card-lbl">Comprensión</div>
+      </div>
+      <div class="result-card">
+        <div class="result-card-val" id="r-delta" style="color:var(--violet)">—</div>
+        <div class="result-card-lbl">vs. anterior</div>
+      </div>
+    </div>
+    <div class="result-insight" id="result-insight"></div>
+    <div class="result-btns">
+      <button class="btn-ghost" onclick="restartExercise()">← Nuevo texto</button>
+      <button class="btn-primary session-next-btn" onclick="completeAndContinue()" style="display:none;flex:1;">Siguiente →</button>
+      <button class="btn-primary" id="repeat-btn" onclick="restartExercise()" style="flex:1;">Repetir →</button>
+    </div>
+  </div>
+</div>
+
+<!-- EntrenaMente wordmark -->
+<div style="position:fixed;bottom:0;left:0;right:0;z-index:40;display:flex;
+  justify-content:center;align-items:center;padding:10px 20px 20px;pointer-events:none;">
+  <a href="index.html" style="font-family:'Fredoka',sans-serif;font-size:14px;font-weight:600;
+    color:var(--text3);letter-spacing:-0.01em;text-decoration:none;pointer-events:all;
+    opacity:0.6;transition:opacity 0.2s;"
+    onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">
+    Entrena<em style="color:var(--violet);font-style:italic;">Mente</em>
+  </a>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// Text pool — 8 paragraph pairs (A = free read, B = timed)
+// Each pair shares a theme; B is slightly harder/longer
+// ─────────────────────────────────────────────
+const PAIRS = [
+  {
+    a: {
+      text: "El sueño no es un estado de reposo pasivo, sino un proceso activo en el que el cerebro consolida recuerdos, elimina toxinas y reorganiza conexiones neuronales. Durante el sueño profundo, el hipocampo transfiere información a la corteza cerebral para su almacenamiento a largo plazo. Dormir menos de siete horas de forma sostenida reduce significativamente la capacidad de aprender y recordar.",
+      q: "¿Qué hace el cerebro durante el sueño profundo?",
+      opts: ["Descansa por completo sin actividad","Transfiere recuerdos al almacenamiento a largo plazo","Produce hormonas de crecimiento exclusivamente","Regula la temperatura corporal"],
+      correct: 1
+    },
+    b: {
+      text: "La privación crónica de sueño no solo deteriora la memoria, sino que altera la regulación emocional, reduce la velocidad de procesamiento y aumenta el riesgo de enfermedades cardiovasculares. El sistema glinfático, activo principalmente durante el sueño, elimina proteínas tóxicas asociadas al Alzheimer. La cultura que glorifica dormir poco como señal de productividad contradice décadas de evidencia científica.",
+      q: "¿Qué sistema elimina toxinas cerebrales durante el sueño?",
+      opts: ["El sistema linfático periférico","El sistema inmunológico","El sistema glinfático","El sistema nervioso autónomo"],
+      correct: 2
+    }
+  },
+  {
+    a: {
+      text: "La atención sostenida es una de las capacidades cognitivas más afectadas por el uso intensivo de tecnología digital. Las plataformas están diseñadas para maximizar el tiempo de pantalla mediante recompensas variables que activan el sistema dopaminérgico, creando patrones similares a los de la dependencia. El resultado es un cerebro entrenado para buscar novedad constante en lugar de profundidad.",
+      q: "¿Cómo afectan las plataformas digitales al sistema dopaminérgico?",
+      opts: ["Lo desactivan progresivamente","Lo estimulan con recompensas variables","No tienen ningún efecto sobre él","Lo regulan de forma positiva"],
+      correct: 1
+    },
+    b: {
+      text: "Recuperar la capacidad de atención sostenida requiere práctica deliberada: períodos de trabajo profundo sin interrupciones, lectura de textos largos y reducción consciente del consumo de contenido fragmentado. La neuroplasticidad garantiza que estos cambios son posibles a cualquier edad. Sin embargo, el entorno digital hace que el esfuerzo sea constante — la atención profunda no se recupera pasivamente.",
+      q: "¿Qué garantiza que la atención puede recuperarse a cualquier edad?",
+      opts: ["El sistema inmunológico","La neuroplasticidad","La reducción del estrés","El descanso suficiente"],
+      correct: 1
+    }
+  },
+  {
+    a: {
+      text: "Las ciudades concentran más de la mitad de la población mundial y generan cerca del setenta por ciento de las emisiones globales de dióxido de carbono. Esta paradoja convierte al urbanismo en una de las disciplinas más críticas del siglo veintiuno. Rediseñar las ciudades para priorizar el transporte público, los espacios verdes y la densidad compacta puede reducir drásticamente la huella ambiental sin sacrificar calidad de vida.",
+      q: "¿Qué porcentaje de emisiones globales generan las ciudades?",
+      opts: ["Cerca del treinta por ciento","Cerca del cincuenta por ciento","Cerca del setenta por ciento","Cerca del noventa por ciento"],
+      correct: 2
+    },
+    b: {
+      text: "El concepto de ciudad de quince minutos propone que todos los servicios esenciales — trabajo, educación, salud, comercio y ocio — estén accesibles a pie o en bicicleta desde cualquier punto de la ciudad. Este modelo reduce la dependencia del automóvil, disminuye las emisiones y fortalece el tejido social de los barrios. Ciudades como París y Bogotá han comenzado a implementarlo con resultados prometedores.",
+      q: "¿Qué propone el modelo de ciudad de quince minutos?",
+      opts: ["Limitar el acceso a vehículos privados","Concentrar servicios en zonas específicas","Hacer accesibles todos los servicios a pie desde cualquier punto","Reducir la densidad urbana"],
+      correct: 2
+    }
+  },
+  {
+    a: {
+      text: "El microbioma intestinal, compuesto por billones de microorganismos, influye directamente en el estado de ánimo, la cognición y el sistema inmunológico. La comunicación entre el intestino y el cerebro ocurre a través del nervio vago y de neurotransmisores como la serotonina, de la cual se estima que el noventa por ciento se produce en el intestino. Una alimentación variada y rica en fibra favorece la diversidad microbiana y el bienestar mental.",
+      q: "¿Dónde se produce la mayor parte de la serotonina?",
+      opts: ["En el cerebro","En el hígado","En el intestino","En el sistema linfático"],
+      correct: 2
+    },
+    b: {
+      text: "Los estudios más recientes asocian la baja diversidad del microbioma con trastornos como la depresión, la ansiedad y el deterioro cognitivo. Los antibióticos, el estrés crónico y la alimentación ultraprocesada reducen significativamente esta diversidad. La psicobiótica — el uso terapéutico de probióticos y prebióticos — emerge como un campo prometedor, aunque la mayoría de las relaciones de causalidad aún están bajo investigación.",
+      q: "¿Qué es la psicobiótica?",
+      opts: ["Una disciplina de psicología conductual","El uso terapéutico de probióticos y prebióticos","Un tipo de terapia cognitiva","Un método de análisis del microbioma"],
+      correct: 1
+    }
+  },
+  {
+    a: {
+      text: "La creatividad no es un rasgo innato reservado a unos pocos, sino una capacidad cognitiva que puede desarrollarse con práctica. Implica la generación de conexiones novedosas entre conceptos aparentemente no relacionados, y depende de la interacción entre la red de control ejecutivo y la red por defecto del cerebro. El descanso, el aburrimiento y la exposición a ideas diversas son condiciones que la favorecen.",
+      q: "¿De qué depende la creatividad según el texto?",
+      opts: ["De la inteligencia innata del individuo","De la interacción entre dos redes cerebrales","Del nivel educativo alcanzado","De la práctica de artes visuales"],
+      correct: 1
+    },
+    b: {
+      text: "El estado de flujo — esa sensación de inmersión total en una actividad desafiante — es una de las condiciones más propicias para la creatividad y el alto rendimiento cognitivo. Se produce cuando el nivel de dificultad de la tarea supera ligeramente las capacidades del individuo, activando una concentración profunda sin ansiedad. Diseñar tareas en esa zona de desafío óptimo es uno de los principios más sólidos del aprendizaje eficaz.",
+      q: "¿Cuándo se produce el estado de flujo?",
+      opts: ["Cuando la tarea es muy fácil y relajante","Cuando la dificultad supera ligeramente las capacidades","Cuando el individuo tiene experiencia previa suficiente","Cuando no hay distracciones externas"],
+      correct: 1
+    }
+  },
+  {
+    a: {
+      text: "La migración es tan antigua como la especie humana, y durante milenios fue la principal estrategia de adaptación y supervivencia. Hoy, más de doscientos ochenta millones de personas viven fuera de su país de nacimiento. Los debates públicos sobre migración suelen ignorar la dimensión más íntima del fenómeno: la negociación constante de identidad que vive quien pertenece a más de un lugar y a ninguno del todo.",
+      q: "¿Cuántas personas viven fuera de su país de nacimiento?",
+      opts: ["Más de cien millones","Más de doscientos millones","Más de doscientos ochenta millones","Más de trescientos millones"],
+      correct: 2
+    },
+    b: {
+      text: "Los migrantes de segunda generación — nacidos en el país de acogida de padres extranjeros — enfrentan una tensión identitaria particular: son considerados extranjeros en el país de sus padres y no del todo locales en el suyo. Esta posición liminal puede ser fuente de conflicto, pero también de una perspectiva única que enriquece las sociedades que saben acogerla. La investigación muestra que las comunidades más diversas son también las más innovadoras.",
+      q: "¿Qué muestra la investigación sobre comunidades diversas?",
+      opts: ["Son más propensas al conflicto social","Son más innovadoras","Tienen mayor dificultad para integrarse","Requieren más recursos públicos"],
+      correct: 1
+    }
+  },
+  {
+    a: {
+      text: "La lectura profunda activa una red neuronal extensa que incluye áreas visuales, lingüísticas y emocionales del cerebro. A diferencia de la lectura superficial en pantallas, que tiende a ser no lineal y fragmentada, la lectura lineal de textos largos entrena la capacidad de inferencia, la empatía narrativa y el pensamiento analítico. Investigadores como Maryanne Wolf advierten que estos circuitos cognitivos pueden atrofiarse con el desuso.",
+      q: "¿Qué diferencia la lectura profunda de la lectura en pantallas?",
+      opts: ["La velocidad de procesamiento","La activación de áreas visuales","La profundidad lineal frente a la fragmentación","El uso de la memoria a largo plazo"],
+      correct: 2
+    },
+    b: {
+      text: "El cerebro no nació para leer — la escritura tiene apenas cinco mil años, un instante en términos evolutivos. Aprender a leer exige reconfigurar circuitos cerebrales diseñados para otras funciones, como el reconocimiento visual de objetos. Este proceso de reconversión neuronal es extraordinariamente plástico en la infancia, pero persiste toda la vida. La lectura no solo transmite información: transforma literalmente la arquitectura del cerebro que la practica.",
+      q: "¿Qué hace el cerebro para aprender a leer?",
+      opts: ["Desarrolla nuevas zonas cerebrales específicas","Reconfigura circuitos diseñados para otras funciones","Activa el sistema límbico emocional","Reduce la actividad en el lóbulo frontal"],
+      correct: 1
+    }
+  },
+  {
+    a: {
+      text: "La economía circular propone reemplazar el modelo lineal de producción — extraer, fabricar, usar y desechar — por un sistema en el que los residuos de un proceso se convierten en recursos de otro. No es solo un principio ambiental: es también una oportunidad económica. Las empresas que han adoptado este modelo han encontrado que la eficiencia en el uso de materiales reduce costos y genera ventajas competitivas sostenibles.",
+      q: "¿Qué propone la economía circular?",
+      opts: ["Reducir la producción industrial global","Convertir residuos de un proceso en recursos de otro","Eliminar el comercio internacional","Centralizar la producción en pocos países"],
+      correct: 1
+    },
+    b: {
+      text: "La transición hacia una economía circular requiere cambios profundos no solo en los procesos productivos, sino en los patrones de consumo y en el diseño de los productos desde su origen. El concepto de diseño para la desmontabilidad — crear productos pensados para ser reparados, reutilizados y reciclados — está ganando terreno en la industria electrónica y textil. Europa lidera la regulación en este ámbito, con legislación que obliga a los fabricantes a garantizar la disponibilidad de piezas de repuesto durante años.",
+      q: "¿Qué es el diseño para la desmontabilidad?",
+      opts: ["Un método para reducir el tamaño de los productos","Crear productos pensados para ser reparados y reciclados","Una técnica de fabricación automatizada","Un sistema de clasificación de residuos"],
+      correct: 1
+    }
+  },
+];
+
+// ─────────────────────────────────────────────
+// State
+// ─────────────────────────────────────────────
+let currentPair = null;
+let baselineMs = 0;
+let baselineWpm = 0;
+let timedWpm = 0;
+let baselineCorrect = false;
+let timedCorrect = false;
+let timedTimer = null;
+let timedExpired = false;
+
+// ─────────────────────────────────────────────
+// Utilities
+// ─────────────────────────────────────────────
+function countWords(text) {
+  return text.trim().split(/\s+/).length;
+}
+
+function setStage(n) {
+  document.querySelectorAll('.stage').forEach((el, i) => {
+    el.classList.toggle('show', i === n);
+  });
+}
+
+function requestWakeLock() {
+  if('wakeLock' in navigator) {
+    navigator.wakeLock.request('screen').catch(()=>{});
   }
 }
-// ── Session completion tracking ──
+
+function releaseWakeLock() {}
+
+// ─────────────────────────────────────────────
+// Session / completion tracking
+// ─────────────────────────────────────────────
+function isInSession() {
+  try { return !!JSON.parse(localStorage.getItem('em_session_queue')); } catch(e){ return false; }
+}
+
+function getSessionNext() {
+  try {
+    const q = JSON.parse(localStorage.getItem('em_session_queue'));
+    if(!q) return null;
+    const done = JSON.parse(localStorage.getItem('em_completions') || '{}');
+    const today = new Date().toISOString().slice(0,10);
+    const todayDone = done[today] || [];
+    const remaining = q.keys.filter(k => !todayDone.includes(k));
+    return remaining.length > 1 ? remaining[1] : 'done';
+  } catch(e){ return null; }
+}
+
 function markComplete() {
   try {
     const today = new Date().toISOString().slice(0,10);
@@ -569,708 +459,209 @@ function markComplete() {
     if(!all[today]) all[today] = [];
     if(!all[today].includes('contra')) all[today].push('contra');
     localStorage.setItem('em_completions', JSON.stringify(all));
-  } catch(e) {}
-  showSessionUI();
+    // Reveal session-next-btn
+    if(isInSession()) {
+      document.querySelectorAll('.session-next-btn').forEach(b => {
+        b.style.display = 'block';
+      });
+      document.getElementById('repeat-btn').style.display = 'none';
+    }
+  } catch(e){}
 }
 
 function completeAndContinue() {
   markComplete();
-  setTimeout(() => goNextOrHome('index.html'), 1200);
+  setTimeout(() => {
+    const next = getSessionNext();
+    if(!next || next === 'done') {
+      window.location.href = 'index.html?done=session';
+    } else {
+      const exercises = {
+        contra: 'contrarreloj.html', lectura_flash: 'lectura_flash_rsvp.html',
+        saltos: 'saltos_visuales.html', memoria: 'memoria_activa.html',
+        cats: 'actualizacion_categorias.html', continua: 'actualizacion_continua.html',
+        vision: 'vision_paralela.html', bloques: 'lectura_por_bloques_prototype.html'
+      };
+      window.location.href = (exercises[next] || 'index.html') + '?session=1';
+    }
+  }, 300);
 }
 
-
-// ── Session navigation ──
-function getSessionNext() {
-  try {
-    const q = JSON.parse(localStorage.getItem('em_session_queue')||'null');
-    if(!q) return null;
-    const today = new Date().toISOString().slice(0,10);
-    if(q.date !== today) return null; // stale queue
-
-    // Get completed today
-    const all = JSON.parse(localStorage.getItem('em_completions')||'{}');
-    const done = all[today] || [];
-
-    // Find next uncompleted in queue
-    const remaining = q.keys.filter(k => !done.includes(k));
-    if(remaining.length === 0) return 'done'; // all finished
-
-    const urls = {
-      flash:'lectura_flash_rsvp.html', bloques:'lectura_por_bloques_prototype.html',
-      contra:'contrarreloj.html', vision:'vision_paralela.html',
-      saltos:'saltos_visuales.html', memoria:'memoria_activa.html',
-      cats:'actualizacion_categorias.html', continua:'actualizacion_continua.html',
-    };
-    return urls[remaining[0]] ? urls[remaining[0]] + '?session=1' : null;
-  } catch(e) { return null; }
-}
-
-function isInSession() {
-  return new URLSearchParams(window.location.search).get('session') === '1';
-}
-
-function goNextOrHome(homeUrl) {
-  if(!isInSession()) { window.location.href = homeUrl; return; }
-  const next = getSessionNext();
-  if(!next || next === 'done') {
-    window.location.href = 'index.html?done=session';
-  } else {
-    window.location.href = next;
-  }
-}
-
-
-// Update session button labels to reflect position in queue
-function updateSessionBtnLabels() {
-  if(!isInSession()) return;
-  const next = getSessionNext();
-  const isLast = !next || next === 'done';
-  const label = isLast ? 'Finalizar sesión →' : 'Siguiente ejercicio →';
-  document.querySelectorAll('.session-next-btn').forEach(b => {
-    b.textContent = label;
-  });
-}
-
-</script>
-
-
-  <div class="stage-dots">
-    <div class="sdot active" id="sd0"></div>
-    <div class="sdot" id="sd1"></div>
-    <div class="sdot" id="sd2"></div>
-    <div class="sdot" id="sd3"></div>
-  </div>
-
-  <!-- ═══════════════════════
-       STAGE 0: Calibration
-       ═══════════════════════ -->
-  <div class="card show" id="stage-0">
-    <div class="chead" style="padding:14px 20px;">
-      <div style="font-size:14px;color:var(--text3);">Lee a tu ritmo natural — sin presión</div>
-      <div class="clive"><div class="cv" id="calib-prog">0/6</div><div class="cl">oraciones</div></div>
-    </div>
-    <div class="prog-bar"><div class="prog-fill" id="calib-fill" style="width:0%;background:var(--teal)"></div></div>
-
-    <div class="calib-text-area" id="calib-area">
-      <div class="calib-sentence" id="calib-sent"></div>
-      <div id="calib-q-wrap" style="display:none;width:100%;text-align:center;">
-        <div class="calib-q" id="calib-q"></div>
-        <div class="calib-opts" id="calib-opts"></div>
-      </div>
-    </div>
-
-    <div class="adapt-banner" id="calib-fb-banner"></div>
-
-    <div class="cfooter">
-      <div style="font-size:12px;color:var(--muted)">Lee a tu ritmo natural — no es una prueba de velocidad</div>
-      <div style="display:flex;gap:8px">
-        <button class="btn btn-ghost btn-sm" id="calib-space-btn" onclick="calibNext()" style="display:none">Listo →</button>
-        <button class="btn btn-teal" id="calib-start-btn" onclick="startCalib()">▶ Comenzar calibración</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════
-       STAGE 1: Training
-       ═══════════════════════ -->
-  <div class="card" id="stage-1">
-    <div class="chead" style="padding:14px 20px;">
-      <div style="font-size:14px;color:var(--text3);" id="mode-pill">Párrafo completo</div>
-      <div class="clive"><div class="cv" id="train-prog">0/15</div><div class="cl">oraciones</div></div>
-    </div>
-    <div class="prog-bar"><div class="prog-fill" id="train-fill" style="width:0%;background:var(--amber)"></div></div>
-
-    <!-- Fading mode selector -->
-    <div class="mode-row" style="display:none;">
-      <div class="mtab" id="m0" onclick="setFadeMode(0)">← Izq. → Der.</div>
-      <div class="mtab" id="m1" onclick="setFadeMode(1)">Palabras</div>
-      <div class="mtab mactive" id="m2" onclick="setFadeMode(2)">Párrafo completo</div>
-    </div>
-
-    <div class="reading-area" id="reading-area">
-      <div class="sentence-display" id="sent-display">
-        <span id="sent-text"></span>
-        <div class="fade-overlay" id="fade-overlay"></div>
-      </div>
-      <div class="sentence-meta">
-        <span class="sent-counter" id="sent-counter">Oración 1 de 15</span>
-        <span class="rate-badge" id="rate-badge">– ms/car.</span>
-      </div>
-    </div>
-
-    <div class="adapt-banner" id="adapt-banner"></div>
-
-    <div class="cfooter">
-      <div style="font-size:12px;color:var(--muted)">Lee con atención — habrá preguntas de comprensión</div>
-      <button class="btn btn-ghost btn-sm" onclick="pauseTraining()" id="pause-btn">⏸ Pausa</button>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════
-       STAGE 2: Comprehension
-       ═══════════════════════ -->
-  <div class="card" id="stage-2">
-    <div class="chead">
-      <div>
-        <div class="ctitle">Comprensión inferencial</div>
-        <div class="csub">Responde sin volver a leer. Tu puntuación ajusta la velocidad de la siguiente sesión.</div>
-        <div class="cpills">
-          <span class="pill pt">Puerta de comprensión</span>
-          <span class="pill pp">Adaptación RAP</span>
-        </div>
-      </div>
-      <div class="clive"><div class="cv" id="q-score">–</div><div class="cl">aciertos</div></div>
-    </div>
-    <div class="prog-bar"><div class="prog-fill" id="q-fill" style="width:0%;background:var(--teal)"></div></div>
-    <div class="q-area" id="q-area"></div>
-    <div class="cfooter">
-      <div style="font-size:12px;color:var(--muted)" id="q-footer-note">Responde todas las preguntas para ver tus resultados</div>
-      <button class="btn btn-ink" id="q-next-btn" onclick="showResults()" style="display:none">Ver resultados →</button>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════
-       STAGE 3: Results
-       ═══════════════════════ -->
-  <div class="card" id="stage-3">
-    <div class="chead">
-      <div><div class="ctitle">Resultados de sesión</div></div>
-    </div>
-    <div class="results-inner" id="results-inner"></div>
-  </div>
-
-  <!-- Science note -->
-  <details class="sci-details session-hide">
-  <summary>⚗ Cómo funciona la adaptación RAP</summary>
-  <div class="sci-details-body">El Programa de Aceleración Lectora (Breznitz, University of Haifa) calibra individualmente la tasa de borrado en ms/carácter. La tasa se <strong>aumenta 2 ms/car.</strong> si se acierta en 9 de cada 10 oraciones consecutivas, se <strong>mantiene</strong> si se acierta entre 8–9, y se <strong>reduce 2 ms/car.</strong> si hay más de 2 errores en 10. Este ajuste se hace hasta 5 veces por sesión. Los estudios muestran mejoras de fluidez y comprensión en 24 sesiones, con efectos de transferencia a la lectura sin restricción de tiempo.</div>
-</details>
-
-
-  <!-- ─── END SCREEN ─── -->
-  <div id="end-screen" style="display:none;background:var(--card);border:1px solid var(--border2);border-radius:14px;box-shadow:var(--sh);overflow:hidden;">
-    <div style="padding:28px 24px;text-align:center;">
-      <div style="font-size:40px;margin-bottom:12px;">🎯</div>
-      <div style="font-family:'Poppins',sans-serif;font-size:28px;font-weight:300;color:var(--text);margin-bottom:8px;">Sesión completada</div>
-      <div style="font-size:15px;color:var(--text2);line-height:1.65;margin-bottom:24px;">Tu velocidad se ha ajustado para la próxima sesión. La consistencia es la clave del progreso.</div>
-      <button class="session-next-btn" onclick="completeAndContinue()">Siguiente ejercicio →</button>
-      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;" class="session-hide">
-        <button onclick="restartSession()" style="padding:13px 24px;background:var(--teal);color:var(--bg);border:none;border-radius:11px;font-family:'Poppins',sans-serif;font-size:15px;font-weight:700;cursor:pointer;">Nueva sesión →</button>
-        <a href="index.html" onclick="event.preventDefault(); completeAndContinue();" style="padding:13px 24px;background:transparent;color:var(--text2);border:1.5px solid var(--border2);border-radius:11px;font-family:'Poppins',sans-serif;font-size:15px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;">← Inicio</a>
-      </div>
-    </div>
-  </div>
-</main>
-
-<script>
-// ──────────────────────────────────────────
-// Content — Spanish sentences for calibration and training
-// ──────────────────────────────────────────
-const CALIB_ITEMS = [
-  { s: "La inteligencia artificial está transformando la forma en que procesamos información a diario.", q: "¿Qué está transformando la inteligencia artificial?", opts: ["La educación universitaria", "El procesamiento cotidiano de información", "Los sistemas de transporte", "La industria farmacéutica"], correct: 1 },
-  { s: "Las ciudades costeras enfrentan retos crecientes debido al aumento del nivel del mar.", q: "¿Qué desafío enfrentan las ciudades costeras?", opts: ["La escasez de agua potable", "La contaminación del aire", "El aumento del nivel del mar", "La pérdida de biodiversidad"], correct: 2 },
-  { s: "La lectura profunda requiere atención sostenida y capacidad para conectar ideas entre sí.", q: "¿Qué requiere la lectura profunda además de atención?", opts: ["Velocidad elevada", "Conectar ideas entre sí", "Memorizar párrafos enteros", "Leer en voz alta"], correct: 1 },
-  { s: "El cambio climático afecta patrones migratorios de aves en toda América Latina.", q: "¿Qué fenómeno afecta los patrones migratorios de aves?", opts: ["La deforestación urbana", "La contaminación lumínica", "El cambio climático", "La caza ilegal"], correct: 2 },
-  { s: "Las neurociencias han demostrado que el sueño consolida los recuerdos del día anterior.", q: "¿Qué consolida el sueño según las neurociencias?", opts: ["La memoria procedimental", "Los recuerdos del día anterior", "Las habilidades motoras", "El aprendizaje lingüístico"], correct: 1 },
-  { s: "El comercio electrónico ha redefinido las expectativas de los consumidores en cuanto a velocidad.", q: "¿Qué ha redefinido el comercio electrónico?", opts: ["Los métodos de pago", "Las expectativas sobre velocidad", "Los precios de los productos", "La calidad del servicio"], correct: 1 },
-  { s: "Una dieta rica en vegetales reduce el riesgo de enfermedades cardiovasculares de forma significativa.", q: "¿Qué efecto tiene una dieta rica en vegetales?", opts: ["Mejora el rendimiento atlético", "Reduce el riesgo cardiovascular", "Aumenta la energía matutina", "Fortalece el sistema óseo"], correct: 1 },
-  { s: "La biodiversidad marina es esencial para mantener el equilibrio de los ecosistemas globales.", q: "¿Para qué es esencial la biodiversidad marina?", opts: ["Para la pesca sostenible", "Para el equilibrio de ecosistemas globales", "Para el turismo costero", "Para la producción de oxígeno"], correct: 1 },
-  { s: "El aprendizaje de idiomas fortalece las conexiones entre distintas regiones del cerebro.", q: "¿Qué fortalece el aprendizaje de idiomas?", opts: ["La memoria visual", "Las conexiones cerebrales entre regiones", "La velocidad de procesamiento", "La capacidad auditiva"], correct: 1 },
-  { s: "Los bosques tropicales generan más del veinte por ciento del oxígeno atmosférico mundial.", q: "¿Cuánto oxígeno generan los bosques tropicales?", opts: ["El diez por ciento", "El cuarenta por ciento", "Más del veinte por ciento", "El cincuenta por ciento"], correct: 2 },
-  { s: "La meditación regular reduce los niveles de cortisol y mejora la regulación emocional.", q: "¿Qué reduce la meditación regular?", opts: ["Los niveles de adrenalina", "Los niveles de cortisol", "La presión arterial", "Los niveles de glucosa"], correct: 1 },
-  { s: "El pensamiento crítico permite evaluar argumentos con mayor objetividad y precisión.", q: "¿Qué permite el pensamiento crítico?", opts: ["Generar ideas originales", "Evaluar argumentos con objetividad", "Memorizar información con eficiencia", "Comunicarse de forma persuasiva"], correct: 1 },
-  { s: "El microbioma intestinal influye directamente en el estado de ánimo y el bienestar mental.", q: "¿Qué influye directamente en el estado de ánimo?", opts: ["El sistema nervioso autónomo", "El microbioma intestinal", "La actividad hormonal", "El ritmo circadiano"], correct: 1 },
-  { s: "La neuroplasticidad permite al cerebro reorganizarse en respuesta a nuevas experiencias.", q: "¿Qué permite la neuroplasticidad?", opts: ["Aumentar el volumen cerebral", "Reorganizarse ante nuevas experiencias", "Acelerar la transmisión sináptica", "Reducir el consumo de glucosa"], correct: 1 },
-  { s: "El silencio activo facilita la consolidación de recuerdos y la generación de ideas creativas.", q: "¿Qué facilita el silencio activo?", opts: ["La concentración en tareas específicas", "La consolidación de recuerdos y creatividad", "La regulación del ritmo cardíaco", "El procesamiento visual de estímulos"], correct: 1 },
-  { s: "Las lenguas en peligro de extinción representan sistemas únicos de conocimiento cultural.", q: "¿Qué representan las lenguas en peligro de extinción?", opts: ["Dialectos sin gramática formal", "Sistemas únicos de conocimiento cultural", "Variantes regionales del mismo idioma", "Códigos de comunicación obsoletos"], correct: 1 },
-  { s: "La desigualdad educativa limita el desarrollo del potencial cognitivo en etapas tempranas.", q: "¿Qué limita el desarrollo cognitivo en etapas tempranas?", opts: ["La falta de estimulación sensorial", "La desigualdad educativa", "La nutrición deficiente exclusivamente", "La ausencia de actividad física"], correct: 1 },
-  { s: "El ejercicio aeróbico mejora la función ejecutiva y la memoria de trabajo en adultos.", q: "¿Qué mejora el ejercicio aeróbico en adultos?", opts: ["La memoria visual a largo plazo", "La función ejecutiva y la memoria de trabajo", "La capacidad de atención selectiva", "La velocidad de procesamiento auditivo"], correct: 1 },
-  { s: "La escritura a mano activa regiones cerebrales distintas a las que usa la escritura digital.", q: "¿Qué diferencia hay entre escritura a mano y digital neurológicamente?", opts: ["La escritura digital es más precisa", "Activan regiones cerebrales distintas", "La escritura a mano es más lenta siempre", "No existe diferencia neurológica"], correct: 1 },
-  { s: "Los hábitos de lectura sostenidos desde la infancia predicen el rendimiento académico futuro.", q: "¿Qué predicen los hábitos de lectura sostenidos desde la infancia?", opts: ["El coeficiente intelectual adulto", "El rendimiento académico futuro", "La capacidad de memorización", "El desarrollo del lenguaje oral"], correct: 1 },
-];
-
-const TRAIN_ITEMS = [
-  { s: "La economía circular propone que los residuos de un proceso se conviertan en recursos de otro.", q: "¿Qué propone la economía circular?", opts: ["Reducir la producción industrial", "Convertir residuos en recursos de otro proceso", "Eliminar el uso de plásticos", "Regular el comercio internacional"], correct: 1 },
-  { s: "Los arrecifes de coral albergan casi un tercio de todas las especies marinas conocidas.", q: "¿Qué proporción de especies marinas albergan los arrecifes?", opts: ["La mitad", "Un cuarto", "Casi un tercio", "Dos tercios"], correct: 2 },
-  { s: "La memoria de trabajo es el sistema cognitivo que permite manipular información de forma activa.", q: "¿Qué permite la memoria de trabajo?", opts: ["Almacenar recuerdos a largo plazo", "Manipular información activamente", "Procesar estímulos visuales", "Coordinar el movimiento"], correct: 1 },
-  { s: "El sueño profundo elimina proteínas tóxicas del cerebro a través del sistema glinfático.", q: "¿Cómo elimina el cerebro proteínas tóxicas durante el sueño?", opts: ["A través del sistema linfático", "Por medio del sistema glinfático", "Mediante el flujo sanguíneo cerebral", "A través de la barrera hematoencefálica"], correct: 1 },
-  { s: "El entrenamiento físico aeróbico aumenta el volumen del hipocampo en adultos mayores.", q: "¿Qué estructura cerebral crece con el ejercicio aeróbico?", opts: ["La corteza prefrontal", "El hipocampo", "La amígdala", "El cerebelo"], correct: 1 },
-  { s: "La lectura en pantalla tiende a producir una lectura más superficial que la lectura en papel.", q: "¿Qué produce la lectura en pantalla comparada con el papel?", opts: ["Mayor comprensión inferencial", "Lectura más superficial", "Mejor retención de vocabulario", "Mayor velocidad de procesamiento"], correct: 1 },
-  { s: "Los idiomas con escritura transparente como el español permiten la decodificación más rápida.", q: "¿Qué permite la escritura transparente del español?", opts: ["Mayor expresividad", "Decodificación más rápida", "Vocabulario más amplio", "Mejor comprensión oral"], correct: 1 },
-  { s: "La práctica distribuida en el tiempo es más efectiva que el estudio masivo para la retención.", q: "¿Qué tipo de práctica es más efectiva para retener?", opts: ["El estudio intensivo de pocas horas", "La práctica distribuida en el tiempo", "La repetición oral del material", "El estudio en grupo colaborativo"], correct: 1 },
-  { s: "El efecto de generación implica que producir información activa la memoria mejor que recibirla.", q: "¿Qué mejora la memoria según el efecto de generación?", opts: ["Recibir información de fuentes externas", "Producir información activamente", "Repetir en voz alta el contenido", "Leer el mismo texto varias veces"], correct: 1 },
-  { s: "Los manglares protegen las costas de los efectos devastadores de huracanes y tsunamis.", q: "¿De qué protegen los manglares a las costas?", opts: ["De la erosión por mareas", "De huracanes y tsunamis", "De la contaminación del agua", "De la invasión de especies foráneas"], correct: 1 },
-  { s: "La cognición distribuida sugiere que el pensamiento se extiende más allá del cerebro individual.", q: "¿Qué sugiere la cognición distribuida?", opts: ["Que la inteligencia es innata", "Que el pensamiento supera al cerebro individual", "Que la memoria es colectiva", "Que aprendemos mejor en grupos"], correct: 1 },
-  { s: "La atención plena incrementa la densidad de materia gris en regiones del lóbulo parietal.", q: "¿Qué efecto tiene la atención plena sobre el lóbulo parietal?", opts: ["Reduce la actividad neuronal", "Incrementa la densidad de materia gris", "Mejora la conectividad hemisférica", "Activa las neuronas espejo"], correct: 1 },
-  { s: "La variabilidad interindividual en la velocidad lectora puede alcanzar un factor de diez entre lectores.", q: "¿Cuánto puede variar la velocidad lectora entre individuos?", opts: ["Un factor de dos", "Un factor de cinco", "Un factor de diez", "Un factor de veinte"], correct: 2 },
-  { s: "Las metáforas conceptuales estructuran gran parte de nuestro pensamiento abstracto cotidiano.", q: "¿Qué estructuran las metáforas conceptuales?", opts: ["El lenguaje poético", "El pensamiento abstracto cotidiano", "La comprensión literal de textos", "Las habilidades matemáticas"], correct: 1 },
-  { s: "El dominio de una segunda lengua retrasa la aparición de síntomas de deterioro cognitivo.", q: "¿Qué efecto tiene el dominio de una segunda lengua?", opts: ["Mejora el rendimiento en matemáticas", "Retrasa el deterioro cognitivo", "Aumenta la velocidad de procesamiento visual", "Mejora la memoria episódica"], correct: 1 },
-  { s: "La empatía cognitiva implica comprender el punto de vista ajeno sin necesariamente compartirlo.", q: "¿Qué implica la empatía cognitiva?", opts: ["Sentir las emociones del otro como propias", "Comprender el punto de vista ajeno sin compartirlo", "Expresar solidaridad en momentos difíciles", "Identificar las emociones propias con precisión"], correct: 1 },
-  { s: "Las ciudades con mayor densidad verde reportan menores niveles de estrés en sus habitantes.", q: "¿Qué reportan las ciudades con mayor densidad verde?", opts: ["Mayor productividad laboral", "Menores niveles de estrés", "Mejor calidad del aire interior", "Mayor cohesión social entre vecinos"], correct: 1 },
-  { s: "La sobrecarga informativa reduce la capacidad de tomar decisiones de calidad de forma sostenida.", q: "¿Qué efecto tiene la sobrecarga informativa?", opts: ["Mejora la velocidad de respuesta", "Reduce la calidad de las decisiones sostenidas", "Aumenta la capacidad de análisis crítico", "Facilita la priorización de tareas"], correct: 1 },
-  { s: "El aprendizaje por error activado es más duradero que el aprendizaje por exposición pasiva.", q: "¿Qué tipo de aprendizaje es más duradero?", opts: ["El aprendizaje por observación repetida", "El aprendizaje por error activado", "El estudio memorístico intensivo", "La revisión pasiva de material previo"], correct: 1 },
-  { s: "La conciencia fonológica es el predictor más sólido del éxito en la adquisición de la lectura.", q: "¿Qué predice mejor el éxito en la adquisición lectora?", opts: ["El cociente intelectual verbal", "La conciencia fonológica", "El vocabulario receptivo temprano", "La coordinación visomotora fina"], correct: 1 },
-  { s: "El pensamiento lateral genera soluciones innovadoras al romper los patrones de razonamiento habitual.", q: "¿Cómo genera soluciones el pensamiento lateral?", opts: ["Siguiendo los pasos del método científico", "Rompiendo los patrones de razonamiento habitual", "Aplicando fórmulas lógicas establecidas", "Consultando fuentes de autoridad reconocidas"], correct: 1 },
-  { s: "La autorregulación emocional es una habilidad cognitiva que puede desarrollarse con entrenamiento.", q: "¿Cómo se clasifica la autorregulación emocional?", opts: ["Como un rasgo de personalidad fijo", "Como una habilidad cognitiva entrenable", "Como una respuesta puramente instintiva", "Como un proceso exclusivamente inconsciente"], correct: 1 },
-  { s: "Los mapas mentales mejoran la organización del conocimiento al representar relaciones entre conceptos.", q: "¿Cómo mejoran los mapas mentales la organización del conocimiento?", opts: ["Reduciendo la cantidad de información a procesar", "Representando relaciones entre conceptos", "Ordenando la información de forma lineal", "Eliminando la información redundante"], correct: 1 },
-  { s: "La recuperación activa del conocimiento fortalece las trazas de memoria de forma exponencial.", q: "¿Qué fortalece la recuperación activa del conocimiento?", opts: ["Las conexiones sinápticas visuales", "Las trazas de memoria de forma exponencial", "La velocidad de procesamiento lingüístico", "La capacidad de atención dividida"], correct: 1 },
-  { s: "El fenómeno de la fluidez cognitiva hace que la información familiar parezca más verdadera.", q: "¿Qué hace la fluidez cognitiva con la información familiar?", opts: ["La hace parecer más compleja", "La hace parecer más verdadera", "La hace más fácil de olvidar", "La convierte en memoria procedimental"], correct: 1 },
-];
-
-// ──────────────────────────────────────────
-// State
-// ──────────────────────────────────────────
-let calibIdx = 0, calibTimes = [], calibStart = 0, calibCorrect = 0;
-let _currentCalibItem = null, _currentTrainItem = null;
-let baseRateMs = 0; // ms per character — the calibration result
-let currentRate = 0; // live training rate (ms per character)
-
-let trainIdx = 0, trainCorrect = 0, trainWindow = []; // last 10 results
-let fadeMode = 2; // default: full paragraph (easiest — whole sentence disappears at once)
-let fadeTimer = null, paused = false;
-
-let qAnswered = 0, qCorrect = 0;
-const TRAIN_COUNT = 15;
-const CALIB_COUNT = 6;
-// Adaptation thresholds (RAP protocol)
-const ADAPT_WINDOW = 10;
-const ADAPT_UP_THRESHOLD = 9;   // ≥9/10 correct → increase rate (faster = shorter time per char)
-const ADAPT_DOWN_THRESHOLD = 7; // <8/10 correct → decrease rate (slower)
-const ADAPT_STEP_MS = 2;        // ms per character per adaptation
-
-// ──────────────────────────────────────────
-// Stage navigation
-// ──────────────────────────────────────────
-function setStage(n) {
-  [0,1,2,3].forEach(i => {
-    document.getElementById('stage-'+i).classList.toggle('show', i===n);
-    const dot = document.getElementById('sd'+i);
-    dot.classList.remove('active','done');
-    if(i<n) dot.classList.add('done');
-    else if(i===n) dot.classList.add('active');
-  });
-}
-
-// ──────────────────────────────────────────
-// STAGE 0: Calibration
-// ──────────────────────────────────────────
-function startCalib() {
-  const ch = document.querySelector('#stage-0 .chead');
-  if(ch) ch.style.display='none';
+// ─────────────────────────────────────────────
+// Flow
+// ─────────────────────────────────────────────
+function dismissReady() {
+  document.getElementById('ready-screen').classList.add('hidden');
   requestWakeLock();
-  calibIdx=0; calibTimes=[]; calibCorrect=0;
-  document.getElementById('calib-start-btn').style.display='none';
-  document.getElementById('calib-space-btn').style.display='';
-  showCalibItem();
-  // Spacebar support
-  document.addEventListener('keydown', spaceHandler);
+  loadPair();
+  setStage(0);
+  // Start timing baseline
+  baselineMs = performance.now();
 }
 
-function spaceHandler(e) {
-  if(e.code==='Space') { e.preventDefault(); calibNext(); }
-}
-
-function showCalibItem() {
-  const item = nextCalibItem();
-  const sentEl = document.getElementById('calib-sent');
-  sentEl.style.opacity = '1';
-  sentEl.style.transition = 'opacity 0.3s';
-  sentEl.textContent = item.s;
-  document.getElementById('calib-q-wrap').style.display='none';
-  document.getElementById('calib-opts').innerHTML='';
-  document.getElementById('calib-prog').textContent = (calibIdx+1)+'/'+CALIB_COUNT;
-  document.getElementById('calib-fill').style.width = (calibIdx/CALIB_COUNT*100)+'%';
-  document.getElementById('calib-space-btn').textContent = 'Listo →';
-  document.getElementById('calib-space-btn').onclick = calibNext;
-  calibStart = performance.now();
-}
-
-function calibNext() {
-  const elapsed = performance.now() - calibStart;
-  const item = currentCalibItem();
-  const charCount = item.s.length;
-  const msPerChar = elapsed / charCount;
-  // Hide sentence, show question
-  document.getElementById('calib-sent').style.opacity='0';
-  document.getElementById('calib-space-btn').style.display='none';
-  document.getElementById('calib-q-wrap').style.display='';
-  document.getElementById('calib-q').innerHTML='<strong>'+item.q+'</strong>';
-  const opts = document.getElementById('calib-opts');
-  opts.innerHTML='';
-  item.opts.forEach((o,i) => {
-    const b = document.createElement('div');
-    b.className='copt'; b.textContent=o;
-    b.addEventListener('click', ()=>calibAnswer(i, item.correct, msPerChar, charCount));
-    opts.appendChild(b);
-  });
-}
-
-function calibAnswer(chosen, correct, msPerChar, charCount) {
-  const hit = chosen===correct;
-  document.querySelectorAll('.copt').forEach((b,i)=>{
-    b.classList.add('c-locked');
-    if(i===correct) b.classList.add('c-correct');
-  });
-  if(!hit) document.querySelectorAll('.copt')[chosen].classList.add('c-wrong');
-  // Only count correctly answered sentences for base rate (RAP protocol)
-  if(hit) { calibTimes.push(msPerChar); calibCorrect++; }
-
-  calibIdx++;
-  setTimeout(()=>{
-    if(calibIdx >= CALIB_COUNT) finishCalib();
-    else {
-      document.getElementById('calib-space-btn').style.display='';
-      document.getElementById('calib-space-btn').textContent='Siguiente →';
-      document.getElementById('calib-space-btn').onclick=showCalibNextItem;
-      document.getElementById('calib-fill').style.width=(calibIdx/CALIB_COUNT*100)+'%';
-    }
-  }, 800);
-}
-
-function showCalibNextItem() {
-  showCalibItem();
-  document.getElementById('calib-space-btn').textContent='Listo →';
-  document.getElementById('calib-space-btn').onclick=calibNext;
-}
-
-function finishCalib() {
-  document.removeEventListener('keydown', spaceHandler);
-  // Base rate = mean ms/char of correctly answered sentences
-  const mean = calibTimes.length > 0
-    ? calibTimes.reduce((a,b)=>a+b,0)/calibTimes.length
-    : 80; // fallback ~250wpm
-  baseRateMs = Math.round(mean);
-  // RAP starts training at the calibrated rate
-  currentRate = baseRateMs;
-  const _hr2=document.getElementById('hdr-rate'); if(_hr2) _hr2.textContent = baseRateMs+'ms/c';
-  document.getElementById('calib-area').innerHTML=`
-    <div style="padding:14px 0;text-align:center">
-      <div style="font-size:28px;font-weight:300;color:var(--teal)">${baseRateMs} ms/car.</div>
-      <div style="font-size:13px;color:var(--muted);margin-top:4px">Tasa base calibrada · ${calibCorrect}/${CALIB_COUNT} correctas</div>
-    </div>`;
-  document.getElementById('calib-space-btn').style.display='none';
-  document.getElementById('calib-start-btn').textContent='▶ Iniciar entrenamiento';
-  document.getElementById('calib-start-btn').style.display='';
-  document.getElementById('calib-start-btn').onclick=startTraining;
-  document.getElementById('calib-fb-banner').className='adapt-banner hold';
-  document.getElementById('calib-fb-banner').textContent='Calibración completada. Tasa inicial: '+baseRateMs+' ms/car. — equivale a ~'+Math.round(60000/baseRateMs/5)+' palabras por minuto.';
-  document.getElementById('calib-fill').style.width='100%';
-}
-
-// ──────────────────────────────────────────
-// STAGE 1: Training
-// ──────────────────────────────────────────
-function setFadeMode(n) {
-  fadeMode=n;
-  [0,1,2].forEach(i=>document.getElementById('m'+i).classList.toggle('mactive',i===n));
-  const labels=['Izq. → Der.','Palabras','Párrafo completo'];
-  document.getElementById('mode-pill').textContent='Modo: '+labels[n];
-}
-
-function startTraining() {
-  trainIdx=0; trainCorrect=0; trainWindow=[]; paused=false;
-  // Build shuffled session set from the full pool
-  const pool = TRAIN_ITEMS.slice();
-  for(let i=pool.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [pool[i],pool[j]]=[pool[j],pool[i]];
+function loadPair() {
+  // Pick unused pair from queue
+  let q; try{ q=JSON.parse(localStorage.getItem('em_contra_q')||'[]'); }catch(e){ q=[]; }
+  q = q.filter(i => i < PAIRS.length);
+  if(!q.length) {
+    const fresh = PAIRS.map((_,i)=>i).sort(()=>Math.random()-0.5);
+    q = fresh;
   }
-  sessionTrainItems = pool.slice(0, TRAIN_COUNT);
-  setStage(1);
-  document.addEventListener('keydown', spaceHandler2);
-  runNextSentence();
+  const idx = q.shift();
+  try{ localStorage.setItem('em_contra_q', JSON.stringify(q)); }catch(e){}
+  currentPair = PAIRS[idx];
+
+  document.getElementById('text-0').textContent = currentPair.a.text;
+  document.getElementById('text-2').textContent = currentPair.b.text;
 }
 
-function spaceHandler2(e) {
-  if(e.code==='Space') { e.preventDefault(); if(!paused) togglePause(); }
+function finishBaseline() {
+  const elapsed = performance.now() - baselineMs;
+  baselineMs = elapsed;
+  const words = countWords(currentPair.a.text);
+  baselineWpm = Math.round(words / (elapsed / 60000));
+  // Save WPM for future sessions
+  try{ localStorage.setItem('em_contra_wpm', String(baselineWpm)); }catch(e){}
+  showQuestion(1);
 }
 
-function runNextSentence() {
-  if(trainIdx >= TRAIN_COUNT) { endTraining(); return; }
-  clearTimeout(fadeTimer);
-  const item = sessionTrainItems[trainIdx];
-  const text = item.s;
-  const totalMs = text.length * currentRate;
+function showQuestion(stage) {
+  setStage(stage);
+  const isBaseline = stage === 1;
+  const data = isBaseline ? currentPair.a : currentPair.b;
+  const qTextEl = document.getElementById(`q-text-${isBaseline ? 0 : 2}`);
+  const qOptsEl = document.getElementById(`q-opts-${isBaseline ? 0 : 2}`);
+  const qFbEl   = document.getElementById(`q-fb-${isBaseline ? 0 : 2}`);
+  const nextBtn  = document.getElementById(isBaseline ? 'next-1' : 'next-3');
 
-  document.getElementById('train-prog').textContent=(trainIdx+1)+'/'+TRAIN_COUNT;
-  document.getElementById('train-fill').style.width=(trainIdx/TRAIN_COUNT*100)+'%';
-  document.getElementById('rate-badge').textContent=currentRate+' ms/car.';
-  document.getElementById('sent-counter').textContent='Oración '+(trainIdx+1)+' de '+TRAIN_COUNT;
+  qTextEl.textContent = data.q;
+  qOptsEl.innerHTML = '';
+  qFbEl.textContent = '';
+  nextBtn.style.display = 'none';
 
-  const sentText = document.getElementById('sent-text');
-  const overlay = document.getElementById('fade-overlay');
-  overlay.style.transition='none';
-  overlay.style.width='0%';
-  sentText.innerHTML='';
+  data.opts.forEach((o, i) => {
+    const d = document.createElement('div');
+    d.className = 'q-opt';
+    d.textContent = o;
+    d.onclick = () => {
+      document.querySelectorAll(`#q-opts-${isBaseline ? 0 : 2} .q-opt`).forEach(el => el.classList.add('locked'));
+      const correct = i === data.correct;
+      d.classList.add(correct ? 'correct' : 'wrong');
+      if(!correct) document.querySelectorAll(`#q-opts-${isBaseline ? 0 : 2} .q-opt`)[data.correct].classList.add('correct');
+      if(isBaseline) baselineCorrect = correct; else timedCorrect = correct;
+      qFbEl.textContent = correct ? '✓ Correcto' : 'La respuesta correcta está marcada.';
+      setTimeout(() => { nextBtn.style.display = 'block'; }, 500);
+    };
+    qOptsEl.appendChild(d);
+  });
+}
 
-  if(fadeMode===0) {
-    // Left-to-right erasure overlay
-    sentText.textContent=text;
-    overlay.style.display='block';
-    // Force reflow then animate
-    requestAnimationFrame(()=>requestAnimationFrame(()=>{
-      overlay.style.transition=`width ${totalMs}ms linear`;
-      overlay.style.width='100%';
-    }));
-    fadeTimer=setTimeout(()=>{ trainIdx++; checkAdapt(); runNextSentence(); }, totalMs+200);
+function startTimed() {
+  setStage(3);
+  timedExpired = false;
+  document.getElementById('text-2').style.opacity = '1';
+  document.getElementById('listo-2').style.display = 'none';
+  document.getElementById('hint-2').textContent = 'La barra marca el tiempo — lee con atención';
 
-  } else if(fadeMode===1) {
-    // Word-by-word fade
-    overlay.style.display='none';
-    const words=text.split(' ');
-    const msPerWord=totalMs/words.length;
-    sentText.innerHTML=words.map((w,i)=>`<span class="word-span" id="ws${i}">${w} </span>`).join('');
-    let wi=0;
-    function fadeWord(){
-      if(wi<words.length){ document.getElementById('ws'+wi).classList.add('faded'); wi++; fadeTimer=setTimeout(fadeWord,msPerWord); }
-      else { fadeTimer=setTimeout(()=>{ trainIdx++; checkAdapt(); runNextSentence(); },200); }
-    }
-    fadeTimer=setTimeout(fadeWord,msPerWord*0.5);
+  // Calculate timed duration: baseline speed + 15% faster
+  const words = countWords(currentPair.b.text);
+  const targetMs = Math.round((words / (baselineWpm * 1.15)) * 60000);
+  const duration = Math.max(targetMs, 4000); // minimum 4 seconds
 
+  // Fade text gradually — text itself is the timer
+  const textEl = document.getElementById('text-2');
+  textEl.style.transition = 'none';
+  textEl.style.opacity = '1';
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    textEl.style.transition = `opacity ${duration}ms linear`;
+    textEl.style.opacity = '0';
+  }));
+
+  // Show Listo button halfway through so user can tap if done
+  setTimeout(() => {
+    document.getElementById('listo-2').style.display = 'block';
+  }, duration * 0.5);
+
+  // Full fade when time expires
+  timedTimer = setTimeout(() => {
+    timedExpired = true;
+    document.getElementById('text-2').style.opacity = '0';
+    document.getElementById('hint-2').textContent = '¡Tiempo! ¿Recordaste el contenido?';
+    document.getElementById('listo-2').style.display = 'block';
+    document.getElementById('listo-2').textContent = 'Responder pregunta →';
+  }, duration);
+}
+
+function finishTimed() {
+  clearTimeout(timedTimer);
+  // Stop the fade wherever it is
+  const textEl = document.getElementById('text-2');
+  textEl.style.transition = 'none';
+  // Calculate timed WPM if user tapped Listo before timeout
+  if(!timedExpired) {
+    // User finished early — great
+    timedWpm = baselineWpm; // conservative — we don't have exact timing
   } else {
-    // Full paragraph: show, then blank all at once
-    overlay.style.display='none';
-    sentText.textContent=text;
-    fadeTimer=setTimeout(()=>{
-      sentText.style.opacity='0';
-      setTimeout(()=>{
-        sentText.style.opacity='1';
-        trainIdx++; checkAdapt(); runNextSentence();
-      },300);
-    }, totalMs);
+    timedWpm = Math.round(baselineWpm * 1.15);
   }
-}
-
-function togglePause() {
-  paused=!paused;
-  document.getElementById('pause-btn').textContent=paused?'▶ Continuar':'⏸ Pausa';
-  if(paused) clearTimeout(fadeTimer);
-  else runNextSentence();
-}
-
-function pauseTraining() { togglePause(); }
-
-// RAP adaptation: every ADAPT_WINDOW sentences, check accuracy and adjust
-function checkAdapt() {
-  // Mark last answer — since we can't verify reading without a q, we proxy via session
-  // For the training phase, adapt after comprehension, not per-sentence
-  // (Full adaptation happens in the comprehension gate)
-}
-
-function endTraining() {
-  document.removeEventListener('keydown', spaceHandler2);
-  clearTimeout(fadeTimer);
-  buildQuestions();
-  setStage(2);
-}
-
-// ──────────────────────────────────────────
-// STAGE 2: Comprehension
-// ──────────────────────────────────────────
-let questionItems = [];
-let sessionTrainItems = []; // shuffled set for this session
-
-function buildQuestions() {
-  // Pick 5 evenly spaced from the session items actually shown
-  const step = Math.floor(TRAIN_COUNT / 5);
-  questionItems = [0,1,2,3,4].map(i => sessionTrainItems[i * step]);
-  qAnswered=0; qCorrect=0;
-  const area = document.getElementById('q-area');
-  area.innerHTML='';
-  document.getElementById('q-score').textContent='–';
-  document.getElementById('q-fill').style.width='0%';
-  document.getElementById('q-next-btn').style.display='none';
-
-  questionItems.forEach((item,qi)=>{
-    const block = document.createElement('div');
-    block.style.cssText='border-bottom:1.5px solid var(--border);padding-bottom:16px;margin-bottom:4px';
-    block.innerHTML=`
-      <div class="q-label">Pregunta ${qi+1}</div>
-      <div class="q-text" style="margin:6px 0 10px">${item.q}</div>
-      <div class="q-opts" id="qo${qi}">
-        ${item.opts.map((o,oi)=>`<div class="qopt" onclick="answerQ(${qi},${oi},${item.correct})">${o}</div>`).join('')}
-      </div>
-      <div class="q-fb" id="qfb${qi}"></div>
-    `;
-    area.appendChild(block);
-  });
-}
-
-function answerQ(qi, chosen, correct) {
-  const opts = document.querySelectorAll(`#qo${qi} .qopt`);
-  opts.forEach((o,i)=>{
-    o.classList.add('q-locked');
-    if(i===correct) o.classList.add('q-correct');
-  });
-  const hit = chosen===correct;
-  if(!hit) opts[chosen].classList.add('q-wrong');
-  else qCorrect++;
-
-  qAnswered++;
-  const fb = document.getElementById('qfb'+qi);
-  fb.className='q-fb show '+(hit?'good':'bad');
-  fb.textContent = hit
-    ? '✓ Correcto'
-    : 'La opción correcta era: "'+questionItems[qi].opts[correct]+'"';
-
-  document.getElementById('q-score').textContent=qCorrect+'/'+qAnswered;
-  document.getElementById('q-fill').style.width=(qAnswered/questionItems.length*100)+'%';
-  const _hc=document.getElementById('hdr-comp'); if(_hc) _hc.textContent=Math.round(qCorrect/qAnswered*100)+'%';
-
-  if(qAnswered===questionItems.length) {
-    document.getElementById('q-next-btn').style.display='';
-    document.getElementById('q-footer-note').textContent='Sesión completa — adaptando tasa para la próxima.';
-    applyRAPAdaptation();
-  }
-}
-
-function applyRAPAdaptation() {
-  const acc = qCorrect/questionItems.length;
-  let delta = 0;
-  // ≥90% correct → increase rate (reduce ms/char → faster)
-  if(acc >= 0.9) delta = -ADAPT_STEP_MS * 2;
-  else if(acc >= 0.8) delta = -ADAPT_STEP_MS;
-  else if(acc >= 0.7) delta = 0; // hold
-  else delta = +ADAPT_STEP_MS * 2; // slow down significantly
-  // Clamp: never go below 30ms/char or above 200ms/char
-  currentRate = Math.max(30, Math.min(200, currentRate + delta));
-  const _hr2=document.getElementById('hdr-rate'); if(_hr2) _hr2.textContent=currentRate+'ms/c';
+  showQuestion(4);
 }
 
 function showResults() {
+  setStage(5);
+  const compreh = (baselineCorrect ? 1 : 0) + (timedCorrect ? 1 : 0);
+  const compPct = Math.round(compreh / 2 * 100);
+  const displayWpm = Math.max(baselineWpm, 80);
+
+  document.getElementById('result-wpm').textContent = displayWpm;
+  document.getElementById('r-comp').textContent = compPct + '%';
+  document.getElementById('r-comp').style.color = compPct >= 50 ? 'var(--teal)' : 'var(--coral)';
+
+  // Compare to previous session
+  try {
+    const prev = parseInt(localStorage.getItem('em_contra_prev_wpm') || '0');
+    if(prev > 0) {
+      const delta = displayWpm - prev;
+      document.getElementById('r-delta').textContent = (delta >= 0 ? '+' : '') + delta + ' ppm';
+      document.getElementById('r-delta').style.color = delta >= 0 ? 'var(--teal)' : 'var(--coral)';
+    } else {
+      document.getElementById('r-delta').textContent = '—';
+    }
+    localStorage.setItem('em_contra_prev_wpm', String(displayWpm));
+  } catch(e){}
+
+  // Insight
+  let insight = '';
+  if(compPct === 100) {
+    insight = '<strong style="color:var(--violet)">Comprensión perfecta.</strong> Tu lectura es tanto rápida como precisa. La próxima sesión aumentará el ritmo.';
+  } else if(compPct >= 50) {
+    insight = '<strong style="color:var(--violet)">Buen ritmo.</strong> Leíste con velocidad y retuviste lo esencial. Sigue practicando para mejorar la comprensión bajo presión.';
+  } else {
+    insight = '<strong style="color:var(--amber)">Comprensión baja.</strong> El ritmo fue alto pero la retención sufrió. Intenta leer con más atención en los próximos ejercicios.';
+  }
+  document.getElementById('result-insight').innerHTML = insight;
+
   markComplete();
-  releaseWakeLock();
-  document.getElementById('end-screen').style.display='block';
-  document.getElementById('end-screen').scrollIntoView({behavior:'smooth',block:'center'});
-  const acc = Math.round(qCorrect/questionItems.length*100);
-  const wpmEquiv = Math.round(60000/currentRate/5);
-  const inner = document.getElementById('results-inner');
-
-  let insight;
-  if(acc>=90) insight=`<strong>Comprensión excelente.</strong> Tu tasa se ha aumentado a ${currentRate} ms/car. (~${wpmEquiv} wpm). Estás en la zona de entrenamiento óptima — la velocidad supera la comodidad pero la comprensión se mantiene alta.`;
-  else if(acc>=70) insight=`<strong>Comprensión sólida.</strong> Tasa mantenida en ${currentRate} ms/car. Consolida este nivel durante 2–3 sesiones más antes de acelerar.`;
-  else insight=`<strong>Comprensión por debajo del umbral.</strong> Tasa reducida a ${currentRate} ms/car. El entrenamiento solo es efectivo cuando la comprensión supera el 70%. Esto es exactamente cómo funciona el protocolo RAP.`;
-
-  inner.innerHTML=`
-    <div class="res-top">
-      <div class="res-big"><div class="rv">${acc}%</div><div class="rl">Comprensión</div></div>
-      <div class="res-big"><div class="rv">${currentRate}</div><div class="rl">ms/car. actual</div></div>
-    </div>
-    <div class="res-grid">
-      <div class="rg"><div class="rv">${Math.round(60000/baseRateMs/5)}</div><div class="rl">wpm base</div></div>
-      <div class="rg"><div class="rv">${wpmEquiv}</div><div class="rl">wpm sesión</div></div>
-      <div class="rg"><div class="rv">${qCorrect}/${questionItems.length}</div><div class="rl">Preguntas correctas</div></div>
-      <div class="rg"><div class="rv">${currentRate>baseRateMs?'↑':'↓'} ${Math.abs(currentRate-baseRateMs)}</div><div class="rl">ms/car. vs. base</div></div>
-    </div>
-    <div class="insight">${insight}</div>
-    <div class="res-btns session-hide">
-      <button class="btn btn-ghost" onclick="restartSession()">← Nueva sesión</button>
-    </div>
-    <button class="btn btn-ink session-next-btn" onclick="completeAndContinue()" style="display:none;">Siguiente ejercicio →</button>
-  `;
-  setStage(3);
 }
 
-function restartSession() {
-  clearTimeout(fadeTimer);
-  document.removeEventListener('keydown', spaceHandler2);
-  trainIdx=0; trainCorrect=0; trainWindow=[];
-  qAnswered=0; qCorrect=0; questionItems=[];
-  paused=false;
-  // Reset question UI
-  const qArea=document.getElementById('q-area');
-  if(qArea) qArea.innerHTML='';
-  const qBtn=document.getElementById('q-next-btn');
-  if(qBtn) qBtn.style.display='none';
-  const qNote=document.getElementById('q-footer-note');
-  if(qNote) qNote.textContent='Responde todas las preguntas para ver tus resultados';
+function restartExercise() {
+  baselineMs = 0; baselineWpm = 0; timedWpm = 0;
+  baselineCorrect = false; timedCorrect = false;
+  clearTimeout(timedTimer);
+  // Reset text visibility
+  document.getElementById('text-2').style.opacity = '1';
+  document.getElementById('ready-screen').classList.remove('hidden');
   setStage(0);
 }
 
-// Init
-setStage(0);
-
-// ── Show session navigation UI ──
-function showSessionUI() {
-  if(!isInSession()) return;
-  updateSessionBtnLabels();
-  // Show the next button
-  document.querySelectorAll('.session-next-btn').forEach(b => {
-    b.style.cssText = 'display:block!important';
-  });
-  // Hide the repeat/reset buttons
-  document.querySelectorAll('.session-hide').forEach(b => {
-    b.style.cssText = 'display:none!important';
-  });
-}
-
-// ── Wake Lock: prevent screen sleep during exercise ──
-let _wakeLock = null;
-async function requestWakeLock() {
-  if(!('wakeLock' in navigator)) return;
-  try {
-    _wakeLock = await navigator.wakeLock.request('screen');
-  } catch(e) {}
-}
-function releaseWakeLock() {
-  if(_wakeLock) { _wakeLock.release().catch(()=>{}); _wakeLock = null; }
-}
-// Re-acquire on tab visibility change
-document.addEventListener('visibilitychange', () => {
-  if(document.visibilityState === 'visible') requestWakeLock();
-});
-
-(function updateContraHint(){
-  const saved = localStorage.getItem('em_contra_wpm');
-  const title = document.getElementById('rdy-calib-title');
-  const desc = document.getElementById('rdy-calib-desc');
-  if(saved && title && desc){
-    title.textContent = 'Ritmo guardado — ' + saved + ' ppm';
-    desc.textContent = 'Comenzamos directamente con tu ritmo anterior. Puedes recalibrar desde el ejercicio.';
-    title.style.color = 'var(--teal)';
+// Check if launched in session context
+(function(){
+  const params = new URLSearchParams(window.location.search);
+  if(params.get('session') === '1') {
+    // Already in session, just show ready screen
   }
 })();
-
-
-// ── Shuffled sentence rotation ──
-function _shuffleArr(arr) {
-  const a = arr.slice();
-  for(let i=a.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [a[i],a[j]]=[a[j],a[i]];
-  }
-  return a;
-}
-
-function getShuffledQueue(key, pool) {
-  let queue;
-  try { queue = JSON.parse(localStorage.getItem(key) || '[]'); } catch(e) { queue = []; }
-  queue = queue.filter(i => i < pool.length);
-  if(queue.length === 0) {
-    const lastSeen = (() => { try { return parseInt(localStorage.getItem(key+'_last') || '-1'); } catch(e) { return -1; } })();
-    const fresh = _shuffleArr(pool.map((_,i)=>i));
-    if(fresh[0] === lastSeen && fresh.length > 1) fresh.push(fresh.shift());
-    queue = fresh;
-  }
-  const next = queue.shift();
-  try {
-    localStorage.setItem(key, JSON.stringify(queue));
-    localStorage.setItem(key+'_last', String(next));
-  } catch(e) {}
-  return next;
-}
-
-function nextCalibItem() { _currentCalibItem = CALIB_ITEMS[getShuffledQueue('em_ct_calib', CALIB_ITEMS)]; return _currentCalibItem; }
-function currentCalibItem() { return _currentCalibItem || nextCalibItem(); }
-function nextTrainItem() { _currentTrainItem = TRAIN_ITEMS[getShuffledQueue('em_ct_train', TRAIN_ITEMS)]; return _currentTrainItem; }
-function currentTrainItem() { return _currentTrainItem || nextTrainItem(); }
-
 </script>
-
-<div style="position:fixed;bottom:0;left:0;right:0;z-index:40;display:flex;justify-content:center;align-items:center;padding:10px 20px 20px;pointer-events:none;">
-  <a href="index.html" style="font-family:'Fredoka',sans-serif;font-size:14px;font-weight:600;color:var(--text3);letter-spacing:-0.01em;text-decoration:none;pointer-events:all;opacity:0.6;transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">
-    Entrena<em style="color:var(--violet);font-style:italic;">Mente</em>
-  </a>
-</div>
 
 </body>
 </html>
