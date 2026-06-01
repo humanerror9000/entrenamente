@@ -571,6 +571,31 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 
 <main>
 
+<!-- First-time intro screen -->
+<div id="first-intro" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:200;
+  flex-direction:column;align-items:center;justify-content:center;
+  padding:40px 28px;text-align:center;">
+  <div style="width:88px;height:88px;border-radius:28px;background:var(--amber-d);
+    border:1.5px solid var(--amber-b);display:flex;align-items:center;justify-content:center;
+    font-size:42px;margin-bottom:28px;box-shadow:0 0 40px rgba(245,166,35,0.15);">🧠</div>
+  <div style="font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;
+    color:var(--amber);margin-bottom:10px;">Ejercicio 2 de 3</div>
+  <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(28px,7vw,40px);
+    font-weight:300;color:var(--text);line-height:1.2;margin-bottom:16px;">
+    Actualización por <em style="color:var(--amber);font-style:italic;">Categorías</em>
+  </div>
+  <div style="font-size:16px;color:var(--text2);line-height:1.7;max-width:300px;margin-bottom:12px;">
+    Ahora un ejercicio que entrena tu <strong style="color:var(--text);">memoria de trabajo</strong> — la capacidad de mantener y actualizar información mientras piensas.
+  </div>
+  <div style="font-size:13px;color:var(--text3);margin-bottom:36px;">~3 minutos · Sin tiempo límite</div>
+  <button onclick="dismissFirstIntro()" style="width:100%;max-width:340px;padding:18px;
+    background:var(--amber);color:#0C0C10;border:none;border-radius:14px;
+    font-family:'Fredoka','DM Sans',sans-serif;font-size:18px;font-weight:600;
+    cursor:pointer;letter-spacing:0.01em;">
+    ▶ Comenzar
+  </button>
+</div>
+
 <div class="ready-screen" id="ready-screen">
   <div class="ready-inner">
     <div class="ready-title">Actualización por <em>Categorías</em></div>
@@ -618,6 +643,11 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
   }
   setTimeout(next,500);
 })();
+function dismissFirstIntro() {
+  document.getElementById('first-intro').style.display = 'none';
+  document.getElementById('ready-screen').classList.remove('hidden');
+}
+
 function dismissReady(){
   document.getElementById('ready-screen').classList.add('hidden');
   if(typeof requestWakeLock==='function') requestWakeLock();
@@ -664,7 +694,9 @@ function getSessionNext() {
       saltos:'saltos_visuales.html', memoria:'memoria_activa.html',
       cats:'actualizacion_categorias.html', continua:'actualizacion_continua.html',
     };
-    return urls[remaining[0]] ? urls[remaining[0]] + '?session=1' : null;
+    const isFirst = new URLSearchParams(window.location.search).get('first') === '1';
+    const suffix = isFirst ? '?session=1&first=1' : '?session=1';
+    return urls[remaining[0]] ? urls[remaining[0]] + suffix : null;
   } catch(e) { return null; }
 }
 
@@ -1295,6 +1327,15 @@ document.addEventListener('visibilitychange', () => {
   }
   tick();
   setInterval(tick, 1800);
+})();
+
+// First-time intro
+(function(){
+  const params = new URLSearchParams(window.location.search);
+  if(params.get('first') === '1') {
+    document.getElementById('ready-screen').classList.add('hidden');
+    document.getElementById('first-intro').style.display = 'flex';
+  }
 })();
 
 </script>

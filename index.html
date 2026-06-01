@@ -325,6 +325,12 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 
 
 <script>
+const FIRST_SESSION = [
+  { key:'saltos',  url:'saltos_visuales.html' },
+  { key:'cats',    url:'actualizacion_categorias.html' },
+  { key:'flash',   url:'lectura_flash_rsvp.html' },
+];
+
 const EXERCISES = {
   flash:    { name:'Lectura Flash',        url:'lectura_flash_rsvp.html' },
   bloques:  { name:'Lectura por Bloques',   url:'lectura_por_bloques_prototype.html' },
@@ -446,16 +452,19 @@ function isFirstSession(){
 function startDailySession(){
   const data=getUser(); if(!data)return;
 
-  let sessionKeys;
   if(isFirstSession()){
-    // Curated first session — welcoming and game-like
-    sessionKeys = ['saltos','lectura_flash','cats'];
-  } else {
-    const dow=new Date().getDay();
-    const schedule=SCHEDULE[data.profile||'adult']||SCHEDULE.adult;
-    sessionKeys = schedule[dow];
+    const done=getTodayCompletions();
+    const remaining=FIRST_SESSION.filter(e=>!done.includes(e.key));
+    if(remaining.length===0)return;
+    const queue={keys:FIRST_SESSION.map(e=>e.key),date:TODAY_KEY(),profile:data.profile||'adult'};
+    try{localStorage.setItem('em_session_queue',JSON.stringify(queue));}catch(e){}
+    window.location.href=remaining[0].url+'?session=1&first=1';
+    return;
   }
 
+  const dow=new Date().getDay();
+  const schedule=SCHEDULE[data.profile||'adult']||SCHEDULE.adult;
+  const sessionKeys=schedule[dow];
   const done=getTodayCompletions();
   const remaining=sessionKeys.filter(k=>!done.includes(k));
   if(remaining.length===0)return;
@@ -548,7 +557,9 @@ function finishOnboarding(launchExercise){
   const data={name,profile:_profile||'adult',conf:_conf||'intermediate',firstUrl:rec.url,since:new Date().toLocaleDateString('es-CO',{day:'numeric',month:'long'})};
   try{localStorage.setItem('em_user',JSON.stringify(data));}catch(e){}
   if(launchExercise){
-    window.location.href=rec.url+'?onboarding=1';
+    const queue={keys:FIRST_SESSION.map(e=>e.key),date:TODAY_KEY(),profile:_profile||'adult'};
+    try{localStorage.setItem('em_session_queue',JSON.stringify(queue));}catch(e){}
+    window.location.href=FIRST_SESSION[0].url+'?session=1&first=1';
   } else {
     document.getElementById('onboarding').classList.add('hidden');
     document.getElementById('app').classList.add('show');
