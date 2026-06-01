@@ -232,8 +232,10 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <div class="ob-greeting" id="ob-rec-greeting"></div>
     <div class="ob-session-note" id="ob-session-note"></div>
     <div class="ob-rec-card">
-      <div class="ob-rec-head"><span class="ob-rec-icon" id="rec-icon">📖</span><div><div class="ob-rec-label">Tu primer ejercicio recomendado</div><div class="ob-rec-name" id="rec-name">Lectura Flash</div></div></div>
-      <div class="ob-rec-body"><div class="ob-rec-desc" id="rec-desc"></div><div class="ob-rec-tags" id="rec-tags"></div></div>
+      <div class="ob-rec-body" style="padding:22px 20px;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:var(--text);line-height:1.4;margin-bottom:10px;">Empezaremos con unos ejercicios para calentar.</div>
+        <div style="font-size:15px;color:var(--text2);line-height:1.65;">¿Estás listo para tu <strong style="color:var(--text);">EntrenaMente</strong> de hoy?</div>
+      </div>
     </div>
     <button class="ob-btn" id="ob-start-btn">Comenzar →</button>
     <button class="ob-btn-ghost">Ver todos los ejercicios primero</button>
@@ -540,14 +542,8 @@ function selectConf(el,c){
 }
 function setupS4(){
   const name=document.getElementById('ob-name').value.trim();
-  const rec=(RECS[_profile]||RECS.adult)[_conf||'intermediate']||RECS.adult.intermediate;
   document.getElementById('ob-rec-greeting').innerHTML=_profile==='child'?'Listo para <em>'+name+'</em> 🌱':'Todo listo, <em>'+name+'</em>.';
-  document.getElementById('ob-session-note').textContent='Hemos elegido el mejor punto de partida según tu perfil.';
-  document.getElementById('rec-icon').textContent=rec.icon;
-  document.getElementById('rec-name').textContent=rec.name;
-  document.getElementById('rec-desc').textContent=rec.desc;
-  const tagsEl=document.getElementById('rec-tags'); tagsEl.innerHTML='';
-  rec.tags.forEach(t=>{const s=document.createElement('span');s.className='ob-rec-tag';s.textContent=t;tagsEl.appendChild(s);});
+  document.getElementById('ob-session-note').textContent='Así es como entrena tu cerebro cada día.';
   document.getElementById('ob-start-btn').onclick=()=>finishOnboarding(true);
   document.querySelector('.ob-btn-ghost').onclick=()=>finishOnboarding(false);
 }
