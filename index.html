@@ -236,7 +236,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       <div class="ob-rec-body"><div class="ob-rec-desc" id="rec-desc"></div><div class="ob-rec-tags" id="rec-tags"></div></div>
     </div>
     <button class="ob-btn" id="ob-start-btn">Comenzar →</button>
-    <button class="ob-btn-ghost" onclick="finishOnboarding()">Ver todos los ejercicios primero</button>
+    <button class="ob-btn-ghost">Ver todos los ejercicios primero</button>
     <span class="ob-back" onclick="goTo(3)">← Atrás</span>
   </div>
 </div>
@@ -303,7 +303,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       <div class="ex-grid">
         <a class="ex-card" id="card-flash" href="lectura_flash_rsvp.html"><div class="ex-card-text"><div class="ex-name">Lectura Flash</div><div class="ex-desc">Velocidad lectora adaptativa</div></div><span class="ex-arrow">↗</span></a>
         <a class="ex-card" id="card-bloques" href="lectura_por_bloques_prototype.html"><div class="ex-card-text"><div class="ex-name">Lectura por Bloques</div><div class="ex-desc">Procesamiento por grupos</div></div><span class="ex-arrow">↗</span></a>
-        <a class="ex-card" id="card-contra" href="contrarreloj.html"><div class="ex-card-text"><div class="ex-name">Contrarreloj</div><div class="ex-desc">Lee antes de que desaparezca</div></div><span class="ex-arrow">↗</span></a>
+        <a class="ex-card" id="card-contra" href="contrarreloj.html"><div class="ex-card-text"><div class="ex-name">Lectura Adaptativa</div><div class="ex-desc">Calibra tu ritmo y lee contra el tiempo</div></div><span class="ex-arrow">↗</span></a>
         <a class="ex-card" id="card-vision" href="vision_paralela.html"><div class="ex-card-text"><div class="ex-name">Visión Paralela</div><div class="ex-desc">Amplitud visual e icónica</div></div><span class="ex-arrow">↗</span></a>
         <a class="ex-card" id="card-saltos" href="saltos_visuales.html"><div class="ex-card-text"><div class="ex-name">Saltos Visuales</div><div class="ex-desc">Movimientos oculares</div></div><span class="ex-arrow">↗</span></a>
       </div>
@@ -328,7 +328,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 const EXERCISES = {
   flash:    { name:'Lectura Flash',        url:'lectura_flash_rsvp.html' },
   bloques:  { name:'Lectura por Bloques',   url:'lectura_por_bloques_prototype.html' },
-  contra:   { name:'Contrarreloj',          url:'contrarreloj.html' },
+  contra:   { name:'Lectura Adaptativa',    url:'contrarreloj.html' },
   vision:   { name:'Visión Paralela',       url:'vision_paralela.html' },
   saltos:   { name:'Saltos Visuales',       url:'saltos_visuales.html' },
   memoria:  { name:'Memoria Activa',        url:'memoria_activa.html' },
@@ -355,7 +355,7 @@ const RECS = {
     advanced:     {icon:'⚡',name:'Act. Continua',     url:'actualizacion_continua.html',  id:'card-continua',desc:'Para lectores avanzados, el n-back entrena la memoria de trabajo que marca la diferencia en lectura compleja.',tags:['1-back visual','Desafiante']},
   },
   adult: {
-    beginner:     {icon:'📖',name:'Contrarreloj',      url:'contrarreloj.html',            id:'card-contra', desc:'Contrarreloj comienza con una calibración breve de tu ritmo, luego el texto se desvanece gradualmente.',tags:['Calibración propia','RAP']},
+    beginner:     {icon:'📖',name:'Lectura Adaptativa',  url:'contrarreloj.html',            id:'card-contra', desc:'Comenzamos con una calibración breve de tu velocidad natural, luego el texto se desvanece gradualmente.',tags:['Calibración propia','RAP']},
     intermediate: {icon:'🎯',name:'Lectura Flash',     url:'lectura_flash_rsvp.html',      id:'card-flash',  desc:'Lectura Flash es el punto de entrada más efectivo — te calibras tú mismo y ves resultados desde la primera sesión.',tags:['200 ppm','Adaptativo']},
     advanced:     {icon:'🧠',name:'Act. Continua',     url:'actualizacion_continua.html',  id:'card-continua',desc:'El n-back visual entrena la capacidad que más distingue a los lectores expertos de los normales.',tags:['2-back','Inteligencia fluida']},
   },
@@ -539,16 +539,21 @@ function setupS4(){
   document.getElementById('rec-desc').textContent=rec.desc;
   const tagsEl=document.getElementById('rec-tags'); tagsEl.innerHTML='';
   rec.tags.forEach(t=>{const s=document.createElement('span');s.className='ob-rec-tag';s.textContent=t;tagsEl.appendChild(s);});
-  document.getElementById('ob-start-btn').onclick=finishOnboarding;
+  document.getElementById('ob-start-btn').onclick=()=>finishOnboarding(true);
+  document.querySelector('.ob-btn-ghost').onclick=()=>finishOnboarding(false);
 }
-function finishOnboarding(){
+function finishOnboarding(launchExercise){
   const name=document.getElementById('ob-name').value.trim();
   const rec=(RECS[_profile]||RECS.adult)[_conf||'intermediate']||RECS.adult.intermediate;
   const data={name,profile:_profile||'adult',conf:_conf||'intermediate',firstUrl:rec.url,since:new Date().toLocaleDateString('es-CO',{day:'numeric',month:'long'})};
   try{localStorage.setItem('em_user',JSON.stringify(data));}catch(e){}
-  document.getElementById('onboarding').classList.add('hidden');
-  document.getElementById('app').classList.add('show');
-  buildHomeScreen();
+  if(launchExercise){
+    window.location.href=rec.url+'?onboarding=1';
+  } else {
+    document.getElementById('onboarding').classList.add('hidden');
+    document.getElementById('app').classList.add('show');
+    buildHomeScreen();
+  }
 }
 function resetOnboarding(){
   if(!confirm('¿Cambiar el perfil de usuario? Esto reiniciará la configuración.'))return;

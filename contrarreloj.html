@@ -61,13 +61,13 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
 
 /* ── Reading area ── */
 .reading-area{flex:1;display:flex;flex-direction:column;align-items:center;
-  justify-content:center;padding:28px 28px 16px;}
-.reading-text{font-family:'Cormorant Garamond',serif;font-size:26px;
+  justify-content:center;padding:20px 24px 12px;overflow-y:auto;}
+.reading-text{font-family:'Cormorant Garamond',serif;font-size:clamp(18px,4.5vw,26px);
   line-height:1.65;color:var(--text);text-align:center;
   max-width:520px;transition:opacity 0.6s ease;}
 
 /* ── Stage footer ── */
-.stage-footer{padding:16px 24px 36px;border-top:1px solid var(--border);flex-shrink:0;}
+.stage-footer{padding:14px 24px 32px;border-top:1px solid var(--border);flex-shrink:0;background:var(--bg);}
 .stage-hint{font-size:12px;color:var(--text3);text-align:center;margin-bottom:12px;}
 .btn-primary{width:100%;padding:17px;background:var(--violet-deep);color:#fff;
   border:none;border-radius:14px;font-family:'Fredoka','DM Sans',sans-serif;
@@ -281,6 +281,45 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
 </div>
 
 <script>
+// ─────────────────────────────────────────────
+// Calibration texts — one simple paragraph per age group
+// Used as the baseline read on first session / onboarding
+// ─────────────────────────────────────────────
+const CALIBRATION = {
+  child: {
+    a: {
+      text: "Los perros son los animales domésticos más populares del mundo. Pueden aprender muchas cosas si las practicamos con paciencia. Hay perros grandes y pequeños, de pelo largo y de pelo corto. Todos necesitan agua fresca, comida y mucho cariño cada día.",
+      q: "¿Qué necesitan los perros todos los días?",
+      opts: ["Solo comida y agua","Agua, comida y cariño","Un lugar grande para correr","Juguetes y paseos"],
+      correct: 1
+    }
+  },
+  teen: {
+    a: {
+      text: "Dormir bien es una de las cosas más importantes que puedes hacer por tu cerebro. Cuando dormimos, el cerebro organiza los recuerdos del día y elimina sustancias que lo cansan. Los adolescentes necesitan entre ocho y diez horas de sueño. Quedarse despierto hasta tarde estudiando suele ser contraproducente.",
+      q: "¿Qué hace el cerebro mientras dormimos?",
+      opts: ["Descansa por completo","Organiza recuerdos y elimina sustancias dañinas","Procesa únicamente emociones","Ralentiza todas sus funciones"],
+      correct: 1
+    }
+  },
+  adult: {
+    a: {
+      text: "Caminar treinta minutos al día tiene efectos positivos comprobados sobre el cerebro. Mejora el estado de ánimo, reduce el estrés y favorece la memoria a corto plazo. No hace falta un ritmo intenso: una caminata tranquila en un parque es suficiente para activar la circulación y oxigenar las neuronas.",
+      q: "¿Qué beneficio tiene caminar sobre la memoria?",
+      opts: ["Mejora la memoria a largo plazo","Favorece la memoria a corto plazo","No tiene efectos sobre la memoria","Solo mejora el estado de ánimo"],
+      correct: 1
+    }
+  },
+  senior: {
+    a: {
+      text: "Leer en voz alta es un ejercicio sencillo que activa varias partes del cerebro al mismo tiempo. Mientras leemos, usamos la vista, el habla y la memoria juntas. Es una actividad recomendada para mantener la agilidad mental a cualquier edad. Basta con diez o quince minutos diarios para notar la diferencia.",
+      q: "¿Por qué leer en voz alta activa el cerebro?",
+      opts: ["Porque mejora la vista","Porque usa la vista, el habla y la memoria juntas","Porque aumenta la velocidad lectora","Porque reduce el estrés"],
+      correct: 1
+    }
+  }
+};
+
 // ─────────────────────────────────────────────
 // Text pool — 8 paragraph pairs (A = free read, B = timed)
 // Each pair shares a theme; B is slightly harder/longer
@@ -499,17 +538,50 @@ function dismissReady() {
   baselineMs = performance.now();
 }
 
+function isCalibrationRun() {
+  const params = new URLSearchParams(window.location.search);
+  if(params.get('onboarding') === '1') return true;
+  // Also calibrate if user has never done contrarreloj before
+  try {
+    const wpm = localStorage.getItem('em_contra_wpm');
+    return !wpm;
+  } catch(e){ return true; }
+}
+
+function getUserProfile() {
+  try {
+    const u = JSON.parse(localStorage.getItem('em_user') || '{}');
+    return u.profile || 'adult';
+  } catch(e){ return 'adult'; }
+}
+
 function loadPair() {
-  // Pick unused pair from queue
-  let q; try{ q=JSON.parse(localStorage.getItem('em_contra_q')||'[]'); }catch(e){ q=[]; }
-  q = q.filter(i => i < PAIRS.length);
-  if(!q.length) {
-    const fresh = PAIRS.map((_,i)=>i).sort(()=>Math.random()-0.5);
-    q = fresh;
+  // Use calibration text on first run / onboarding
+  if(isCalibrationRun()) {
+    const profile = getUserProfile();
+    const cal = CALIBRATION[profile] || CALIBRATION.adult;
+    // Pick a regular pair for the timed paragraph (B)
+    let q; try{ q=JSON.parse(localStorage.getItem('em_contra_q')||'[]'); }catch(e){ q=[]; }
+    q = q.filter(i => i < PAIRS.length);
+    if(!q.length) {
+      const fresh = PAIRS.map((_,i)=>i).sort(()=>Math.random()-0.5);
+      q = fresh;
+    }
+    const idx = q.shift();
+    try{ localStorage.setItem('em_contra_q', JSON.stringify(q)); }catch(e){}
+    currentPair = { a: cal.a, b: PAIRS[idx].b };
+  } else {
+    // Pick unused pair from queue
+    let q; try{ q=JSON.parse(localStorage.getItem('em_contra_q')||'[]'); }catch(e){ q=[]; }
+    q = q.filter(i => i < PAIRS.length);
+    if(!q.length) {
+      const fresh = PAIRS.map((_,i)=>i).sort(()=>Math.random()-0.5);
+      q = fresh;
+    }
+    const idx = q.shift();
+    try{ localStorage.setItem('em_contra_q', JSON.stringify(q)); }catch(e){}
+    currentPair = PAIRS[idx];
   }
-  const idx = q.shift();
-  try{ localStorage.setItem('em_contra_q', JSON.stringify(q)); }catch(e){}
-  currentPair = PAIRS[idx];
 
   document.getElementById('text-0').textContent = currentPair.a.text;
   document.getElementById('text-2').textContent = currentPair.b.text;
@@ -654,11 +726,13 @@ function restartExercise() {
   setStage(0);
 }
 
-// Check if launched in session context
+// Check if launched in session context or onboarding
 (function(){
-  const params = new URLSearchParams(window.location.search);
-  if(params.get('session') === '1') {
-    // Already in session, just show ready screen
+  if(isCalibrationRun()) {
+    // Update ready screen messaging for calibration
+    document.querySelector('.ready-sub').textContent = 'Primero leerás un texto corto a tu ritmo — así calibramos tu velocidad natural. Luego un segundo párrafo contra el tiempo.';
+    document.querySelectorAll('.ready-step-title')[0].textContent = 'Lee a tu ritmo natural';
+    document.querySelectorAll('.ready-step-desc')[0].textContent = 'Texto sencillo y corto. Toca Listo al terminar.';
   }
 })();
 </script>
