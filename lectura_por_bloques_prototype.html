@@ -599,7 +599,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
         <div><div style="font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;">Modo 3</div><div style="font-size:14px;color:var(--text2);">Reconstrucción</div></div>
       </div>
     </div>
-    <button class="ready-btn"<button class="ready-btn" onclick="dismissReady()">▶ Empecemos</button>
+    <button class="ready-btn" onclick="dismissReady()">▶ Empecemos</button>
     <div class="ready-hint">Empieza por el Modo 1 — puedes cambiar cuando quieras</div>
   </div>
 </div>
@@ -772,7 +772,7 @@ function updateSessionBtnLabels() {
       <div class="focos-area" id="focos-area">
         <!-- paragraph injected by JS -->
       </div>
-      <div class="focos-footer">
+      <div class="focos-footer" id="focos-footer">
         <button class="focos-start-btn" id="focos-start-btn" onclick="startFocos()">▶ Iniciar</button>
         <div class="focos-nav" id="focos-nav" style="display:none">
           <button class="btn btn-ghost" onclick="showBloqueTransition(2)">Siguiente modo →</button>
@@ -1105,7 +1105,7 @@ function startFocos() {
   const cd = setInterval(() => {
     count--;
     if(count > 0) {
-      area.innerHTML = '<div style="font-family:Poppins,sans-serif;font-size:72px;font-weight:300;color:var(--violet);text-align:center;width:100%);">' + count + '</div>';
+      area.innerHTML = '<div style="font-family:Poppins,sans-serif;font-size:72px;font-weight:300;color:var(--violet);text-align:center;width:100%;">' + count + '</div>';
     } else {
       clearInterval(cd);
       initFocos();
@@ -1191,6 +1191,7 @@ const flashChunks = _flashPassage.flashChunks;
 let flashIdx = 0, flashTimer = null;
 
 function startFlash() {
+  if(flashTimer) { clearInterval(flashTimer); flashTimer = null; }
   flashIdx = 0;
   const area = document.getElementById('flash-area');
   area.innerHTML = `
