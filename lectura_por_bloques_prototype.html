@@ -6,14 +6,14 @@
 <title>EntrenaMente – Lectura por Bloques</title>
 <style>
   :root {
-  --bg:#0C0C10; --bg2:#13131A; --card:#18181F; --card2:#1E1E28;
-  --border:rgba(255,255,255,0.06); --border2:rgba(255,255,255,0.11);
-  --text:#EAE8F2; --text2:#8E8CA8; --text3:#4A4860;
+  --bg:#F8F7FF; --bg2:#F0EEF8; --card:#FFFFFF; --card2:#F4F2FC;
+  --border:rgba(0,0,0,0.07); --border2:rgba(0,0,0,0.13);
+  --text:#1A1830; --text2:#4A4468; --text3:#8B87A8;
   /* Brand violet — primary accent */
-  --violet:#B8A9FF; --violet-d:rgba(184,169,255,0.12); --violet-b:rgba(184,169,255,0.28);
+  --violet:#6C5CE7; --violet-d:rgba(108,92,231,0.10); --violet-b:rgba(108,92,231,0.25);
   --violet-deep:#534AB7;
   /* Teal — action/success/interactive */
-  --teal:#2ECFB8; --teal-d:rgba(46,207,184,0.12); --teal-b:rgba(46,207,184,0.28);
+  --teal:#1AAF9A; --teal-d:rgba(26,175,154,0.10); --teal-b:rgba(26,175,154,0.25);
   /* Supporting palette */
   --gold:#C9A84C; --gold-l:rgba(201,168,76,0.12); --gold-b:rgba(201,168,76,0.30);
   --amber:#F5A623; --amber-d:rgba(245,166,35,0.12); --amber-b:rgba(245,166,35,0.28);
@@ -53,7 +53,7 @@
   .mode-badge {
     font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
     text-transform: uppercase;
-    background: rgba(255,255,255,0.12);
+    background: rgba(0,0,0,0.08);
     border: 1px solid rgba(255,255,255,0.2);
     color: #fff;
     padding: 4px 12px; border-radius: 20px;
@@ -126,7 +126,7 @@
 
   .card-instruction {
     padding: 16px 24px;
-    font-size: 14px; color: var(--ink2); line-height: 1.6;
+    font-size: 17px; color: var(--ink2); line-height: 1.6;
     background: var(--bg);
     border-bottom: 1px solid var(--border);
   }
@@ -305,7 +305,7 @@
     margin: 0 24px 24px;
     padding: 16px 20px;
     border-radius: 12px;
-    font-size: 14px; line-height: 1.6;
+    font-size: 16px; line-height: 1.6;
     display: none;
   }
   .feedback-panel.correct {
@@ -337,10 +337,10 @@
   .question-text { font-size: 15px; color: var(--ink); line-height: 1.5; margin-bottom: 10px; }
   .q-options { display: flex; flex-direction: column; gap: 7px; }
   .q-option {
-    padding: 11px 16px; border-radius: 10px;
+    padding: 13px 16px; border-radius: 10px;
     border: 1.5px solid var(--border);
     background: var(--card); cursor: pointer;
-    font-size: 14px; font-family: 'Poppins', sans-serif;
+    font-size: 17px; font-family: 'Poppins', sans-serif;
     transition: all 0.15s; color: var(--ink2);
   }
   .q-option:hover { border-color:var(--teal);color:var(--text);background:var(--teal-d); background: var(--purple-light); }
@@ -398,20 +398,19 @@
   .feedback-panel { margin: 0 16px 16px !important; font-size: 13px !important; }
 }
 
-body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.4;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");}
+body::before{display:none;}
 
 /* ── Shared design system classes ── */
 .logo{font-family:'Poppins',sans-serif;font-size:20px;font-weight:300;color:var(--text);letter-spacing:-0.01em;}
 .logo em{color:var(--gold);font-style:italic;}
-.hdr-back{font-size:12px;color:var(--text3);text-decoration:none;display:flex;align-items:center;gap:4px;transition:color 0.15s;}
+.hdr-back{font-size:15px;color:var(--text3);text-decoration:none;display:flex;align-items:center;gap:4px;transition:color 0.15s;}
 .hdr-back:hover{color:var(--text2);}
-.hdr-ex-name{font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);}
-.hdr-stat{font-size:12px;color:var(--text3);display:flex;align-items:center;gap:5px;}
+.hdr-ex-name{font-size:15px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);}
+.hdr-stat{font-size:15px;color:var(--text3);display:flex;align-items:center;gap:5px;}
 .hdr-stat b{color:var(--teal);font-size:13px;}
 .instr-banner{background:var(--teal-d);border-bottom:1px solid var(--teal-b);padding:14px 20px;display:flex;align-items:flex-start;gap:12px;}
 .instr-icon{font-size:20px;flex-shrink:0;margin-top:1px;}
-.instr-text{font-size:14px;color:var(--text2);line-height:1.65;}
+.instr-text{font-size:17px;color:var(--text2);line-height:1.65;}
 .instr-text strong{color:var(--text);font-weight:600;}
 .card-title-serif{font-family:'Poppins',sans-serif;font-size:24px;font-weight:300;color:var(--text);line-height:1.1;margin-bottom:4px;}
 .sci-details{background:var(--card);border:1px solid var(--border2);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;}
@@ -420,7 +419,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 .sci-details summary::after{content:'▸';font-size:10px;transition:transform 0.2s;color:var(--text3);}
 .sci-details[open] summary::after{transform:rotate(90deg);}
 .sci-details[open] summary{border-bottom:1px solid var(--border);}
-.sci-body,.sci-details-body{padding:14px 18px 16px;font-size:13px;color:var(--text2);line-height:1.7;}
+.sci-body,.sci-details-body{padding:14px 18px 16px;font-size:16px;color:var(--text2);line-height:1.7;}
 .sci-body strong,.sci-details-body strong{color:var(--text);}
 
 
@@ -448,7 +447,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
   color:var(--text); line-height:1.1; margin-bottom:12px;
 }
 .ready-title em { color:var(--teal); font-style:italic; }
-.ready-sub{font-size:17px;color:var(--text2);line-height:1.6;text-align:center;margin-bottom:24px;max-width:320px;}
+.ready-sub{font-size:19px;color:var(--text2);line-height:1.65;text-align:center;margin-bottom:24px;max-width:320px;}
 .ready-sub strong { color:var(--text); font-weight:600; }
 
 /* Animation preview box */
@@ -485,7 +484,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 .ready-btn:hover { opacity:0.88; transform:translateY(-1px); }
 .ready-btn:active { transform:translateY(0); }
 .ready-hint {
-  font-size:13px; color:var(--text3); line-height:1.5;
+  font-size:16px; color:var(--text3); line-height:1.5;
 }
 
 @media(max-width:600px) {
@@ -530,7 +529,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
   border: none;
   border-radius: 13px;
   font-family: 'Fredoka', 'Poppins', sans-serif;
-  font-size: 17px;
+  font-size: 19px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
@@ -563,9 +562,9 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
   font-weight:600; cursor:pointer; }
 .focos-nav { display:flex; justify-content:flex-end; }
 .focos-question { margin-bottom:12px; }
-.focos-q-text { font-size:16px; color:var(--text); margin-bottom:12px; line-height:1.5; }
-.focos-opt { padding:13px 16px; border-radius:12px; border:1.5px solid var(--border2);
-  background:var(--card); font-size:15px; color:var(--text2); cursor:pointer;
+.focos-q-text { font-size:18px; color:var(--text); margin-bottom:12px; line-height:1.5; }
+.focos-opt { padding:14px 16px; border-radius:12px; border:1.5px solid var(--border2);
+  background:var(--card); font-size:17px; color:var(--text2); cursor:pointer;
   margin-bottom:8px; transition:all 0.12s; }
 
 </style>
@@ -588,15 +587,15 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
     <div style="width:100%;margin-bottom:24px;display:flex;flex-direction:column;gap:8px;">
       <div style="display:flex;gap:8px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border2);border-radius:10px;">
         <span style="font-size:18px;">🔦</span>
-        <div><div style="font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;">Modo 1</div><div style="font-size:14px;color:var(--text2);">Lectura por focos</div></div>
+        <div><div style="font-size:15px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;">Modo 1</div><div style="font-size:14px;color:var(--text2);">Lectura por focos</div></div>
       </div>
       <div style="display:flex;gap:8px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border2);border-radius:10px;">
         <span style="font-size:18px;">⚡</span>
-        <div><div style="font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;">Modo 2</div><div style="font-size:14px;color:var(--text2);">Flash por bloques</div></div>
+        <div><div style="font-size:15px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;">Modo 2</div><div style="font-size:14px;color:var(--text2);">Flash por bloques</div></div>
       </div>
       <div style="display:flex;gap:8px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border2);border-radius:10px;">
         <span style="font-size:18px;">🧩</span>
-        <div><div style="font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;">Modo 3</div><div style="font-size:14px;color:var(--text2);">Reconstrucción</div></div>
+        <div><div style="font-size:15px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;">Modo 3</div><div style="font-size:14px;color:var(--text2);">Reconstrucción</div></div>
       </div>
     </div>
     <button class="ready-btn" onclick="dismissReady()">▶ Empecemos</button>

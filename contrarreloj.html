@@ -8,12 +8,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:#0C0C10; --bg2:#13131A; --card:#18181F; --card2:#1E1E28;
-  --border:rgba(255,255,255,0.06); --border2:rgba(255,255,255,0.11);
-  --text:#EAE8F2; --text2:#8E8CA8; --text3:#4A4860;
-  --violet:#B8A9FF; --violet-d:rgba(184,169,255,0.12); --violet-b:rgba(184,169,255,0.28);
+  --bg:#F8F7FF; --bg2:#F0EEF8; --card:#FFFFFF; --card2:#F4F2FC;
+  --border:rgba(0,0,0,0.07); --border2:rgba(0,0,0,0.13);
+  --text:#1A1830; --text2:#4A4468; --text3:#8B87A8;
+  --violet:#6C5CE7; --violet-d:rgba(108,92,231,0.10); --violet-b:rgba(108,92,231,0.25);
   --violet-deep:#534AB7;
-  --teal:#2ECFB8; --teal-d:rgba(46,207,184,0.12); --teal-b:rgba(46,207,184,0.28);
+  --teal:#1AAF9A; --teal-d:rgba(26,175,154,0.10); --teal-b:rgba(26,175,154,0.25);
   --gold:#C9A84C; --amber:#F5A623;
   --coral:#E05C5C; --coral-d:rgba(224,92,92,0.12);
   --green:#4ECB9A; --green-d:rgba(78,203,154,0.12);
@@ -39,7 +39,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
   border:1px solid var(--border2);border-radius:13px;padding:14px 16px;text-align:left;}
 .ready-step-icon{font-size:22px;flex-shrink:0;margin-top:1px;}
 .ready-step-title{font-size:14px;color:var(--text);font-weight:600;margin-bottom:3px;}
-.ready-step-desc{font-size:13px;color:var(--text3);line-height:1.55;}
+.ready-step-desc{font-size:16px;color:var(--text3);line-height:1.55;}
 .ready-btn{width:100%;max-width:340px;padding:18px;background:var(--violet-deep);
   color:#fff;border:none;border-radius:14px;
   font-family:'Fredoka','DM Sans',sans-serif;font-size:18px;font-weight:600;cursor:pointer;}
@@ -52,7 +52,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
 /* ── Stage header ── */
 .stage-header{padding:14px 20px 0;display:flex;align-items:center;
   justify-content:space-between;flex-shrink:0;}
-.stage-label{font-size:13px;color:var(--text3);}
+.stage-label{font-size:16px;color:var(--text3);}
 .stage-step{font-size:13px;color:var(--teal);font-family:'Fredoka',sans-serif;}
 
 /* ── Progress bar ── */
@@ -68,7 +68,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
 
 /* ── Stage footer ── */
 .stage-footer{padding:14px 24px 32px;border-top:1px solid var(--border);flex-shrink:0;background:var(--bg);}
-.stage-hint{font-size:12px;color:var(--text3);text-align:center;margin-bottom:12px;}
+.stage-hint{font-size:15px;color:var(--text3);text-align:center;margin-bottom:12px;}
 .btn-primary{width:100%;padding:17px;background:var(--violet-deep);color:#fff;
   border:none;border-radius:14px;font-family:'Fredoka','DM Sans',sans-serif;
   font-size:18px;font-weight:600;cursor:pointer;}
@@ -95,13 +95,13 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
   justify-content:center;padding:28px 24px;gap:16px;}
 .result-wpm{font-family:'Cormorant Garamond',serif;font-size:72px;font-weight:300;
   color:var(--teal);line-height:1;}
-.result-wpm-label{font-size:13px;color:var(--text3);text-transform:uppercase;
+.result-wpm-label{font-size:16px;color:var(--text3);text-transform:uppercase;
   letter-spacing:0.10em;margin-top:4px;}
 .result-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:340px;}
 .result-card{background:var(--card);border:1px solid var(--border2);border-radius:13px;
   padding:14px;text-align:center;}
 .result-card-val{font-size:24px;font-weight:600;font-family:'Fredoka',sans-serif;}
-.result-card-lbl{font-size:11px;color:var(--text3);text-transform:uppercase;
+.result-card-lbl{font-size:14px;color:var(--text3);text-transform:uppercase;
   letter-spacing:0.08em;margin-top:3px;}
 .result-insight{background:var(--violet-d);border:1px solid var(--violet-b);
   border-radius:13px;padding:16px;font-size:14px;color:var(--text2);
