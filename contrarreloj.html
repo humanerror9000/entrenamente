@@ -631,7 +631,10 @@ function showQuestion(stage) {
 function startTimed() {
   setStage(3);
   timedExpired = false;
-  document.getElementById('text-2').style.opacity = '1';
+  const textEl = document.getElementById('text-2');
+  // Reset any lingering transition from a previous run
+  textEl.style.transition = 'none';
+  textEl.style.opacity = '1';
   document.getElementById('listo-2').style.display = 'none';
   document.getElementById('hint-2').textContent = 'La barra marca el tiempo — lee con atención';
 
@@ -641,9 +644,6 @@ function startTimed() {
   const duration = Math.max(targetMs, 4000); // minimum 4 seconds
 
   // Fade text gradually — text itself is the timer
-  const textEl = document.getElementById('text-2');
-  textEl.style.transition = 'none';
-  textEl.style.opacity = '1';
   requestAnimationFrame(() => requestAnimationFrame(() => {
     textEl.style.transition = `opacity ${duration}ms linear`;
     textEl.style.opacity = '0';
@@ -657,7 +657,8 @@ function startTimed() {
   // Full fade when time expires
   timedTimer = setTimeout(() => {
     timedExpired = true;
-    document.getElementById('text-2').style.opacity = '0';
+    textEl.style.transition = 'none';
+    textEl.style.opacity = '0';
     document.getElementById('hint-2').textContent = '¡Tiempo! ¿Recordaste el contenido?';
     document.getElementById('listo-2').style.display = 'block';
     document.getElementById('listo-2').textContent = 'Responder pregunta →';
@@ -666,13 +667,13 @@ function startTimed() {
 
 function finishTimed() {
   clearTimeout(timedTimer);
-  // Stop the fade wherever it is
+  // Hard-stop the fade — clear transition and snap opacity to 0
   const textEl = document.getElementById('text-2');
   textEl.style.transition = 'none';
+  textEl.style.opacity = '0';
   // Calculate timed WPM if user tapped Listo before timeout
   if(!timedExpired) {
-    // User finished early — great
-    timedWpm = baselineWpm; // conservative — we don't have exact timing
+    timedWpm = baselineWpm;
   } else {
     timedWpm = Math.round(baselineWpm * 1.15);
   }
