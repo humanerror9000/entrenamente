@@ -217,12 +217,15 @@ body::before{display:none;}
   </div>
   <div class="ob-screen" id="ob-s3">
     <div class="ob-dots"><div class="ob-dot done"></div><div class="ob-dot active"></div><div class="ob-dot"></div></div>
-    <div class="ob-title" id="ob-s3-title">¿Cómo describes tu <em>lectura</em>?</div>
-    <div class="ob-sub" id="ob-s3-sub">Sé honesto/a — esto solo sirve para empezar en el nivel correcto.</div>
-    <div class="ob-confidence">
-      <div class="ob-conf-opt" onclick="selectConf(this,'beginner')"><span class="oc-emoji">🐢</span><div><div class="oc-label" id="cl1">Leo despacio y me cuesta concentrarme</div><div class="oc-desc">Empezaremos muy suave, sin presión</div></div></div>
-      <div class="ob-conf-opt" onclick="selectConf(this,'intermediate')"><span class="oc-emoji">🚶</span><div><div class="oc-label" id="cl2">Leo bien pero me gustaría mejorar</div><div class="oc-desc">Nivel estándar con progresión gradual</div></div></div>
-      <div class="ob-conf-opt" onclick="selectConf(this,'advanced')"><span class="oc-emoji">🏃</span><div><div class="oc-label" id="cl3">Leo rápido y quiero ir más lejos</div><div class="oc-desc">Comenzamos con más intensidad</div></div></div>
+    <div class="ob-title">¿Cuántos años <em>tienes</em>?</div>
+    <div class="ob-sub">Usamos tu edad para adaptar el ritmo de los ejercicios desde el inicio.</div>
+    <div style="width:100%;display:flex;flex-direction:column;align-items:center;gap:16px;margin-bottom:28px;">
+      <input id="ob-age" type="number" min="18" max="100" placeholder="Ej. 62"
+        style="width:100%;padding:18px 20px;font-family:'Cormorant Garamond',serif;font-size:36px;
+        font-weight:300;text-align:center;background:var(--card);border:1.5px solid var(--border2);
+        border-radius:14px;color:var(--text);outline:none;-webkit-tap-highlight-color:transparent;"
+        oninput="checkAge()" inputmode="numeric">
+      <div style="font-size:15px;color:var(--text3);">Entre 18 y 100 años</div>
     </div>
     <button class="ob-btn" id="ob-s3-btn" disabled onclick="goTo(4)">Continuar →</button>
     <span class="ob-back" onclick="goTo(1)">← Atrás</span>
@@ -527,18 +530,13 @@ function setupS2(){
   document.getElementById('ob-s2-sub').textContent=_profile==='child'?'Elige el grupo de edad del niño o niña.':'Elige el grupo que mejor te corresponde, '+name+'.';
 }
 function setupS3(){
-  const isChild=_profile==='child';
-  document.getElementById('ob-s3-title').innerHTML=isChild?'¿Cómo le va con la <em>lectura</em>?':'¿Cómo describes tu <em>lectura</em>?';
-  document.getElementById('ob-s3-sub').textContent=isChild?'Elige la opción que mejor describe al niño o niña.':'Sé honesto/a — esto solo sirve para empezar en el nivel correcto.';
-  const labels=isChild?['Le cuesta leer y se cansa rápido','Lee bien pero puede mejorar','Le encanta leer y lee mucho']:['Leo despacio y me cuesta concentrarme','Leo bien pero me gustaría mejorar','Leo rápido y quiero ir más lejos'];
-  ['cl1','cl2','cl3'].forEach((id,i)=>document.getElementById(id).textContent=labels[i]);
-  document.querySelectorAll('.ob-conf-opt').forEach(o=>o.classList.remove('selected'));
-  document.getElementById('ob-s3-btn').disabled=true;
+  document.getElementById('ob-s3-btn').disabled = true;
+  const ageEl = document.getElementById('ob-age');
+  if(ageEl) ageEl.value = '';
 }
-function selectConf(el,c){
-  document.querySelectorAll('.ob-conf-opt').forEach(o=>o.classList.remove('selected'));
-  el.classList.add('selected'); _conf=c;
-  document.getElementById('ob-s3-btn').disabled=false;
+function checkAge(){
+  const v = parseInt(document.getElementById('ob-age').value);
+  document.getElementById('ob-s3-btn').disabled = !(v >= 18 && v <= 100);
 }
 function setupS4(){
   const name=document.getElementById('ob-name').value.trim();
@@ -549,8 +547,8 @@ function setupS4(){
 }
 function finishOnboarding(launchExercise){
   const name=document.getElementById('ob-name').value.trim();
-  const rec=(RECS[_profile]||RECS.adult)[_conf||'intermediate']||RECS.adult.intermediate;
-  const data={name,profile:_profile||'adult',conf:_conf||'intermediate',firstUrl:rec.url,since:new Date().toLocaleDateString('es-CO',{day:'numeric',month:'long'})};
+  const age=parseInt(document.getElementById('ob-age')?.value)||60;
+  const data={name,profile:'senior',age,since:new Date().toLocaleDateString('es-CO',{day:'numeric',month:'long'})};
   try{localStorage.setItem('em_user',JSON.stringify(data));}catch(e){}
   if(launchExercise){
     const queue={keys:FIRST_SESSION.map(e=>e.key),date:TODAY_KEY(),profile:_profile||'adult'};
@@ -562,6 +560,25 @@ function finishOnboarding(launchExercise){
     buildHomeScreen();
   }
 }
+// ─────────────────────────────────────────────
+// Age-based reading speed baseline
+// Based on normative reading speed research
+// ─────────────────────────────────────────────
+function getBaseWpm(age) {
+  age = age || 60;
+  if (age < 30) return 250;
+  if (age < 40) return 230;
+  if (age < 50) return 210;
+  if (age < 60) return 185;
+  if (age < 70) return 160;
+  if (age < 80) return 140;
+  return 120;
+}
+
+function getUserAge() {
+  try { return parseInt(JSON.parse(localStorage.getItem('em_user')||'{}').age)||60; } catch(e){ return 60; }
+}
+
 function resetOnboarding(){
   if(!confirm('¿Cambiar el perfil de usuario? Esto reiniciará la configuración.'))return;
   ['em_user','em_completions','em_streak','em_session_queue'].forEach(k=>{try{localStorage.removeItem(k);}catch(e){}});

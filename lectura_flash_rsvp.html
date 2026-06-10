@@ -609,7 +609,7 @@ details.sci[open] summary{border-bottom:1px solid var(--border);}
       <div class="preview-inner">
         <div style="text-align:center;">
           <div id="rdy-word" style="font-family:'Poppins',sans-serif;font-size:38px;font-weight:300;color:var(--text);min-height:50px;transition:opacity 0.12s;"></div>
-          <div style="font-size:14px;color:var(--text3);margin-top:8px;letter-spacing:0.06em;">150 ppm</div>
+          <div style="font-size:14px;color:var(--text3);margin-top:8px;letter-spacing:0.06em;" id="rdy-wpm-label">150 ppm</div>
         </div>
       </div>
     </div>
@@ -651,7 +651,12 @@ function dismissFirstIntro() {
 function dismissReady(){
   window._stopRdy && window._stopRdy();
   const spd = document.getElementById('rdy-speed-slider');
-  if(spd){ currentWpm=parseInt(spd.value)||150; syncSpeed(spd.value); }
+  if(spd){
+    spd.value = currentWpm;
+    document.getElementById('rdy-speed-val').textContent = currentWpm;
+    if(document.getElementById('rdy-wpm-label')) document.getElementById('rdy-wpm-label').textContent = currentWpm + ' ppm';
+    syncSpeed(spd.value);
+  }
   selectedTextIdx = getNextTextIdx('adult');
   document.getElementById('ready-screen').classList.add('hidden');
   setStage(1);
@@ -1114,7 +1119,21 @@ const TEXTS = [
 // ──────────────────────────────────
 // State
 // ──────────────────────────────────
-let currentWpm = 150;
+// Age-based reading speed baseline
+function getBaseWpm(age) {
+  age = age || 60;
+  if (age < 30) return 250;
+  if (age < 40) return 230;
+  if (age < 50) return 210;
+  if (age < 60) return 185;
+  if (age < 70) return 160;
+  if (age < 80) return 140;
+  return 120;
+}
+function getUserAge() {
+  try { return parseInt(JSON.parse(localStorage.getItem('em_user')||'{}').age)||60; } catch(e){ return 60; }
+}
+let currentWpm = getBaseWpm(getUserAge());
 let presentMode = 'word'; // 'word' | 'phrase'
 let selectedTextIdx = 0;
 let rsvpTimer = null;

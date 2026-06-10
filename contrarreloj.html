@@ -45,9 +45,11 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
   font-family:'Fredoka','DM Sans',sans-serif;font-size:18px;font-weight:600;cursor:pointer;}
 
 /* ── Stage layout ── */
-.stage{display:none;flex-direction:column;position:fixed;inset:0;
-  background:var(--bg);z-index:10;}
-.stage.show{display:flex;}
+.stage{display:flex;flex-direction:column;position:fixed;inset:0;
+  background:var(--bg);z-index:10;
+  opacity:0;pointer-events:none;
+  -webkit-transform:translateZ(0);transform:translateZ(0);}
+.stage.show{opacity:1;pointer-events:auto;}
 
 /* ── Stage header ── */
 .stage-header{padding:14px 20px 0;display:flex;align-items:center;
@@ -451,6 +453,24 @@ let timedCorrect = false;
 let timedTimer = null;
 let timedExpired = false;
 
+// Age-based reading speed baseline
+function getBaseWpm(age) {
+  age = age || 60;
+  if (age < 30) return 250;
+  if (age < 40) return 230;
+  if (age < 50) return 210;
+  if (age < 60) return 185;
+  if (age < 70) return 160;
+  if (age < 80) return 140;
+  return 120;
+}
+function getUserAge() {
+  try { return parseInt(JSON.parse(localStorage.getItem('em_user')||'{}').age)||60; } catch(e){ return 60; }
+}
+// Seed baselineWpm from age so first timed paragraph has a sensible duration
+// (will be overwritten by actual measured speed after calibration read)
+baselineWpm = getBaseWpm(getUserAge());
+
 // ─────────────────────────────────────────────
 // Utilities
 // ─────────────────────────────────────────────
@@ -643,14 +663,15 @@ function startTimed() {
   const targetMs = Math.round((words / (baselineWpm * 1.15)) * 60000);
   const duration = Math.max(targetMs, 4000); // minimum 4 seconds
 
-  // Hard reset — force reflow before starting fade
+  // Hard reset — wait for stage swap to fully paint before starting fade
   textEl.style.transition = 'none';
   textEl.style.opacity = '1';
   void textEl.offsetHeight; // force reflow
-  requestAnimationFrame(() => {
+  // Double rAF ensures the stage swap has been committed to the GPU before fade starts
+  requestAnimationFrame(() => requestAnimationFrame(() => {
     textEl.style.transition = `opacity ${duration}ms linear`;
     textEl.style.opacity = '0';
-  });
+  }));
 
   // Show Listo button halfway through so user can tap if done
   setTimeout(() => {

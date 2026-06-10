@@ -623,10 +623,94 @@ body::before{display:none;}
       <div style="padding:6px 12px;background:var(--card);border:1px solid var(--border2);border-radius:20px;font-size:15px;color:var(--text3);"># Escaneo</div>
     </div>
     <button class="ready-btn" onclick="dismissReady()">▶ Empecemos</button>
+    <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-top:4px;margin-bottom:8px;">
+      <span style="font-size:16px;color:var(--text3);">🔔 Metrónomo</span>
+      <div id="metronome-toggle" onclick="toggleMetronome()"
+        style="width:52px;height:28px;border-radius:14px;background:var(--border2);
+        cursor:pointer;position:relative;transition:background 0.2s;-webkit-tap-highlight-color:transparent;">
+        <div id="metronome-knob" style="width:22px;height:22px;border-radius:11px;background:#fff;
+          position:absolute;top:3px;left:3px;transition:left 0.2s;box-shadow:0 1px 4px rgba(0,0,0,0.2);"></div>
+      </div>
+      <span id="metronome-label" style="font-size:14px;color:var(--text3);">Off</span>
+    </div>
     <div class="ready-hint">Avanza a tu ritmo entre los cuatro modos</div>
   </div>
 </div>
 <script>
+// ── Age-based speed utilities ──
+function getBaseWpm(age) {
+  age = age || 60;
+  if (age < 30) return 250;
+  if (age < 40) return 230;
+  if (age < 50) return 210;
+  if (age < 60) return 185;
+  if (age < 70) return 160;
+  if (age < 80) return 140;
+  return 120;
+}
+function getUserAge() {
+  try { return parseInt(JSON.parse(localStorage.getItem('em_user')||'{}').age)||60; } catch(e){ return 60; }
+}
+
+// ── Metronome engine (Web Audio API) ──
+// Tempo derived from age-based WPM: each tick = one saccade
+// Average words per fixation ~1.5, so saccades/min ≈ wpm / 1.5
+let _metronomeOn = false;
+let _metronomeInterval = null;
+let _audioCtx = null;
+
+function getMetronomeBpm() {
+  const wpm = getBaseWpm(getUserAge());
+  return Math.round(wpm / 1.5); // saccades per minute
+}
+
+function playTick() {
+  try {
+    if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = _audioCtx.createOscillator();
+    const gain = _audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(_audioCtx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(880, _audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.15, _audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, _audioCtx.currentTime + 0.08);
+    osc.start(_audioCtx.currentTime);
+    osc.stop(_audioCtx.currentTime + 0.08);
+  } catch(e) {}
+}
+
+function startMetronome() {
+  stopMetronome();
+  const bpm = getMetronomeBpm();
+  const ms = Math.round(60000 / bpm);
+  playTick();
+  _metronomeInterval = setInterval(playTick, ms);
+}
+
+function stopMetronome() {
+  if (_metronomeInterval) { clearInterval(_metronomeInterval); _metronomeInterval = null; }
+}
+
+function toggleMetronome() {
+  _metronomeOn = !_metronomeOn;
+  const toggle = document.getElementById('metronome-toggle');
+  const knob = document.getElementById('metronome-knob');
+  const label = document.getElementById('metronome-label');
+  if (_metronomeOn) {
+    toggle.style.background = 'var(--teal)';
+    knob.style.left = '27px';
+    label.textContent = 'On';
+    label.style.color = 'var(--teal)';
+  } else {
+    toggle.style.background = 'var(--border2)';
+    knob.style.left = '3px';
+    label.textContent = 'Off';
+    label.style.color = 'var(--text3)';
+    stopMetronome();
+  }
+}
+
 function dismissFirstIntro() {
   document.getElementById('first-intro').style.display = 'none';
   document.getElementById('ready-screen').classList.remove('hidden');
@@ -635,6 +719,7 @@ function dismissFirstIntro() {
 function dismissReady(){
   document.getElementById('ready-screen').classList.add('hidden');
   if(typeof requestWakeLock==='function') requestWakeLock();
+  if (_metronomeOn) startMetronome();
   showDrillIntro(0);
 }
 
@@ -651,6 +736,7 @@ function markComplete() {
 }
 
 function completeAndContinue() {
+  stopMetronome();
   markComplete();
   setTimeout(() => goNextOrHome('index.html'), 1200);
 }
@@ -1450,6 +1536,7 @@ function releaseWakeLock() {
 // Re-acquire on tab visibility change
 document.addEventListener('visibilitychange', () => {
   if(document.visibilityState === 'visible') requestWakeLock();
+  else stopMetronome();
 });
 
 // ── Saltos auto-flow ──

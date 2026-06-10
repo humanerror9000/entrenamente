@@ -1052,9 +1052,31 @@ const _reconPassage  = getCurrentPassage('recon', [BLOQUE_POOL.indexOf(_parsePas
 const focosChunks = _parsePassage.flashChunks;
 
 // Speed levels: ms per chunk, decreases as user levels up
+// Age-based reading speed
+function getBaseWpm(age) {
+  age = age || 60;
+  if (age < 30) return 250;
+  if (age < 40) return 230;
+  if (age < 50) return 210;
+  if (age < 60) return 185;
+  if (age < 70) return 160;
+  if (age < 80) return 140;
+  return 120;
+}
+function getUserAge() {
+  try { return parseInt(JSON.parse(localStorage.getItem('em_user')||'{}').age)||60; } catch(e){ return 60; }
+}
+
 const FOCOS_SPEEDS = [1800, 1400, 1100, 850, 650];
 let focosLevel = 0;
 try { focosLevel = Math.min(parseInt(localStorage.getItem('em_focos_level')||'0'), FOCOS_SPEEDS.length-1); } catch(e){}
+// If no saved level, derive starting level from age
+if(!localStorage.getItem('em_focos_level')) {
+  const age = getUserAge();
+  if (age < 40) focosLevel = 2;
+  else if (age < 55) focosLevel = 1;
+  else focosLevel = 0;
+}
 
 let focosTimer = null;
 let focosIdx = 0;
