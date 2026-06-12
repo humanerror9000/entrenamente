@@ -41,6 +41,7 @@ body::before{display:none;}
 .ob-title{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,7vw,46px);font-weight:300;line-height:1.2;color:var(--text);text-align:center;margin-bottom:12px;}
 .ob-title em{color:var(--violet);font-style:italic;}
 .ob-sub{font-size:20px;color:var(--text2);text-align:center;line-height:1.75;margin-bottom:32px;max-width:400px;}
+#ob-age::-webkit-inner-spin-button,#ob-age::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
 .ob-input{width:100%;padding:16px 20px;background:var(--card);border:1.5px solid var(--border2);border-radius:12px;color:var(--text);font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;text-align:center;outline:none;transition:border-color 0.2s;margin-bottom:28px;-webkit-appearance:none;}
 .ob-input::placeholder{color:var(--text3);}
 .ob-input:focus{border-color:var(--violet);}
@@ -223,9 +224,9 @@ body::before{display:none;}
       <input id="ob-age" type="number" min="18" max="100" placeholder="Ej. 62"
         style="width:100%;padding:18px 20px;font-family:'Cormorant Garamond',serif;font-size:36px;
         font-weight:300;text-align:center;background:var(--card);border:1.5px solid var(--border2);
-        border-radius:14px;color:var(--text);outline:none;-webkit-tap-highlight-color:transparent;"
+        border-radius:14px;color:var(--text);outline:none;-webkit-tap-highlight-color:transparent;
+        -webkit-appearance:none;-moz-appearance:textfield;appearance:textfield;"
         oninput="checkAge()" inputmode="numeric">
-      <div style="font-size:15px;color:var(--text3);">Entre 18 y 100 años</div>
     </div>
     <button class="ob-btn" id="ob-s3-btn" disabled onclick="goTo(4)">Continuar →</button>
     <span class="ob-back" onclick="goTo(1)">← Atrás</span>
@@ -411,7 +412,21 @@ function buildHomeScreen(){
     const check=document.createElement('div'); check.className='today-ex-check'; if(isDone)check.textContent='✓';
     const name=document.createElement('div'); name.className='today-ex-name'; name.textContent=ex?ex.name:key;
     const pill=document.createElement('div'); pill.className='today-ex-pill'; pill.textContent=isDone?'Hecho':'~5 min';
-    div.appendChild(check); div.appendChild(name); div.appendChild(pill); list.appendChild(div);
+    if(!isDone && ex){
+      div.style.cursor='pointer';
+      div.style.transition='all 0.15s';
+      div.addEventListener('click',()=>{ window.location.href=ex.url+'?session=1'; });
+      div.addEventListener('mouseenter',()=>{ div.style.borderColor='var(--violet-b)'; div.style.background='var(--violet-d)'; });
+      div.addEventListener('mouseleave',()=>{ div.style.borderColor=''; div.style.background=''; });
+      // Add a small arrow to signal it's tappable
+      const arrow=document.createElement('span');
+      arrow.textContent='›';
+      arrow.style.cssText='font-size:22px;color:var(--text3);margin-left:4px;line-height:1;';
+      div.appendChild(check); div.appendChild(name); div.appendChild(pill); div.appendChild(arrow);
+    } else {
+      div.appendChild(check); div.appendChild(name); div.appendChild(pill);
+    }
+    list.appendChild(div);
   });
   const cta=document.getElementById('main-cta');
   if(allDone){
@@ -543,7 +558,7 @@ function setupS4(){
   document.getElementById('ob-rec-greeting').innerHTML=_profile==='child'?'Listo para <em>'+name+'</em> 🌱':'Todo listo, <em>'+name+'</em>.';
   document.getElementById('ob-session-note').textContent='Así es como entrena tu cerebro cada día.';
   document.getElementById('ob-start-btn').onclick=()=>finishOnboarding(true);
-  document.querySelector('.ob-btn-ghost').onclick=()=>finishOnboarding(false);
+  document.querySelector('.ob-btn-ghost').onclick=()=>goToExplore();
 }
 function finishOnboarding(launchExercise){
   const name=document.getElementById('ob-name').value.trim();
@@ -560,6 +575,29 @@ function finishOnboarding(launchExercise){
     buildHomeScreen();
   }
 }
+function goToExplore(){
+  // Save user data if not already saved
+  const name=document.getElementById('ob-name')?.value.trim()||'';
+  const age=parseInt(document.getElementById('ob-age')?.value)||60;
+  if(name){
+    const data={name,profile:'senior',age,since:new Date().toLocaleDateString('es-CO',{day:'numeric',month:'long'})};
+    try{localStorage.setItem('em_user',JSON.stringify(data));}catch(e){}
+  }
+  document.getElementById('onboarding').classList.add('hidden');
+  document.getElementById('app').classList.add('show');
+  buildHomeScreen();
+  // After build, expand exercise grid and scroll to it
+  setTimeout(()=>{
+    const wrap=document.getElementById('ex-grid-wrap');
+    if(wrap){ wrap.classList.add('show'); }
+    const footer=document.getElementById('explore-footer');
+    if(footer){ footer.scrollIntoView({behavior:'smooth',block:'start'}); }
+    // Hide the session CTA so exercises are the focus
+    const cta=document.getElementById('main-cta');
+    if(cta) cta.style.display='none';
+  }, 100);
+}
+
 // ─────────────────────────────────────────────
 // Age-based reading speed baseline
 // Based on normative reading speed research
