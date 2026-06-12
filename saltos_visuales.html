@@ -108,10 +108,11 @@ main { width: 100%; max-width: 700px; padding: 24px 16px 0; display: flex; flex-
 /* ═══════════════════════════════
    DRILL 1 — Horizontal jump targets
    ═══════════════════════════════ */
-.jump-arena { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; gap:20px; }
+.jump-arena { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; gap:20px; width:100%; }
 .jump-track {
   width: 100%; position: relative;
-  height: 64px; display: flex; align-items: center;
+  height: 72px; display: flex; align-items: center;
+  box-sizing: border-box; padding: 0 26px;
 }
 .jump-rail {
   position: absolute; left: 0; right: 0; top: 50%;
@@ -995,12 +996,12 @@ function switchDrill(n) {
 // ─────────────────────────────────────
 // DRILL 0: Horizontal jump targets
 // ─────────────────────────────────────
-let jRunning=false, jCurrent=-1, jStart=0, jHits=0, jTrials=0, jTotalRT=0;
+let jRunning=false, jCurrent=-1, jStart=0, jHits=0, jTrials=0, jTotalRT=0, jRound=1;
 let jWidth='medium', jTimer=null;
 const J_POSITIONS = {
-  short:  [15, 35, 55, 75],
-  medium: [10, 35, 60, 85],
-  long:   [5,  33, 66, 94],
+  short:  [15, 38, 62, 85],
+  medium: [10, 37, 63, 90],
+  long:   [5,  32, 68, 95],
 };
 const J_CHARS = ['A','E','I','O','U','M','T','S'];
 const J_ROUNDS = 12;
@@ -1069,9 +1070,7 @@ function pulseBeatDot(hit) {
 }
 
 function startJump() {
-  // Debug: confirm function runs
-  document.getElementById('jump-instr').innerHTML = '<strong style="color:red">startJump running...</strong>';
-  jHits=0; jTrials=0; jTotalRT=0; jCurrent=-1;
+  jHits=0; jTrials=0; jTotalRT=0; jCurrent=-1; jRound=jRound||1;
   jRunning=true;
   buildJumpTargets();
   document.getElementById('j-start-btn').textContent='En progreso…';
@@ -1161,14 +1160,55 @@ function finishJump() {
   jRunning=false;
   clearInterval(jMetronomeInterval);
   stopMetronome();
-  markComplete();
   const acc = Math.round(jHits/J_ROUNDS*100);
-  document.getElementById('jump-instr').innerHTML=`Completado — Precisión: <strong style="color:var(--teal)">${acc}%</strong> · <strong style="color:var(--teal)">${jHits}/${J_ROUNDS}</strong> aciertos`;
-  document.getElementById('j-beat-label').textContent = '–';
-  document.getElementById('j-start-btn').textContent='▶ Repetir';
-  document.getElementById('j-start-btn').style.display='';
-  document.getElementById('j-start-btn').disabled=false;
-  nextSaltosDrill();
+
+  const isLastRound = jRound >= 2;
+  const ov = document.createElement('div');
+  ov.id = 'jump-result';
+  ov.style.cssText = 'position:fixed;inset:0;z-index:600;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;text-align:center;';
+  ov.innerHTML = `
+    <div style="font-size:52px;margin-bottom:12px;">${acc >= 80 ? '🎯' : acc >= 60 ? '👍' : '💪'}</div>
+    <div style="font-family:'Poppins',sans-serif;font-size:26px;font-weight:300;color:var(--text);margin-bottom:6px;">Saltos horizontales</div>
+    <div style="font-size:15px;color:var(--text3);margin-bottom:24px;">Ronda ${jRound} de 2</div>
+    <div style="background:var(--card);border:1px solid var(--border2);border-radius:16px;padding:22px 32px;margin-bottom:28px;width:100%;max-width:300px;">
+      <div style="font-size:52px;font-weight:700;color:var(--teal);font-family:'Fredoka',sans-serif;">${acc}%</div>
+      <div style="font-size:16px;color:var(--text2);margin-top:4px;">${jHits} de ${J_ROUNDS} aciertos</div>
+    </div>
+    <button id="jump-next-btn"
+      style="width:100%;max-width:300px;padding:18px;background:var(--violet-deep);color:#fff;border:none;
+      border-radius:14px;font-family:'Fredoka','Poppins',sans-serif;font-size:18px;font-weight:600;cursor:pointer;">
+      ${isLastRound ? 'Siguiente modo →' : 'Otra ronda →'}
+    </button>
+  `;
+  document.body.appendChild(ov);
+
+  document.getElementById('jump-next-btn').onclick = () => {
+    ov.remove();
+    if(isLastRound) {
+      markComplete();
+      nextSaltosDrill();
+    } else {
+      jRound++;
+      jHits=0; jTrials=0; jCurrent=-1;
+      setTimeout(() => startJump(), 50);
+    }
+  };
+}
+
+// ── Mode transition screen ──
+function showModeTransition(info, onStart) {
+  const ov = document.createElement('div');
+  ov.style.cssText = 'position:fixed;inset:0;z-index:600;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;text-align:center;gap:16px;';
+  ov.innerHTML = `
+    <div style="font-size:52px;">${info.icon}</div>
+    <div style="font-family:'Poppins',sans-serif;font-size:28px;font-weight:300;color:var(--text);">${info.title}</div>
+    <div style="font-size:17px;color:var(--text2);line-height:1.6;max-width:280px;">${info.desc}</div>
+    <button id="mode-start-btn" style="width:100%;max-width:300px;padding:18px;background:var(--violet-deep);
+      color:#fff;border:none;border-radius:14px;font-family:'Fredoka','Poppins',sans-serif;
+      font-size:18px;font-weight:600;cursor:pointer;margin-top:8px;">¡Vamos! →</button>
+  `;
+  document.body.appendChild(ov);
+  document.getElementById('mode-start-btn').onclick = () => { ov.remove(); onStart(); };
 }
 
 function resetJump() {
@@ -1607,14 +1647,42 @@ const _saltosOrder = [
   {start: startKD}
 ];
 
+const DRILL_INTROS = [
+  null, // Saltos horizontales has no intro (it's first)
+  { icon:'↵', title:'Barrido de retorno', desc:'Lee cada línea de izquierda a derecha y toca Listo al terminar.' },
+  { icon:'◈', title:'Amplitud visual', desc:'Memoriza el número del destello y encuéntralo en la cuadrícula.' },
+  { icon:'#', title:'Escaneo numérico', desc:'Toca los números en orden ascendente lo más rápido posible.' },
+];
+
 function nextSaltosDrill(){
   _saltosDrill++;
   if(_saltosDrill >= _saltosOrder.length){
     showSaltosComplete();
     return;
   }
-  switchDrill(_saltosDrill);
-  _drillStarts[_saltosDrill]();
+  const intro = DRILL_INTROS[_saltosDrill];
+  const launchDrill = () => {
+    document.querySelectorAll('.drill-card').forEach(c => {
+      c.classList.remove('active');
+      c.style.cssText = '';
+    });
+    const dn = document.getElementById('drill-' + _saltosDrill);
+    if(dn) {
+      dn.classList.add('active');
+      dn.style.display = 'flex';
+      dn.style.position = 'fixed';
+      dn.style.inset = '0';
+      dn.style.zIndex = '500';
+      dn.style.background = 'var(--bg)';
+    }
+    document.querySelectorAll('.dtab').forEach((t,i) => t.classList.toggle('active', i===_saltosDrill));
+    setTimeout(() => { try { _drillStarts[_saltosDrill](); } catch(e) {} }, 100);
+  };
+  if(intro) {
+    showModeTransition(intro, launchDrill);
+  } else {
+    launchDrill();
+  }
 }
 
 function showSaltosComplete(){
