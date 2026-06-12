@@ -584,11 +584,11 @@ body::before{display:none;}
 </head>
 <body>
 
-<main>
+<main id="main-content">
 
 <!-- First-time intro screen -->
 <div id="first-intro" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:200;
-  display:none;flex-direction:column;align-items:center;justify-content:center;
+  flex-direction:column;align-items:center;justify-content:center;
   padding:40px 28px;text-align:center;">
   <div style="width:88px;height:88px;border-radius:28px;background:var(--teal-d);
     border:1.5px solid var(--teal-b);display:flex;align-items:center;justify-content:center;
@@ -600,7 +600,7 @@ body::before{display:none;}
     Saltos <em style="color:var(--teal);font-style:italic;">Visuales</em>
   </div>
   <div style="font-size:16px;color:var(--text2);line-height:1.7;max-width:300px;margin-bottom:12px;">
-    Empecemos con este ejercicio que entrena el <strong style="color:var(--text);">movimiento de tus ojos</strong> — la base de una lectura más rápida y fluida.
+    Empecemos con este ejercicio que entrena el <strong style="color:var(--text);">movimiento de tus ojos</strong> — la base de una lectura más rápida y fluida. Un metrónomo marcará el ritmo.
   </div>
   <div style="font-size:16px;color:var(--text3);margin-bottom:36px;">~3 minutos · Sin presión</div>
   <button onclick="dismissFirstIntro()" style="width:100%;max-width:340px;padding:18px;
@@ -614,26 +614,42 @@ body::before{display:none;}
 <div class="ready-screen" id="ready-screen">
   <div class="ready-inner">
     <div class="ready-title">Saltos <em>Visuales</em></div>
-    <div class="ready-sub">Sigue el punto con los ojos y tócalo cuando se ilumine.</div>
-    
-    <div style="display:flex;gap:8px;justify-content:center;margin-bottom:24px;flex-wrap:wrap;">
-      <div style="padding:6px 12px;background:var(--card);border:1px solid var(--border2);border-radius:20px;font-size:15px;color:var(--text3);">⇄ Saltos</div>
-      <div style="padding:6px 12px;background:var(--card);border:1px solid var(--border2);border-radius:20px;font-size:15px;color:var(--text3);">↵ Barrido</div>
-      <div style="padding:6px 12px;background:var(--card);border:1px solid var(--border2);border-radius:20px;font-size:15px;color:var(--text3);">◈ Amplitud</div>
-      <div style="padding:6px 12px;background:var(--card);border:1px solid var(--border2);border-radius:20px;font-size:15px;color:var(--text3);"># Escaneo</div>
-    </div>
-    <button class="ready-btn" onclick="dismissReady()">▶ Empecemos</button>
-    <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-top:4px;margin-bottom:8px;">
-      <span style="font-size:16px;color:var(--text3);">🔔 Metrónomo</span>
-      <div id="metronome-toggle" onclick="toggleMetronome()"
-        style="width:52px;height:28px;border-radius:14px;background:var(--border2);
-        cursor:pointer;position:relative;transition:background 0.2s;-webkit-tap-highlight-color:transparent;">
-        <div id="metronome-knob" style="width:22px;height:22px;border-radius:11px;background:#fff;
-          position:absolute;top:3px;left:3px;transition:left 0.2s;box-shadow:0 1px 4px rgba(0,0,0,0.2);"></div>
+    <div class="ready-sub">Sigue el punto con los ojos y tócalo cuando se ilumine al ritmo del metrónomo.</div>
+
+    <!-- Static circle track preview -->
+    <div style="width:100%;max-width:340px;background:var(--card);border:1px solid var(--border2);
+      border-radius:14px;padding:28px 20px;margin-bottom:28px;position:relative;">
+      <!-- Rail -->
+      <div style="position:relative;height:56px;display:flex;align-items:center;">
+        <div style="position:absolute;left:0;right:0;height:2px;background:var(--border2);border-radius:1px;"></div>
+        <!-- Waiting circle -->
+        <div style="position:absolute;left:8%;transform:translateX(-50%);
+          width:44px;height:44px;border-radius:50%;background:var(--card2);
+          border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;
+          font-family:'Poppins',sans-serif;font-size:16px;font-weight:500;color:var(--text3);">A</div>
+        <!-- Active (amber) circle -->
+        <div style="position:absolute;left:40%;transform:translateX(-50%);
+          width:44px;height:44px;border-radius:50%;background:rgba(245,166,35,0.15);
+          border:2px solid var(--amber);display:flex;align-items:center;justify-content:center;
+          font-family:'Poppins',sans-serif;font-size:16px;font-weight:700;color:var(--amber);
+          box-shadow:0 0 0 6px rgba(245,166,35,0.08);">E</div>
+        <!-- Waiting circle -->
+        <div style="position:absolute;left:72%;transform:translateX(-50%);
+          width:44px;height:44px;border-radius:50%;background:var(--card2);
+          border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;
+          font-family:'Poppins',sans-serif;font-size:16px;font-weight:500;color:var(--text3);">I</div>
+        <!-- Waiting circle -->
+        <div style="position:absolute;left:92%;transform:translateX(-50%);
+          width:44px;height:44px;border-radius:50%;background:var(--card2);
+          border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;
+          font-family:'Poppins',sans-serif;font-size:16px;font-weight:500;color:var(--text3);">O</div>
       </div>
-      <span id="metronome-label" style="font-size:14px;color:var(--text3);">Off</span>
+      <div style="text-align:center;margin-top:14px;font-size:14px;color:var(--text3);">
+        Toca el círculo <strong style="color:var(--amber);">dorado</strong> cuando se ilumine
+      </div>
     </div>
-    <div class="ready-hint">Avanza a tu ritmo entre los cuatro modos</div>
+
+    <button class="ready-btn" onclick="dismissReady()">▶ Empecemos</button>
   </div>
 </div>
 <script>
@@ -658,6 +674,7 @@ function getUserAge() {
 let _metronomeOn = false;
 let _metronomeInterval = null;
 let _audioCtx = null;
+let jMetronomeInterval = null; // declared here so stopMetronome can reference it
 
 function getMetronomeBpm() {
   const wpm = getBaseWpm(getUserAge());
@@ -690,25 +707,7 @@ function startMetronome() {
 
 function stopMetronome() {
   if (_metronomeInterval) { clearInterval(_metronomeInterval); _metronomeInterval = null; }
-}
-
-function toggleMetronome() {
-  _metronomeOn = !_metronomeOn;
-  const toggle = document.getElementById('metronome-toggle');
-  const knob = document.getElementById('metronome-knob');
-  const label = document.getElementById('metronome-label');
-  if (_metronomeOn) {
-    toggle.style.background = 'var(--teal)';
-    knob.style.left = '27px';
-    label.textContent = 'On';
-    label.style.color = 'var(--teal)';
-  } else {
-    toggle.style.background = 'var(--border2)';
-    knob.style.left = '3px';
-    label.textContent = 'Off';
-    label.style.color = 'var(--text3)';
-    stopMetronome();
-  }
+  if (jMetronomeInterval) { clearInterval(jMetronomeInterval); jMetronomeInterval = null; }
 }
 
 function dismissFirstIntro() {
@@ -717,10 +716,34 @@ function dismissFirstIntro() {
 }
 
 function dismissReady(){
+  alert('dismissReady fired');
   document.getElementById('ready-screen').classList.add('hidden');
   if(typeof requestWakeLock==='function') requestWakeLock();
-  if (_metronomeOn) startMetronome();
-  showDrillIntro(0);
+  const bar = document.getElementById('session-bar');
+  if(bar) bar.style.display = '';
+  // Force drill-0 visible — don't rely solely on class toggle
+  document.querySelectorAll('.drill-card').forEach((c,i) => {
+    c.classList.remove('active');
+    c.style.display = 'none';
+  });
+  const d0 = document.getElementById('drill-0');
+  if(d0) {
+    d0.classList.add('active');
+    d0.style.display = 'flex';
+  }
+  // Update tab states
+  document.querySelectorAll('.dtab').forEach((t,i) => t.classList.toggle('active', i===0));
+  // Small delay to ensure drill-0 is fully painted before startJump manipulates its children
+  setTimeout(function() {
+    try {
+      startJump();
+    } catch(e) {
+      console.error('startJump error:', e);
+      // Fallback: show start button so user can tap manually
+      const btn = document.getElementById('j-start-btn');
+      if(btn) { btn.style.display = ''; btn.disabled = false; }
+    }
+  }, 100);
 }
 
 // ── Session completion tracking ──
@@ -819,7 +842,7 @@ function updateSessionBtnLabels() {
 </script>
 
 
-  <div class="session-bar" id="session-bar">
+  <div class="session-bar" id="session-bar" style="display:none;">
     <div class="seg active" id="seg0"></div>
     <div class="seg" id="seg1"></div>
     <div class="seg" id="seg2"></div>
@@ -837,34 +860,32 @@ function updateSessionBtnLabels() {
   <!-- ═══════════════════════════════
        DRILL 0: Horizontal jump targets
        ═══════════════════════════════ -->
-  <div class="drill-card active" id="drill-0">
+  <div class="drill-card" id="drill-0">
     <div class="card-head" style="padding:12px 20px;display:flex;align-items:center;justify-content:space-between;">
       <div style="font-size:14px;color:var(--text3);">Saltos horizontales</div>
-      <div class="live-stat"><div class="val" id="j-rt">–</div><div class="lbl">ms / salto</div></div>
+      <div class="live-stat"><div class="val" id="j-score">0/0</div><div class="lbl">aciertos</div></div>
     </div>
-  <div class="fb-bar"><div class="fb-fill" id="j-fb" style="width:0%;background:var(--teal)"></div></div>
+    <div class="fb-bar"><div class="fb-fill" id="j-fb" style="width:0%;background:var(--teal)"></div></div>
     <div class="jump-arena" id="jump-arena">
       <div class="jump-track" id="jump-track">
         <div class="jump-rail"></div>
         <!-- targets injected by JS -->
       </div>
-      <div style="display:flex;gap:20px;align-items:center;justify-content:center">
-        <div style="text-align:center">
-          <div class="rt-display" id="j-rt-big">–</div>
-          <div class="rt-label">Tiempo de reacción</div>
-        </div>
-        <div style="text-align:center">
-          <div class="rt-display" id="j-score">0/0</div>
-          <div class="rt-label">Precisión</div>
+      <!-- Beat indicator -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+        <div id="j-beat-row" style="display:flex;gap:8px;align-items:center;justify-content:center;">
+          <div id="j-beat-dot" style="width:18px;height:18px;border-radius:50%;background:var(--border2);
+            transition:background 0.05s,transform 0.05s;"></div>
+          <div id="j-beat-label" style="font-size:15px;color:var(--text3);">–</div>
         </div>
       </div>
       <div class="jump-instruction" id="jump-instr">
-        Presiona <strong>Iniciar</strong> para comenzar. Toca el blanco <strong>dorado</strong> cada vez que aparezca.
+        Toca el círculo <strong style="color:var(--amber)">dorado</strong> al ritmo del metrónomo.
       </div>
     </div>
     <div class="drill-footer">
       <div></div>
-      <button class="btn btn-teal" id="j-start-btn" onclick="startJump()">▶ Iniciar</button>
+      <button class="btn btn-teal" id="j-start-btn" onclick="startJump()" style="display:none;">▶ Iniciar</button>
     </div>
   </div>
 
@@ -954,41 +975,11 @@ function updateSessionBtnLabels() {
   </div>
 
   <!-- Science note -->
-  <details class="sci-details session-hide">
+  <details class="sci-details session-hide" id="sci-details" style="display:none;">
   <summary>⚗ Base científica — sacadas y lectura</summary>
   <div class="sci-details-body">Los ojos adultos expertos hacen 4–5 sacadas por segundo durante la lectura, cubriendo 7–9 caracteres por salto. El 10–15% de los movimientos son regresiones — costosas en tiempo pero necesarias para la comprensión. El barrido de retorno de fin de línea falla en el 40–60% de los casos: los ojos aterrizan a mitad de la siguiente línea y requieren una corrección. El estudio King-Devick (RCT, 2016) mostró +6.2% de fluidez y +7.5% de comprensión con 20 min/día de entrenamiento sacádico durante 6 semanas. El escaneo numérico entrena también el denominado "nombramiento automático rápido" (RAN), predictor independiente de la velocidad lectora.</div>
 </details>
 
-
-
-<div id="intro-0" style="display:none;position:fixed;inset:0;z-index:200;background:var(--bg);flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;text-align:center;">
-  <div style="font-size:56px;margin-bottom:16px;">⇄</div>
-  <div style="font-family:'Poppins',sans-serif;font-size:32px;font-weight:300;color:var(--text);margin-bottom:12px;">Saltos horizontales</div>
-  <div style="font-size:16px;color:var(--text2);line-height:1.65;max-width:320px;margin-bottom:36px;">Toca el círculo que se ilumina en dorado. Mueve solo los ojos, no la cabeza.</div>
-  <button onclick="dismissDrillIntro(0)" style="width:100%;max-width:320px;padding:18px;background:var(--violet-deep);color:#fff;border:none;border-radius:14px;font-family:'Fredoka','Poppins',sans-serif;font-size:18px;font-weight:600;cursor:pointer;">▶ Iniciar</button>
-  <div style="margin-top:14px;font-size:15px;color:var(--text3);">Ejercicio 1 de 4</div>
-</div>
-<div id="intro-1" style="display:none;position:fixed;inset:0;z-index:200;background:var(--bg);flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;text-align:center;">
-  <div style="font-size:56px;margin-bottom:16px;">↵</div>
-  <div style="font-family:'Poppins',sans-serif;font-size:32px;font-weight:300;color:var(--text);margin-bottom:12px;">Barrido de retorno</div>
-  <div style="font-size:16px;color:var(--text2);line-height:1.65;max-width:320px;margin-bottom:36px;">Lee cada línea de izquierda a derecha, luego salta a la siguiente. Toca "Listo" al terminar cada línea.</div>
-  <button onclick="dismissDrillIntro(1)" style="width:100%;max-width:320px;padding:18px;background:var(--violet-deep);color:#fff;border:none;border-radius:14px;font-family:'Fredoka','Poppins',sans-serif;font-size:18px;font-weight:600;cursor:pointer;">▶ Iniciar</button>
-  <div style="margin-top:14px;font-size:15px;color:var(--text3);">Ejercicio 2 de 4</div>
-</div>
-<div id="intro-2" style="display:none;position:fixed;inset:0;z-index:200;background:var(--bg);flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;text-align:center;">
-  <div style="font-size:56px;margin-bottom:16px;">◈</div>
-  <div style="font-family:'Poppins',sans-serif;font-size:32px;font-weight:300;color:var(--text);margin-bottom:12px;">Amplitud visual</div>
-  <div style="font-size:16px;color:var(--text2);line-height:1.65;max-width:320px;margin-bottom:36px;">Memoriza el número que aparece brevemente, luego encuéntralo en la cuadrícula.</div>
-  <button onclick="dismissDrillIntro(2)" style="width:100%;max-width:320px;padding:18px;background:var(--violet-deep);color:#fff;border:none;border-radius:14px;font-family:'Fredoka','Poppins',sans-serif;font-size:18px;font-weight:600;cursor:pointer;">▶ Iniciar</button>
-  <div style="margin-top:14px;font-size:15px;color:var(--text3);">Ejercicio 3 de 4</div>
-</div>
-<div id="intro-3" style="display:none;position:fixed;inset:0;z-index:200;background:var(--bg);flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;text-align:center;">
-  <div style="font-size:56px;margin-bottom:16px;">#</div>
-  <div style="font-family:'Poppins',sans-serif;font-size:32px;font-weight:300;color:var(--text);margin-bottom:12px;">Escaneo numérico</div>
-  <div style="font-size:16px;color:var(--text2);line-height:1.65;max-width:320px;margin-bottom:36px;">Toca los números en orden ascendente lo más rápido posible.</div>
-  <button onclick="dismissDrillIntro(3)" style="width:100%;max-width:320px;padding:18px;background:var(--violet-deep);color:#fff;border:none;border-radius:14px;font-family:'Fredoka','Poppins',sans-serif;font-size:18px;font-weight:600;cursor:pointer;">▶ Iniciar</button>
-  <div style="margin-top:14px;font-size:15px;color:var(--text3);">Ejercicio 4 de 4</div>
-</div>
 </main>
 
 <script>
@@ -1011,7 +1002,7 @@ function switchDrill(n) {
 let jRunning=false, jCurrent=-1, jStart=0, jHits=0, jTrials=0, jTotalRT=0;
 let jWidth='medium', jTimer=null;
 const J_POSITIONS = {
-  short:  [15, 35, 55, 75],           // % across track
+  short:  [15, 35, 55, 75],
   medium: [10, 35, 60, 85],
   long:   [5,  33, 66, 94],
 };
@@ -1020,7 +1011,6 @@ const J_ROUNDS = 12;
 
 function buildJumpTargets() {
   const track = document.getElementById('jump-track');
-  // remove old targets
   track.querySelectorAll('.jump-target').forEach(t=>t.remove());
   const positions = J_POSITIONS[jWidth];
   positions.forEach((pct, i) => {
@@ -1036,7 +1026,6 @@ function buildJumpTargets() {
 
 function setJumpWidth(w) {
   jWidth = w;
-  // Map key to button id suffix
   const idMap = {short:'short', medium:'med', long:'long'};
   ['short','medium','long'].forEach(x=>{
     const btn=document.getElementById('jw-'+idMap[x]);
@@ -1047,23 +1036,101 @@ function setJumpWidth(w) {
   buildJumpTargets();
 }
 
+function getJumpBpm() {
+  // Age-based tempo: slightly slower than reading saccade rate so it's achievable
+  const age = getUserAge();
+  if (age < 40) return 80;
+  if (age < 55) return 66;
+  if (age < 70) return 54;
+  return 46;
+}
+
+function playJumpTick() {
+  try {
+    if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = _audioCtx.createOscillator();
+    const gain = _audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(_audioCtx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(660, _audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.18, _audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, _audioCtx.currentTime + 0.07);
+    osc.start(_audioCtx.currentTime);
+    osc.stop(_audioCtx.currentTime + 0.07);
+  } catch(e) {}
+}
+
+function pulseBeatDot(hit) {
+  const dot = document.getElementById('j-beat-dot');
+  if(!dot) return;
+  dot.style.background = hit === true ? 'var(--teal)' : hit === false ? 'var(--coral)' : 'var(--violet)';
+  dot.style.transform = 'scale(1.5)';
+  setTimeout(() => {
+    dot.style.transform = 'scale(1)';
+    dot.style.background = 'var(--border2)';
+  }, 150);
+}
+
 function startJump() {
+  // Debug: confirm function runs
+  document.getElementById('jump-instr').innerHTML = '<strong style="color:red">startJump running...</strong>';
   jHits=0; jTrials=0; jTotalRT=0; jCurrent=-1;
   jRunning=true;
   buildJumpTargets();
   document.getElementById('j-start-btn').textContent='En progreso…';
   document.getElementById('j-start-btn').disabled=true;
-  document.getElementById('jump-instr').innerHTML='Toca el blanco <strong style="color:var(--amber)">dorado</strong> rápidamente.';
-  nextJumpTarget();
+  document.getElementById('jump-instr').innerHTML='Toca el círculo <strong style="color:var(--amber)">dorado</strong> al ritmo del metrónomo.';
+  document.getElementById('j-score').textContent='0/0';
+  document.getElementById('j-fb').style.width='0%';
+
+  const bpm = getJumpBpm();
+  const ms = Math.round(60000 / bpm);
+  document.getElementById('j-beat-label').textContent = bpm + ' bpm';
+
+  // Countdown: 3 ticks — show number in beat label, leave circles visible
+  let countdown = 3;
+  const beatLabel = document.getElementById('j-beat-label');
+  if(beatLabel) beatLabel.textContent = countdown;
+  document.getElementById('jump-instr').innerHTML = 'Prepárate — el metrónomo marcará el ritmo.';
+  const cdInterval = setInterval(() => {
+    playJumpTick();
+    pulseBeatDot(null);
+    countdown--;
+    if (countdown > 0) {
+      if(beatLabel) beatLabel.textContent = countdown;
+    } else {
+      clearInterval(cdInterval);
+      if(beatLabel) beatLabel.textContent = getJumpBpm() + ' bpm';
+      document.getElementById('jump-instr').innerHTML='Toca el círculo <strong style="color:var(--amber)">dorado</strong> al ritmo del metrónomo.';
+      // First target immediately, then metronome drives the rest
+      nextJumpTarget();
+      jMetronomeInterval = setInterval(() => {
+        if(!jRunning) { clearInterval(jMetronomeInterval); return; }
+        playJumpTick();
+        pulseBeatDot(null);
+        // Missed — didn't tap in time
+        if(jCurrent >= 0) {
+          jTrials++;
+          const missed = document.querySelector(`.jump-target[data-idx="${jCurrent}"]`);
+          if(missed) missed.className='jump-target miss';
+          document.getElementById('j-score').textContent = jHits+'/'+jTrials;
+          document.getElementById('j-fb').style.width=(jTrials/J_ROUNDS*100)+'%';
+          document.getElementById('j-fb').style.background='var(--coral)';
+          jCurrent = -1;
+          if(jTrials >= J_ROUNDS) { clearInterval(jMetronomeInterval); finishJump(); return; }
+        }
+        nextJumpTarget();
+      }, ms);
+    }
+  }, ms);
 }
 
 function nextJumpTarget() {
   if(!jRunning) return;
-  if(jTrials >= J_ROUNDS) { finishJump(); return; }
   const targets = document.querySelectorAll('.jump-target');
   targets.forEach(t=>t.className='jump-target waiting');
   const positions = J_POSITIONS[jWidth];
-  // pick a different position from last
   let nextIdx;
   do { nextIdx = Math.floor(Math.random()*positions.length); } while(nextIdx===jCurrent && positions.length>1);
   jCurrent = nextIdx;
@@ -1072,53 +1139,54 @@ function nextJumpTarget() {
     target.className='jump-target active-target';
     jStart = performance.now();
   }
-  // No timeout — user must tap; trial counts on tap
 }
 
 function jumpHit(idx) {
   if(!jRunning || jCurrent<0) return;
-  const rt = Math.round(performance.now()-jStart);
   const hit = idx===jCurrent;
-  jTrials++;
   const target = document.querySelector(`.jump-target[data-idx="${idx}"]`);
   if(hit) {
     jHits++;
-    jTotalRT += rt;
+    jTrials++;
     target.className='jump-target hit';
-    document.getElementById('j-rt').textContent = rt+'ms';
-    document.getElementById('j-rt-big').textContent = rt+'ms';
-    const _hr=document.getElementById('hdr-rt'); if(_hr) _hr.textContent = rt+'ms';
+    pulseBeatDot(true);
+    jCurrent = -1; // prevent metronome from counting as miss
+    document.getElementById('j-score').textContent = jHits+'/'+jTrials;
+    document.getElementById('j-fb').style.width=(jTrials/J_ROUNDS*100)+'%';
+    document.getElementById('j-fb').style.background='var(--teal)';
+    if(jTrials >= J_ROUNDS) { clearInterval(jMetronomeInterval); finishJump(); }
   } else {
     target.className='jump-target miss';
-    const correct = document.querySelector(`.jump-target[data-idx="${jCurrent}"]`);
-    if(correct) correct.className='jump-target miss';
+    pulseBeatDot(false);
   }
-  document.getElementById('j-score').textContent = jHits+'/'+jTrials;
-  const _ha=document.getElementById('hdr-acc'); if(_ha) _ha.textContent=Math.round(jHits/jTrials*100)+'%';
-  // progress bar
-  document.getElementById('j-fb').style.width=(jTrials/J_ROUNDS*100)+'%';
-  document.getElementById('j-fb').style.background=hit?'var(--green)':'var(--coral)';
-  setTimeout(nextJumpTarget, 400);
 }
 
 function finishJump() {
   jRunning=false;
+  clearInterval(jMetronomeInterval);
+  stopMetronome();
   markComplete();
-  const avgRT = jHits>0 ? Math.round(jTotalRT/jHits) : 0;
   const acc = Math.round(jHits/J_ROUNDS*100);
-  document.getElementById('jump-instr').innerHTML=`Completado — Precisión: <strong style="color:var(--teal)">${acc}%</strong> · TR medio: <strong style="color:var(--teal)">${avgRT}ms</strong>`;
+  document.getElementById('jump-instr').innerHTML=`Completado — Precisión: <strong style="color:var(--teal)">${acc}%</strong> · <strong style="color:var(--teal)">${jHits}/${J_ROUNDS}</strong> aciertos`;
+  document.getElementById('j-beat-label').textContent = '–';
   document.getElementById('j-start-btn').textContent='▶ Repetir';
+  document.getElementById('j-start-btn').style.display='';
   document.getElementById('j-start-btn').disabled=false;
-
   nextSaltosDrill();
 }
 
 function resetJump() {
-  jRunning=false; clearTimeout(jTimer);
+  jRunning=false;
+  clearInterval(jMetronomeInterval);
+  clearTimeout(jTimer);
   document.getElementById('j-start-btn').textContent='▶ Iniciar';
   document.getElementById('j-start-btn').disabled=false;
-  document.getElementById('j-rt').textContent='–';
-  document.getElementById('j-rt-big').textContent='–';
+  document.getElementById('j-score').textContent='–';
+  document.getElementById('j-beat-label').textContent='–';
+  document.getElementById('j-fb').style.width='0%';
+  document.getElementById('jump-instr').innerHTML='Toca el círculo <strong style="color:var(--amber)">dorado</strong> al ritmo del metrónomo.';
+  buildJumpTargets();
+}
   document.getElementById('j-score').textContent='0/0';
   document.getElementById('j-fb').style.width='0%';
   document.getElementById('jump-instr').innerHTML='Presiona <strong>Iniciar</strong> para comenzar. Toca el blanco <strong style="color:var(--amber)">dorado</strong> cada vez que aparezca.';
@@ -1554,7 +1622,8 @@ function nextSaltosDrill(){
     showSaltosComplete();
     return;
   }
-  showDrillIntro(_saltosDrill);
+  switchDrill(_saltosDrill);
+  _drillStarts[_saltosDrill]();
 }
 
 function showSaltosComplete(){
@@ -1587,13 +1656,35 @@ function showSaltosComplete(){
 const _drillStarts = [startJump, startSweep, startSpan, startKD];
 
 function showDrillIntro(n) {
-  const ov = document.getElementById('intro-' + n);
-  if(ov) { ov.style.display = 'flex'; }
+  // Remove any existing intro overlay
+  const existing = document.getElementById('intro-overlay');
+  if(existing) existing.remove();
+
+  const drillInfo = [
+    { icon:'⇄', title:'Saltos horizontales', desc:'Toca el círculo que se ilumina en dorado. Mueve solo los ojos, no la cabeza.', num:'1' },
+    { icon:'↵', title:'Barrido de retorno', desc:'Lee cada línea de izquierda a derecha, luego salta a la siguiente. Toca "Listo" al terminar cada línea.', num:'2' },
+    { icon:'◈', title:'Amplitud visual', desc:'Memoriza el número que aparece brevemente, luego encuéntralo en la cuadrícula.', num:'3' },
+    { icon:'#', title:'Escaneo numérico', desc:'Toca los números en orden ascendente lo más rápido posible.', num:'4' },
+  ];
+  const d = drillInfo[n];
+  const ov = document.createElement('div');
+  ov.id = 'intro-overlay';
+  ov.style.cssText = 'position:fixed;inset:0;z-index:300;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;text-align:center;';
+  ov.innerHTML = `
+    <div style="font-size:56px;margin-bottom:16px;">${d.icon}</div>
+    <div style="font-family:'Poppins',sans-serif;font-size:32px;font-weight:300;color:var(--text);margin-bottom:12px;">${d.title}</div>
+    <div style="font-size:17px;color:var(--text2);line-height:1.65;max-width:320px;margin-bottom:36px;">${d.desc}</div>
+    <button onclick="dismissDrillIntro(${n})" style="width:100%;max-width:320px;padding:18px;background:var(--violet-deep);color:#fff;border:none;border-radius:14px;font-family:'Fredoka','Poppins',sans-serif;font-size:18px;font-weight:600;cursor:pointer;">▶ Iniciar</button>
+    <div style="margin-top:14px;font-size:15px;color:var(--text3);">Ejercicio ${d.num} de 4</div>
+  `;
+  document.body.appendChild(ov);
 }
 
 function dismissDrillIntro(n) {
-  const ov = document.getElementById('intro-' + n);
-  if(ov) ov.style.display = 'none';
+  const ov = document.getElementById('intro-overlay');
+  if(ov) ov.remove();
+  const bar = document.getElementById('session-bar');
+  if(bar) bar.style.display = '';
   switchDrill(n);
   _drillStarts[n]();
 }
