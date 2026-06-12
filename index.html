@@ -84,7 +84,7 @@ body::before{display:none;}
 /* MAIN APP */
 #app{display:none;}
 #app.show{display:block;}
-.app-wrap{position:relative;z-index:10;max-width:480px;margin:0 auto;padding:0 20px 48px;display:flex;flex-direction:column;min-height:100vh;  padding-bottom:100px;
+.app-wrap{position:relative;z-index:10;max-width:480px;margin:0 auto;padding:0 20px 48px;display:flex;flex-direction:column;min-height:100vh;
 }
 
 .top-bar{display:flex;align-items:center;justify-content:space-between;padding:28px 0 0;}
@@ -151,30 +151,39 @@ body::before{display:none;}
 .today-ex.done .today-ex-pill{background:var(--teal-d);color:var(--teal);border-color:var(--teal-b);}
 
 .explore-footer {
-  position:fixed; bottom:0; left:0; right:0;
-  padding:12px 20px 32px; background:var(--bg);
-  border-top:1px solid var(--border);
-  z-index:50;
+  width:100%; margin-top:8px;
 }
 .see-all-btn {
-  width:100%; padding:14px 20px; border-radius:14px; cursor:pointer;
-  background:var(--card); border:1.5px solid rgba(234,232,242,0.2);
+  width:100%; padding:16px 20px; border-radius:14px; cursor:pointer;
+  background:var(--card); border:1.5px solid var(--border2);
   text-align:left; transition:all 0.15s;
+  box-shadow:0 1px 4px rgba(0,0,0,0.05);
 }
-.see-all-btn:hover { border-color:rgba(234,232,242,0.35); background:var(--card2); }
-.see-all-main { font-family:'Fredoka',sans-serif; font-size:17px; font-weight:500; color:var(--text); display:flex; align-items:center; justify-content:space-between; }
-.see-all-sub { font-size:16px; color:var(--text3); margin-top:2px; }
-.see-all-arrow { transition:transform 0.2s; color:var(--text3); font-size:16px; }
-.see-all-btn:hover{color:var(--text2);}
-.see-all-arrow { transition:transform 0.2s; color:var(--text3); font-size:14px; }
+.see-all-btn:hover { border-color:var(--violet-b); background:var(--violet-d); }
+.see-all-main { font-family:'Fredoka',sans-serif; font-size:18px; font-weight:600; color:var(--text); display:flex; align-items:center; justify-content:space-between; }
+.see-all-sub { font-size:14px; color:var(--text3); margin-top:2px; }
+.see-all-arrow { transition:transform 0.2s; color:var(--violet); font-size:18px; font-weight:700; }
+.see-all-btn:hover .see-all-main { color:var(--violet); }
 .see-all-btn.open .see-all-arrow{transform:rotate(180deg);}
 
 .ex-grid-wrap{display:none;flex-direction:column;gap:24px;animation:fadeUp 0.3s ease both;}
 .ex-grid-wrap.show{display:flex;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.pillar-title{font-size:14px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;display:flex;align-items:center;gap:10px;}
+.pillar-title{font-size:14px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;margin-top:4px;display:flex;align-items:center;gap:10px;}
 .pillar-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.ex-thumb-grid .ex-thumb:last-child:nth-child(odd){grid-column:1/-1;max-width:calc(50% - 5px);}
 .ex-grid{display:flex;flex-direction:column;gap:8px;}
+
+/* ── Exercise thumbnail grid ── */
+.ex-thumb-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.ex-thumb{background:var(--card);border:1px solid var(--border2);border-radius:14px;
+  padding:16px 14px;text-decoration:none;display:flex;flex-direction:column;
+  align-items:center;gap:8px;text-align:center;transition:all 0.18s;
+  -webkit-tap-highlight-color:transparent;box-shadow:0 1px 4px rgba(0,0,0,0.05);}
+.ex-thumb:hover,.ex-thumb:active{border-color:var(--violet-b);background:var(--violet-d);}
+.ex-thumb-icon{font-size:28px;line-height:1;}
+.ex-thumb-name{font-size:14px;font-weight:600;color:var(--text);line-height:1.3;}
+
 .ex-card{background:var(--card);border:1px solid var(--border2);border-radius:13px;padding:16px 18px;text-decoration:none;display:flex;align-items:center;gap:14px;transition:all 0.18s;-webkit-tap-highlight-color:transparent;box-shadow:0 1px 4px rgba(0,0,0,0.06);}
 .ex-card:hover,.ex-card:active{border-color:var(--violet-b);background:var(--violet-d);}
 .ex-card.recommended{border-color:rgba(201,168,76,0.35);}
@@ -295,8 +304,6 @@ body::before{display:none;}
     <span style="font-size:16px;line-height:1;">▶</span><span id="cta-label">Comenzar sesión</span>
   </button>
 
-
-
   <div class="explore-footer" id="explore-footer">
     <button class="see-all-btn" id="see-all-btn" onclick="toggleExGrid()">
       <div class="see-all-main">Explorar ejercicios&nbsp;<span class="see-all-arrow">↓</span></div>
@@ -306,20 +313,20 @@ body::before{display:none;}
   <div class="ex-grid-wrap" id="ex-grid-wrap">
     <div>
       <div class="pillar-title" style="color:var(--teal);">Lectura Visual</div>
-      <div class="ex-grid">
-        <a class="ex-card" id="card-flash" href="lectura_flash_rsvp.html"><div class="ex-card-text"><div class="ex-name">Lectura Flash</div><div class="ex-desc">Velocidad lectora adaptativa</div></div><span class="ex-arrow">↗</span></a>
-        <a class="ex-card" id="card-bloques" href="lectura_por_bloques_prototype.html"><div class="ex-card-text"><div class="ex-name">Lectura por Bloques</div><div class="ex-desc">Procesamiento por grupos</div></div><span class="ex-arrow">↗</span></a>
-        <a class="ex-card" id="card-contra" href="contrarreloj.html"><div class="ex-card-text"><div class="ex-name">Lectura Adaptativa</div><div class="ex-desc">Calibra tu ritmo y lee contra el tiempo</div></div><span class="ex-arrow">↗</span></a>
-        <a class="ex-card" id="card-vision" href="vision_paralela.html"><div class="ex-card-text"><div class="ex-name">Visión Paralela</div><div class="ex-desc">Amplitud visual e icónica</div></div><span class="ex-arrow">↗</span></a>
-        <a class="ex-card" id="card-saltos" href="saltos_visuales.html"><div class="ex-card-text"><div class="ex-name">Saltos Visuales</div><div class="ex-desc">Movimientos oculares</div></div><span class="ex-arrow">↗</span></a>
+      <div class="ex-thumb-grid">
+        <a class="ex-thumb" id="card-flash" href="lectura_flash_rsvp.html"><div class="ex-thumb-icon">⚡</div><div class="ex-thumb-name">Lectura Flash</div></a>
+        <a class="ex-thumb" id="card-bloques" href="lectura_por_bloques_prototype.html"><div class="ex-thumb-icon">📦</div><div class="ex-thumb-name">Lectura por Bloques</div></a>
+        <a class="ex-thumb" id="card-contra" href="contrarreloj.html"><div class="ex-thumb-icon">📖</div><div class="ex-thumb-name">Lectura Adaptativa</div></a>
+        <a class="ex-thumb" id="card-vision" href="vision_paralela.html"><div class="ex-thumb-icon">👁</div><div class="ex-thumb-name">Visión Paralela</div></a>
+        <a class="ex-thumb" id="card-saltos" href="saltos_visuales.html"><div class="ex-thumb-icon">⇄</div><div class="ex-thumb-name">Saltos Visuales</div></a>
       </div>
     </div>
     <div>
       <div class="pillar-title" style="color:var(--violet);">Memoria Activa</div>
-      <div class="ex-grid">
-        <a class="ex-card" id="card-memoria" href="memoria_activa.html"><div class="ex-card-text"><div class="ex-name">Memoria Activa</div><div class="ex-desc">Amplitud de memoria de trabajo</div></div><span class="ex-arrow">↗</span></a>
-        <a class="ex-card" id="card-cats" href="actualizacion_categorias.html"><div class="ex-card-text"><div class="ex-name">Act. Categorías</div><div class="ex-desc">Actualiza lo que recuerdas</div></div><span class="ex-arrow">↗</span></a>
-        <a class="ex-card" id="card-continua" href="actualizacion_continua.html"><div class="ex-card-text"><div class="ex-name">Act. Continua</div><div class="ex-desc">N-back visual y de letras</div></div><span class="ex-arrow">↗</span></a>
+      <div class="ex-thumb-grid">
+        <a class="ex-thumb" id="card-memoria" href="memoria_activa.html"><div class="ex-thumb-icon">🧠</div><div class="ex-thumb-name">Memoria Activa</div></a>
+        <a class="ex-thumb" id="card-cats" href="actualizacion_categorias.html"><div class="ex-thumb-icon">🗂</div><div class="ex-thumb-name">Act. Categorías</div></a>
+        <a class="ex-thumb" id="card-continua" href="actualizacion_continua.html"><div class="ex-thumb-icon">🔄</div><div class="ex-thumb-name">Act. Continua</div></a>
       </div>
     </div>
     <div style="padding:4px 0 8px;">
@@ -576,7 +583,6 @@ function finishOnboarding(launchExercise){
   }
 }
 function goToExplore(){
-  // Save user data if not already saved
   const name=document.getElementById('ob-name')?.value.trim()||'';
   const age=parseInt(document.getElementById('ob-age')?.value)||60;
   if(name){
@@ -586,15 +592,20 @@ function goToExplore(){
   document.getElementById('onboarding').classList.add('hidden');
   document.getElementById('app').classList.add('show');
   buildHomeScreen();
-  // After build, expand exercise grid and scroll to it
   setTimeout(()=>{
+    // Hide entire session section
+    ['session-label','today-list','main-cta','prog-wrap'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el) el.style.display='none';
+    });
+    // Open exercise grid directly
     const wrap=document.getElementById('ex-grid-wrap');
-    if(wrap){ wrap.classList.add('show'); }
+    if(wrap) wrap.classList.add('show');
+    const btn=document.getElementById('see-all-btn');
+    if(btn) btn.classList.add('open');
+    // Scroll to grid
     const footer=document.getElementById('explore-footer');
-    if(footer){ footer.scrollIntoView({behavior:'smooth',block:'start'}); }
-    // Hide the session CTA so exercises are the focus
-    const cta=document.getElementById('main-cta');
-    if(cta) cta.style.display='none';
+    if(footer) footer.scrollIntoView({behavior:'smooth',block:'start'});
   }, 100);
 }
 
