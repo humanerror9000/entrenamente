@@ -560,18 +560,26 @@ body::before{display:none;}
 
 <div class="ready-screen" id="ready-screen">
   <div class="ready-inner">
+    <div style="font-size:56px;margin-bottom:16px;">👁</div>
     <div class="ready-title">Visión <em>Paralela</em></div>
-    <div class="ready-sub">Memoriza los caracteres del destello y selecciónalos en orden.</div>
-    <div class="ready-preview">
-      <div class="preview-label">Vista previa</div>
-      <div class="preview-inner" style="flex-direction:column;gap:10px;align-items:center;justify-content:center;">
-        <div id="rdy-vp-string" style="font-family:'Poppins',sans-serif;font-size:32px;font-weight:300;color:var(--teal);letter-spacing:0.12em;min-height:44px;transition:opacity 0.15s;text-align:center;"></div>
-        <div id="rdy-vp-msg" style="font-size:15px;color:var(--text3);letter-spacing:0.06em;text-align:center;min-height:18px;"></div>
+
+    <div style="background:var(--card);border:1px solid var(--border2);border-radius:16px;
+      padding:24px 22px;width:100%;max-width:340px;margin-bottom:28px;
+      box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+      <div style="font-size:18px;color:var(--text2);line-height:1.75;margin-bottom:16px;">
+        Verás unas <strong style="color:var(--text);">letras</strong> aparecer por un instante — recuérdalas y selecciónalas en orden.
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:10px;padding:14px 16px;
+        background:var(--amber-d);border:1px solid var(--amber-b);border-radius:12px;">
+        <span style="font-size:18px;flex-shrink:0;margin-top:1px;">⚠️</span>
+        <div style="font-size:16px;color:var(--text);font-weight:600;line-height:1.5;">
+          El destello dura menos de un segundo — ¡prepárate!
+        </div>
       </div>
     </div>
-    <button class="ready-btn" onclick="dismissReady()">▶ Comenzar</button>
-  </div>
 
+    <button class="ready-btn" onclick="dismissReady()">¡Vamos! →</button>
+  </div>
 </div>
 <span id="pd0" style="display:none"></span><span id="pd1" style="display:none"></span><span id="pd2" style="display:none"></span>
 <div class="task-tabs" style="display:none">
@@ -590,9 +598,7 @@ body::before{display:none;}
     </div>
     <div class="prog-bar"><div class="prog-fill" id="wr-pfill" style="width:0%;background:var(--teal)"></div></div>
     <div class="arena" id="wr-arena">
-      <div class="flash-prompt" id="wr-prompt">
-        Presiona <strong>Iniciar</strong> para comenzar. Memoriza los caracteres del destello y selecciónalos en orden.
-      </div>
+      <div class="flash-prompt" id="wr-prompt" style="display:none"></div>
       <div class="flash-display hidden" id="wr-flash">·····</div>
       <div class="input-slots" id="wr-slots" style="display:none"></div>
       <div class="response-row" id="wr-choices" style="display:none"></div>
@@ -764,7 +770,7 @@ function initWR() {
   document.getElementById('wr-results').classList.remove('show');
   document.getElementById('wr-pfill').style.width='0%';
   document.getElementById('wr-acc').textContent='–';
-  document.getElementById('wr-prompt').textContent='Presiona Iniciar para comenzar. Memoriza los caracteres del destello y selecciónalos en orden.';
+  document.getElementById('wr-prompt').textContent='Presiona Iniciar para comenzar. Memoriza las letras del destello y selecciónalos en orden.';
   document.getElementById('wr-prompt').style.display='';
   document.getElementById('wr-start').disabled=false;
   document.getElementById('wr-start').textContent='▶ Iniciar';
@@ -1269,28 +1275,10 @@ function dismissReady(){
   document.getElementById('ready-screen').classList.add('hidden');
   if(typeof requestWakeLock === 'function') requestWakeLock();
   switchTask(0);
+  // Skip the Iniciar button — go straight to countdown
+  document.getElementById('wr-start').style.display = 'none';
+  startWR();
 }
-
-(function startVPPreview(){
-  const words = ['BARO','TEVI','KAMU','SOLI'];
-  let idx = 0;
-  const strEl = document.getElementById('rdy-vp-string');
-  const msgEl = document.getElementById('rdy-vp-msg');
-  if(!strEl) return;
-  function tick(){
-    strEl.style.opacity='0';
-    setTimeout(function(){
-      strEl.textContent = words[idx % words.length];
-      strEl.style.opacity='1';
-      if(msgEl) msgEl.textContent = 'selecciona en orden';
-      idx++;
-      setTimeout(function(){ strEl.style.opacity='0'; if(msgEl) msgEl.textContent=''; }, 400);
-    }, 150);
-  }
-  tick();
-  setInterval(tick, 2200);
-})();
-
 
 // ── Session tracking ──
 function markComplete(){
