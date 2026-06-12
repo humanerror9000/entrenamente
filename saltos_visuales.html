@@ -716,12 +716,10 @@ function dismissFirstIntro() {
 }
 
 function dismissReady(){
-  alert('dismissReady fired');
   document.getElementById('ready-screen').classList.add('hidden');
   if(typeof requestWakeLock==='function') requestWakeLock();
   const bar = document.getElementById('session-bar');
   if(bar) bar.style.display = '';
-  // Force drill-0 visible — don't rely solely on class toggle
   document.querySelectorAll('.drill-card').forEach((c,i) => {
     c.classList.remove('active');
     c.style.display = 'none';
@@ -730,16 +728,14 @@ function dismissReady(){
   if(d0) {
     d0.classList.add('active');
     d0.style.display = 'flex';
+    d0.style.position = 'fixed';
+    d0.style.inset = '0';
+    d0.style.zIndex = '500';
+    d0.style.background = 'var(--bg)';
   }
-  // Update tab states
   document.querySelectorAll('.dtab').forEach((t,i) => t.classList.toggle('active', i===0));
-  // Small delay to ensure drill-0 is fully painted before startJump manipulates its children
   setTimeout(function() {
-    try {
-      startJump();
-    } catch(e) {
-      console.error('startJump error:', e);
-      // Fallback: show start button so user can tap manually
+    try { startJump(); } catch(e) {
       const btn = document.getElementById('j-start-btn');
       if(btn) { btn.style.display = ''; btn.disabled = false; }
     }
@@ -1185,11 +1181,6 @@ function resetJump() {
   document.getElementById('j-beat-label').textContent='–';
   document.getElementById('j-fb').style.width='0%';
   document.getElementById('jump-instr').innerHTML='Toca el círculo <strong style="color:var(--amber)">dorado</strong> al ritmo del metrónomo.';
-  buildJumpTargets();
-}
-  document.getElementById('j-score').textContent='0/0';
-  document.getElementById('j-fb').style.width='0%';
-  document.getElementById('jump-instr').innerHTML='Presiona <strong>Iniciar</strong> para comenzar. Toca el blanco <strong style="color:var(--amber)">dorado</strong> cada vez que aparezca.';
   buildJumpTargets();
 }
 
@@ -1656,28 +1647,9 @@ function showSaltosComplete(){
 const _drillStarts = [startJump, startSweep, startSpan, startKD];
 
 function showDrillIntro(n) {
-  // Remove any existing intro overlay
-  const existing = document.getElementById('intro-overlay');
-  if(existing) existing.remove();
-
-  const drillInfo = [
-    { icon:'⇄', title:'Saltos horizontales', desc:'Toca el círculo que se ilumina en dorado. Mueve solo los ojos, no la cabeza.', num:'1' },
-    { icon:'↵', title:'Barrido de retorno', desc:'Lee cada línea de izquierda a derecha, luego salta a la siguiente. Toca "Listo" al terminar cada línea.', num:'2' },
-    { icon:'◈', title:'Amplitud visual', desc:'Memoriza el número que aparece brevemente, luego encuéntralo en la cuadrícula.', num:'3' },
-    { icon:'#', title:'Escaneo numérico', desc:'Toca los números en orden ascendente lo más rápido posible.', num:'4' },
-  ];
-  const d = drillInfo[n];
-  const ov = document.createElement('div');
-  ov.id = 'intro-overlay';
-  ov.style.cssText = 'position:fixed;inset:0;z-index:300;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;text-align:center;';
-  ov.innerHTML = `
-    <div style="font-size:56px;margin-bottom:16px;">${d.icon}</div>
-    <div style="font-family:'Poppins',sans-serif;font-size:32px;font-weight:300;color:var(--text);margin-bottom:12px;">${d.title}</div>
-    <div style="font-size:17px;color:var(--text2);line-height:1.65;max-width:320px;margin-bottom:36px;">${d.desc}</div>
-    <button onclick="dismissDrillIntro(${n})" style="width:100%;max-width:320px;padding:18px;background:var(--violet-deep);color:#fff;border:none;border-radius:14px;font-family:'Fredoka','Poppins',sans-serif;font-size:18px;font-weight:600;cursor:pointer;">▶ Iniciar</button>
-    <div style="margin-top:14px;font-size:15px;color:var(--text3);">Ejercicio ${d.num} de 4</div>
-  `;
-  document.body.appendChild(ov);
+  alert('showDrillIntro called! n=' + n + ' caller=' + (new Error().stack||'unknown').split('\n')[1]);
+  // No-op: drill intros removed, flow goes directly to exercise
+  return;
 }
 
 function dismissDrillIntro(n) {
@@ -1685,8 +1657,14 @@ function dismissDrillIntro(n) {
   if(ov) ov.remove();
   const bar = document.getElementById('session-bar');
   if(bar) bar.style.display = '';
-  switchDrill(n);
-  _drillStarts[n]();
+  document.querySelectorAll('.drill-card').forEach((c,i) => {
+    c.classList.remove('active');
+    c.style.display = 'none';
+  });
+  const dn = document.getElementById('drill-' + n);
+  if(dn) { dn.classList.add('active'); dn.style.display='flex'; dn.style.position='fixed'; dn.style.inset='0'; dn.style.zIndex='500'; dn.style.background='var(--bg)'; }
+  document.querySelectorAll('.dtab').forEach((t,i) => t.classList.toggle('active', i===n));
+  setTimeout(() => { try { _drillStarts[n](); } catch(e) {} }, 100);
 }
 
 // First-time intro
