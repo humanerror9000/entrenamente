@@ -67,6 +67,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
 .reading-text{font-family:'Cormorant Garamond',serif;font-size:clamp(18px,4.5vw,26px);
   line-height:1.65;color:var(--text);text-align:center;
   max-width:520px;}
+.fw{display:inline;white-space:pre-wrap;}
 
 /* ── Stage footer ── */
 .stage-footer{padding:14px 24px 32px;border-top:1px solid var(--border);flex-shrink:0;background:var(--bg);}
@@ -290,33 +291,33 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
 const CALIBRATION = {
   child: {
     a: {
-      text: "Los perros son los animales domésticos más populares del mundo. Pueden aprender muchas cosas si las practicamos con paciencia. Hay perros grandes y pequeños, de pelo largo y de pelo corto. Todos necesitan agua fresca, comida y mucho cariño cada día.",
-      q: "¿Qué necesitan los perros todos los días?",
-      opts: ["Solo comida y agua","Agua, comida y cariño","Un lugar grande para correr","Juguetes y paseos"],
+      text: "Los perros son muy listos y aprenden rápido. Les gusta jugar, correr y estar con su familia. Un perro feliz mueve la cola todo el tiempo.",
+      q: "¿Cómo sabe uno que un perro está feliz?",
+      opts: ["Se queda quieto","Mueve la cola","Se esconde","Ladra fuerte"],
       correct: 1
     }
   },
   teen: {
     a: {
-      text: "Dormir bien es una de las cosas más importantes que puedes hacer por tu cerebro. Cuando dormimos, el cerebro organiza los recuerdos del día y elimina sustancias que lo cansan. Los adolescentes necesitan entre ocho y diez horas de sueño. Quedarse despierto hasta tarde estudiando suele ser contraproducente.",
-      q: "¿Qué hace el cerebro mientras dormimos?",
-      opts: ["Descansa por completo","Organiza recuerdos y elimina sustancias dañinas","Procesa únicamente emociones","Ralentiza todas sus funciones"],
+      text: "Dormir bien mejora la memoria y el estado de ánimo. Los jóvenes necesitan entre ocho y diez horas de sueño. Estudiar hasta tarde suele ser contraproducente.",
+      q: "¿Cuántas horas de sueño necesitan los jóvenes?",
+      opts: ["Seis horas","Entre ocho y diez horas","Doce horas","Depende del día"],
       correct: 1
     }
   },
   adult: {
     a: {
-      text: "Caminar treinta minutos al día tiene efectos positivos comprobados sobre el cerebro. Mejora el estado de ánimo, reduce el estrés y favorece la memoria a corto plazo. No hace falta un ritmo intenso: una caminata tranquila en un parque es suficiente para activar la circulación y oxigenar las neuronas.",
-      q: "¿Qué beneficio tiene caminar sobre la memoria?",
-      opts: ["Mejora la memoria a largo plazo","Favorece la memoria a corto plazo","No tiene efectos sobre la memoria","Solo mejora el estado de ánimo"],
+      text: "Caminar al aire libre mejora el estado de ánimo y despeja la mente. Muchas personas lo hacen por las mañanas para empezar el día con energía. Es un hábito sencillo con grandes beneficios.",
+      q: "¿Para qué sirve caminar por las mañanas?",
+      opts: ["Solo para bajar de peso","Para empezar el día con energía","Para evitar el frío","Para llegar al trabajo"],
       correct: 1
     }
   },
   senior: {
     a: {
-      text: "Leer en voz alta es un ejercicio sencillo que activa varias partes del cerebro al mismo tiempo. Mientras leemos, usamos la vista, el habla y la memoria juntas. Es una actividad recomendada para mantener la agilidad mental a cualquier edad. Basta con diez o quince minutos diarios para notar la diferencia.",
-      q: "¿Por qué leer en voz alta activa el cerebro?",
-      opts: ["Porque mejora la vista","Porque usa la vista, el habla y la memoria juntas","Porque aumenta la velocidad lectora","Porque reduce el estrés"],
+      text: "Leer un buen libro antes de dormir ayuda a relajar la mente. Es una costumbre que muchas personas disfrutan desde jóvenes. Los libros abren puertas a otros mundos.",
+      q: "¿Para qué ayuda leer antes de dormir?",
+      opts: ["Para aprender más rápido","Para relajar la mente","Para mejorar la vista","Para recordar más"],
       correct: 1
     }
   }
@@ -474,6 +475,23 @@ baselineWpm = getBaseWpm(getUserAge());
 // ─────────────────────────────────────────────
 // Utilities
 // ─────────────────────────────────────────────
+// Difficulty multiplier: starts at 0.80 (slower than baseline = more time to read)
+// Increases by 0.05 each session up to 1.20 (faster than baseline)
+function getTimedDifficulty() {
+  try {
+    const sessions = parseInt(localStorage.getItem('em_contra_sessions') || '0');
+    const multiplier = 0.80 + (sessions * 0.05);
+    return Math.min(multiplier, 1.20);
+  } catch(e) { return 0.80; }
+}
+
+function incrementTimedDifficulty() {
+  try {
+    const sessions = parseInt(localStorage.getItem('em_contra_sessions') || '0');
+    localStorage.setItem('em_contra_sessions', String(sessions + 1));
+  } catch(e) {}
+}
+
 function countWords(text) {
   return text.trim().split(/\s+/).length;
 }
@@ -559,9 +577,7 @@ function dismissReady() {
 }
 
 function isCalibrationRun() {
-  const params = new URLSearchParams(window.location.search);
-  if(params.get('onboarding') === '1') return true;
-  // Also calibrate if user has never done contrarreloj before
+  // Only calibrate once — if we have a saved WPM, skip calibration entirely
   try {
     const wpm = localStorage.getItem('em_contra_wpm');
     return !wpm;
@@ -648,54 +664,125 @@ function showQuestion(stage) {
   });
 }
 
+let _fadeSweepTimer = null;
+let _fadeSweepRAF = null;
+
+function startLineFade(el, duration, onComplete) {
+  // Split text into lines by wrapping each word in a span,
+  // measuring their vertical position, grouping into lines,
+  // then fading each line left-to-right sequentially.
+
+  const text = el.textContent;
+  const words = text.split(/\s+/).filter(Boolean);
+
+  // Wrap each word in a span
+  el.innerHTML = words.map(w => `<span class="fw">${w} </span>`).join('');
+
+  // Measure line groups by top position
+  const spans = Array.from(el.querySelectorAll('.fw'));
+  const lines = [];
+  let currentLineY = null;
+  let currentLine = [];
+
+  spans.forEach(span => {
+    const y = span.getBoundingClientRect().top;
+    if (currentLineY === null || Math.abs(y - currentLineY) > 4) {
+      if (currentLine.length) lines.push(currentLine);
+      currentLine = [span];
+      currentLineY = y;
+    } else {
+      currentLine.push(span);
+    }
+  });
+  if (currentLine.length) lines.push(currentLine);
+
+  if (!lines.length) { if (onComplete) onComplete(); return; }
+
+  const msPerLine = duration / lines.length;
+  let lineIdx = 0;
+
+  function fadeNextLine() {
+    if (lineIdx >= lines.length) {
+      if (onComplete) onComplete();
+      return;
+    }
+    const lineSpans = lines[lineIdx];
+    const lineDuration = msPerLine;
+    const msPerSpan = lineDuration / lineSpans.length;
+
+    lineSpans.forEach((span, i) => {
+      setTimeout(() => {
+        span.style.transition = `opacity ${msPerSpan * 0.8}ms ease`;
+        span.style.opacity = '0';
+      }, i * msPerSpan);
+    });
+
+    lineIdx++;
+    _fadeSweepTimer = setTimeout(fadeNextLine, lineDuration);
+  }
+
+  fadeNextLine();
+}
+
+function stopLineFade(el) {
+  if (_fadeSweepRAF) { cancelAnimationFrame(_fadeSweepRAF); _fadeSweepRAF = null; }
+  if (_fadeSweepTimer) { clearTimeout(_fadeSweepTimer); _fadeSweepTimer = null; }
+  // Hide all spans immediately
+  el.querySelectorAll('.fw').forEach(s => { s.style.transition = 'none'; s.style.opacity = '0'; });
+}
+
+function resetLineFade(el) {
+  if (_fadeSweepRAF) { cancelAnimationFrame(_fadeSweepRAF); _fadeSweepRAF = null; }
+  if (_fadeSweepTimer) { clearTimeout(_fadeSweepTimer); _fadeSweepTimer = null; }
+  // Restore plain text
+  const text = Array.from(el.querySelectorAll('.fw')).map(s => s.textContent).join('').trimEnd();
+  if (text) el.textContent = text;
+  el.style.webkitMaskImage = '';
+  el.style.maskImage = '';
+  el.style.opacity = '1';
+  el.style.transition = 'none';
+}
+
 function startTimed() {
   setStage(3);
   timedExpired = false;
   const textEl = document.getElementById('text-2');
-  // Reset any lingering transition from a previous run
-  textEl.style.transition = 'none';
-  textEl.style.opacity = '1';
+
+  // Full reset
+  resetLineFade(textEl);
+  void textEl.offsetHeight;
+
   document.getElementById('listo-2').style.display = 'none';
-  document.getElementById('hint-2').textContent = 'La barra marca el tiempo — lee con atención';
+  document.getElementById('hint-2').textContent = 'El texto desaparecerá poco a poco — lee con atención';
 
-  // Calculate timed duration: baseline speed + 15% faster
+  // Calculate timed duration: slightly slower than baseline to build confidence
+  // Starts at 85% of natural speed, adapts upward over sessions
   const words = countWords(currentPair.b.text);
-  const targetMs = Math.round((words / (baselineWpm * 1.15)) * 60000);
-  const duration = Math.max(targetMs, 4000); // minimum 4 seconds
+  const difficultyMultiplier = getTimedDifficulty();
+  const targetMs = Math.round((words / (baselineWpm * difficultyMultiplier)) * 60000);
+  const duration = Math.max(targetMs, 8000); // minimum 8 seconds
 
-  // Hard reset — wait for stage swap to fully paint before starting fade
-  textEl.style.transition = 'none';
-  textEl.style.opacity = '1';
-  void textEl.offsetHeight; // force reflow
-  // Double rAF ensures the stage swap has been committed to the GPU before fade starts
+  // Double rAF to ensure stage is painted before starting
   requestAnimationFrame(() => requestAnimationFrame(() => {
-    textEl.style.transition = `opacity ${duration}ms linear`;
-    textEl.style.opacity = '0';
+    startLineFade(textEl, duration, () => {
+      // Fade complete
+      timedExpired = true;
+      document.getElementById('hint-2').textContent = '¡Tiempo! ¿Recordaste el contenido?';
+      document.getElementById('listo-2').style.display = 'block';
+      document.getElementById('listo-2').textContent = 'Responder pregunta →';
+    });
   }));
 
-  // Show Listo button halfway through so user can tap if done
-  setTimeout(() => {
+  // Show Listo button halfway through
+  timedTimer = setTimeout(() => {
     document.getElementById('listo-2').style.display = 'block';
   }, duration * 0.5);
-
-  // Full fade when time expires
-  timedTimer = setTimeout(() => {
-    timedExpired = true;
-    textEl.style.transition = 'none';
-    textEl.style.opacity = '0';
-    document.getElementById('hint-2').textContent = '¡Tiempo! ¿Recordaste el contenido?';
-    document.getElementById('listo-2').style.display = 'block';
-    document.getElementById('listo-2').textContent = 'Responder pregunta →';
-  }, duration);
 }
 
 function finishTimed() {
   clearTimeout(timedTimer);
-  // Hard-stop the fade — clear transition and snap opacity to 0
   const textEl = document.getElementById('text-2');
-  textEl.style.transition = 'none';
-  textEl.style.opacity = '0';
-  // Calculate timed WPM if user tapped Listo before timeout
+  stopLineFade(textEl);
   if(!timedExpired) {
     timedWpm = baselineWpm;
   } else {
@@ -706,6 +793,7 @@ function finishTimed() {
 
 function showResults() {
   setStage(5);
+  incrementTimedDifficulty(); // ramp up difficulty for next session
   const compreh = (baselineCorrect ? 1 : 0) + (timedCorrect ? 1 : 0);
   const compPct = Math.round(compreh / 2 * 100);
   const displayWpm = Math.max(baselineWpm, 80);
@@ -751,13 +839,14 @@ function restartExercise() {
   setStage(0);
 }
 
-// Check if launched in session context or onboarding
+// Update ready screen messaging
 (function(){
   if(isCalibrationRun()) {
-    // Update ready screen messaging for calibration
-    document.querySelector('.ready-sub').textContent = 'Primero leerás un texto corto a tu ritmo — así calibramos tu velocidad natural. Luego un segundo párrafo contra el tiempo.';
+    document.querySelector('.ready-sub').textContent = 'Primero leerás un texto corto a tu ritmo — calibramos tu velocidad natural. Luego un párrafo contra el tiempo.';
     document.querySelectorAll('.ready-step-title')[0].textContent = 'Lee a tu ritmo natural';
-    document.querySelectorAll('.ready-step-desc')[0].textContent = 'Texto sencillo y corto. Toca Listo al terminar.';
+    document.querySelectorAll('.ready-step-desc')[0].textContent = 'Texto corto. Toca Listo al terminar.';
+  } else {
+    document.querySelector('.ready-sub').textContent = 'Lee el párrafo antes de que desaparezca. Luego responde una pregunta de comprensión.';
   }
 })();
 </script>
