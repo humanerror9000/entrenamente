@@ -266,9 +266,9 @@
 .recon-drop-zone { min-height:80px; background:var(--card); border:2px solid var(--violet-b);
   border-radius:14px; padding:14px; display:flex; flex-wrap:wrap; gap:8px;
   margin-bottom:0; }
-.recon-drop-zone .placeholder { color:var(--text3); font-size:14px; align-self:center; }
+.recon-drop-zone .placeholder { color:var(--text3); font-size:16px; align-self:center; }
 .recon-divider { display:flex; align-items:center; gap:10px; margin:14px 0 10px;
-  font-size:11px; color:var(--text3); text-transform:uppercase; letter-spacing:0.08em; }
+  font-size:13px; color:var(--text3); text-transform:uppercase; letter-spacing:0.08em; font-weight:600; }
 .recon-divider::before, .recon-divider::after { content:''; flex:1; height:1px; background:var(--border); }
 .chunk-bank { display:flex; flex-wrap:wrap; gap:8px; }
   .recon-drop-zone {
@@ -288,9 +288,10 @@
   .recon-drop-zone .chunk-tile { background:var(--violet-d); border-color:var(--violet-b); color:var(--violet); }
 .chunk-tile {
     display: inline-flex; align-items: center;
-    font-family: 'Lora', serif; font-size: 16px;
-    padding: 8px 16px; border-radius: 10px;
-    background: var(--card); border: 1.5px solid var(--border);
+    font-family: 'Lora', serif; font-size: 18px;
+    padding: 10px 18px; border-radius: 10px;
+    background: var(--card); border: 2px solid var(--border2);
+    color: var(--text);
     cursor: grab; user-select: none;
     box-shadow: 0 1px 4px rgba(0,0,0,0.06);
     transition: all 0.15s;
@@ -381,8 +382,8 @@
   .flash-area { padding: 24px 16px !important; }
   .flash-chunk { font-size: 20px !important; padding: 10px 16px !important; }
   .recon-area { padding: 16px 16px !important; }
-  .recon-drop-zone .chunk-tile { background:var(--violet-d); border-color:var(--violet-b); color:var(--violet); }
-.chunk-tile { font-size: 14px !important; padding: 10px 14px !important; min-height: 44px !important; }
+  .recon-drop-zone .chunk-tile { background:var(--violet-d); border-color:var(--violet-b); color:var(--violet); font-weight:600; }
+.chunk-tile { font-size: 17px !important; padding: 12px 16px !important; min-height: 48px !important; font-weight:500; }
   .recon-drop-zone { min-height: 60px !important; padding: 10px 12px !important; }
   .card-instruction { padding: 12px 16px !important; font-size: 14px !important; }
   .card-header { padding: 14px 16px 12px !important; }
@@ -581,25 +582,11 @@ body::before{display:none;}
 
 <div class="ready-screen" id="ready-screen">
   <div class="ready-inner">
-    <div class="ready-title">Lectura por <em>Bloques</em></div>
-    <div class="ready-sub">Lee grupos de palabras como una sola unidad.</div>
-    
-    <div style="width:100%;margin-bottom:24px;display:flex;flex-direction:column;gap:8px;">
-      <div style="display:flex;gap:8px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border2);border-radius:10px;">
-        <span style="font-size:18px;">🔦</span>
-        <div><div style="font-size:15px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;">Modo 1</div><div style="font-size:14px;color:var(--text2);">Lectura por focos</div></div>
-      </div>
-      <div style="display:flex;gap:8px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border2);border-radius:10px;">
-        <span style="font-size:18px;">⚡</span>
-        <div><div style="font-size:15px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;">Modo 2</div><div style="font-size:14px;color:var(--text2);">Flash por bloques</div></div>
-      </div>
-      <div style="display:flex;gap:8px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border2);border-radius:10px;">
-        <span style="font-size:18px;">🧩</span>
-        <div><div style="font-size:15px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;">Modo 3</div><div style="font-size:14px;color:var(--text2);">Reconstrucción</div></div>
-      </div>
-    </div>
+    <div style="font-size:52px;margin-bottom:8px;">🔦</div>
+    <div class="ready-title">Lectura por <em>Focos</em></div>
+    <div class="ready-sub">Sigue el bloque iluminado con los ojos. Lee cada grupo de palabras como una sola unidad.</div>
     <button class="ready-btn" onclick="dismissReady()">▶ Empecemos</button>
-    <div class="ready-hint">Empieza por el Modo 1 — puedes cambiar cuando quieras</div>
+    <div class="ready-hint">Primero de tres modos — cada uno entrena algo distinto</div>
   </div>
 </div>
 <script>
@@ -607,6 +594,8 @@ function dismissReady(){
   document.getElementById('ready-screen').classList.add('hidden');
   if(typeof requestWakeLock==='function') requestWakeLock();
   switchMode(1);
+  document.getElementById('focos-start-btn').style.display = 'none';
+  startFocos();
 }
 
 // ── Session completion tracking ──
@@ -785,8 +774,9 @@ function updateSessionBtnLabels() {
   <!-- ═══════════════════════════════════════ -->
   <div class="mode-section" id="mode-2">
     <div class="exercise-card">
-      <div class="card-instruction">
-        Lee cada <strong>bloque</strong> que aparece. Cuando termine la secuencia, responde la pregunta de comprensión. El ritmo se adapta a tu velocidad de lectura.
+      <div class="instr-banner" id="flash-instruction">
+        <span class="instr-icon">⚡</span>
+        <div class="instr-text">Lee cada <strong>bloque</strong> que aparece. Al terminar, responde la pregunta.</div>
       </div>
       <div class="flash-area" id="flash-area">
         <button class="flash-start-btn" onclick="startFlash()">▶ Iniciar secuencia</button>
@@ -808,8 +798,9 @@ function updateSessionBtnLabels() {
   <!-- ═══════════════════════════════════════ -->
   <div class="mode-section" id="mode-3">
     <div class="exercise-card">
-      <div class="card-instruction">
-        <strong>Toca los bloques</strong> para colocarlos en orden y reconstruir la oración completa.
+      <div class="instr-banner">
+        <span class="instr-icon">🧩</span>
+        <div class="instr-text"><strong>Toca los bloques</strong> en orden para reconstruir la oración.</div>
       </div>
       <div class="recon-area">
         <div class="recon-drop-zone" id="drop-zone" ondragover="dragOver(event)" ondrop="dropChunk(event)" ondragleave="dragLeave(event)">
@@ -873,18 +864,16 @@ function answerQ(el, correct, mode) {
   el.classList.add(correct ? 'correct-ans' : 'wrong-ans');
   if (!correct) {
     options.forEach(o => {
-      // mark the correct one green
       const onclickAttr = o.getAttribute('onclick') || '';
       if (onclickAttr.includes('true')) o.classList.add('correct-ans');
     });
   }
   const fb = document.getElementById('feedback-' + mode);
-  if (correct) {
-    fb.className = 'feedback-panel correct';
-    fb.innerHTML = '<div class="feedback-label">✓ Correcto</div>Identificaste correctamente la postura crítica implícita en el marcador discursivo "sin embargo" y la perífrasis "ha tardado en". Este es el tipo de lectura inferencial que entrena la comprensión profunda.';
-  } else {
-    fb.className = 'feedback-panel incorrect';
-    fb.innerHTML = '<div class="feedback-label">✗ Incorrecto</div>La clave está en el marcador discursivo <em>"Sin embargo"</em> (adversativo) combinado con la perífrasis <em>"ha tardado en reconocer"</em> — juntos indican que el autor critica la lentitud de la comunidad científica.';
+  if(fb) {
+    fb.className = 'feedback-panel ' + (correct ? 'correct' : 'incorrect');
+    fb.innerHTML = correct
+      ? '<div class="feedback-label">✓ Correcto</div>'
+      : '<div class="feedback-label">✗ Incorrecto</div>La respuesta correcta está resaltada arriba.';
   }
   document.getElementById('main-progress').style.width = (35 + (correct ? 15 : 5)) + '%';
 }
@@ -1084,9 +1073,9 @@ let focosRunning = false;
 
 
 function prepareFocos() {
-  // Just show the start button, don't render paragraph yet
+  // Ready screen already explained the mode — just show a clean state
   const area = document.getElementById('focos-area');
-  area.innerHTML = '<div style="text-align:center;color:var(--text3);font-size:15px;line-height:1.7;padding:0 16px;">Sigue el bloque iluminado<br>con los ojos.<br>Lee cada grupo como una unidad.</div>';
+  area.innerHTML = '<div style="text-align:center;color:var(--text3);font-size:17px;">Toca Iniciar cuando estés listo</div>';
   document.getElementById('focos-start-btn').style.display = 'block';
   document.getElementById('focos-nav').style.display = 'none';
   document.getElementById('focos-speed').textContent = 'Nivel ' + (focosLevel + 1);
@@ -1179,6 +1168,10 @@ function finishFocos() {
       document.getElementById('focos-nav').style.display = 'flex';
       return;
     }
+    // Clear the paragraph area to declutter — focus entirely on the question
+    const area = document.getElementById('focos-area');
+    if(area) area.innerHTML = '<div style="text-align:center;color:var(--text3);font-size:15px;">✓ Secuencia completada</div>';
+
     const footer = document.getElementById('focos-footer');
     const qDiv = document.createElement('div');
     qDiv.className = 'focos-question';
@@ -1214,12 +1207,14 @@ let flashIdx = 0, flashTimer = null;
 function startFlash() {
   if(flashTimer) { clearInterval(flashTimer); flashTimer = null; }
   flashIdx = 0;
+  const instr = document.getElementById('flash-instruction');
+  if(instr) instr.style.display = 'none';
   const area = document.getElementById('flash-area');
   area.innerHTML = `
     <div class="flash-counter" id="flash-ctr">Bloque 1 de ${flashChunks.length}</div>
-    <div class="flash-chunk" id="flash-text">${flashChunks[0]}</div>
+    <div class="flash-chunk" id="flash-text" style="font-family:'Lora',serif;font-size:clamp(20px,5vw,28px);color:var(--text);padding:14px 22px;background:var(--violet-d);border:1.5px solid var(--violet-b);border-radius:14px;">${flashChunks[0]}</div>
     <div class="flash-progress-bar"><div class="flash-progress-fill" id="flash-pb" style="width:${100/flashChunks.length}%"></div></div>
-    <div style="font-size:12px;color:var(--muted);margin-top:4px;">Velocidad adaptativa — ajustada a tu perfil</div>
+    <div style="font-size:14px;color:var(--text3);margin-top:4px;">Velocidad adaptativa</div>
   `;
   flashTimer = setInterval(advanceFlash, 1100);
 }
@@ -1229,8 +1224,8 @@ function advanceFlash() {
   if (flashIdx >= flashChunks.length) {
     clearInterval(flashTimer);
     document.getElementById('flash-area').innerHTML = `
-      <div style="font-size:15px;font-weight:600;color:var(--ink)">✓ Secuencia completada</div>
-      <div style="font-size:13px;color:var(--muted);margin-top:4px;">Responde la pregunta de comprensión</div>
+      <div style="font-size:17px;font-weight:600;color:var(--teal)">✓ Secuencia completada</div>
+      <div style="font-size:15px;color:var(--text3);margin-top:4px;">Responde la pregunta de comprensión</div>
     `;
     showFlashQuestion();
     return;
@@ -1421,9 +1416,18 @@ function showBloqueTransition(toMode) {
     <div style="font-size:48px;">${t.icon}</div>
     <div style="font-family:'Poppins',sans-serif;font-size:34px;font-weight:300;color:var(--text);">${t.title}</div>
     <div style="font-size:17px;color:var(--text2);line-height:1.7;max-width:320px;">${t.desc}</div>
-    <button onclick="const _ov=this.parentNode; setTimeout(()=>{ if(_ov.parentNode) _ov.parentNode.removeChild(_ov); switchMode(${toMode}); },50);" style="width:100%;max-width:320px;padding:18px;background:var(--violet-deep);color:#fff;border:none;border-radius:14px;font-family:'Fredoka','Poppins',sans-serif;font-size:18px;font-weight:600;cursor:pointer;margin-top:8px;">Continuar →</button>
+    <button id="bloque-trans-btn" style="width:100%;max-width:320px;padding:18px;background:var(--violet-deep);color:#fff;border:none;border-radius:14px;font-family:'Fredoka','Poppins',sans-serif;font-size:18px;font-weight:600;cursor:pointer;margin-top:8px;">Continuar →</button>
   `;
   document.body.appendChild(ov);
+  document.getElementById('bloque-trans-btn').onclick = () => {
+    ov.remove();
+    switchMode(toMode);
+    if(toMode === 2) {
+      const instr = document.getElementById('flash-instruction');
+      if(instr) instr.style.display = 'none';
+      startFlash();
+    }
+  };
 }
 
 
