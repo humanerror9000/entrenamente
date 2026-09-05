@@ -137,3 +137,69 @@
   --duration-base: 260ms;    /* progress-bar width */
   --easing-standard: ease;
 }
+
+
+/* ==========================================================================
+   Bridge — legacy variable aliases
+   Maps the old single-file variable names to the new design-system tokens.
+   Every HTML file that used --violet, --card, --bg etc. automatically
+   inherits the correct token value without a single HTML edit required.
+   Remove these one file at a time as each screen is migrated to the
+   proper token names.
+   ========================================================================== */
+
+:root {
+  /* Surfaces */
+  --bg:    var(--color-bg);
+  --bg2:   var(--color-bg-sunken);
+  --card:  var(--color-surface-card);
+  --card2: var(--color-surface-nested);
+
+  /* Borders */
+  --border:  var(--color-border);
+  --border2: var(--color-border-strong);
+
+  /* Text */
+  --text:  var(--color-text);
+  --text2: var(--color-text-secondary);
+  --text3: var(--color-text-muted);
+
+  /* Primary (violet) */
+  --violet:      var(--color-primary);
+  --violet-deep: var(--color-primary-deep);
+  --violet-d:    var(--color-primary-tint);
+  --violet-b:    var(--color-primary-border);
+
+  /* Secondary (teal) — note: design system teal is the progress/positive
+     colour (#2ECFB8), not the dark teal (#0A7A6A) in the old files.
+     The deep exercise teal is mapped separately below. */
+  --teal:   var(--color-secondary);
+  --teal-d: var(--color-secondary-tint);
+
+  /* Category colours */
+  --amber:      var(--color-category-attention);
+  --amber-d:    var(--color-category-attention-tint);
+  --amber-b:    var(--color-category-attention-border);
+  --amber-deep: var(--color-category-attention-deep);
+
+  --green:      var(--color-category-language);
+  --green-d:    var(--color-category-language-tint);
+  --green-b:    var(--color-category-language-border);
+  --green-deep: var(--color-category-language-deep);
+
+  --coral:      var(--color-danger);
+  --coral-d:    var(--color-danger-tint);
+  --coral-b:    var(--color-danger-border);
+  --coral-deep: var(--color-danger-deep);
+
+  --gold:      var(--color-achievement);
+  --gold-d:    var(--color-achievement-tint);
+  --gold-b:    var(--color-achievement-border);
+  --gold-deep: var(--color-achievement-deep);
+
+  /* Spacing aliases (old files used raw px; add as needed) */
+  --r: var(--radius-lg);   /* most files used --r as the card radius */
+
+  /* Typography */
+  --font-base: var(--font-family-base);
+}
