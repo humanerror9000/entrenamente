@@ -9,10 +9,71 @@
 <link rel="stylesheet" href="./tokens.css">
 <link rel="stylesheet" href="./components.css">
 <style>
-/* tokens.css and components.css loaded above — :root tokens live there */
+/* tokens.css loaded above — :root tokens live there */
+
+/* ── Blob texture background ── */
+.app-blobs { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+.app-blobs svg { position:absolute; }
+.blob-a { top:-8%; right:-18%; width:82%; }
+.blob-b { bottom:-10%; left:-14%; width:70%; }
+
+/* ── Exercise tile grid (design system colour-zone style) ── */
+.ex-thumb-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.ex-thumb {
+  background:var(--card); border:1px solid var(--border2);
+  border-radius:16px; text-decoration:none; overflow:hidden;
+  display:flex; flex-direction:column;
+  box-shadow:var(--shadow-card,0 2px 8px rgba(26,24,48,0.06));
+  transition:box-shadow 0.18s;
+  -webkit-tap-highlight-color:transparent;
+}
+.ex-thumb:hover, .ex-thumb:active { box-shadow:var(--shadow-lift,0 8px 20px rgba(26,24,48,0.12)); }
+.ex-thumb-zone {
+  height:78px; display:flex; align-items:center; justify-content:center;
+  position:relative;
+}
+/* Wave edge — SVG clip path injected via pseudo-element would need JS;
+   instead use a simple border-radius transition for the wave feel */
+.ex-thumb-zone::after {
+  content:''; position:absolute; bottom:-1px; left:0; right:0; height:14px;
+  background:var(--card);
+  border-radius:50% 50% 0 0 / 100% 100% 0 0;
+}
+.ex-thumb-zone-icon {
+  font-size:32px; line-height:1; position:relative; z-index:1;
+}
+.ex-thumb-body { padding:10px 12px 14px; }
+.ex-thumb-cat {
+  font-size:11px; font-weight:600; letter-spacing:0.07em;
+  text-transform:uppercase; margin-bottom:4px;
+}
+.ex-thumb-name {
+  font-family:'Fredoka',sans-serif; font-size:18px; font-weight:600;
+  color:var(--text); line-height:1.2; margin-bottom:4px;
+}
+.ex-thumb-dur { font-size:13px; color:var(--text3); }
+
+/* Colour zones per category */
+.zone-velocidad { background:var(--violet); }
+.zone-velocidad .ex-thumb-cat { color:var(--violet-deep); }
+.zone-memoria   { background:var(--teal); }
+.zone-memoria   .ex-thumb-cat { color:#0A7A6A; }
+.zone-atencion  { background:var(--amber); }
+.zone-atencion  .ex-thumb-cat { color:var(--amber-deep); }
+.zone-lenguaje  { background:var(--green); }
+.zone-lenguaje  .ex-thumb-cat { color:var(--green-deep); }
+
+/* ── Today session rows — add colour zone strip ── */
+.today-ex { position:relative; padding-left:0; overflow:hidden; }
+.today-ex-zone {
+  width:56px; flex-shrink:0; align-self:stretch;
+  display:flex; align-items:center; justify-content:center;
+  font-size:20px; border-radius:11px 0 0 11px;
+}
+
 *{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
-body{font-family:var(--font-family-base);background:var(--color-bg);color:var(--color-text);min-height:100vh;overflow-x:hidden;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
 body::before{display:none;}
 
 /* ONBOARDING */
@@ -189,6 +250,17 @@ body::before{display:none;}
 </style>
 </head>
 <body>
+<!-- ── Background blob texture ── -->
+<div class="app-blobs" aria-hidden="true">
+  <!-- Blob A: crown — top-right, violet tint -->
+  <svg class="blob-a" viewBox="0 0 400 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M320 30 C380 10 420 80 400 160 C380 240 300 280 220 260 C140 240 80 180 100 100 C120 20 260 50 320 30Z" fill="rgba(108,92,231,0.10)"/>
+  </svg>
+  <!-- Blob B: footing — bottom-left, teal tint -->
+  <svg class="blob-b" viewBox="0 0 360 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M40 280 C-20 250 -10 160 40 100 C90 40 180 20 250 60 C320 100 350 190 300 250 C250 310 100 310 40 280Z" fill="rgba(46,207,184,0.10)"/>
+  </svg>
+</div>
 
 <!-- ONBOARDING -->
 <div id="onboarding">
@@ -302,21 +374,77 @@ body::before{display:none;}
   </div>
   <div class="ex-grid-wrap" id="ex-grid-wrap">
     <div>
-      <div class="pillar-title" style="color:var(--teal);">Lectura Visual</div>
+      <div class="pillar-title" style="color:var(--violet);">Lectura Visual</div>
       <div class="ex-thumb-grid">
-        <a class="ex-thumb" id="card-flash" href="lectura_flash_rsvp.html"><div class="ex-thumb-icon">⚡</div><div class="ex-thumb-name">Lectura Flash</div></a>
-        <a class="ex-thumb" id="card-bloques" href="lectura_por_bloques_prototype.html"><div class="ex-thumb-icon">📦</div><div class="ex-thumb-name">Lectura por Bloques</div></a>
-        <a class="ex-thumb" id="card-contra" href="contrarreloj.html"><div class="ex-thumb-icon">📖</div><div class="ex-thumb-name">Lectura Adaptativa</div></a>
-        <a class="ex-thumb" id="card-vision" href="vision_paralela.html"><div class="ex-thumb-icon">👁</div><div class="ex-thumb-name">Visión Paralela</div></a>
-        <a class="ex-thumb" id="card-saltos" href="saltos_visuales.html"><div class="ex-thumb-icon">⇄</div><div class="ex-thumb-name">Saltos Visuales</div></a>
+        <a class="ex-thumb" id="card-flash" href="lectura_flash_rsvp.html">
+          <div class="ex-thumb-zone zone-velocidad"><span class="ex-thumb-zone-icon">≡</span></div>
+          <div class="ex-thumb-body">
+            <div class="ex-thumb-cat" style="color:var(--violet-deep);">Velocidad</div>
+            <div class="ex-thumb-name">Lectura Flash</div>
+            <div class="ex-thumb-dur">5 min</div>
+          </div>
+        </a>
+        <a class="ex-thumb" id="card-bloques" href="lectura_por_bloques_prototype.html">
+          <div class="ex-thumb-zone zone-velocidad"><span class="ex-thumb-zone-icon">▦</span></div>
+          <div class="ex-thumb-body">
+            <div class="ex-thumb-cat" style="color:var(--violet-deep);">Velocidad</div>
+            <div class="ex-thumb-name">Por Bloques</div>
+            <div class="ex-thumb-dur">5 min</div>
+          </div>
+        </a>
+        <a class="ex-thumb" id="card-contra" href="contrarreloj.html">
+          <div class="ex-thumb-zone zone-atencion"><span class="ex-thumb-zone-icon">◎</span></div>
+          <div class="ex-thumb-body">
+            <div class="ex-thumb-cat" style="color:var(--amber-deep);">Atención</div>
+            <div class="ex-thumb-name">Adaptativa</div>
+            <div class="ex-thumb-dur">5 min</div>
+          </div>
+        </a>
+        <a class="ex-thumb" id="card-vision" href="vision_paralela.html">
+          <div class="ex-thumb-zone zone-atencion"><span class="ex-thumb-zone-icon">⊙</span></div>
+          <div class="ex-thumb-body">
+            <div class="ex-thumb-cat" style="color:var(--amber-deep);">Atención</div>
+            <div class="ex-thumb-name">Visión Paralela</div>
+            <div class="ex-thumb-dur">5 min</div>
+          </div>
+        </a>
+        <a class="ex-thumb" id="card-saltos" href="saltos_visuales.html">
+          <div class="ex-thumb-zone zone-atencion"><span class="ex-thumb-zone-icon">⇄</span></div>
+          <div class="ex-thumb-body">
+            <div class="ex-thumb-cat" style="color:var(--amber-deep);">Atención</div>
+            <div class="ex-thumb-name">Saltos Visuales</div>
+            <div class="ex-thumb-dur">5 min</div>
+          </div>
+        </a>
       </div>
     </div>
     <div>
-      <div class="pillar-title" style="color:var(--violet);">Memoria Activa</div>
+      <div class="pillar-title" style="color:var(--teal);">Memoria Activa</div>
       <div class="ex-thumb-grid">
-        <a class="ex-thumb" id="card-memoria" href="memoria_activa.html"><div class="ex-thumb-icon">🧠</div><div class="ex-thumb-name">Memoria Activa</div></a>
-        <a class="ex-thumb" id="card-cats" href="actualizacion_categorias.html"><div class="ex-thumb-icon">🗂</div><div class="ex-thumb-name">Act. Categorías</div></a>
-        <a class="ex-thumb" id="card-continua" href="actualizacion_continua.html"><div class="ex-thumb-icon">🔄</div><div class="ex-thumb-name">Act. Continua</div></a>
+        <a class="ex-thumb" id="card-memoria" href="memoria_activa.html">
+          <div class="ex-thumb-zone zone-memoria"><span class="ex-thumb-zone-icon">▣</span></div>
+          <div class="ex-thumb-body">
+            <div class="ex-thumb-cat" style="color:#0A7A6A;">Memoria</div>
+            <div class="ex-thumb-name">Memoria Activa</div>
+            <div class="ex-thumb-dur">5 min</div>
+          </div>
+        </a>
+        <a class="ex-thumb" id="card-cats" href="actualizacion_categorias.html">
+          <div class="ex-thumb-zone zone-memoria"><span class="ex-thumb-zone-icon">◈</span></div>
+          <div class="ex-thumb-body">
+            <div class="ex-thumb-cat" style="color:#0A7A6A;">Memoria</div>
+            <div class="ex-thumb-name">Categorías</div>
+            <div class="ex-thumb-dur">4 min</div>
+          </div>
+        </a>
+        <a class="ex-thumb" id="card-continua" href="actualizacion_continua.html">
+          <div class="ex-thumb-zone zone-lenguaje"><span class="ex-thumb-zone-icon">↺</span></div>
+          <div class="ex-thumb-body">
+            <div class="ex-thumb-cat" style="color:var(--green-deep);">Lenguaje</div>
+            <div class="ex-thumb-name">Act. Continua</div>
+            <div class="ex-thumb-dur">5 min</div>
+          </div>
+        </a>
       </div>
     </div>
     <div style="padding:4px 0 8px;">
