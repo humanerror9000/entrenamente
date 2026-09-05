@@ -1,0 +1,139 @@
+/* ==========================================================================
+   EntrenaMente — Design tokens v1.1
+   Every token is named by role, never by appearance.
+   Contrast ratios are measured against --color-bg (#F8F7FF) and
+   --color-surface-card (#FFFFFF).
+   ========================================================================== */
+
+:root {
+  /* ---------------------------------------------------------------- Colors */
+
+  /* Surfaces */
+  --color-bg: #F8F7FF;                 /* app canvas — warm cream, never pure white */
+  --color-bg-sunken: #F0EEF8;          /* recessed areas, progress-bar tracks, inactive fills */
+  --color-surface-card: #FFFFFF;       /* every card, sheet and input surface */
+  --color-surface-nested: #F4F2FC;     /* nested panels inside a white card */
+
+  /* Primary */
+  --color-primary: #6C5CE7;            /* buttons, links, active states, logo accent — 4.86:1 on card */
+  --color-primary-deep: #534AB7;       /* hover / pressed, emphasis text — 6.93:1 on card */
+  --color-primary-tint: rgba(108, 92, 231, 0.10);   /* secondary button fill, selected rows */
+  --color-primary-border: rgba(108, 92, 231, 0.25);
+
+  /* Secondary — non-text only (1.96:1 on card). Never set type in this. */
+  --color-secondary: #2ECFB8;          /* progress fills, completed marks, positive feedback */
+  --color-secondary-tint: rgba(46, 207, 184, 0.10);
+
+  /* Text */
+  --color-text: #1A1830;               /* headings and body copy — 17.25:1 on card, AAA */
+  --color-text-secondary: #4A4468;     /* supporting sentences, card descriptors — 9.06:1, AAA */
+  --color-text-muted: #5C5880;         /* captions, inactive tabs, disabled labels — 6.64:1, AA.
+                                          The lightest text permitted anywhere. */
+  --color-text-inverse: #FFFFFF;       /* on --color-primary and category base fills */
+
+  /* Borders */
+  --color-border: rgba(0, 0, 0, 0.07);   /* hairlines on cards */
+  --color-border-strong: rgba(0, 0, 0, 0.13);  /* inputs, dividers, ghost outlines that must be findable */
+
+  /* Category — Atención & streaks */
+  --color-category-attention: #F5A623;             /* fills, bars, illustration only — 1.90:1 */
+  --color-category-attention-deep: #A16707;        /* text-safe — 4.71:1 on card, AA */
+  --color-category-attention-tint: rgba(245, 166, 35, 0.10);
+  --color-category-attention-border: rgba(245, 166, 35, 0.25);
+
+  /* Category — Lenguaje & correct answers */
+  --color-category-language: #52C98A;              /* non-text — 1.96:1 */
+  --color-category-language-deep: #298454;         /* text-safe — 4.64:1 on card, AA */
+  --color-category-language-tint: rgba(82, 201, 138, 0.10);
+  --color-category-language-border: rgba(82, 201, 138, 0.25);
+
+  /* Category — Errors & destructive actions */
+  --color-danger: #E05C5C;                         /* large text (24px+) or non-text — 3.37:1 */
+  --color-danger-deep: #D93737;                    /* text-safe — 4.61:1 on card, AA */
+  --color-danger-tint: rgba(224, 92, 92, 0.10);
+  --color-danger-border: rgba(224, 92, 92, 0.25);
+
+  /* Category — Achievements, medals, milestones */
+  --color-achievement: #C9A84C;                    /* non-text — 2.15:1 */
+  --color-achievement-deep: #8A712A;               /* text-safe — 4.69:1 on card, AA */
+  --color-achievement-tint: rgba(201, 168, 76, 0.10);
+  --color-achievement-border: rgba(201, 168, 76, 0.25);
+
+  /* ------------------------------------------------------------ Typography */
+
+  --font-family-base: Fredoka, system-ui, sans-serif;   /* one family for every use */
+
+  /* Only 400 and 600 ship. 300 is too thin to read at distance;
+     700 closes up Fredoka's rounded bowls. */
+  --font-weight-regular: 400;
+  --font-weight-semibold: 600;
+
+  /* Sizes — 14px is the absolute floor, no exceptions. */
+  --font-size-display: 52px;      /* onboarding hero, celebration — one per screen */
+  --font-size-h1: 38px;           /* screen title — exactly one per screen */
+  --font-size-h2: 30px;           /* section heading, live word inside an exercise */
+  --font-size-h3: 24px;           /* card titles, list-row headings */
+  --font-size-body-lg: 20px;      /* instructions the user must act on; button labels */
+  --font-size-body: 18px;         /* descriptors — smallest size for a full sentence */
+  --font-size-label: 16px;        /* chips, tab labels, step counters */
+  --font-size-caption: 14px;      /* durations, timestamps, metadata — never instructions */
+
+  /* Line heights — headings 1.3, anything read as a sentence 1.6 */
+  --line-height-tight: 1.3;
+  --line-height-body: 1.6;
+  --line-height-wordmark: 1.1;
+
+  /* Letter spacing */
+  --letter-spacing-display: -0.01em;
+  --letter-spacing-h1: -0.005em;
+  --letter-spacing-heading: 0;
+  --letter-spacing-label: 0.02em;
+  --letter-spacing-caption: 0.01em;
+  --letter-spacing-eyebrow: 0.06em;   /* uppercase category and section labels */
+  --letter-spacing-wordmark: 0.1em;
+
+  /* --------------------------------------------------------------- Spacing */
+  /* 4px base unit. Generous by default — when in doubt, go one step up. */
+
+  --space-1: 4px;    /* icon-to-dot, inside a badge */
+  --space-2: 8px;    /* icon-to-label, chip gaps */
+  --space-3: 12px;   /* title-to-descriptor */
+  --space-4: 16px;   /* list gaps, chip padding */
+  --space-5: 24px;   /* card padding, screen gutters */
+  --space-6: 32px;   /* between cards */
+  --space-7: 48px;   /* above a screen's H1 */
+  --space-8: 64px;   /* around a single-action screen */
+
+  /* ---------------------------------------------------------- Border radius */
+  /* Four radii, no others. Rounded forms carry the warmth. */
+
+  --radius-sm: 8px;        /* tags, badges, accent bars, swatches */
+  --radius-md: 12px;       /* buttons, inputs, nested panels */
+  --radius-lg: 16px;       /* every card and sheet */
+  --radius-pill: 9999px;   /* streak badges, progress bars, step dots */
+
+  /* --------------------------------------------------------------- Shadows */
+
+  --shadow-card: 0 2px 8px rgba(26, 24, 48, 0.06);    /* resting cards */
+  --shadow-lift: 0 8px 20px rgba(26, 24, 48, 0.12);   /* daily session card, sheets */
+  --shadow-primary: 0 8px 20px rgba(83, 74, 183, 0.24);  /* primary button */
+  --shadow-brand: 0 10px 24px rgba(83, 74, 183, 0.28);   /* app mark lockup */
+
+  /* -------------------------------------------------------------- Sizing */
+
+  --size-control: 56px;          /* preferred touch target — all buttons */
+  --size-control-input: 54px;    /* text input minimum height */
+  --size-touch-min: 44px;        /* absolute minimum touch target */
+  --size-progress-track: 8px;
+  --size-card-zone-row: 92px;    /* colour zone width on an exercise row */
+  --size-card-zone-tile: 88px;   /* colour zone height on an exercise tile */
+  --size-border-width: 1px;
+  --size-border-width-strong: 2px;   /* ghost button outline, input focus ring */
+
+  /* ------------------------------------------------------------- Motion */
+  /* No springs, no bounces. */
+
+  --duration-fast: 140ms;    /* button state changes */
+  --duration-base: 260ms;    /* progress-bar width */
+  --easing-standard: ease;
+}
