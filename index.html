@@ -9,69 +9,133 @@
 <link rel="stylesheet" href="./tokens.css">
 <link rel="stylesheet" href="./components.css">
 <style>
-/* tokens.css loaded above — :root tokens live there */
+/* tokens.css + components.css loaded above — :root tokens live there */
 
-/* ── Blob texture background ── */
-.app-blobs { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
-.app-blobs svg { position:absolute; }
-.blob-a { top:-8%; right:-18%; width:82%; }
-.blob-b { bottom:-10%; left:-14%; width:70%; }
+/* ── Blob background texture ── */
+.app-blobs{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.blob-a{position:absolute;top:-10%;right:-20%;width:85%;opacity:1;}
+.blob-b{position:absolute;bottom:-12%;left:-16%;width:72%;opacity:1;}
 
-/* ── Exercise tile grid (design system colour-zone style) ── */
-.ex-thumb-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-.ex-thumb {
-  background:var(--card); border:1px solid var(--border2);
-  border-radius:16px; text-decoration:none; overflow:hidden;
-  display:flex; flex-direction:column;
-  box-shadow:var(--shadow-card,0 2px 8px rgba(26,24,48,0.06));
-  transition:box-shadow 0.18s;
-  -webkit-tap-highlight-color:transparent;
-}
-.ex-thumb:hover, .ex-thumb:active { box-shadow:var(--shadow-lift,0 8px 20px rgba(26,24,48,0.12)); }
-.ex-thumb-zone {
-  height:78px; display:flex; align-items:center; justify-content:center;
-  position:relative;
-}
-/* Wave edge — SVG clip path injected via pseudo-element would need JS;
-   instead use a simple border-radius transition for the wave feel */
-.ex-thumb-zone::after {
-  content:''; position:absolute; bottom:-1px; left:0; right:0; height:14px;
-  background:var(--card);
-  border-radius:50% 50% 0 0 / 100% 100% 0 0;
-}
-.ex-thumb-zone-icon {
-  font-size:32px; line-height:1; position:relative; z-index:1;
-}
-.ex-thumb-body { padding:10px 12px 14px; }
-.ex-thumb-cat {
-  font-size:11px; font-weight:600; letter-spacing:0.07em;
-  text-transform:uppercase; margin-bottom:4px;
-}
-.ex-thumb-name {
-  font-family:'Fredoka',sans-serif; font-size:18px; font-weight:600;
-  color:var(--text); line-height:1.2; margin-bottom:4px;
-}
-.ex-thumb-dur { font-size:13px; color:var(--text3); }
+/* ── Body: Fredoka everywhere ── */
+body{font-family:'Fredoka',sans-serif;background:#F8F7FF;color:#1A1830;min-height:100vh;overflow-x:hidden;}
 
-/* Colour zones per category */
-.zone-velocidad { background:var(--violet); }
-.zone-velocidad .ex-thumb-cat { color:var(--violet-deep); }
-.zone-memoria   { background:var(--teal); }
-.zone-memoria   .ex-thumb-cat { color:#0A7A6A; }
-.zone-atencion  { background:var(--amber); }
-.zone-atencion  .ex-thumb-cat { color:var(--amber-deep); }
-.zone-lenguaje  { background:var(--green); }
-.zone-lenguaje  .ex-thumb-cat { color:var(--green-deep); }
+/* ── Top bar ── */
+.app-wrap{position:relative;z-index:10;max-width:480px;margin:0 auto;padding:0 20px 96px;display:flex;flex-direction:column;min-height:100vh;}
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding:16px 0 8px;position:sticky;top:0;z-index:20;background:#F8F7FF;}
+.top-logo{font-family:'Fredoka',sans-serif;font-size:22px;font-weight:600;color:#1A1830;letter-spacing:-0.01em;display:flex;align-items:center;gap:7px;white-space:nowrap;text-decoration:none;}
+.top-logo em{color:#6C5CE7;font-style:italic;}
+.top-right{display:flex;align-items:center;gap:12px;}
+.streak-wrap{display:flex;align-items:center;gap:4px;padding:5px 11px;border-radius:9999px;background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.28);}
+.streak-wrap.zero{background:rgba(0,0,0,0.06);border-color:rgba(0,0,0,0.13);}
+.streak-fire{font-size:17px;line-height:1;}
+.streak-wrap.zero .streak-fire{filter:grayscale(1);opacity:0.5;}
+.streak-count{font-family:'Fredoka',sans-serif;font-size:16px;font-weight:600;color:#A16707;}
+.streak-wrap.zero .streak-count{color:#5C5880;}
+.top-settings{background:none;border:none;cursor:pointer;color:#5C5880;font-size:18px;padding:4px;-webkit-tap-highlight-color:transparent;}
 
-/* ── Today session rows — colour zone strip ── */
-.today-ex { position:relative; overflow:hidden; padding:0; }
-.today-ex-zone {
-  width:60px; flex-shrink:0; align-self:stretch;
-  display:flex; align-items:center; justify-content:center;
-  border-radius:11px 0 0 11px; min-height:60px;
+/* ── Greeting ── */
+.greeting-block{padding:24px 0 16px;}
+.greeting-hi{font-family:'Fredoka',sans-serif;font-size:clamp(38px,10vw,52px);font-weight:600;color:#1A1830;line-height:1.1;margin-bottom:6px;}
+.greeting-hi em{color:#6C5CE7;font-style:normal;}
+.greeting-date{font-family:'Fredoka',sans-serif;font-size:18px;font-weight:400;color:#5C5880;}
+
+/* ── Post-session state ── */
+.done-block{display:none;flex-direction:column;margin-bottom:20px;}
+.done-block.show{display:flex;}
+.done-unified-card{background:#fff;border:1.5px solid rgba(46,207,184,0.25);border-radius:16px;padding:20px 22px;display:flex;align-items:center;gap:14px;}
+.done-summary-icon{width:38px;height:38px;border-radius:50%;background:rgba(46,207,184,0.10);border:1.5px solid rgba(46,207,184,0.25);color:#2ECFB8;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;flex-shrink:0;}
+.done-summary-title{font-family:'Fredoka',sans-serif;font-size:20px;font-weight:600;color:#1A1830;line-height:1.2;}
+.done-summary-sub{font-size:17px;color:#5C5880;margin-top:3px;}
+.done-fire{font-size:60px;filter:drop-shadow(0 0 14px rgba(255,140,0,0.6));animation:firePop 0.5s ease both;margin-bottom:4px;}
+@keyframes firePop{from{transform:scale(0.4);opacity:0}to{transform:scale(1);opacity:1}}
+.done-msg{font-family:'Fredoka',sans-serif;font-size:28px;font-weight:600;color:#1A1830;}
+.done-sub{font-size:18px;color:#4A4468;line-height:1.6;max-width:300px;}
+
+/* ── Progress bar ── */
+.prog-bar-wrap{margin-bottom:20px;display:flex;align-items:center;gap:10px;}
+.prog-bar{flex:1;height:8px;background:#F0EEF8;border-radius:9999px;overflow:hidden;}
+.prog-fill{height:100%;background:#6C5CE7;border-radius:9999px;transition:width 0.5s ease;}
+.prog-label{font-family:'Fredoka',sans-serif;font-size:16px;color:#5C5880;min-width:28px;text-align:right;}
+
+/* ── Session label ── */
+#session-label{font-family:'Fredoka',sans-serif;font-size:16px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#5C5880;margin-bottom:12px;}
+
+/* ── Today-list rows (design system: 92px zone, min-height 92px) ── */
+.today-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.today-ex{display:grid;grid-template-columns:64px 1fr;align-items:stretch;background:#fff;border:1px solid rgba(0,0,0,0.13);border-radius:16px;min-height:84px;overflow:hidden;box-shadow:0 2px 8px rgba(26,24,48,0.06);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.today-ex.done{border-color:rgba(46,207,184,0.25);background:#fff;}
+.today-ex-zone{display:grid;place-items:center;flex-shrink:0;border-radius:15px 0 0 15px;}
+.today-ex-body{display:flex;align-items:center;gap:10px;padding:14px 14px 14px 10px;}
+.today-ex-check{width:26px;height:26px;border-radius:50%;border:2px solid rgba(0,0,0,0.13);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;transition:all 0.2s;}
+.today-ex.done .today-ex-check{background:#2ECFB8;border-color:#2ECFB8;color:#fff;}
+.today-ex-name{font-family:'Fredoka',sans-serif;font-size:20px;font-weight:600;color:#1A1830;flex:1;line-height:1.2;}
+.today-ex.done .today-ex-name{color:#5C5880;text-decoration:line-through;}
+.today-ex-pill{font-family:'Fredoka',sans-serif;font-size:14px;font-weight:600;letter-spacing:0.04em;padding:4px 10px;border-radius:9999px;background:rgba(108,92,231,0.10);color:#534AB7;border:1px solid rgba(108,92,231,0.25);white-space:nowrap;}
+.today-ex.done .today-ex-pill{background:rgba(46,207,184,0.10);color:#0A7A6A;border-color:rgba(46,207,184,0.25);}
+
+/* ── Primary CTA button (design system: 56px, radius-12, Fredoka 20/600) ── */
+.main-cta{width:100%;height:56px;margin-bottom:16px;background:#6C5CE7;color:#fff;border:none;border-radius:12px;font-family:'Fredoka',sans-serif;font-size:20px;font-weight:600;letter-spacing:0.02em;cursor:pointer;transition:background 140ms ease;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 8px 20px rgba(83,74,183,0.24);}
+.main-cta:hover{background:#534AB7;}
+.main-cta:active{background:#534AB7;box-shadow:none;}
+.main-cta:disabled{background:#F0EEF8;border:1px solid rgba(0,0,0,0.13);color:#5C5880;box-shadow:none;cursor:not-allowed;}
+
+/* ── Explore footer ── */
+.explore-footer{width:100%;margin-top:8px;}
+.see-all-btn{width:100%;padding:16px 20px;border-radius:16px;cursor:pointer;background:#fff;border:1px solid rgba(0,0,0,0.13);text-align:left;transition:all 0.15s;box-shadow:0 2px 8px rgba(26,24,48,0.06);}
+.see-all-btn:hover{border-color:rgba(108,92,231,0.25);background:rgba(108,92,231,0.05);}
+.see-all-main{font-family:'Fredoka',sans-serif;font-size:20px;font-weight:600;color:#1A1830;display:flex;align-items:center;justify-content:space-between;}
+.see-all-sub{font-family:'Fredoka',sans-serif;font-size:16px;color:#5C5880;margin-top:2px;}
+.see-all-arrow{transition:transform 0.2s;color:#6C5CE7;font-size:18px;}
+.see-all-btn.open .see-all-arrow{transform:rotate(180deg);}
+
+/* ── Exercise tile grid (design system tile variant: 78px zone, wave edge) ── */
+.ex-grid-wrap{display:none;flex-direction:column;gap:24px;animation:fadeUp 0.3s ease both;margin-top:16px;}
+.ex-grid-wrap.show{display:flex;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.pillar-title{font-family:'Fredoka',sans-serif;font-size:16px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#5C5880;margin-bottom:10px;display:flex;align-items:center;gap:10px;}
+.pillar-title::after{content:'';flex:1;height:1px;background:rgba(0,0,0,0.07);}
+
+.ex-thumb-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.ex-thumb{background:#fff;border:1px solid rgba(0,0,0,0.07);border-radius:16px;text-decoration:none;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 2px 8px rgba(26,24,48,0.06);transition:box-shadow 0.18s;-webkit-tap-highlight-color:transparent;}
+.ex-thumb:hover,.ex-thumb:active{box-shadow:0 8px 20px rgba(26,24,48,0.12);}
+.ex-thumb-zone{height:78px;display:flex;align-items:center;justify-content:center;position:relative;}
+/* Wave edge between zone and body */
+.ex-thumb-zone::after{content:'';position:absolute;bottom:0;left:0;right:0;height:20px;background:#fff;border-radius:50% 50% 0 0/100% 100% 0 0;}
+.ex-thumb-zone svg{position:relative;z-index:1;}
+.ex-thumb-body{padding:10px 14px 14px;}
+.ex-thumb-cat{font-family:'Fredoka',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:3px;}
+.ex-thumb-name{font-family:'Fredoka',sans-serif;font-size:20px;font-weight:600;color:#1A1830;line-height:1.2;margin-bottom:3px;}
+.ex-thumb-dur{font-family:'Fredoka',sans-serif;font-size:14px;color:#5C5880;}
+
+/* Odd tile last child: single tile centered */
+.ex-thumb-grid .ex-thumb:last-child:nth-child(odd){grid-column:1/-1;max-width:calc(50% - 7px);}
+
+/* Session complete overlay */
+.session-complete-overlay{position:fixed;inset:0;z-index:500;background:#F8F7FF;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center;animation:scFadeIn 0.4s ease both;}
+@keyframes scFadeIn{from{opacity:0;transform:scale(0.97)}to{opacity:1;transform:scale(1)}}
+.session-complete-overlay.hidden{display:none;}
+.ob-back{background:none;border:none;cursor:pointer;font-family:'Fredoka',sans-serif;font-size:16px;color:#5C5880;padding:4px 0;-webkit-tap-highlight-color:transparent;}
+.ob-back:hover{color:#6C5CE7;}
+
+/* ── Bottom navigation bar (design system: 60px bar, 5 tabs) ── */
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:100;
+  background:#fff;border-top:1px solid rgba(0,0,0,0.07);
+  box-shadow:0 -2px 12px rgba(26,24,48,0.08);
+  display:flex;align-items:stretch;justify-content:space-around;
+  height:60px;padding-bottom:env(safe-area-inset-bottom,0px);
+  max-width:100%;
 }
-.today-ex-zone svg { flex-shrink:0; }
-
+.nav-tab{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:3px;cursor:pointer;
+  border-radius:12px;color:#5C5880;
+  -webkit-tap-highlight-color:transparent;border:none;background:none;
+  font-family:'Fredoka',sans-serif;font-size:14px;font-weight:400;
+  transition:color 0.15s;padding:4px 6px;
+}
+.nav-tab.active{color:#6C5CE7;font-weight:600;}
+.nav-tab svg{flex-shrink:0;}
 *{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
@@ -194,13 +258,7 @@ body::before{display:none;}
 
 .today-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
 .today-ex{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--card);border:1px solid var(--border2);border-radius:12px;}
-.today-ex.done{border-color:var(--teal-b);background:rgba(46,207,184,0.06);}
-.today-ex-check{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;transition:all 0.2s;}
-.today-ex.done .today-ex-check{background:var(--teal);border-color:var(--teal);color:#0C0C10;}
-.today-ex-name{font-size:18px;font-weight:600;color:var(--text);flex:1;}
-.today-ex.done .today-ex-name{color:var(--text3);}
-.today-ex-pill{font-size:14px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:3px 9px;border-radius:20px;background:var(--violet-d);color:var(--violet);border:1px solid var(--violet-b);}
-.today-ex.done .today-ex-pill{background:var(--teal-d);color:var(--teal);border-color:var(--teal-b);}
+/* today-ex styles defined above in design system block */
 
 .explore-footer {
   width:100%; margin-top:8px;
@@ -251,13 +309,11 @@ body::before{display:none;}
 </style>
 </head>
 <body>
-<!-- ── Background blob texture ── -->
+<!-- Blob texture background -->
 <div class="app-blobs" aria-hidden="true">
-  <!-- Blob A: crown — top-right, violet tint -->
   <svg class="blob-a" viewBox="0 0 400 380" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M320 30 C380 10 420 80 400 160 C380 240 300 280 220 260 C140 240 80 180 100 100 C120 20 260 50 320 30Z" fill="rgba(108,92,231,0.10)"/>
   </svg>
-  <!-- Blob B: footing — bottom-left, teal tint -->
   <svg class="blob-b" viewBox="0 0 360 320" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M40 280 C-20 250 -10 160 40 100 C90 40 180 20 250 60 C320 100 350 190 300 250 C250 310 100 310 40 280Z" fill="rgba(46,207,184,0.10)"/>
   </svg>
@@ -375,44 +431,44 @@ body::before{display:none;}
   </div>
   <div class="ex-grid-wrap" id="ex-grid-wrap">
     <div>
-      <div class="pillar-title" style="color:var(--violet);">Lectura Visual</div>
+      <div class="pillar-title">Lectura Visual</div>
       <div class="ex-thumb-grid">
         <a class="ex-thumb" id="card-flash" href="lectura_flash_rsvp.html">
-          <div class="ex-thumb-zone zone-velocidad"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="3" rx="1.5" fill="white"/><rect x="3" y="11" width="18" height="3" rx="1.5" fill="white"/><rect x="3" y="17" width="12" height="3" rx="1.5" fill="white"/></svg></div>
-          <div class="ex-thumb-body"><div class="ex-thumb-cat" style="color:var(--violet-deep);">Velocidad</div><div class="ex-thumb-name">Lectura Flash</div><div class="ex-thumb-dur">5 min</div></div>
+          <div class="ex-thumb-zone" style="background:#6C5CE7;"><svg width="34" height="34" viewBox="0 0 34 34" fill="none"><rect x="5" y="7" width="24" height="4.6" rx="2.3" fill="#FFF"/><rect x="5" y="15" width="16" height="4.6" rx="2.3" fill="#FFF"/><rect x="5" y="23" width="20" height="4.6" rx="2.3" fill="#FFF"/></svg></div>
+          <div class="ex-thumb-body"><div class="ex-thumb-cat" style="color:#534AB7;">Velocidad</div><div class="ex-thumb-name">Lectura Flash</div><div class="ex-thumb-dur">5 min</div></div>
         </a>
         <a class="ex-thumb" id="card-bloques" href="lectura_por_bloques_prototype.html">
-          <div class="ex-thumb-zone zone-velocidad"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8" height="8" rx="2" fill="white"/><rect x="13" y="3" width="8" height="8" rx="2" fill="white"/><rect x="3" y="13" width="8" height="8" rx="2" fill="white"/><rect x="13" y="13" width="8" height="8" rx="2" fill="white" opacity="0.5"/></svg></div>
-          <div class="ex-thumb-body"><div class="ex-thumb-cat" style="color:var(--violet-deep);">Velocidad</div><div class="ex-thumb-name">Por Bloques</div><div class="ex-thumb-dur">5 min</div></div>
+          <div class="ex-thumb-zone" style="background:#534AB7;"><svg width="34" height="34" viewBox="0 0 34 34" fill="none"><rect x="5" y="5" width="11" height="11" rx="3.6" fill="#FFF"/><rect x="18" y="5" width="11" height="11" rx="3.6" fill="#FFF"/><rect x="5" y="18" width="11" height="11" rx="3.6" fill="#FFF"/><rect x="18" y="18" width="11" height="11" rx="3.6" fill="#FFF" opacity="0.5"/></svg></div>
+          <div class="ex-thumb-body"><div class="ex-thumb-cat" style="color:#534AB7;">Velocidad</div><div class="ex-thumb-name">Por Bloques</div><div class="ex-thumb-dur">5 min</div></div>
         </a>
         <a class="ex-thumb" id="card-contra" href="contrarreloj.html">
-          <div class="ex-thumb-zone zone-atencion"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="white" stroke-width="2.5"/><circle cx="12" cy="12" r="3" fill="white"/></svg></div>
-          <div class="ex-thumb-body"><div class="ex-thumb-cat" style="color:var(--amber-deep);">Atención</div><div class="ex-thumb-name">Adaptativa</div><div class="ex-thumb-dur">5 min</div></div>
+          <div class="ex-thumb-zone" style="background:#F5A623;"><svg width="34" height="34" viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17" r="11" stroke="#FFF" stroke-width="3"/><circle cx="17" cy="17" r="4" fill="#FFF"/></svg></div>
+          <div class="ex-thumb-body"><div class="ex-thumb-cat" style="color:#A16707;">Atención</div><div class="ex-thumb-name">Adaptativa</div><div class="ex-thumb-dur">5 min</div></div>
         </a>
         <a class="ex-thumb" id="card-vision" href="vision_paralela.html">
-          <div class="ex-thumb-zone zone-atencion"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="12" rx="9" ry="6" stroke="white" stroke-width="2.5"/><circle cx="12" cy="12" r="3" fill="white"/></svg></div>
-          <div class="ex-thumb-body"><div class="ex-thumb-cat" style="color:var(--amber-deep);">Atención</div><div class="ex-thumb-name">Visión Paralela</div><div class="ex-thumb-dur">5 min</div></div>
+          <div class="ex-thumb-zone" style="background:#F5A623;"><svg width="34" height="34" viewBox="0 0 34 34" fill="none"><ellipse cx="17" cy="17" rx="12" ry="8" stroke="#FFF" stroke-width="3"/><circle cx="17" cy="17" r="4" fill="#FFF"/></svg></div>
+          <div class="ex-thumb-body"><div class="ex-thumb-cat" style="color:#A16707;">Atención</div><div class="ex-thumb-name">Visión Paralela</div><div class="ex-thumb-dur">5 min</div></div>
         </a>
         <a class="ex-thumb" id="card-saltos" href="saltos_visuales.html">
-          <div class="ex-thumb-zone zone-atencion"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M15 7l5 5-5 5M9 7L4 12l5 5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <div class="ex-thumb-body"><div class="ex-thumb-cat" style="color:var(--amber-deep);">Atención</div><div class="ex-thumb-name">Saltos Visuales</div><div class="ex-thumb-dur">5 min</div></div>
+          <div class="ex-thumb-zone" style="background:#F5A623;"><svg width="34" height="34" viewBox="0 0 34 34" fill="none"><path d="M6 17h22M19 10l7 7-7 7M15 10L8 17l7 7" stroke="#FFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="ex-thumb-body"><div class="ex-thumb-cat" style="color:#A16707;">Atención</div><div class="ex-thumb-name">Saltos Visuales</div><div class="ex-thumb-dur">5 min</div></div>
         </a>
       </div>
     </div>
     <div>
-      <div class="pillar-title" style="color:#0A7A6A;">Memoria Activa</div>
+      <div class="pillar-title">Memoria Activa</div>
       <div class="ex-thumb-grid">
         <a class="ex-thumb" id="card-memoria" href="memoria_activa.html">
-          <div class="ex-thumb-zone zone-memoria"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="2" fill="white"/><rect x="14" y="3" width="7" height="7" rx="2" fill="white"/><rect x="3" y="14" width="7" height="7" rx="2" fill="white"/><circle cx="17.5" cy="17.5" r="3.5" fill="white" opacity="0.5"/></svg></div>
+          <div class="ex-thumb-zone" style="background:#2ECFB8;"><svg width="34" height="34" viewBox="0 0 34 34" fill="none"><rect x="5" y="5" width="11" height="11" rx="3.6" fill="#FFF"/><rect x="18" y="5" width="11" height="11" rx="3.6" fill="#FFF"/><rect x="5" y="18" width="11" height="11" rx="3.6" fill="#FFF"/><circle cx="23.5" cy="23.5" r="5.5" fill="#FFF" opacity="0.6"/></svg></div>
           <div class="ex-thumb-body"><div class="ex-thumb-cat" style="color:#0A7A6A;">Memoria</div><div class="ex-thumb-name">Memoria Activa</div><div class="ex-thumb-dur">5 min</div></div>
         </a>
         <a class="ex-thumb" id="card-cats" href="actualizacion_categorias.html">
-          <div class="ex-thumb-zone zone-memoria"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="2" fill="white"/><rect x="14" y="3" width="7" height="7" rx="2" fill="white" opacity="0.5"/><rect x="3" y="14" width="7" height="7" rx="2" fill="white" opacity="0.5"/><rect x="14" y="14" width="7" height="7" rx="2" fill="white"/></svg></div>
+          <div class="ex-thumb-zone" style="background:#2ECFB8;"><svg width="34" height="34" viewBox="0 0 34 34" fill="none"><rect x="5" y="5" width="11" height="11" rx="3.6" fill="#FFF"/><rect x="18" y="5" width="11" height="11" rx="3.6" fill="#FFF" opacity="0.5"/><rect x="5" y="18" width="11" height="11" rx="3.6" fill="#FFF" opacity="0.5"/><rect x="18" y="18" width="11" height="11" rx="3.6" fill="#FFF"/></svg></div>
           <div class="ex-thumb-body"><div class="ex-thumb-cat" style="color:#0A7A6A;">Memoria</div><div class="ex-thumb-name">Categorías</div><div class="ex-thumb-dur">4 min</div></div>
         </a>
         <a class="ex-thumb" id="card-continua" href="actualizacion_continua.html">
-          <div class="ex-thumb-zone zone-lenguaje"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M4 12h16M4 12l5-5M4 12l5 5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 8v8" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg></div>
-          <div class="ex-thumb-body"><div class="ex-thumb-cat" style="color:var(--green-deep);">Lenguaje</div><div class="ex-thumb-name">Act. Continua</div><div class="ex-thumb-dur">5 min</div></div>
+          <div class="ex-thumb-zone" style="background:#52C98A;"><svg width="34" height="34" viewBox="0 0 34 34" fill="none"><path d="M6 17h22M6 17l7-7M6 17l7 7" stroke="#FFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M28 10v14" stroke="#FFF" stroke-width="3" stroke-linecap="round"/></svg></div>
+          <div class="ex-thumb-body"><div class="ex-thumb-cat" style="color:#298454;">Lenguaje</div><div class="ex-thumb-name">Act. Continua</div><div class="ex-thumb-dur">5 min</div></div>
         </a>
       </div>
     </div>
@@ -431,24 +487,24 @@ const FIRST_SESSION = [
   { key:'flash',   url:'lectura_flash_rsvp.html' },
 ];
 
-// ── Exercise zone metadata (colour + SVG icon + category label) ──
+// ── Exercise zone metadata — SVGs match the design system bundle exactly ──
 const EX_ZONE = {
-  flash:   { cls:'zone-velocidad', cat:'Velocidad', color:'var(--violet)',      deep:'var(--violet-deep)',
-    icon:`<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="3" rx="1.5" fill="white"/><rect x="3" y="11" width="18" height="3" rx="1.5" fill="white"/><rect x="3" y="17" width="12" height="3" rx="1.5" fill="white"/></svg>` },
-  bloques: { cls:'zone-velocidad', cat:'Velocidad', color:'var(--violet)',      deep:'var(--violet-deep)',
-    icon:`<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8" height="8" rx="2" fill="white"/><rect x="13" y="3" width="8" height="8" rx="2" fill="white"/><rect x="3" y="13" width="8" height="8" rx="2" fill="white"/><rect x="13" y="13" width="8" height="8" rx="2" fill="white" opacity="0.5"/></svg>` },
-  contra:  { cls:'zone-atencion',  cat:'Atención',  color:'var(--amber)',       deep:'var(--amber-deep)',
-    icon:`<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="white" stroke-width="2.5"/><circle cx="12" cy="12" r="3" fill="white"/></svg>` },
-  vision:  { cls:'zone-atencion',  cat:'Atención',  color:'var(--amber)',       deep:'var(--amber-deep)',
-    icon:`<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="12" rx="9" ry="6" stroke="white" stroke-width="2.5"/><circle cx="12" cy="12" r="3" fill="white"/></svg>` },
-  saltos:  { cls:'zone-atencion',  cat:'Atención',  color:'var(--amber)',       deep:'var(--amber-deep)',
-    icon:`<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M15 7l5 5-5 5M9 7L4 12l5 5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>` },
-  memoria: { cls:'zone-memoria',   cat:'Memoria',   color:'#2ECFB8',            deep:'#0A7A6A',
-    icon:`<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="2" fill="white"/><rect x="14" y="3" width="7" height="7" rx="2" fill="white"/><rect x="3" y="14" width="7" height="7" rx="2" fill="white"/><circle cx="17.5" cy="17.5" r="3.5" fill="white" opacity="0.5"/></svg>` },
-  cats:    { cls:'zone-memoria',   cat:'Memoria',   color:'#2ECFB8',            deep:'#0A7A6A',
-    icon:`<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="2" fill="white"/><rect x="14" y="3" width="7" height="7" rx="2" fill="white" opacity="0.5"/><rect x="3" y="14" width="7" height="7" rx="2" fill="white" opacity="0.5"/><rect x="14" y="14" width="7" height="7" rx="2" fill="white"/></svg>` },
-  continua:{ cls:'zone-lenguaje',  cat:'Lenguaje',  color:'var(--green)',       deep:'var(--green-deep)',
-    icon:`<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 12h16M4 12l5-5M4 12l5 5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 8v8" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg>` },
+  flash:   { bg:'#6C5CE7', cat:'Velocidad', catColor:'#534AB7',
+    svg:`<svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true"><rect x="5" y="7" width="24" height="4.6" rx="2.3" fill="#FFFFFF"/><rect x="5" y="15" width="16" height="4.6" rx="2.3" fill="#FFFFFF"/><rect x="5" y="23" width="20" height="4.6" rx="2.3" fill="#FFFFFF"/></svg>` },
+  bloques: { bg:'#534AB7', cat:'Velocidad', catColor:'#534AB7',
+    svg:`<svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true"><rect x="5" y="5" width="11" height="11" rx="3.6" fill="#FFFFFF"/><rect x="18" y="5" width="11" height="11" rx="3.6" fill="#FFFFFF"/><rect x="5" y="18" width="11" height="11" rx="3.6" fill="#FFFFFF"/><rect x="18" y="18" width="11" height="11" rx="3.6" fill="#FFFFFF" opacity="0.5"/></svg>` },
+  contra:  { bg:'#F5A623', cat:'Atención', catColor:'#A16707',
+    svg:`<svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true"><circle cx="17" cy="17" r="11" stroke="#FFFFFF" stroke-width="3"/><circle cx="17" cy="17" r="4" fill="#FFFFFF"/></svg>` },
+  vision:  { bg:'#F5A623', cat:'Atención', catColor:'#A16707',
+    svg:`<svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true"><ellipse cx="17" cy="17" rx="12" ry="8" stroke="#FFFFFF" stroke-width="3"/><circle cx="17" cy="17" r="4" fill="#FFFFFF"/></svg>` },
+  saltos:  { bg:'#F5A623', cat:'Atención', catColor:'#A16707',
+    svg:`<svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true"><path d="M6 17h22M19 10l7 7-7 7M15 10L8 17l7 7" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>` },
+  memoria: { bg:'#2ECFB8', cat:'Memoria', catColor:'#0A7A6A',
+    svg:`<svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true"><rect x="5" y="5" width="11" height="11" rx="3.6" fill="#FFFFFF"/><rect x="18" y="5" width="11" height="11" rx="3.6" fill="#FFFFFF"/><rect x="5" y="18" width="11" height="11" rx="3.6" fill="#FFFFFF"/><circle cx="23.5" cy="23.5" r="5.5" fill="#FFFFFF" opacity="0.6"/></svg>` },
+  cats:    { bg:'#2ECFB8', cat:'Memoria', catColor:'#0A7A6A',
+    svg:`<svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true"><rect x="5" y="5" width="11" height="11" rx="3.6" fill="#FFFFFF"/><rect x="18" y="5" width="11" height="11" rx="3.6" fill="#FFFFFF" opacity="0.5"/><rect x="5" y="18" width="11" height="11" rx="3.6" fill="#FFFFFF" opacity="0.5"/><rect x="18" y="18" width="11" height="11" rx="3.6" fill="#FFFFFF"/></svg>` },
+  continua:{ bg:'#52C98A', cat:'Lenguaje', catColor:'#298454',
+    svg:`<svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true"><path d="M6 17h22M6 17l7-7M6 17l7 7" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M28 10v14" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/></svg>` },
 };
 
 const EXERCISES = {
@@ -522,32 +578,44 @@ function buildHomeScreen(){
   const list=document.getElementById('today-list'); list.innerHTML='';
   todayKeys.forEach(key=>{
     const ex=EXERCISES[key]; const isDone=done.includes(key);
-    const zone=EX_ZONE[key]||{cls:'zone-velocidad',icon:'',color:'var(--violet)'};
+    const zone=EX_ZONE[key]||{bg:'#6C5CE7',svg:'',cat:'',catColor:'#534AB7'};
+
     const div=document.createElement('div');
     div.className='today-ex'+(isDone?' done':'');
 
-    // Coloured zone strip (left side)
+    // Coloured zone (left column)
     const zoneEl=document.createElement('div');
-    zoneEl.className='today-ex-zone '+zone.cls;
-    zoneEl.innerHTML=zone.icon;
-    zoneEl.style.background=isDone?'rgba(46,207,184,0.15)':zone.color;
+    zoneEl.className='today-ex-zone';
+    zoneEl.style.background=isDone?'rgba(46,207,184,0.12)':zone.bg;
+    zoneEl.innerHTML=isDone
+      ? `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="rgba(46,207,184,0.3)"/><path d="M7 12l3.5 3.5L17 9" stroke="#0A7A6A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+      : zone.svg;
 
-    const check=document.createElement('div'); check.className='today-ex-check'; if(isDone)check.textContent='✓';
-    const name=document.createElement('div'); name.className='today-ex-name'; name.textContent=ex?ex.name:key;
-    const pill=document.createElement('div'); pill.className='today-ex-pill'; pill.textContent=isDone?'Hecho':'~5 min';
+    // Body (right column)
+    const body=document.createElement('div');
+    body.className='today-ex-body';
 
-    div.appendChild(zoneEl);
+    const check=document.createElement('div'); check.className='today-ex-check';
+    const name=document.createElement('div'); name.className='today-ex-name';
+    name.textContent=ex?ex.name:key;
+    const pill=document.createElement('div'); pill.className='today-ex-pill';
+    pill.textContent=isDone?'Hecho':'~5 min';
+
+    body.appendChild(check);
+    body.appendChild(name);
+    body.appendChild(pill);
+
     if(!isDone && ex){
       div.style.cursor='pointer';
-      div.style.transition='all 0.15s';
       div.addEventListener('click',()=>{ window.location.href=ex.url+'?session=1'; });
       const arrow=document.createElement('span');
       arrow.textContent='›';
-      arrow.style.cssText='font-size:22px;color:var(--text3);margin-left:4px;line-height:1;flex-shrink:0;';
-      div.appendChild(check); div.appendChild(name); div.appendChild(pill); div.appendChild(arrow);
-    } else {
-      div.appendChild(check); div.appendChild(name); div.appendChild(pill);
+      arrow.style.cssText='font-size:24px;color:#5C5880;margin-left:2px;line-height:1;flex-shrink:0;';
+      body.appendChild(arrow);
     }
+
+    div.appendChild(zoneEl);
+    div.appendChild(body);
     list.appendChild(div);
   });
   const cta=document.getElementById('main-cta');
@@ -694,6 +762,8 @@ function finishOnboarding(launchExercise){
   } else {
     document.getElementById('onboarding').classList.add('hidden');
     document.getElementById('app').classList.add('show');
+    const nav = document.getElementById('bottom-nav');
+    if (nav) nav.style.display = 'flex';
     buildHomeScreen();
   }
 }
@@ -706,6 +776,8 @@ function goToExplore(){
   }
   document.getElementById('onboarding').classList.add('hidden');
   document.getElementById('app').classList.add('show');
+  const nav = document.getElementById('bottom-nav');
+  if (nav) nav.style.display = 'flex';
   buildHomeScreen();
   setTimeout(()=>{
     // Hide entire session section
@@ -755,6 +827,8 @@ function init(){
   if(data){
     document.getElementById('onboarding').classList.add('hidden');
     document.getElementById('app').classList.add('show');
+    const nav = document.getElementById('bottom-nav');
+    if (nav) nav.style.display = 'flex';
     buildHomeScreen();
   }
 }
@@ -764,6 +838,50 @@ document.getElementById('ob-name').addEventListener('keydown',e=>{
 });
 
 init();
+</script>
+
+<!-- ── Bottom navigation bar ── -->
+<nav class="bottom-nav" id="bottom-nav" style="display:none;">
+  <button class="nav-tab active" id="nav-inicio" onclick="navTo('inicio')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+    <span>Inicio</span>
+  </button>
+  <button class="nav-tab" id="nav-progreso" onclick="navTo('progreso')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M5 19V13"/><path d="M12 19V6"/><path d="M19 19v-9"/></svg>
+    <span>Progreso</span>
+  </button>
+  <button class="nav-tab" id="nav-ejercicios" onclick="navTo('ejercicios')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linejoin="round"><rect x="4" y="4" width="7" height="7" rx="2.2"/><rect x="13" y="4" width="7" height="7" rx="2.2"/><rect x="4" y="13" width="7" height="7" rx="2.2"/><rect x="13" y="13" width="7" height="7" rx="2.2"/></svg>
+    <span>Ejercicios</span>
+  </button>
+  <button class="nav-tab" id="nav-perfil" onclick="navTo('perfil')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><circle cx="12" cy="8.5" r="3.8"/><path d="M5 20c0-3.6 3.1-5.5 7-5.5s7 1.9 7 5.5"/></svg>
+    <span>Perfil</span>
+  </button>
+  <button class="nav-tab" id="nav-familia" onclick="navTo('familia')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="10" r="2.5"/><path d="M3 20c0-3 2.7-5 6-5s6 2 6 5"/><path d="M17 20c0-2 1.3-3.5 3-4"/></svg>
+    <span>Familia</span>
+  </button>
+</nav>
+
+<script>
+function navTo(tab) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  const el = document.getElementById('nav-' + tab);
+  if (el) el.classList.add('active');
+  // Placeholder for future navigation — for now just updates the active state
+  if (tab === 'ejercicios') {
+    // Scroll to and open the explore grid
+    const footer = document.getElementById('explore-footer');
+    const grid = document.getElementById('ex-grid-wrap');
+    const btn = document.getElementById('see-all-btn');
+    if (grid && !grid.classList.contains('show')) {
+      grid.classList.add('show');
+      if (btn) btn.classList.add('open');
+    }
+    if (footer) footer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
 </script>
 </body>
 </html>
